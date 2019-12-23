@@ -69,10 +69,7 @@ namespace OmniMIDIConfigurator
 
         private void WikipediaLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            var helpFile = Path.Combine(Path.GetTempPath(), "help.txt");
-            // File.WriteAllText(helpFile, Properties.Resources.gmlist);
-            Process.Start(helpFile).WaitForExit();
-            File.Delete(helpFile);
+            Process.Start("https://www.midi.org/specifications-old/item/gm-level-1-sound-set");
         }
     }
 }

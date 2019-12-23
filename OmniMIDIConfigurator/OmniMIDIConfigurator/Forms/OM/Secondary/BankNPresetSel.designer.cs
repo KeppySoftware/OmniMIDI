@@ -151,10 +151,10 @@
             this.WikipediaLink.AutoSize = true;
             this.WikipediaLink.Location = new System.Drawing.Point(12, 208);
             this.WikipediaLink.Name = "WikipediaLink";
-            this.WikipediaLink.Size = new System.Drawing.Size(92, 13);
+            this.WikipediaLink.Size = new System.Drawing.Size(148, 13);
             this.WikipediaLink.TabIndex = 8;
             this.WikipediaLink.TabStop = true;
-            this.WikipediaLink.Text = "Banks/Presets list";
+            this.WikipediaLink.Text = "GM Level 1 banks/presets list";
             this.WikipediaLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WikipediaLink_LinkClicked);
             // 
             // SrcBankVal
