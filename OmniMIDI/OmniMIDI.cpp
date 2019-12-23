@@ -11,7 +11,7 @@ typedef long NTSTATUS;
 
 // KDMAPI version
 #define CUR_MAJOR	2
-#define CUR_MINOR	0
+#define CUR_MINOR	1
 #define CUR_BUILD	0
 #define CUR_REV		0
 
@@ -639,7 +639,6 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 			PrintMIDIOPENDESCToDebugLog("MODM_OPEN", OMMPD, dwUser, OMFlags);
 
 			InitializeCallbackFeatures(
-				FALSE,
 				OMMPD->hMidi,
 				OMMPD->dwCallback,
 				OMMPD->dwInstance,
