@@ -273,6 +273,12 @@
     <Compile Include="Panels\Generic\NoAvailableControl.Designer.cs">
       <DependentUpon>NoAvailableControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OM\Secondary\WinMMSpeed.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OM\Secondary\WinMMSpeed.Designer.cs">
+      <DependentUpon>WinMMSpeed.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Donate.resx">
       <DependentUpon>Donate.cs</DependentUpon>
     </EmbeddedResource>
@@ -362,6 +368,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Secondary\TextReader.resx">
       <DependentUpon>TextReader.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OM\Secondary\WinMMSpeed.resx">
+      <DependentUpon>WinMMSpeed.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />
@@ -464,6 +473,7 @@
     <Content Include="Resources\Images\DonateBtn.png" />
     <Content Include="Resources\Images\OMLauncher.png" />
     <Content Include="Resources\Icons\PayPalLogo.png" />
+    <Content Include="Resources\Images\OMLauncherChristmas.png" />
     <Content Include="Resources\Images\OMLauncherFish.png" />
     <Content Include="Resources\LoudMax\LoudMax32.dll" />
     <Content Include="Resources\LoudMax\LoudMax64.dll" />

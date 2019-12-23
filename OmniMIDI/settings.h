@@ -130,6 +130,7 @@ BOOL LoadSoundfont(int whichsf) {
 		if (!whichsf) swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, CSFFileTemplate);
 		else swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, OMFileTemplate, L"lists", OMLetters[whichsf], L"omlist");
 		
+		PrintMessageWToDebugLog(L"LoadSoundFontFunc", ListToLoad);
 		RET = FontLoader(ListToLoad);
 		if (RET) PrintMessageToDebugLog("LoadSoundFontFunc", "Done!");
 	}
@@ -141,30 +142,36 @@ bool LoadSoundfontStartup() {
 	wchar_t CurrentAppList[NTFS_MAX_PATH] = { 0 };
 	wchar_t CurrentString[NTFS_MAX_PATH] = { 0 };
 
-	if (!SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, CurrentAppList)) {
-		for (int i = 0; i < 15; ++i) {
+	for (int i = 0; i < 7; ++i) {
+		memset(CurrentAppList, 0, sizeof(CurrentAppList));
+		if (!SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, CurrentAppList)) {
 			swprintf_s(CurrentAppList + wcslen(CurrentAppList), NTFS_MAX_PATH, OMFileTemplate, L"applists", OMLetters[i], L"applist");
+
+			PrintMessageWToDebugLog(L"LoadSoundfontStartup", CurrentAppList);
 
 			std::wifstream AppList(CurrentAppList);
 			if (AppList) {
 				AppList.imbue(UTF8Support);
 				while (AppList.getline(CurrentString, sizeof(CurrentString) / sizeof(*CurrentString)))
 				{
-					if (!_wcsicmp(AppNameW, CurrentString) && !_wcsicmp(AppPathW, CurrentString)) {
+					PrintMessageWToDebugLog(L"LoadSoundfontStartup", CurrentString);
+
+					if (!_wcsicmp(AppNameW, CurrentString) || !_wcsicmp(AppPathW, CurrentString)) {
 						PrintMessageToDebugLog("LoadSoundfontStartup", "Found list. Loading...");
-						LoadSoundfont(i + 1);
+						LoadSoundfont(i);
 						return TRUE;
 					}
 				}
 			}
 		}
-
-		PrintMessageToDebugLog("LoadSoundfontStartup", "No default startup list found. Continuing...");
-		return FALSE;
+		else break;
 	}
+
+	PrintMessageToDebugLog("LoadSoundfontStartup", "No default startup list found. Continuing...");
+	return FALSE;
 }
 
-void LoadDriverModule(HMODULE * Target, LPWSTR RequestedLib, BOOL Mandatory) {
+void LoadDriverModule(HMODULE * Target, wchar_t* RequestedLib, BOOL Mandatory) {
 	wchar_t InstallPath[MAX_PATH] = { 0 };
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
@@ -187,7 +194,7 @@ void LoadDriverModule(HMODULE * Target, LPWSTR RequestedLib, BOOL Mandatory) {
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The library is already in memory. The HMODULE will be a pointer to that address.");
 }
 
-void LoadPluginModule(HPLUGIN* Target, LPWSTR RequestedLib, BOOL Mandatory) {
+void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 	wchar_t InstallPath[MAX_PATH] = { 0 };
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 

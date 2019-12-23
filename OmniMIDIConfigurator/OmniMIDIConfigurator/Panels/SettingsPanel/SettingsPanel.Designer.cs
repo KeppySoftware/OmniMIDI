@@ -111,6 +111,7 @@
             this.FastHotKeys = new System.Windows.Forms.CheckBox();
             this.DebugMode = new System.Windows.Forms.CheckBox();
             this.LegacySetDia = new System.Windows.Forms.GroupBox();
+            this.WinMMSpeedDiag = new OmniMIDIConfigurator.LinkLabelEx();
             this.UseTGT = new System.Windows.Forms.CheckBox();
             this.ShowChangelogUpdate = new System.Windows.Forms.CheckBox();
             this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
@@ -1151,6 +1152,7 @@
             // 
             this.LegacySetDia.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.LegacySetDia.Controls.Add(this.WinMMSpeedDiag);
             this.LegacySetDia.Controls.Add(this.UseTGT);
             this.LegacySetDia.Controls.Add(this.ShowChangelogUpdate);
             this.LegacySetDia.Controls.Add(this.DebugModeFolder);
@@ -1164,10 +1166,23 @@
             this.LegacySetDia.Controls.Add(this.ChangeSynthMask);
             this.LegacySetDia.Location = new System.Drawing.Point(3, 867);
             this.LegacySetDia.Name = "LegacySetDia";
-            this.LegacySetDia.Size = new System.Drawing.Size(670, 239);
+            this.LegacySetDia.Size = new System.Drawing.Size(670, 257);
             this.LegacySetDia.TabIndex = 2;
             this.LegacySetDia.TabStop = false;
             this.LegacySetDia.Text = "Debug and legacy settings";
+            // 
+            // WinMMSpeedDiag
+            // 
+            this.WinMMSpeedDiag.AutoSize = true;
+            this.WinMMSpeedDiag.Enabled = false;
+            this.WinMMSpeedDiag.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.WinMMSpeedDiag.Location = new System.Drawing.Point(6, 197);
+            this.WinMMSpeedDiag.Name = "WinMMSpeedDiag";
+            this.WinMMSpeedDiag.Size = new System.Drawing.Size(338, 13);
+            this.WinMMSpeedDiag.TabIndex = 49;
+            this.WinMMSpeedDiag.TabStop = true;
+            this.WinMMSpeedDiag.Text = "Change speed of the Windows Multimedia Wrapper (Not yet available)";
+            this.WinMMSpeedDiag.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WinMMSpeedDiag_LinkClicked);
             // 
             // UseTGT
             // 
@@ -1208,7 +1223,7 @@
             // 
             this.SpatialSound.AutoSize = true;
             this.SpatialSound.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.SpatialSound.Location = new System.Drawing.Point(6, 215);
+            this.SpatialSound.Location = new System.Drawing.Point(6, 233);
             this.SpatialSound.Name = "SpatialSound";
             this.SpatialSound.Size = new System.Drawing.Size(148, 13);
             this.SpatialSound.TabIndex = 46;
@@ -1232,7 +1247,7 @@
             // 
             this.ChangeSynthMask.AutoSize = true;
             this.ChangeSynthMask.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ChangeSynthMask.Location = new System.Drawing.Point(6, 197);
+            this.ChangeSynthMask.Location = new System.Drawing.Point(6, 215);
             this.ChangeSynthMask.Name = "ChangeSynthMask";
             this.ChangeSynthMask.Size = new System.Drawing.Size(299, 13);
             this.ChangeSynthMask.TabIndex = 44;
@@ -1248,7 +1263,7 @@
             this.Controls.Add(this.SynthBox);
             this.Controls.Add(this.EnginesBox);
             this.Name = "SettingsPanel";
-            this.Size = new System.Drawing.Size(678, 1113);
+            this.Size = new System.Drawing.Size(678, 1134);
             this.Load += new System.EventHandler(this.SettingsPanel_Load);
             this.EnginesBox.ResumeLayout(false);
             this.EnginesBox.PerformLayout();
@@ -1360,5 +1375,6 @@
         public System.Windows.Forms.GroupBox LegacySetDia;
         public System.Windows.Forms.CheckBox ShowChangelogUpdate;
         public System.Windows.Forms.CheckBox UseTGT;
+        private LinkLabelEx WinMMSpeedDiag;
     }
 }

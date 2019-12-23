@@ -374,6 +374,11 @@ namespace OmniMIDIConfigurator
             new MaskSynthAsAnother().ShowDialog();
         }
 
+        private void WinMMSpeedDiag_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            new WinMMSpeed().ShowDialog();
+        }
+
         private void VolTrackBar_Scroll(object sender)
         {
             if (VolTrackBar.Value <= 49) VolSimView.ForeColor = Color.Red;

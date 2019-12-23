@@ -44,7 +44,7 @@
             this.VolTrackBar.Location = new System.Drawing.Point(12, 37);
             this.VolTrackBar.Maximum = 10000;
             this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.Size = new System.Drawing.Size(314, 45);
+            this.VolTrackBar.Size = new System.Drawing.Size(298, 45);
             this.VolTrackBar.TabIndex = 16;
             this.VolTrackBar.TickFrequency = 500;
             this.VolTrackBar.Scroll += new System.EventHandler(this.ValueChanged);
@@ -52,7 +52,7 @@
             // ReturnOK
             // 
             this.ReturnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ReturnOK.Location = new System.Drawing.Point(243, 84);
+            this.ReturnOK.Location = new System.Drawing.Point(235, 76);
             this.ReturnOK.Name = "ReturnOK";
             this.ReturnOK.Size = new System.Drawing.Size(75, 23);
             this.ReturnOK.TabIndex = 17;
@@ -71,7 +71,7 @@
             // 
             // VolValN
             // 
-            this.VolValN.Location = new System.Drawing.Point(260, 10);
+            this.VolValN.Location = new System.Drawing.Point(252, 10);
             this.VolValN.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -92,7 +92,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(326, 115);
+            this.ClientSize = new System.Drawing.Size(322, 111);
             this.ControlBox = false;
             this.Controls.Add(this.VolValN);
             this.Controls.Add(this.label1);

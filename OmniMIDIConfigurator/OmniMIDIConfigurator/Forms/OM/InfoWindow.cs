@@ -77,8 +77,13 @@ namespace OmniMIDIConfigurator
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
             if (Properties.Settings.Default.PreRelease) VerLabel.Text += " (PR)";
 
-            OMBigLogo.Image = 
-                (DateTime.Today.Month == 4 && DateTime.Today.Day == 1) ? Properties.Resources.OMLauncherFish : Properties.Resources.OMLauncher;
+            // Date check :^)
+            if (DateTime.Today.Month == 4 && DateTime.Today.Day == 1)
+                OMBigLogo.Image = Properties.Resources.OMLauncherFish;
+            else if (DateTime.Today.Month == 12 && (DateTime.Today.Day >= 23 && DateTime.Today.Day <= 26))
+                OMBigLogo.Image = Properties.Resources.OMLauncherChristmas;
+            else
+                OMBigLogo.Image = Properties.Resources.OMLauncher;
 
             BB.Location = new Point(OMBigLogo.Size.Width - BB.Size.Width - 8, OMBigLogo.Size.Height - BB.Size.Height - 8);
             BB.Parent = OMBigLogo;

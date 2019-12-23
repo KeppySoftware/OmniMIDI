@@ -306,14 +306,8 @@ void PrintMMToDebugLog(UINT uDID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam
 				uDID, uMsg, (DWORD)dwUser, *(DWORD_PTR*)dwUser, (DWORD)dwParam1, (DWORD)dwParam2);
 		}
 		catch (...) {
-			try {
-				sprintf(Msg, "Stage <<modMessage>> | uDeviceID-> %d, uMsg-> %d, dwUser-> %d (LPVOID: %d), dwParam1-> %d, dwParam2-> %d",
-					uDID, uMsg, (DWORD)dwUser, (DWORD_PTR*)dwUser, (DWORD)dwParam1, (DWORD)dwParam2);
-			}
-			catch (...) {
-				sprintf(Msg, "Stage <<modMessage>> | uDeviceID-> %d, uMsg-> %d, dwUser-> %d (LPVOID: FAIL), dwParam1-> %d, dwParam2-> %d",
-					uDID, uMsg, (DWORD)dwUser, (DWORD)dwParam1, (DWORD)dwParam2);
-			}
+			sprintf(Msg, "Stage <<modMessage>> | uDeviceID-> %d, uMsg-> %d, dwUser-> %d (LPVOID: FAIL), dwParam1-> %d, dwParam2-> %d",
+				uDID, uMsg, (DWORD)dwUser, (DWORD)dwParam1, (DWORD)dwParam2);
 		}
 	
 		fprintf(DebugLog, Msg);
@@ -328,21 +322,24 @@ void PrintMMToDebugLog(UINT uDID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam
 
 void PrintLoadedDLLToDebugLog(LPCWSTR LibraryW, LPCSTR Status) {
 	if (ManagedSettings.DebugMode) {
+		wchar_t* Lib = (wchar_t*)malloc(sizeof(wchar_t) * NTFS_MAX_PATH);
 		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
-		char* LibraryA = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
-		wcstombs(LibraryA, LibraryW, sizeof(LibraryA));
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
 
 		// Print to log
 		PrintCurrentTime();
-		sprintf(Msg, "Library <<%s>> | %s\n", LibraryA, Status);
+		swprintf(Lib, L"Library <<%s>> | ", LibraryW);
+		fwprintf(DebugLog, Lib);
+		OutputDebugStringW(Lib);
+
+		sprintf(Msg, "%s\n", Status);
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
+		free(Lib);
 		free(Msg);
-		free(LibraryA);
 
 		// Flush buffer
 		fflush(DebugLog);

@@ -255,7 +255,7 @@ namespace OmniMIDIConfigurator
                     Directory.CreateDirectory(Program.OMSFPath);
                     Directory.CreateDirectory(Program.DebugDataPath);
 
-                    for (int i = 1; i < 16; i++)
+                    for (int i = 1; i < Program.ListsPath.Count(); i++)
                         File.Create(Program.ListsPath[i]).Dispose();
 
                     if (!ImportMode) SoundFontListEditor.Delegate.Lis.Items.Clear();
@@ -264,7 +264,6 @@ namespace OmniMIDIConfigurator
                 if (!File.Exists(WhichList))
                 {
                     // List doesn't exist, create it
-
                     File.Create(WhichList).Dispose();
 
                     if (!ImportMode) SoundFontListEditor.Delegate.Lis.Items.Clear();
@@ -426,7 +425,7 @@ namespace OmniMIDIConfigurator
             catch (Exception ex)
             {
                 Program.ShowError(
-                    5,
+                    4,
                     "Error while loading list",
                     String.Format("The configurator has encountered an error while trying to parse the following list:\n{0}", WhichList),
                     ex

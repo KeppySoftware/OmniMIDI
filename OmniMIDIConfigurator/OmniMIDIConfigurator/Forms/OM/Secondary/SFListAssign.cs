@@ -17,6 +17,7 @@ namespace OmniMIDIConfigurator
         public static string PathToAllLists = soundfontnewlocation + "\\OmniMIDI\\applists";
         public string[] ListsPath = new string[]
         {
+            soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_A.applist",
             soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_B.applist",
             soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_C.applist",
             soundfontnewlocation + "\\OmniMIDI\\applists\\OmniMIDI_D.applist",
