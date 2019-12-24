@@ -17,24 +17,23 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 // F**k WinMM and Microsoft
 typedef VOID(CALLBACK* WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
 WMMC CustomCallback = nullptr;
-DWORD OMCallbackMode = CALLBACK_NULL;
+DWORD OMCallbackMode = CALLBACK_NULL | MIDI_IO_PACKED;
 
 // In case the CustomCallback isn't ready
 void DoCallback(DWORD msg, DWORD_PTR param1, DWORD_PTR param2) {
-	switch (OMCallbackMode) {
-	case CALLBACK_FUNCTION:
+	if (OMCallbackMode & CALLBACK_FUNCTION) {
 		CustomCallback((HMIDIOUT)OMHMIDI, msg, OMInstance, param1, param2);
-		break;
-	case CALLBACK_EVENT:
-		if (!SetEvent((HANDLE)OMCallback)) CrashMessage(L"DoCallbackSE");
-		break;
-	case CALLBACK_THREAD:
-		if (!PostThreadMessage((DWORD)OMCallback, msg, param1, param2)) CrashMessage(L"DoCallbackPTM");
-		break;
-	case CALLBACK_WINDOW:
-		if (!PostMessage((HWND)OMCallback, msg, param1, param2)) CrashMessage(L"DoCallbackPM");
-		break;
 	}
+	else if (OMCallbackMode & CALLBACK_EVENT) {
+		if (!SetEvent((HANDLE)OMCallback)) CrashMessage(L"DoCallbackSE");
+	}
+	else if (OMCallbackMode & CALLBACK_THREAD) {
+		if (!PostThreadMessage((DWORD)OMCallback, msg, param1, param2)) CrashMessage(L"DoCallbackPTM");
+	}
+	else if (OMCallbackMode & CALLBACK_WINDOW) {
+		if (!PostMessage((HWND)OMCallback, msg, param1, param2)) CrashMessage(L"DoCallbackPM");
+	}
+	else PrintMessageToDebugLog("DoCallback", "No callback specified.");
 }
 
 // CookedPlayer system
@@ -498,7 +497,7 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 	return FALSE;
 }
 
-VOID KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM, DWORD OMF) {
+VOID KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM) {
 	// Copy values to memory
 	BOOL NV = ((OMCM != NULL) && (!OMCB && !OMI));
 
@@ -506,15 +505,17 @@ VOID KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI
 	OMCallback = NV ? NULL : OMCB;
 	OMInstance = NV ? NULL : OMI;
 	OMCallbackMode = NV ? NULL : OMCM;
-	OMFlags = NV ? NULL : OMF;
-	
+
 	if (NV) PrintMessageToDebugLog("ICF", "The application requested the driver to use callbacks, but no callback address has been given.");
 
 	// If callback function is required, assign it to CustomCallback
-	if (OMCallbackMode == CALLBACK_FUNCTION)
+	if (OMCallbackMode & CALLBACK_FUNCTION)
+	{
+		PrintMessageToDebugLog("ICF", "CALLBACK_FUNCTION allocated.");
 		CustomCallback = (WMMC)OMCallback;
+	}
 
-	if ((OMFlags & MIDI_IO_COOKED)) {
+	if ((OMCallbackMode & MIDI_IO_COOKED)) {
 		PrintMessageToDebugLog("ICF", "MIDI_IO_COOKED requested.");
 
 		// Prepare registry for CookedPlayer

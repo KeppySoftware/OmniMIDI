@@ -633,15 +633,14 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 			// AddVectoredExceptionHandler(1, OmniMIDICrashHandler);
 			PrintMessageToDebugLog("MODM_OPEN", "Preparing callback data (If present)...");
 			LPMIDIOPENDESC OMMPD = ((MIDIOPENDESC*)dwParam1);
-			PrintMIDIOPENDESCToDebugLog("MODM_OPEN", OMMPD, dwUser, OMFlags);
+			PrintMIDIOPENDESCToDebugLog("MODM_OPEN", OMMPD, dwUser, (DWORD)dwParam2);
 
 			InitializeCallbackFeatures(
 				OMMPD->hMidi,
 				OMMPD->dwCallback,
 				OMMPD->dwInstance,
 				dwUser,
-				(DWORD)dwParam2,
-				HIWORD((DWORD)dwParam2));
+				(DWORD)dwParam2);
 
 			// Enable handler if required
 			EnableBuiltInHandler("MODM_OPEN");

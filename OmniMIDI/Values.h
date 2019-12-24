@@ -71,7 +71,6 @@ HMIDI OMHMIDI = NULL;
 HDRVR OMHDRVR = NULL;
 DWORD_PTR OMCallback = NULL;
 DWORD_PTR OMInstance = NULL;
-DWORD OMFlags = NULL;
 
 // Important stuff
 const std::locale UTF8Support(std::locale(), new std::codecvt_utf8<wchar_t>);
