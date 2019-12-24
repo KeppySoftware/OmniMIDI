@@ -422,9 +422,6 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 			return DebugResult("MODM_STRMDATA", MMSYSERR_INVALPARAM, "The buffer doesn't exist, hasn't been allocated or is not valid.");
 		}
 
-		if (!(((MIDIHDR*)dwParam1)->dwFlags & MHDR_ISSTRM))
-			return DebugResult("MODM_STRMDATA", MIDIERR_UNPREPARED, "This is not a stream buffer.");
-
 		if (!(((MIDIHDR*)dwParam1)->dwFlags & MHDR_PREPARED))
 			return DebugResult("MODM_STRMDATA", MIDIERR_UNPREPARED, "The buffer is not prepared.");
 

@@ -60,7 +60,7 @@ typedef struct CookedPlayer
 	DWORD TickAccumulator;				// ?
 	LockSystem Lock;					// LockSystem
 	DWORD_PTR dwInstance;
-};
+} CookedPlayer, *LPCookedPlayer;
 
 // Device stuff
 const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };

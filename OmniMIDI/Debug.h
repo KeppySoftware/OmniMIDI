@@ -371,6 +371,26 @@ void PrintSoundFontToDebugLog(LPCWSTR SoundFontW, LPCSTR Status) {
 	}
 }
 
+void PrintCallbackToDebugLog(LPCSTR Stage, LPCSTR CB, DWORD Msg, DWORD I1, DWORD I2) {
+	if (ManagedSettings.DebugMode) {
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
+
+		// Debug log is busy now
+		std::lock_guard<std::mutex> lock(DebugMutex);
+
+		// Print to log
+		PrintCurrentTime();
+		sprintf(Msg, "Stage <<%s>> | Type: %s - Msg: %08X - I1: %08X - I2: %08X\n", Stage, Msg, I1, I2);
+		fprintf(DebugLog, Msg);
+		OutputDebugStringA(Msg);
+
+		free(Msg);
+
+		// Flush buffer
+		fflush(DebugLog);
+	}
+}
+
 void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 	if (ManagedSettings.DebugMode) {
 		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);

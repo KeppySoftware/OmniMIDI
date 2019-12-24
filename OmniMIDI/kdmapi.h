@@ -500,29 +500,34 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 
 VOID KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM, DWORD OMF) {
 	// Copy values to memory
-	OMHMIDI = OMHM;
-	OMCallback = OMCB;
-	OMInstance = OMI;
+	BOOL NV = ((OMCM != NULL) && (!OMCB && !OMI));
 
-	BOOL NV = (!OMCallback && !OMInstance);
+	OMHMIDI = OMHM;
+	OMCallback = NV ? NULL : OMCB;
+	OMInstance = NV ? NULL : OMI;
 	OMCallbackMode = NV ? NULL : OMCM;
 	OMFlags = NV ? NULL : OMF;
 	
-	if (NV && OMCM) PrintMessageToDebugLog("MODM_OPEN", "The application requested the driver to use callbacks, but no callback address has been given.");
+	if (NV) PrintMessageToDebugLog("ICF", "The application requested the driver to use callbacks, but no callback address has been given.");
 
 	// If callback function is required, assign it to CustomCallback
 	if (OMCallbackMode == CALLBACK_FUNCTION)
 		CustomCallback = (WMMC)OMCallback;
 
-	// Prepare registry for CookedPlayer
-	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
-	RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
+	if ((OMFlags & MIDI_IO_COOKED)) {
+		PrintMessageToDebugLog("ICF", "MIDI_IO_COOKED requested.");
 
-	if ((DWORD)OMF & MIDI_IO_COOKED && !ManagedSettings.DisableCookedPlayer) {
-		PrintMessageToDebugLog("MODM_OPEN", "MIDI_IO_COOKED requested.");
+		// Prepare registry for CookedPlayer
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
+		RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
+
+		if (ManagedSettings.DisableCookedPlayer) {
+			PrintMessageToDebugLog("ICF", "CookedPlayer has been disabled in the configurator.");
+			return;
+		}
 
 		// Prepare the CookedPlayer
-		PrintMessageToDebugLog("MODM_OPEN", "Preparing CookedPlayer struct...");
+		PrintMessageToDebugLog("ICF", "Preparing CookedPlayer struct...");
 
 		*(CookedPlayer**)OMU = (CookedPlayer*)malloc(sizeof(CookedPlayer));
 		memset(*(CookedPlayer**)OMU, 0, sizeof(**(CookedPlayer**)OMU));
@@ -531,18 +536,16 @@ VOID KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI
 		(*(CookedPlayer**)OMU)->Tempo = 500000;
 		(*(CookedPlayer**)OMU)->TimeDiv = 384;
 		(*(CookedPlayer**)OMU)->TempoMulti = (((*(CookedPlayer**)OMU)->Tempo * 10) / (*(CookedPlayer**)OMU)->TimeDiv);
-		PrintStreamValueToDebugLog("MODM_OPEN", "TempoMulti", (*(CookedPlayer**)OMU)->TempoMulti);
+		PrintStreamValueToDebugLog("ICF", "TempoMulti", (*(CookedPlayer**)OMU)->TempoMulti);
 
-		PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer struct prepared.");
+		PrintMessageToDebugLog("ICF", "CookedPlayer struct prepared.");
 
 		// Create player thread
-		PrintMessageToDebugLog("MODM_OPEN", "Preparing thread for CookedPlayer...");
+		PrintMessageToDebugLog("ICF", "Preparing thread for CookedPlayer...");
 		CookedThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)CookedPlayerSystem, *(LPVOID*)OMU, 0, &CookedThread.ThreadAddress);
 
-		PrintMessageToDebugLog("MODM_OPEN", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
-	}
-	else if (ManagedSettings.DisableCookedPlayer)
-		PrintMessageToDebugLog("MODM_OPEN", "CookedPlayer has been disabled in the configurator.");
+		PrintMessageToDebugLog("ICF", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
+	}		
 }
 
 VOID KDMAPI RunCallbackFunction(DWORD Msg, DWORD_PTR P1, DWORD_PTR P2) {
