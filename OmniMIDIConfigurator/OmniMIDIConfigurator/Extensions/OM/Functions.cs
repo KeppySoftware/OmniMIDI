@@ -110,6 +110,7 @@ namespace OmniMIDIConfigurator
             new SettingStruct ("IgnoreSysEx", 0),
             new SettingStruct ("IgnoreSysReset", 0),
             new SettingStruct ("KDMAPIEnabled", 1),
+            new SettingStruct ("KeepAlive", 0),
             new SettingStruct ("LiveChanges", 0),
             new SettingStruct ("MaxRenderingTime", 75),
             new SettingStruct ("MaxVoices", 1000),

@@ -110,7 +110,7 @@
             this.BMPatch.Size = new System.Drawing.Size(298, 45);
             this.BMPatch.TabIndex = 8;
             this.BMPatch.TabStop = false;
-            this.BMPatch.Text = "For Black MIDIs";
+            this.BMPatch.Text = "Standard performance improvement patch (BM)";
             this.BMPatch.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.BMPatch_HelpRequested);
             // 
             // WMMD
@@ -136,7 +136,7 @@
             this.DAWPatch.Size = new System.Drawing.Size(298, 45);
             this.DAWPatch.TabIndex = 9;
             this.DAWPatch.TabStop = false;
-            this.DAWPatch.Text = "For DAWs";
+            this.DAWPatch.Text = "Special DAW patch for multi-device usage (DAW)";
             this.DAWPatch.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.DAWPatch_HelpRequested);
             // 
             // WinMMWRPDesc

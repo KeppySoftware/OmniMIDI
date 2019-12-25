@@ -37,13 +37,13 @@ void DoCallback(DWORD M, DWORD_PTR P1, DWORD_PTR P2) {
 	}
 	case CALLBACK_THREAD:
 	{
-		PostThreadMessageW((DWORD)OMCallback, M, P1, P2);
+		R = PostThreadMessageW((DWORD)OMCallback, M, P1, P2);
 		PrintMessageToDebugLog("DoCallback w/ CALLBACK_THREAD", R ? "The message has been sent to the thread handle." : "Failed to send message to thread handle.");
 		break;
 	}
 	case CALLBACK_WINDOW:
 	{
-		PostMessageW((HWND)OMCallback, M, P1, P2);
+		R = PostMessageW((HWND)OMCallback, M, P1, P2);
 		PrintMessageToDebugLog("DoCallback w/ CALLBACK_WINDOW", R ? "The message has been sent to the window handle." : "Failed to send message to window handle.");
 		break;
 	}

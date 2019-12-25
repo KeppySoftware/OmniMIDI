@@ -229,6 +229,7 @@ namespace OmniMIDIConfigurator
                 AudioEngBox.SelectedIndexChanged += AudioEngBox_SelectedIndexChanged;
 
                 UseTGT.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("StockWinMM", 0));
+                IgnoreCloseCalls.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("KeepAlive", 0));
                 ShowChangelogUpdate.Checked = Properties.Settings.Default.ShowChangelogStartUp;
 
                 Functions.LiveChanges.PreviousEngine = (int)Program.SynthSettings.GetValue("CurrentEngine", AudioEngine.WASAPI_ENGINE);
@@ -300,6 +301,7 @@ namespace OmniMIDIConfigurator
 
             Program.SynthSettings.SetValue("CurrentEngine", AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("StockWinMM", Convert.ToInt32(UseTGT.Checked), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("KeepAlive", Convert.ToInt32(IgnoreCloseCalls.Checked), RegistryValueKind.DWord);
 
             Properties.Settings.Default.ShowChangelogStartUp = ShowChangelogUpdate.Checked;
 
