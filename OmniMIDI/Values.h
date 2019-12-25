@@ -82,7 +82,6 @@ BOOL DisableChime = FALSE;
 BOOL KDMAPIEnabled = FALSE;
 BOOL IsKDMAPIViaWinMM = FALSE;
 WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
-CHAR SynthName[MAXPNAMELEN];			// Synthesizer name, but ASCII
 
 // Stream
 BASS_INFO info;
@@ -230,7 +229,7 @@ DWORD cbank[16];			// MIDI bank setting per channel.
 DWORD cpreset[16];		// MIDI preset setting for... you guess it!
 
 DWORD SynthType = MOD_MIDIPORT;
-const DWORD SynthNamesTypes[7] =
+const WORD SynthNamesTypes[7] =
 {
 	MOD_FMSYNTH,
 	MOD_SYNTH,

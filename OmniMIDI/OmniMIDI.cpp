@@ -239,13 +239,9 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 	// Initialize values
 	static BOOL LoadedOnce = FALSE;
 
-	MIDIOUTCAPSA* MIDICapsA;
-	MIDIOUTCAPSW* MIDICapsW;
-	MIDIOUTCAPS2A* MIDICaps2A;
-	MIDIOUTCAPS2W* MIDICaps2W;
-
+	BOOL DefSynthType = FALSE;
 	DWORD StreamCapable = NULL;
-	DWORD Technology = NULL;
+	WORD Technology = NULL;
 	WORD MID = 0x0000;
 	WORD PID = 0x0000;
 
@@ -253,36 +249,34 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 		PrintMessageToDebugLog("MODM_GETDEVCAPS", "The MIDI app sent a MODM_GETDEVCAPS request to the driver.");
 
 		if (!LoadedOnce) {
-			PrintMessageToDebugLog("MODM_GETDEVCAPS", "Loading settings from the registry...");
 			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
-			RegQueryValueEx(Configuration.Address, L"DisableChime", NULL, &dwType, (LPBYTE)&DisableChime, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"SynthType", NULL, &dwType, (LPBYTE)&SynthType, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"VID", NULL, &dwType, (LPBYTE)&MID, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"DisableChime", NULL, &dwType, (LPBYTE)&DisableChime, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"PID", NULL, &dwType, (LPBYTE)&PID, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"SynthName", NULL, &SNType, (LPBYTE)&SynthNameW, &SNSize);
-			RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
-
-			// If the synth type ID is bigger than the size of the synth types array,
-			// set it automatically to MOD_MIDIPORT
-			if (SynthType >= ((sizeof(SynthNamesTypes) / sizeof(*SynthNamesTypes))))
-				Technology = MOD_MIDIPORT;
-			// Else, load the requested value
-			else Technology = SynthNamesTypes[SynthType];
+			RegQueryValueEx(Configuration.Address, L"SynthType", NULL, &dwType, (LPBYTE)&SynthType, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"VID", NULL, &dwType, (LPBYTE)&MID, &dwSize);
 
 			// If the debug mode is enabled, and the process isn't banned, create the debug log
 			if (ManagedSettings.DebugMode && BlackListSystem())
 				CreateConsole();
 
+			// If the synth type ID is bigger than the size of the synth types array,
+			// set it automatically to MOD_MIDIPORT
+			DefSynthType = (SynthType < 0 || SynthType >= ((sizeof(SynthNamesTypes) / sizeof(*SynthNamesTypes))));
+			if (SynthType < 0 || SynthType >= ((sizeof(SynthNamesTypes) / sizeof(*SynthNamesTypes))))
+				Technology = MOD_MIDIPORT;
+			// Else, load the requested value
+			else Technology = SynthNamesTypes[SynthType];
+			PrintStreamValueToDebugLog("MODM_GETDEVCAPS", "Technology", Technology);
+
 			// If the synthname length is less than 1, or if it's just a space, use the default name
 			PrintMessageToDebugLog("MODM_GETDEVCAPS", "Checking if SynthNameW is valid...");
-			if (wcslen(SynthNameW) < 1 || (wcslen(SynthNameW) == 1 && iswspace(SynthNameW[0]))) {
+			if (!wcslen(SynthNameW) || (wcslen(SynthNameW) && iswspace(SynthNameW[0]))) {
 				RtlSecureZeroMemory(SynthNameW, sizeof(SynthNameW));
 				wcsncpy(SynthNameW, L"OmniMIDI\0", MAXPNAMELEN);
 			}
-
-			PrintMessageToDebugLog("MODM_GETDEVCAPS", "Converting SynthNameW to SynthNameA...");
-			wcstombs(SynthName, SynthNameW, MAXPNAMELEN);
 
 			StreamCapable = (ManagedSettings.DisableCookedPlayer || CPBlacklisted) ? 0 : MIDICAPS_STREAM;
 			if (!StreamCapable)
@@ -297,64 +291,96 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 		switch (capsSize) {
 		case (sizeof(MIDIOUTCAPSA)):
 		{
-			MIDICapsA = (MIDIOUTCAPSA*)capsPtr;
-			strncpy(MIDICapsA->szPname, SynthName, MAXPNAMELEN);
-			MIDICapsA->dwSupport = StreamCapable | MIDICAPS_VOLUME;
-			MIDICapsA->wChannelMask = 0xFFFF;
-			MIDICapsA->wMid = MID;
-			MIDICapsA->wPid = PID;
-			MIDICapsA->wTechnology = Technology;
-			MIDICapsA->wVoices = 65535;
-			MIDICapsA->vDriverVersion = MAKEWORD(6, 0);
+			if (capsPtr == NULL || capsSize != sizeof(MIDIOUTCAPSA))
+				return MMSYSERR_INVALPARAM;
+
+			MIDIOUTCAPSA MIDICaps;
+
+			wcstombs(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
+			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
+			MIDICaps.wChannelMask = 0xFFFF;
+			MIDICaps.wMid = MID;
+			MIDICaps.wPid = PID;
+			MIDICaps.wTechnology = DefSynthType ? MOD_MIDIPORT : SynthNamesTypes[SynthType];
+			MIDICaps.wNotes = 0;
+			MIDICaps.wVoices = 0;
+			MIDICaps.vDriverVersion = MAKEWORD(6, 0);
+
+			memcpy((LPMIDIOUTCAPSA)capsPtr, &MIDICaps, min(capsSize, sizeof(MIDICaps)));
 			PrintMessageToDebugLog("MODM_GETDEVCAPS (ASCII, Type 1)", "Done sharing MIDI device caps.");
+
 			break;
 		}
 		case (sizeof(MIDIOUTCAPSW)):
 		{
-			MIDICapsW = (MIDIOUTCAPSW*)capsPtr;
-			wcsncpy(MIDICapsW->szPname, SynthNameW, MAXPNAMELEN);
-			MIDICapsW->dwSupport = StreamCapable | MIDICAPS_VOLUME;
-			MIDICapsW->wChannelMask = 0xFFFF;
-			MIDICapsW->wMid = MID;
-			MIDICapsW->wPid = PID;
-			MIDICapsW->wTechnology = Technology;
-			MIDICapsW->wVoices = 65535;
-			MIDICapsW->vDriverVersion = MAKEWORD(6, 0);
+			if (capsPtr == NULL || capsSize != sizeof(MIDIOUTCAPSW))
+				return MMSYSERR_INVALPARAM;
+
+			MIDIOUTCAPSW MIDICaps;
+
+			wcsncpy(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
+			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
+			MIDICaps.wChannelMask = 0xFFFF;
+			MIDICaps.wMid = MID;
+			MIDICaps.wPid = PID;
+			MIDICaps.wTechnology = DefSynthType ? MOD_MIDIPORT : SynthNamesTypes[SynthType];
+			MIDICaps.wNotes = 0;
+			MIDICaps.wVoices = 0;
+			MIDICaps.vDriverVersion = MAKEWORD(6, 0);
+
+			memcpy((LPMIDIOUTCAPSW)capsPtr, &MIDICaps, min(capsSize, sizeof(MIDICaps)));
 			PrintMessageToDebugLog("MODM_GETDEVCAPS (Unicode, Type 1)", "Done sharing MIDI device caps.");
+
 			break;
 		}
 		case (sizeof(MIDIOUTCAPS2A)):
-		{
-			MIDICaps2A = (MIDIOUTCAPS2A*)capsPtr;
-			strncpy(MIDICaps2A->szPname, SynthName, MAXPNAMELEN);
-			MIDICaps2A->ManufacturerGuid = OMCLSID;
-			MIDICaps2A->NameGuid = OMCLSID;
-			MIDICaps2A->ProductGuid = OMCLSID;
-			MIDICaps2A->dwSupport = StreamCapable | MIDICAPS_VOLUME;
-			MIDICaps2A->wChannelMask = 0xFFFF;
-			MIDICaps2A->wMid = MID;
-			MIDICaps2A->wPid = PID;
-			MIDICaps2A->wTechnology = Technology;
-			MIDICaps2A->wVoices = 65535;
-			MIDICaps2A->vDriverVersion = MAKEWORD(6, 0);
+		{	
+			if (capsPtr == NULL || capsSize != sizeof(MIDIOUTCAPS2A))
+				return MMSYSERR_INVALPARAM;
+
+			MIDIOUTCAPS2A MIDICaps;
+
+			wcstombs(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
+			MIDICaps.ManufacturerGuid = OMCLSID;
+			MIDICaps.NameGuid = OMCLSID;
+			MIDICaps.ProductGuid = OMCLSID;
+			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
+			MIDICaps.wChannelMask = 0xFFFF;
+			MIDICaps.wMid = MID;
+			MIDICaps.wPid = PID;
+			MIDICaps.wTechnology = DefSynthType ? MOD_MIDIPORT : SynthNamesTypes[SynthType];
+			MIDICaps.wNotes = 0;
+			MIDICaps.wVoices = 0;
+			MIDICaps.vDriverVersion = MAKEWORD(6, 0);
+
+			memcpy((LPMIDIOUTCAPS2A)capsPtr, &MIDICaps, min(capsSize, sizeof(MIDICaps)));
 			PrintMessageToDebugLog("MODM_GETDEVCAPS (ASCII, Type 2)", "Done sharing MIDI device caps.");
+
 			break;
 		}
 		case (sizeof(MIDIOUTCAPS2W)):
-		{
-			MIDICaps2W = (MIDIOUTCAPS2W*)capsPtr;
-			wcsncpy(MIDICaps2W->szPname, SynthNameW, MAXPNAMELEN);
-			MIDICaps2W->ManufacturerGuid = OMCLSID;
-			MIDICaps2W->NameGuid = OMCLSID;
-			MIDICaps2W->ProductGuid = OMCLSID;
-			MIDICaps2W->dwSupport = StreamCapable | MIDICAPS_VOLUME;
-			MIDICaps2W->wChannelMask = 0xFFFF;
-			MIDICaps2W->wMid = MID;
-			MIDICaps2W->wPid = PID;
-			MIDICaps2W->wTechnology = Technology;
-			MIDICaps2W->wVoices = 65535;
-			MIDICaps2W->vDriverVersion = MAKEWORD(6, 0);
+		{	
+			if (capsPtr == NULL || capsSize != sizeof(MIDIOUTCAPS2W))
+				return MMSYSERR_INVALPARAM;
+
+			MIDIOUTCAPS2W MIDICaps;
+
+			wcsncpy(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
+			MIDICaps.ManufacturerGuid = OMCLSID;
+			MIDICaps.NameGuid = OMCLSID;
+			MIDICaps.ProductGuid = OMCLSID;
+			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
+			MIDICaps.wChannelMask = 0xFFFF;
+			MIDICaps.wMid = MID;
+			MIDICaps.wPid = PID;
+			MIDICaps.wTechnology = DefSynthType ? MOD_MIDIPORT : SynthNamesTypes[SynthType];
+			MIDICaps.wNotes = 0;
+			MIDICaps.wVoices = 0;
+			MIDICaps.vDriverVersion = MAKEWORD(6, 0);
+
+			memcpy((LPMIDIOUTCAPS2W)capsPtr, &MIDICaps, min(capsSize, sizeof(MIDICaps)));
 			PrintMessageToDebugLog("MODM_GETDEVCAPS (Unicode, Type 2)", "Done sharing MIDI device caps.");
+
 			break;
 		}
 		}

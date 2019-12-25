@@ -46,9 +46,9 @@ namespace OmniMIDIConfigurator
         private void CancelBtn_Click(object sender, EventArgs e)
         {
             Program.SynthSettings.SetValue("SynthName", PreviousName, RegistryValueKind.String);
-            Program.SynthSettings.SetValue("SynthType", PreviousType, RegistryValueKind.String);
-            Program.SynthSettings.SetValue("VID", PreviousVID, RegistryValueKind.String);
-            Program.SynthSettings.SetValue("PID", PreviousPID, RegistryValueKind.String);
+            Program.SynthSettings.SetValue("SynthType", PreviousType, RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("VID", PreviousVID, RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("PID", PreviousPID, RegistryValueKind.DWord);
             Close();
         }
 

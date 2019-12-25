@@ -465,7 +465,7 @@ void PrintStreamValueToDebugLog(LPCSTR Stage, LPCSTR ValueName, DWORD Value) {
 
 		// Print to log
 		PrintCurrentTime();
-		sprintf(Msg, "Stage <<%s>> | %s: %d\n", Stage, ValueName, Value);
+		sprintf(Msg, "Stage <<%s>> | %s: %d (HEX: %08X)\n", Stage, ValueName, Value, Value);
 		fprintf(DebugLog, Msg);
 		OutputDebugStringA(Msg);
 
