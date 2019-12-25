@@ -66,6 +66,7 @@ namespace OmniMIDIConfigurator
             SincConv.Enabled = SincInter.Checked;
         }
 
+        private int PreviousValue = 2;
         private void AudioEngBoxTrigger(bool S)
         {
             int AE = AudioEngBox.SelectedIndex;
@@ -84,11 +85,23 @@ namespace OmniMIDIConfigurator
                     BufferText.Text = "The output buffer isn't needed when outputting to a .WAV file";
                     break;
                 case AudioEngine.ASIO_ENGINE:
-                    if (DefaultASIOAudioOutput.GetASIODevicesCount() < 1)
+                    if (DefaultASIOAudioOutput.GetASIODevicesCount() < 1 && !S)
                     {
-                        Program.ShowError(4, "Error", "No ASIO devices installed!\n\nClick OK to switch to WASAPI.", null);
-                        AudioEngBox.SelectedIndex = 3;
-                        AudioEngBoxTrigger(true);
+                        DialogResult RES = 
+                            Program.ShowError(
+                                3,
+                                "Error",
+                                "You selected ASIO, but no ASIO devices are installed on your computer.\n" +
+                                "Running any MIDI app with this configuration might lead to an error on startup.\n\n" +
+                                "Are you sure you want to continue?\nPress Yes to keep this configuration, or No to switch back to the previous engine.",
+                                null);
+
+                        if (RES == DialogResult.No)
+                        {
+                            AudioEngBox.SelectedIndex = PreviousValue;
+                            AudioEngBoxTrigger(true);
+                        }
+
                         return;
                     }
 
@@ -108,6 +121,7 @@ namespace OmniMIDIConfigurator
             bufsize.Enabled = NoASIOE ? true : false;
             OldBuff.Enabled = NoAtW ? true : false;
 
+            PreviousValue = AudioEngBox.SelectedIndex;
             if (S) Program.SynthSettings.SetValue("xaudiodisabled", AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
         }
 
@@ -193,6 +207,7 @@ namespace OmniMIDIConfigurator
                 NoteOffDelayValue.Value = Convert.ToDecimal((double)Convert.ToInt32(Program.SynthSettings.GetValue("DelayNoteOffValue", 5)) / 1000.0);
                 HMode_CheckedChanged(null, null);
 
+                AudioEngBox.SelectedIndexChanged -= AudioEngBox_SelectedIndexChanged;
                 switch (Convert.ToInt32(Program.SynthSettings.GetValue("CurrentEngine", AudioEngine.WASAPI_ENGINE)))
                 {
                     case AudioEngine.WASAPI_ENGINE:
@@ -209,6 +224,9 @@ namespace OmniMIDIConfigurator
                         AudioEngBox.SelectedIndex = AudioEngine.ASIO_ENGINE;
                         break;
                 }
+                PreviousValue = AudioEngBox.SelectedIndex;
+                AudioEngBoxTrigger(true);
+                AudioEngBox.SelectedIndexChanged += AudioEngBox_SelectedIndexChanged;
 
                 UseTGT.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("StockWinMM", 0));
                 ShowChangelogUpdate.Checked = Properties.Settings.Default.ShowChangelogStartUp;
@@ -236,20 +254,7 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("DebugMode", Convert.ToInt32(DebugMode.Checked), RegistryValueKind.DWord);
 
             Program.SynthSettings.SetValue("DriverPriority", PrioBox.SelectedIndex, RegistryValueKind.DWord);
-
-            switch (AudioBitDepth.SelectedIndex)
-            {
-                default:
-                case 0:
-                    Program.SynthSettings.GetValue("AudioBitDepth", 1);
-                    break;
-                case 1:
-                    Program.SynthSettings.GetValue("AudioBitDepth", 2);
-                    break;
-                case 2:
-                    Program.SynthSettings.GetValue("AudioBitDepth", 3);
-                    break;
-            }
+            Program.SynthSettings.GetValue("AudioBitDepth", AudioBitDepth.SelectedIndex + 1);
 
             Program.SynthSettings.SetValue("DisableChime", Convert.ToInt32(DisableChime.Checked), RegistryValueKind.DWord);
             Properties.Settings.Default.LiveChanges = LiveChangesTrigger.Checked;
@@ -440,7 +445,6 @@ namespace OmniMIDIConfigurator
                     new DefaultASIOAudioOutput().ShowDialog();
                     break;
                 default:
-                    Program.ShowError(4, "Error", "You're not supposed to see this.", null);
                     break;
             }
         }

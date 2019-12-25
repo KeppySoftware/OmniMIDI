@@ -362,7 +362,7 @@ namespace OmniMIDIConfigurator
             }
             catch
             {
-                MessageBox.Show(ErrorNoWork, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Program.ShowError(2, "Error", ErrorNoWork, null);
             }
         }
 
