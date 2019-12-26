@@ -125,6 +125,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 				TempSF.SourceBank = -1;
 				TempSF.DestinationPreset = -1;
 				TempSF.DestinationBank = 0;
+				TempSF.DestinationBankLSB = 0;
 				TempSF.XGBankMode = FALSE;
 
 				PrintMessageToDebugLog("NewSFLoader", "Beginning per-line scan...");
@@ -150,6 +151,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 						TempSF.SourceBank = -1;
 						TempSF.DestinationPreset = -1;
 						TempSF.DestinationBank = 0;
+						TempSF.DestinationBankLSB = 0;
 						TempSF.XGBankMode = FALSE;
 						PrintMessageToDebugLog("NewSFLoader", "Begin loading SoundFont item...");
 
@@ -230,11 +232,22 @@ static BOOL FontLoader(LPWSTR in_path) {
 					}
 					else if (TempLine.find(L"sf.desb") == 0)
 					{
-						if (AlreadyInitialized) 
+						if (AlreadyInitialized)
 						{
 							// We've found the destination bank! Look at it!
 							TempSF.DestinationBank = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
 							PrintStreamValueToDebugLog("NewSFLoader", "sf.desb", TempSF.DestinationBank);
+						}
+
+						continue;
+					}
+					else if (TempLine.find(L"sf.desblsb") == 0)
+					{
+						if (AlreadyInitialized)
+						{
+							// We've found the destination bank! Look at it!
+							TempSF.DestinationBankLSB = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
+							PrintStreamValueToDebugLog("NewSFLoader", "sf.desblsb", TempSF.DestinationBank);
 						}
 
 						continue;
@@ -277,7 +290,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 					}
 
 					PrintSoundFontToDebugLog(CurrentSF->Path, "Preparing BASS_MIDI_FONTEX...");
-					BASS_MIDI_FONTEX FEX = { font, CurrentSF->SourcePreset, CurrentSF->SourceBank, CurrentSF->DestinationPreset, CurrentSF->DestinationBank, 0 };
+					BASS_MIDI_FONTEX FEX = { font, CurrentSF->SourcePreset, CurrentSF->SourceBank, CurrentSF->DestinationPreset, CurrentSF->DestinationBank, CurrentSF->DestinationBankLSB };
 
 					if (ManagedSettings.PreloadSoundFonts && CurrentSF->Preload) {
 						PrintSoundFontToDebugLog(CurrentSF->Path, "Preloading SoundFont...");

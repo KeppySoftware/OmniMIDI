@@ -17,6 +17,7 @@ namespace OmniMIDIConfigurator
         public int PresetValueReturn = 0;
         public int DesBankValueReturn = 0;
         public int DesPresetValueReturn = 0;
+        public int DesBankLSBValueReturn = 0;
         public string SelectedSF = "";
 
         public BankNPresetSel(String Target, Boolean IsEditingSoundfont, Boolean IsEditingSF2, Int32[] SettingsArray)
@@ -36,7 +37,7 @@ namespace OmniMIDIConfigurator
             else
             {
                 SrcBankVal.Enabled = false;
-                SrcPresetVal.Enabled = false;
+                SrcPresetVal.Enabled = false; 
                 SrcBankVal.Value = 0;
                 SrcPresetVal.Value = 0;
             }
@@ -47,7 +48,8 @@ namespace OmniMIDIConfigurator
                 try { SrcPresetVal.Value = SettingsArray[1]; } catch { SrcPresetVal.Value = -1; }
                 try { DesBankVal.Value = SettingsArray[2]; } catch { DesBankVal.Value = -1; }
                 try { DesPresetVal.Value = SettingsArray[3]; } catch { DesPresetVal.Value = 0; }
-                try { XGMode.Checked = Convert.ToBoolean(SettingsArray[4]); } catch { XGMode.Checked = false; }
+                try { DesBankLSBVal.Value = SettingsArray[4]; } catch { DesBankLSBVal.Value = 0; }
+                try { XGMode.Checked = Convert.ToBoolean(SettingsArray[5]); } catch { XGMode.Checked = false; }
             }
         }
 
@@ -58,6 +60,7 @@ namespace OmniMIDIConfigurator
             PresetValueReturn = Convert.ToInt32(SrcPresetVal.Value);
             DesBankValueReturn = Convert.ToInt32(DesBankVal.Value);
             DesPresetValueReturn = Convert.ToInt32(DesPresetVal.Value);
+            DesBankLSBValueReturn = Convert.ToInt32(DesBankLSBVal.Value);
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -70,6 +73,11 @@ namespace OmniMIDIConfigurator
         private void WikipediaLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://www.midi.org/specifications-old/item/gm-level-1-sound-set");
+        }
+
+        private void BankNPresetSel_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

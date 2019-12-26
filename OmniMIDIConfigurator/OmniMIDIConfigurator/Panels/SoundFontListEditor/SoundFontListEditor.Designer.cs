@@ -34,7 +34,7 @@
             "127",
             "127",
             "127",
-            "Yes",
+            "127",
             "Yes",
             "0",
             "0"}, -1);
@@ -79,10 +79,12 @@
             this.SrcPres = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.DesBank = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.DesPres = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.DesBankLSB = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.XGDrums = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PreloadSF = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SFSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.EBPV = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // SFlg
@@ -365,6 +367,7 @@
             this.LisCM.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.OSF,
             this.OSFd,
+            this.EBPV,
             this.menuItem2,
             this.CSFs,
             this.PSFs,
@@ -389,52 +392,52 @@
             // 
             // menuItem2
             // 
-            this.menuItem2.Index = 2;
+            this.menuItem2.Index = 3;
             this.menuItem2.Text = "-";
             // 
             // CSFs
             // 
-            this.CSFs.Index = 3;
+            this.CSFs.Index = 4;
             this.CSFs.Text = "Copy SoundFont(s)";
             this.CSFs.Click += new System.EventHandler(this.CSFs_Click);
             // 
             // PSFs
             // 
-            this.PSFs.Index = 4;
+            this.PSFs.Index = 5;
             this.PSFs.Text = "Paste SoundFont(s)";
             this.PSFs.Click += new System.EventHandler(this.PSFs_Click);
             // 
             // menuItem3
             // 
-            this.menuItem3.Index = 5;
+            this.menuItem3.Index = 6;
             this.menuItem3.Text = "-";
             // 
             // ReLSFl
             // 
-            this.ReLSFl.Index = 6;
+            this.ReLSFl.Index = 7;
             this.ReLSFl.Text = "(Re)Load SoundFont list";
             this.ReLSFl.Click += new System.EventHandler(this.LoadToApp_Click);
             // 
             // MSu
             // 
-            this.MSu.Index = 7;
+            this.MSu.Index = 8;
             this.MSu.Text = "Move SoundFont up";
             this.MSu.Click += new System.EventHandler(this.MvU_Click);
             // 
             // MSd
             // 
-            this.MSd.Index = 8;
+            this.MSd.Index = 9;
             this.MSd.Text = "Move SoundFont down";
             this.MSd.Click += new System.EventHandler(this.MvD_Click);
             // 
             // ESF
             // 
-            this.ESF.Index = 9;
+            this.ESF.Index = 10;
             this.ESF.Text = "Enable SoundFont";
             // 
             // DSF
             // 
-            this.DSF.Index = 10;
+            this.DSF.Index = 11;
             this.DSF.Text = "Disable SoundFont";
             // 
             // Preload
@@ -473,6 +476,7 @@
             this.SrcPres,
             this.DesBank,
             this.DesPres,
+            this.DesBankLSB,
             this.XGDrums,
             this.PreloadSF,
             this.SFFormat,
@@ -534,6 +538,13 @@
             this.DesPres.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.DesPres.Width = 30;
             // 
+            // DesBankLSB
+            // 
+            this.DesBankLSB.Tag = "DesBLSB";
+            this.DesBankLSB.Text = "LSB";
+            this.DesBankLSB.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.DesBankLSB.Width = 32;
+            // 
             // XGDrums
             // 
             this.XGDrums.Tag = "XG";
@@ -560,6 +571,12 @@
             this.SFSize.Text = "Size";
             this.SFSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SFSize.Width = 62;
+            // 
+            // EBPV
+            // 
+            this.EBPV.Index = 2;
+            this.EBPV.Text = "Edit bank and preset values";
+            this.EBPV.Click += new System.EventHandler(this.EBPV_Click);
             // 
             // SoundFontListEditor
             // 
@@ -635,5 +652,7 @@
         private System.Windows.Forms.MenuItem PSFs;
         private System.Windows.Forms.ColumnHeader PreloadSF;
         public System.Windows.Forms.Button Preload;
+        public System.Windows.Forms.ColumnHeader DesBankLSB;
+        private System.Windows.Forms.MenuItem EBPV;
     }
 }

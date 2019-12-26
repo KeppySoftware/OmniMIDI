@@ -110,7 +110,7 @@ namespace OmniMIDIConfigurator
             List<ListViewItem> iSFs = new List<ListViewItem>();
             List<String> SFErrs = new List<String>();
 
-            int BV = -1, PV = -1, DBV = 0, DPV = -1;
+            int BV = -1, PV = -1, DBV = 0, DPV = -1, DBLSBV = 0;
             bool XGMode = false;
 
             foreach (String SF in SFs)
@@ -138,6 +138,7 @@ namespace OmniMIDIConfigurator
                                     PV = BPOW.PresetValueReturn;
                                     DBV = BPOW.DesBankValueReturn;
                                     DPV = BPOW.DesPresetValueReturn;
+                                    DBLSBV = BPOW.DesBankLSBValueReturn;
                                     XGMode = BPOW.XGModeC;
                                 }
                                 else continue;
@@ -148,7 +149,7 @@ namespace OmniMIDIConfigurator
                         ListViewItem iSF = new ListViewItem(new[]
                         {
                             SF,
-                            BV.ToString(), PV.ToString(), DBV.ToString(), DPV.ToString(), XGMode ? "Yes" : "No", "Yes",
+                            BV.ToString(), PV.ToString(), DBV.ToString(), DPV.ToString(), DBLSBV.ToString(), XGMode ? "Yes" : "No", "Yes",
                             ReturnSoundFontFormat(Path.GetExtension(SF)),
                             ReturnSoundFontSize(SF, Path.GetExtension(SF), file.Length)
                         });
@@ -282,7 +283,7 @@ namespace OmniMIDIConfigurator
                     {
                         string SF = null;
                         bool AI = false, ES = false, XG = false, PL = true;
-                        int BV = -1, PV = -1, DBV = 0, DPV = -1;
+                        int BV = -1, PV = -1, DBV = 0, DPV = -1, DBLSBV = 0;
 
                         ListViewItem iSF;
 
@@ -306,7 +307,7 @@ namespace OmniMIDIConfigurator
                                     FileInfo File = new FileInfo(SF);
                                     iSF = new ListViewItem(new[] {
                                             SF,
-                                            BV.ToString(), PV.ToString(), DBV.ToString(), DPV.ToString(), XG ? "Yes" : "No", PL ? "Yes" : "No",
+                                            BV.ToString(), PV.ToString(), DBV.ToString(), DPV.ToString(), DBLSBV.ToString(), XG ? "Yes" : "No", PL ? "Yes" : "No",
                                              ReturnSoundFontFormat(Path.GetExtension(SF)),
                                              ReturnSoundFontSize(SF, Path.GetExtension(SF), File.Length)
                                         });
@@ -358,6 +359,12 @@ namespace OmniMIDIConfigurator
 
                                     DPV = Convert.ToInt32(GetValue(L));
                                 }
+                                else if (GetName(L).Equals("sf.desblsb"))
+                                {
+                                    if (!AI) continue;
+
+                                    DBLSBV = Convert.ToInt32(GetValue(L));
+                                }
                                 else if (L.Contains("//") || L.Contains('#') || String.IsNullOrWhiteSpace(L)) continue;
                                 else
                                 {
@@ -368,7 +375,7 @@ namespace OmniMIDIConfigurator
 
                                         iSF = new ListViewItem(new[] {
                                                 StripSFZValues(L),
-                                                IsSFZ, IsSFZ, "0", IsSFZ, "No", "Yes",
+                                                IsSFZ, IsSFZ, "0", IsSFZ, "0", "No", "Yes",
                                                 ReturnSoundFontFormat(Path.GetExtension(StripSFZValues(L))),
                                                 ReturnSoundFontSize(StripSFZValues(L), Path.GetExtension(StripSFZValues(L)), file.Length)
                                             });
@@ -384,7 +391,7 @@ namespace OmniMIDIConfigurator
                             {
                                 iSF = new ListViewItem(new[] {
                                         "Unrecognizable SoundFont",
-                                        "0", "0", "0", "0", "No", "No",
+                                        "0", "0", "0", "0", "0", "No", "No",
                                         "Missing",
                                         "N/A"
                                     });
@@ -451,12 +458,13 @@ namespace OmniMIDIConfigurator
                 ToPrint += "sf.start\n";
                 ToPrint += String.Format("sf.path = {0}\n", item.Text);
                 ToPrint += String.Format("sf.enabled = {0}\n", item.Checked ? 1 : 0);
-                ToPrint += String.Format("sf.preload = {0}\n", item.SubItems[6].Text.ToLowerInvariant().Equals("yes") ? 1 : 0);
+                ToPrint += String.Format("sf.preload = {0}\n", item.SubItems[7].Text.ToLowerInvariant().Equals("yes") ? 1 : 0);
                 ToPrint += String.Format("sf.srcb = {0}\n", item.SubItems[1].Text);
                 ToPrint += String.Format("sf.srcp = {0}\n", item.SubItems[2].Text);
                 ToPrint += String.Format("sf.desb = {0}\n", item.SubItems[3].Text);
                 ToPrint += String.Format("sf.desp = {0}\n", item.SubItems[4].Text);
-                ToPrint += String.Format("sf.xgdrums = {0}\n", item.SubItems[5].Text.ToLowerInvariant().Equals("yes") ? 1 : 0);
+                ToPrint += String.Format("sf.desblsb = {0}\n", item.SubItems[5].Text);
+                ToPrint += String.Format("sf.xgdrums = {0}\n", item.SubItems[6].Text.ToLowerInvariant().Equals("yes") ? 1 : 0);
                 ToPrint += "sf.end\n\n";
                 SFCount++;
             }

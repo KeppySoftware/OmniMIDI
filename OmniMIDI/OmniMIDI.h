@@ -91,6 +91,9 @@ typedef struct
 	DOUBLE EPThreadTime;
 	DOUBLE CookedThreadTime;
 
+	// SoundFonts list
+	DWORD CurrentSFList;
+
 	// Add more down here
 	// ------------------
 } DebugInfo;

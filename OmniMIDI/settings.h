@@ -118,7 +118,7 @@ long long TimeNow() {
 }
 
 BOOL LoadSoundfont(int whichsf) {
-	BOOL RET = false;
+	BOOL RET = FALSE;
 	DWORD CurrentList = (whichsf + 1);
 
 	if (!SHGetFolderPathW(NULL, whichsf ? CSIDL_PROFILE : CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, ListToLoad)) {
@@ -132,7 +132,11 @@ BOOL LoadSoundfont(int whichsf) {
 		
 		PrintMessageWToDebugLog(L"LoadSoundFontFunc", ListToLoad);
 		RET = FontLoader(ListToLoad);
-		if (RET) PrintMessageToDebugLog("LoadSoundFontFunc", "Done!");
+
+		if (RET) {
+			ManagedDebugInfo.CurrentSFList = CurrentList;
+			PrintMessageToDebugLog("LoadSoundFontFunc", "Done!");
+		}
 	}
 
 	return RET;
@@ -750,15 +754,7 @@ std::string draw_number(const T a_value, int prec, DWORD compar, LPCSTR c1, LPCS
 	return out.str();
 }
 
-void FillContentDebug(
-	FLOAT CCUI0,				// Rendering time
-	INT HC,						// App's handles
-	ULONGLONG RUI,				// App's working size/RAM usage
-	BOOL KDMAPIStatus,			// KDMAPI status
-	DOUBLE IL,					// ASIO's input latency
-	DOUBLE OL,					// ASIO's output latency
-	BOOL BUFOVD					// EVBuffer overload
-) {
+void FillContentDebug() {
 	GetAppName();
 
 	std::locale::global(std::locale::classic());	// DO NOT REMOVE
@@ -766,37 +762,35 @@ void FillContentDebug(
 	// For debug window
 	std::wstring PipeContent;
 	DWORD bytesWritten;								// Needed for Windows 7 apparently...
+	DWORD handleCount;
+
+	PROCESS_MEMORY_COUNTERS_EX pmc;
+	GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+	GetProcessHandleCount(GetCurrentProcess(), &handleCount);
+	SIZE_T RU = pmc.WorkingSetSize;
+	QWORD ramusageint = static_cast<QWORD>(RU);
 
 	PipeContent.append(L"OMDebugInfo");
 	PipeContent.append(L"|CurrentApp = ");
 	PipeContent.append(AppPathW);
 #if defined(_M_AMD64)
-	PipeContent.append(L"|BitApp = 64-bit");
+	PipeContent.append(L"|BitApp = AMD64");
 #elif defined(_M_IX86)
-	PipeContent.append(L"|BitApp = 32-bit");
+	PipeContent.append(L"|BitApp = i386");
 #elif defined(_M_ARM64)
-	PipeContent.append(L"|BitApp = 64-bit (ARM)");
+	PipeContent.append(L"|BitApp = AArch64");
 #endif
-
-	ManagedDebugInfo.RenderingTime = CCUI0;
 
 	for (int i = 0; i <= 15; ++i) 
 		PipeContent.append(L"|CV" + std::to_wstring(i) + L" = " + std::to_wstring(ManagedDebugInfo.ActiveVoices[i]));
 
-	PipeContent.append(L"|CurCPU = " + std::to_wstring(CCUI0));
-	PipeContent.append(L"|Handles = " + std::to_wstring(HC));
-	PipeContent.append(L"|RAMUsage = " + std::to_wstring(RUI));
-	PipeContent.append(L"|OMDirect = " + std::to_wstring(KDMAPIStatus));
-	PipeContent.append(L"|ASIOInLat = " + std::to_wstring(IL));
-	PipeContent.append(L"|ASIOOutLat = " + std::to_wstring(OL));
-
-	/*
-	PipeContent += L"|BufferOverload = " + std::to_wstring(BUFOVD);
-	PipeContent += L"|HealthThreadTime = " + std::to_wstring(GetThreadUsage(&HealthThread));
-	PipeContent += L"|ATThreadTime = " + std::to_wstring(GetThreadUsage(&ATThread));
-	PipeContent += L"|EPThreadTime = " + std::to_wstring(GetThreadUsage(&EPThread));
-	PipeContent += L"|CookedThreadTime = " + std::to_wstring(GetThreadUsage(&CookedThread));
-	*/
+	PipeContent.append(L"|CurCPU = " + std::to_wstring(ManagedDebugInfo.RenderingTime));
+	PipeContent.append(L"|Handles = " + std::to_wstring(handleCount));
+	PipeContent.append(L"|RAMUsage = " + std::to_wstring(static_cast<QWORD>(RU)));
+	PipeContent.append(L"|OMDirect = " + std::to_wstring(KDMAPIEnabled));
+	PipeContent.append(L"|ASIOInLat = " + std::to_wstring(ManagedDebugInfo.ASIOInputLatency));
+	PipeContent.append(L"|ASIOOutLat = " + std::to_wstring(ManagedDebugInfo.ASIOOutputLatency));
+	PipeContent.append(L"|SFsList = " + std::to_wstring(ManagedDebugInfo.CurrentSFList));
 
 	PipeContent.append(L"\n\0");
 
@@ -814,10 +808,10 @@ void FillContentDebug(
 			ActiveVoices += ManagedDebugInfo.ActiveVoices[i];
 
 		RTSSContent += "<A0=-5><A1=4><C0=FFA0A0><C1=FF0000><C2=FFFFFF><C3=33FF33><C4=FF3333><C5=FFFF00><S0=-50><S1=50>";
-		RTSSContent += "<C0>Rendering time:<S>	 <A0>" + draw_number(CCUI0, 1, ManagedSettings.MaxRenderingTime, "<C1>", "<C>") + "%<A>\n";
+		RTSSContent += "<C0>Rendering time:<S>	 <A0>" + draw_number(ManagedDebugInfo.RenderingTime, 1, ManagedSettings.MaxRenderingTime, "<C1>", "<C>") + "%<A>\n";
 		RTSSContent += "<C0>Active voices:<S>	 <A0>" + draw_number(ActiveVoices, 0, ManagedSettings.MaxVoices, "<C1>", "<C>") + "<A>\n";
 		RTSSContent += "<C0>Init mode:<S><C>	 <A0>";
-		if (KDMAPIStatus) {
+		if (KDMAPIEnabled) {
 			if (IsKDMAPIViaWinMM)
 				RTSSContent += "<C5>WinMMWRP\n<A>\n";
 			else
@@ -836,7 +830,7 @@ void ParseDebugData() {
 	DOUBLE ASIORate;
 
 	if (BASSLoadedToMemory && bass_initialized) {
-		BASS_ChannelGetAttribute(OMStream, BASS_ATTRIB_CPU, &RenderingTime);
+		BASS_ChannelGetAttribute(OMStream, BASS_ATTRIB_CPU, &ManagedDebugInfo.RenderingTime);
 
 		if (ASIOReady != FALSE && ManagedSettings.CurrentEngine == ASIO_ENGINE) {
 			ASIOTempInLatency = BASS_ASIO_GetLatency(TRUE);
@@ -869,7 +863,7 @@ void ParseDebugData() {
 		*/
 	}
 	else {
-		RenderingTime = 0.0f;
+		ManagedDebugInfo.RenderingTime = 0.0f;
 		ManagedDebugInfo.ASIOInputLatency = 0;
 		ManagedDebugInfo.ASIOOutputLatency = 0;
 		for (int i = 0; i <= 15; ++i) ManagedDebugInfo.ActiveVoices[i] = 0;
@@ -878,18 +872,7 @@ void ParseDebugData() {
 
 void SendDebugDataToPipe() {
 	try {
-		DWORD handlecount;
-
-		PROCESS_MEMORY_COUNTERS_EX pmc;
-		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-		GetProcessHandleCount(GetCurrentProcess(), &handlecount);
-		SIZE_T ramusage = pmc.WorkingSetSize;
-		QWORD ramusageint = static_cast<QWORD>(ramusage);
-
-		long long TimeDuringDebug = HyperMode ? 0 : TimeNow();
-
-		FillContentDebug(RenderingTime, handlecount, static_cast<QWORD>(pmc.WorkingSetSize), KDMAPIEnabled,
-			ManagedDebugInfo.ASIOInputLatency, ManagedDebugInfo.ASIOOutputLatency, FALSE /* It's supposed to be a buffer overload check */);
+		FillContentDebug();
 
 		FlushFileBuffers(hPipe);
 	}

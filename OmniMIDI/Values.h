@@ -155,12 +155,12 @@ typedef struct SoundFontList
 	int SourceBank;
 	int DestinationPreset;
 	int DestinationBank;
+	int DestinationBankLSB;
 	int XGBankMode;
 };
 
 FILE* DebugLog = NULL;
 BOOL SettingsManagedByClient;
-FLOAT RenderingTime = 0.0f;
 Settings ManagedSettings = Settings();
 DebugInfo ManagedDebugInfo = DEFAULT_DEBUG;
 

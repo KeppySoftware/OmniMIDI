@@ -141,6 +141,7 @@ namespace OmniMIDIConfigurator.Properties {
   <int>-1</int>
   <int>-1</int>
   <int>-1</int>
+  <int>-1</int>
 </ArrayOfInt>")]
         public int[] SFColumnsSize {
             get {
@@ -161,6 +162,7 @@ namespace OmniMIDIConfigurator.Properties {
   <int>30</int>
   <int>30</int>
   <int>30</int>
+  <int>32</int>
   <int>53</int>
   <int>62</int>
 </ArrayOfInt>")]

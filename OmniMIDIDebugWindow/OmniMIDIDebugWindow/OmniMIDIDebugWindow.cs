@@ -193,7 +193,7 @@ namespace OmniMIDIDebugWindow
             catch { size = "-"; }
 
             if (length > 0) return size;
-            else return "No usage.";
+            else return "No usage";
         }
 
         private System.Drawing.Bitmap CPUImage()
@@ -520,7 +520,7 @@ namespace OmniMIDIDebugWindow
             int x;
 
             if (ClosingPipe) for (x = 0; x <= 15; ++x) CHs[x] = 0;
-            else for(x = 0; x <= 15; ++x) if (!ReadPipeUInt64(Value, String.Format("CV{0}", x), ref CHs[x])) CHs[x] = 0;
+            else for(x = 0; x <= 15; ++x) if (!ReadPipeUInt64(Value, String.Format("CV{0}", x), ref CHs[x]));
         }
 
         private string GetActiveVoices()
@@ -607,19 +607,15 @@ namespace OmniMIDIDebugWindow
             catch { return false; }
         }
 
-        String CurrentApp = "Nothing";
+        String CurrentApp = "None";
         String BitApp = "N/A";
         Single CurCPU = 0.0f;
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
+        UInt64 SFsList = 0;
         Int32 KDMAPIStatus = 0;
         Double ASIOInLat = 0.0f;
         Double ASIOOutLat = 0.0f;
-        // Double HealthThreadTime = 0.0f;
-        // Double ATThreadTime = 0.0f;
-        // Double EPThreadTime = 0.0f;
-        // Double CookedThreadTime = 0.0f;
-        // Int32 BufferOverload = 0;
         private void ParseInfoFromPipe(StreamReader StreamDebugReader, Boolean ClosingPipe)
         {
             try
@@ -634,25 +630,21 @@ namespace OmniMIDIDebugWindow
                     String[] STRs = LN.Split(new char[] { '|' });
                     foreach (String STR in STRs)
                     {
-                        if (!ReadPipeString(STR, "CurrentApp", ref CurrentApp)) CurrentApp = "N/A";
-                        if (!ReadPipeString(STR, "BitApp", ref BitApp)) BitApp = "N/A";
-                        if (!ReadPipeSingle(STR, "CurCPU", ref CurCPU)) CurCPU = 0.0f;
-                        if (!ReadPipeUInt64(STR, "Handles", ref Handles)) Handles = 0;
-                        if (!ReadPipeUInt64(STR, "RAMUsage", ref RAMUsage)) RAMUsage = 0;
-                        if (!ReadPipeBoolean(STR, "OMDirect", ref KDMAPIStatus)) KDMAPIStatus = 0;
-                        if (!ReadPipeDouble(STR, "ASIOInLat", ref ASIOInLat)) ASIOInLat = 0.0f;
-                        if (!ReadPipeDouble(STR, "ASIOOutLat", ref ASIOOutLat)) ASIOOutLat = 0.0f;
-                        // if (!ReadPipeDouble(StreamDebugReader, "HealthThreadTime", ref HealthThreadTime)) HealthThreadTime = 0.0f;
-                        // if (!ReadPipeDouble(StreamDebugReader, "ATThreadTime", ref ATThreadTime)) ATThreadTime = 0.0f;
-                        // if (!ReadPipeDouble(StreamDebugReader, "EPThreadTime", ref EPThreadTime)) EPThreadTime = 0.0f;
-                        // if (!ReadPipeDouble(StreamDebugReader, "CookedThreadTime", ref CookedThreadTime)) CookedThreadTime = 0.0f;
-                        // if (!ReadPipeBoolean(StreamDebugReader, "BufferOverload", ref BufferOverload)) BufferOverload = 0;
+                        if (!ReadPipeString(STR, "CurrentApp", ref CurrentApp));
+                        if (!ReadPipeString(STR, "BitApp", ref BitApp));
+                        if (!ReadPipeSingle(STR, "CurCPU", ref CurCPU));
+                        if (!ReadPipeUInt64(STR, "Handles", ref Handles));
+                        if (!ReadPipeUInt64(STR, "RAMUsage", ref RAMUsage));
+                        if (!ReadPipeBoolean(STR, "OMDirect", ref KDMAPIStatus));
+                        if (!ReadPipeDouble(STR, "ASIOInLat", ref ASIOInLat));
+                        if (!ReadPipeDouble(STR, "ASIOOutLat", ref ASIOOutLat));
+                        if (!ReadPipeUInt64(STR, "SFsList", ref SFsList));
                         UpdateActiveVoicesPerChannel(STR, ClosingPipe);
                     }
                 }
                 else
                 {
-                    CurrentApp = "Nothing";
+                    CurrentApp = "None";
                     BitApp = "N/A";
                     CurCPU = 0.0f;
                     Handles = 0;
@@ -660,11 +652,6 @@ namespace OmniMIDIDebugWindow
                     KDMAPIStatus = 0;
                     ASIOInLat = 0.0f;
                     ASIOOutLat = 0.0f;
-                    // HealthThreadTime = 0.0f;
-                    // ATThreadTime = 0.0f;
-                    // EPThreadTime = 0.0f;
-                    // CookedThreadTime = 0.0f;
-                    // BufferOverload = 0;
                     UpdateActiveVoicesPerChannel(null, ClosingPipe);
                 }
             }
@@ -733,9 +720,11 @@ namespace OmniMIDIDebugWindow
                 else ASIOL.Text = (Handles > 0) ? "Not in use." : "Unavailable";
 
                 if (KDMAPIStatus == 0)
-                    KDMAPI.Text = (Handles > 0) ? "The API is in idle." : "Unavailable";
+                    KDMAPI.Text = (Handles > 0) ? "Disabled, using WinMM" : "Unavailable";
                 else
-                    KDMAPI.Text = "The API is active.";
+                    KDMAPI.Text = "Enabled, using KDMAPI";
+
+                CurSFsList.Text = (SFsList != 0) ? String.Format("List {0}", SFsList) : "Unavailable";
 
                 /*
                 WIP

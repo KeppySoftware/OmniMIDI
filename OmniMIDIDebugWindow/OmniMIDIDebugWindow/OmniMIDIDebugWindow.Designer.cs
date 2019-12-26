@@ -47,8 +47,8 @@
             this.ExitMenu = new System.Windows.Forms.MenuItem();
             this.Tabs = new System.Windows.Forms.TabControl();
             this.SynthDbg = new System.Windows.Forms.TabPage();
-            this.BufStatus = new System.Windows.Forms.Label();
-            this.BufStatusLabel = new System.Windows.Forms.Label();
+            this.CurSFsList = new System.Windows.Forms.Label();
+            this.CurSFsListLabel = new System.Windows.Forms.Label();
             this.KDMAPI = new System.Windows.Forms.Label();
             this.KDMAPILabel = new System.Windows.Forms.Label();
             this.ASIOL = new System.Windows.Forms.Label();
@@ -206,8 +206,8 @@
             // SynthDbg
             // 
             this.SynthDbg.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.SynthDbg.Controls.Add(this.BufStatus);
-            this.SynthDbg.Controls.Add(this.BufStatusLabel);
+            this.SynthDbg.Controls.Add(this.CurSFsList);
+            this.SynthDbg.Controls.Add(this.CurSFsListLabel);
             this.SynthDbg.Controls.Add(this.KDMAPI);
             this.SynthDbg.Controls.Add(this.KDMAPILabel);
             this.SynthDbg.Controls.Add(this.ASIOL);
@@ -231,29 +231,27 @@
             this.SynthDbg.TabIndex = 0;
             this.SynthDbg.Text = "Synth debug info";
             // 
-            // BufStatus
+            // CurSFsList
             // 
-            this.BufStatus.AutoSize = true;
-            this.BufStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BufStatus.Location = new System.Drawing.Point(127, 150);
-            this.BufStatus.Name = "BufStatus";
-            this.BufStatus.Size = new System.Drawing.Size(56, 13);
-            this.BufStatus.TabIndex = 49;
-            this.BufStatus.Text = "Unknown.";
-            this.BufStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BufStatus.Visible = false;
+            this.CurSFsList.AutoSize = true;
+            this.CurSFsList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CurSFsList.Location = new System.Drawing.Point(185, 150);
+            this.CurSFsList.Name = "CurSFsList";
+            this.CurSFsList.Size = new System.Drawing.Size(32, 13);
+            this.CurSFsList.TabIndex = 49;
+            this.CurSFsList.Text = "List 1";
+            this.CurSFsList.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // BufStatusLabel
+            // CurSFsListLabel
             // 
-            this.BufStatusLabel.AutoSize = true;
-            this.BufStatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BufStatusLabel.Location = new System.Drawing.Point(2, 150);
-            this.BufStatusLabel.Name = "BufStatusLabel";
-            this.BufStatusLabel.Size = new System.Drawing.Size(125, 13);
-            this.BufStatusLabel.TabIndex = 48;
-            this.BufStatusLabel.Text = "Events buffer status:";
-            this.BufStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BufStatusLabel.Visible = false;
+            this.CurSFsListLabel.AutoSize = true;
+            this.CurSFsListLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CurSFsListLabel.Location = new System.Drawing.Point(2, 150);
+            this.CurSFsListLabel.Name = "CurSFsListLabel";
+            this.CurSFsListLabel.Size = new System.Drawing.Size(185, 13);
+            this.CurSFsListLabel.TabIndex = 48;
+            this.CurSFsListLabel.Text = "Current SoundFonts list loaded:";
+            this.CurSFsListLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // KDMAPI
             // 
@@ -1116,11 +1114,11 @@
             // KSLogo
             // 
             this.KSLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.KSLogo.BackgroundImage = global::OmniMIDIDebugWindow.Properties.Resources.DebugIcon;
             this.KSLogo.Location = new System.Drawing.Point(9, 207);
             this.KSLogo.Name = "KSLogo";
             this.KSLogo.Size = new System.Drawing.Size(32, 32);
             this.KSLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.KSLogo.BackgroundImage = Properties.Resources.DebugIcon;
             this.KSLogo.TabIndex = 25;
             this.KSLogo.TabStop = false;
             // 
@@ -1284,8 +1282,8 @@
         private System.ComponentModel.BackgroundWorker CheckMem;
         private System.Windows.Forms.Label KDMAPI;
         private System.Windows.Forms.Label KDMAPILabel;
-        private System.Windows.Forms.Label BufStatus;
-        private System.Windows.Forms.Label BufStatusLabel;
+        private System.Windows.Forms.Label CurSFsList;
+        private System.Windows.Forms.Label CurSFsListLabel;
         private System.Windows.Forms.Button SelectDebugPipe;
     }
 }

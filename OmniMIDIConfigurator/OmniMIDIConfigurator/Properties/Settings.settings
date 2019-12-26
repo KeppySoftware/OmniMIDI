@@ -41,6 +41,7 @@
   &lt;int&gt;-1&lt;/int&gt;
   &lt;int&gt;-1&lt;/int&gt;
   &lt;int&gt;-1&lt;/int&gt;
+  &lt;int&gt;-1&lt;/int&gt;
 &lt;/ArrayOfInt&gt;</Value>
     </Setting>
     <Setting Name="SFColumnsDefSize" Type="System.Int32[]" Scope="Application">
@@ -52,6 +53,7 @@
   &lt;int&gt;30&lt;/int&gt;
   &lt;int&gt;30&lt;/int&gt;
   &lt;int&gt;30&lt;/int&gt;
+  &lt;int&gt;32&lt;/int&gt;
   &lt;int&gt;53&lt;/int&gt;
   &lt;int&gt;62&lt;/int&gt;
 &lt;/ArrayOfInt&gt;</Value>
