@@ -205,11 +205,11 @@
     <Compile Include="Forms\OM\Secondary\OutputWAVDir.designer.cs">
       <DependentUpon>OutputWAVDir.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OM\Secondary\PitchShifting.cs">
+    <Compile Include="Forms\OM\Secondary\PitchAndTranspose.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\OM\Secondary\PitchShifting.designer.cs">
-      <DependentUpon>PitchShifting.cs</DependentUpon>
+    <Compile Include="Forms\OM\Secondary\PitchAndTranspose.designer.cs">
+      <DependentUpon>PitchAndTranspose.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OM\Secondary\PreciseControlVol.cs">
       <SubType>Form</SubType>
@@ -340,8 +340,8 @@
     <EmbeddedResource Include="Forms\OM\Secondary\OutputWAVDir.resx">
       <DependentUpon>OutputWAVDir.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OM\Secondary\PitchShifting.resx">
-      <DependentUpon>PitchShifting.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\OM\Secondary\PitchAndTranspose.resx">
+      <DependentUpon>PitchAndTranspose.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Secondary\PreciseControlVol.resx">
       <DependentUpon>PreciseControlVol.cs</DependentUpon>

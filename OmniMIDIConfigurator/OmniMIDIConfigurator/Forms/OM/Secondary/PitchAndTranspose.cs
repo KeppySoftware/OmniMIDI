@@ -10,15 +10,27 @@ using Microsoft.Win32;
 
 namespace OmniMIDIConfigurator
 {
-    public partial class PitchShifting : Form
+    public partial class PitchAndTranspose : Form
     {
-        public static String[] names = new String[] { "ch1pshift", "ch2pshift", "ch3pshift", "ch4pshift", "ch5pshift",
+        String[] NoteNames = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" };
+        String[] CNames = new String[] { "ch1pshift", "ch2pshift", "ch3pshift", "ch4pshift", "ch5pshift",
                 "ch6pshift", "ch7pshift", "ch8pshift", "ch9pshift", "ch10pshift",
                 "ch11pshift", "ch12pshift", "ch13pshift", "ch14pshift", "ch15pshift", "ch16pshift",};
 
-        public PitchShifting()
+        public PitchAndTranspose()
         {
             InitializeComponent();
+        }
+
+        private void PitchShifting_Load(object sender, EventArgs e)
+        {
+            LoadChannels();
+
+            NewTranspose.Value = (Convert.ToInt32(Program.SynthSettings.GetValue("TransposeValue", "127")) - 127);
+            NewCPitch.Value = (Convert.ToInt32(Program.SynthSettings.GetValue("CPitchValue", "8192")) - 8192);
+
+            NewTranspose_ValueChanged(null, null);
+            NewCPitch_ValueChanged(null, null);
         }
 
         private void CancelBtn_Click(object sender, EventArgs e)
@@ -35,22 +47,17 @@ namespace OmniMIDIConfigurator
                 CH11.Checked, CH12.Checked, CH13.Checked, CH14.Checked, CH15.Checked, CH16.Checked };
 
             for (int i = 0; i <= 15; i++)
-                Program.Channels.SetValue(names[i], Convert.ToInt32(booleans[i]), RegistryValueKind.DWord);
+                Program.Channels.SetValue(CNames[i], Convert.ToInt32(booleans[i]), RegistryValueKind.DWord);
 
-            Program.SynthSettings.SetValue("TransposeValue", (NewPitch.Value + 127), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("TransposeValue", (NewTranspose.Value + 127), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("CPitchValue", (NewCPitch.Value + 8192), RegistryValueKind.DWord);
 
             Dispose();
         }
 
-        private void PitchShifting_Load(object sender, EventArgs e)
-        {
-            LoadChannels();
-            NewPitch.Value = (Convert.ToInt32(Program.SynthSettings.GetValue("TransposeValue", "127")) - 127);
-        }
-
         private void LoadChannels()
         {
-            if (Convert.ToInt32(Program.Channels.GetValue(names[0], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[0], "0")) == 0)
             {
                 CH1.Checked = false;
             }
@@ -59,7 +66,7 @@ namespace OmniMIDIConfigurator
                 CH1.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[1], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[1], "0")) == 0)
             {
                 CH2.Checked = false;
             }
@@ -68,7 +75,7 @@ namespace OmniMIDIConfigurator
                 CH2.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[2], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[2], "0")) == 0)
             {
                 CH3.Checked = false;
             }
@@ -77,7 +84,7 @@ namespace OmniMIDIConfigurator
                 CH3.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[3], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[3], "0")) == 0)
             {
                 CH4.Checked = false;
             }
@@ -86,7 +93,7 @@ namespace OmniMIDIConfigurator
                 CH4.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[4], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[4], "0")) == 0)
             {
                 CH5.Checked = false;
             }
@@ -95,7 +102,7 @@ namespace OmniMIDIConfigurator
                 CH5.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[5], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[5], "0")) == 0)
             {
                 CH6.Checked = false;
             }
@@ -104,7 +111,7 @@ namespace OmniMIDIConfigurator
                 CH6.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[6], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[6], "0")) == 0)
             {
                 CH7.Checked = false;
             }
@@ -113,7 +120,7 @@ namespace OmniMIDIConfigurator
                 CH7.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[7], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[7], "0")) == 0)
             {
                 CH8.Checked = false;
             }
@@ -122,7 +129,7 @@ namespace OmniMIDIConfigurator
                 CH8.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[8], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[8], "0")) == 0)
             {
                 CH9.Checked = false;
             }
@@ -131,7 +138,7 @@ namespace OmniMIDIConfigurator
                 CH9.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[9], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[9], "0")) == 0)
             {
                 CH10.Checked = false;
             }
@@ -140,7 +147,7 @@ namespace OmniMIDIConfigurator
                 CH10.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[10], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[10], "0")) == 0)
             {
                 CH11.Checked = false;
             }
@@ -149,7 +156,7 @@ namespace OmniMIDIConfigurator
                 CH11.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[11], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[11], "0")) == 0)
             {
                 CH12.Checked = false;
             }
@@ -158,7 +165,7 @@ namespace OmniMIDIConfigurator
                 CH12.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[12], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[12], "0")) == 0)
             {
                 CH13.Checked = false;
             }
@@ -167,7 +174,7 @@ namespace OmniMIDIConfigurator
                 CH13.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[13], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[13], "0")) == 0)
             {
                 CH14.Checked = false;
             }
@@ -176,7 +183,7 @@ namespace OmniMIDIConfigurator
                 CH14.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[14], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[14], "0")) == 0)
             {
                 CH15.Checked = false;
             }
@@ -185,7 +192,7 @@ namespace OmniMIDIConfigurator
                 CH15.Checked = true;
             }
 
-            if (Convert.ToInt32(Program.Channels.GetValue(names[15], "0")) == 0)
+            if (Convert.ToInt32(Program.Channels.GetValue(CNames[15], "0")) == 0)
             {
                 CH16.Checked = false;
             }
@@ -259,11 +266,35 @@ namespace OmniMIDIConfigurator
                 CH11.Checked, CH12.Checked, CH13.Checked, CH14.Checked, CH15.Checked, CH16.Checked };
 
                 for (int i = 0; i <= 15; i++)
-                    Program.Channels.SetValue(names[i], Convert.ToInt32(booleans[i]), RegistryValueKind.DWord);
+                    Program.Channels.SetValue(CNames[i], Convert.ToInt32(booleans[i]), RegistryValueKind.DWord);
 
-                Program.SynthSettings.SetValue("TransposeValue", (NewPitch.Value + 127), RegistryValueKind.DWord);
+                Program.SynthSettings.SetValue("TransposeValue", (NewTranspose.Value + 127), RegistryValueKind.DWord);
+                Program.SynthSettings.SetValue("CPitchValue", (NewCPitch.Value + 8192), RegistryValueKind.DWord);
             }
             catch { }
+        }
+
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void NewTranspose_ValueChanged(object sender, EventArgs e)
+        {
+            Int32 Octave = Convert.ToInt32(NewTranspose.Value + 48) / 12;
+            Int32 NoteInOctave = Convert.ToInt32(NewTranspose.Value) % 12;
+
+            if (NoteInOctave < 0) NoteInOctave = NoteInOctave * (-1);
+
+            label4.Text = String.Format("Transposed by {0}, expected root key is {1}{2}", NewTranspose.Value, NoteNames[NoteInOctave], Octave);
+        }
+
+        private void NewCPitch_ValueChanged(object sender, EventArgs e)
+        {
+            Double NewFreq = 440.0 + (200.0 / 16384.0 * Convert.ToDouble(NewCPitch.Value));
+            Double Difference = Math.Abs(440.0 - NewFreq);
+
+            label5.Text = String.Format("New pitch is {0}Hz, a difference of {1}Hz", NewFreq.ToString("N2"), Difference.ToString("N2"));
         }
     }
 }

@@ -90,6 +90,7 @@ namespace OmniMIDIConfigurator
             new SettingStruct ("AudioBitDepth", 1),
             new SettingStruct ("AudioFrequency", 48000),
             new SettingStruct ("BufferLength", 0),
+            new SettingStruct ("CPitchValue", 0x2000),
             new SettingStruct ("CapFramerate", 0),
             new SettingStruct ("Chorus", 0),
             new SettingStruct ("CurrentEngine", 3),
@@ -127,6 +128,7 @@ namespace OmniMIDIConfigurator
             new SettingStruct ("SincInter", 0),
             new SettingStruct ("StockWinMM", 0),
             new SettingStruct ("SynthType", 2),
+            new SettingStruct ("TransposeValue", 0x7F),
             new SettingStruct ("VID", 0xFFFF),
             new SettingStruct ("VolumeBoost", 0),
             new SettingStruct ("VolumeMonitor", 0)

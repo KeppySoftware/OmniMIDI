@@ -378,7 +378,7 @@ namespace OmniMIDIConfigurator
 
         private void PitchShifting_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            new PitchShifting().ShowDialog();
+            new PitchAndTranspose().ShowDialog();
         }
 
         private void ChangeSynthMask_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

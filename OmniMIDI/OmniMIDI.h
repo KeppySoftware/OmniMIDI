@@ -145,8 +145,9 @@ typedef struct
 	DWORD TransposeValue = 127;				// Pitch shift (127 = None)
 
 	BOOL FollowDefaultAudioDevice = FALSE;	// Follow the default audio device whenever it's changed
-
 	BOOL ReduceBootUpDelay = FALSE;			// Reduce boot-up delay when using DirectSound
+
+	DWORD ConcertPitch = 8192;				// Concert pitch
 } Settings;
 #endif
 

@@ -3,11 +3,19 @@ OmniMIDI stream init
 */
 #pragma once
 
-void SetInstruments() {
+void SetNoteValuesFromSettings() {
+
 	if (ManagedSettings.OverrideInstruments) {
 		for (int i = 0; i <= 15; ++i) {
 			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_BANK, cbank[i]);
 			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_PROGRAM, cpreset[i]);
+		}
+	}
+
+	for (int i = 0; i <= 15; ++i) {
+		if (pitchshiftchan[i]) {
+			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_FINETUNE, ManagedSettings.ConcertPitch);
+
 		}
 	}
 }
@@ -81,7 +89,7 @@ void EventsProcesser(LPVOID lpV) {
 			// break from the EventProcesser's loop, and close the thread, and move the processing to AudioThread
 			if (ManagedSettings.NotesCatcherWithAudio) break;
 
-			SetInstruments();
+			SetNoteValuesFromSettings();
 
 			// Parse the notes until the audio thread is done
 			if (_PlayBufData() && !stop_thread) _FWAIT;
@@ -136,7 +144,7 @@ void AudioEngine(LPVOID lpParam) {
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
 				if (ManagedSettings.NotesCatcherWithAudio) {
-					SetInstruments();
+					SetNoteValuesFromSettings();
 					_PlayBufDataChk();
 				}
 				// Else, open the EventProcesser thread
@@ -192,7 +200,7 @@ void FastAudioEngine(LPVOID lpParam) {
 DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user) {
 	// If the EventProcesser is disabled, then process the events from the audio thread instead
 	if (ManagedSettings.NotesCatcherWithAudio) {
-		SetInstruments();
+		SetNoteValuesFromSettings();
 		_PlayBufDataChk();
 	}
 	// Else, open the EventProcesser thread
