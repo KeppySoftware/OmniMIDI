@@ -61,12 +61,14 @@ namespace OmniMIDIConfigurator
 
         // Mandatory values
         public static RegistryKey Mixer = null;
+        public static RegistryKey Channels = null;
         public static RegistryKey SynthSettings = null;
         public static RegistryKey Mapper = null;
         public static RegistryKey Watchdog = null;
 
         public const string HKCU = "HKEY_CURRENT_USER\\";
         public const string MIPath = "SOFTWARE\\OmniMIDI";
+        public const string CHPath = "SOFTWARE\\OmniMIDI\\Channels";
         public const string SSPath = "SOFTWARE\\OmniMIDI\\Configuration";
         public const string MPPath = "SOFTWARE\\OmniMIDI\\Mapper";
         public const string WPath = "SOFTWARE\\OmniMIDI\\Watchdog";
@@ -108,6 +110,7 @@ namespace OmniMIDIConfigurator
                 Functions.CheckDriverStatusInReg("x64", Functions.CLSID64);
 
             OpenRequiredKey(ref Mixer, MIPath);
+            OpenRequiredKey(ref Channels, CHPath);
             OpenRequiredKey(ref SynthSettings, SSPath);
             OpenRequiredKey(ref Mapper, MPPath);
             OpenRequiredKey(ref Watchdog, WPath);

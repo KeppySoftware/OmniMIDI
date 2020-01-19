@@ -119,6 +119,7 @@
             this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeEVBuf = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeSynthMask = new OmniMIDIConfigurator.LinkLabelEx();
+            this.PitchShifting = new OmniMIDIConfigurator.LinkLabelEx();
             this.EnginesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChorusV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReverbV)).BeginInit();
@@ -1153,6 +1154,7 @@
             // 
             this.LegacySetDia.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.LegacySetDia.Controls.Add(this.PitchShifting);
             this.LegacySetDia.Controls.Add(this.IgnoreCloseCalls);
             this.LegacySetDia.Controls.Add(this.WinMMSpeedDiag);
             this.LegacySetDia.Controls.Add(this.UseTGT);
@@ -1168,7 +1170,7 @@
             this.LegacySetDia.Controls.Add(this.ChangeSynthMask);
             this.LegacySetDia.Location = new System.Drawing.Point(3, 867);
             this.LegacySetDia.Name = "LegacySetDia";
-            this.LegacySetDia.Size = new System.Drawing.Size(670, 277);
+            this.LegacySetDia.Size = new System.Drawing.Size(670, 288);
             this.LegacySetDia.TabIndex = 2;
             this.LegacySetDia.TabStop = false;
             this.LegacySetDia.Text = "Debug and legacy settings";
@@ -1189,7 +1191,7 @@
             this.WinMMSpeedDiag.AutoSize = true;
             this.WinMMSpeedDiag.Enabled = false;
             this.WinMMSpeedDiag.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.WinMMSpeedDiag.Location = new System.Drawing.Point(6, 216);
+            this.WinMMSpeedDiag.Location = new System.Drawing.Point(6, 234);
             this.WinMMSpeedDiag.Name = "WinMMSpeedDiag";
             this.WinMMSpeedDiag.Size = new System.Drawing.Size(338, 13);
             this.WinMMSpeedDiag.TabIndex = 49;
@@ -1236,7 +1238,7 @@
             // 
             this.SpatialSound.AutoSize = true;
             this.SpatialSound.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.SpatialSound.Location = new System.Drawing.Point(6, 252);
+            this.SpatialSound.Location = new System.Drawing.Point(6, 270);
             this.SpatialSound.Name = "SpatialSound";
             this.SpatialSound.Size = new System.Drawing.Size(148, 13);
             this.SpatialSound.TabIndex = 46;
@@ -1260,13 +1262,25 @@
             // 
             this.ChangeSynthMask.AutoSize = true;
             this.ChangeSynthMask.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ChangeSynthMask.Location = new System.Drawing.Point(6, 234);
+            this.ChangeSynthMask.Location = new System.Drawing.Point(6, 252);
             this.ChangeSynthMask.Name = "ChangeSynthMask";
             this.ChangeSynthMask.Size = new System.Drawing.Size(299, 13);
             this.ChangeSynthMask.TabIndex = 44;
             this.ChangeSynthMask.TabStop = true;
             this.ChangeSynthMask.Text = "Change how applications identify the synthesizer (Mask mode)";
             this.ChangeSynthMask.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeSynthMask_LinkClicked);
+            // 
+            // PitchShifting
+            // 
+            this.PitchShifting.AutoSize = true;
+            this.PitchShifting.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.PitchShifting.Location = new System.Drawing.Point(6, 216);
+            this.PitchShifting.Name = "PitchShifting";
+            this.PitchShifting.Size = new System.Drawing.Size(130, 13);
+            this.PitchShifting.TabIndex = 51;
+            this.PitchShifting.TabStop = true;
+            this.PitchShifting.Text = "Change notes transposing";
+            this.PitchShifting.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PitchShifting_LinkClicked);
             // 
             // SettingsPanel
             // 
@@ -1276,7 +1290,7 @@
             this.Controls.Add(this.SynthBox);
             this.Controls.Add(this.EnginesBox);
             this.Name = "SettingsPanel";
-            this.Size = new System.Drawing.Size(678, 1149);
+            this.Size = new System.Drawing.Size(678, 1178);
             this.Load += new System.EventHandler(this.SettingsPanel_Load);
             this.EnginesBox.ResumeLayout(false);
             this.EnginesBox.PerformLayout();
@@ -1390,5 +1404,6 @@
         public System.Windows.Forms.CheckBox UseTGT;
         private LinkLabelEx WinMMSpeedDiag;
         public System.Windows.Forms.CheckBox IgnoreCloseCalls;
+        private LinkLabelEx PitchShifting;
     }
 }

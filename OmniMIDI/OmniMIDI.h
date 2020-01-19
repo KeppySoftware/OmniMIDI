@@ -108,7 +108,7 @@ typedef struct
 	BOOL DisableNotesFadeOut = FALSE;		// Disable fade-out
 	BOOL DontMissNotes = FALSE;				// Slow down instead of missing notes
 	BOOL EnableSFX = TRUE;					// Enable or disable FXs
-	BOOL Extra8Lists = FALSE;				// Enable extra 8 SoundFont lists
+	BOOL Extra8Lists = FALSE;				// DEPRECATED
 	BOOL FastHotkeys = FALSE;				// Enable/Disable fast hotkeys
 	BOOL FullVelocityMode = FALSE;			// Enable full velocity mode
 	BOOL IgnoreAllEvents = FALSE;			// Ignore all MIDI events

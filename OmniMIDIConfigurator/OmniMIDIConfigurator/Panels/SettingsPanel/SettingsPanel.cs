@@ -376,6 +376,11 @@ namespace OmniMIDIConfigurator
             new EVBufferManager().ShowDialog();
         }
 
+        private void PitchShifting_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            new PitchShifting().ShowDialog();
+        }
+
         private void ChangeSynthMask_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new MaskSynthAsAnother().ShowDialog();

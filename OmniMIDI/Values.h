@@ -252,7 +252,7 @@ DWORD rvalues[16];
 const wchar_t* OMPipeTemplate = L"\\\\.\\pipe\\OmniMIDIDbg%u";
 const wchar_t* CSFFileTemplate = L"\\Common SoundFonts\\SoundFontList.csflist";
 const wchar_t* OMFileTemplate = L"\\OmniMIDI\\%s\\OmniMIDI_%s.%s";
-const wchar_t* OMLetters[15] = { L"A", L"B", L"C", L"D", L"E", L"F", L"G", L"H", L"I", L"L", L"M", L"N", L"O", L"P", L"Q"};
+const wchar_t* OMLetters[7] = { L"A", L"B", L"C", L"D", L"E", L"F", L"G" };
 
 // -----------------------------------------------------------------------
 

@@ -119,16 +119,18 @@ long long TimeNow() {
 
 BOOL LoadSoundfont(int whichsf) {
 	BOOL RET = FALSE;
+	BOOL V = (!whichsf) ? TRUE : FALSE;
 	DWORD CurrentList = (whichsf + 1);
 
-	if (!SHGetFolderPathW(NULL, whichsf ? CSIDL_PROFILE : CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, ListToLoad)) {
+	memset(ListToLoad, 0, sizeof(ListToLoad));
+	if (!SHGetFolderPathW(NULL, V ? CSIDL_APPDATA : CSIDL_PROFILE, NULL, SHGFP_TYPE_CURRENT, ListToLoad)) {
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Loading soundfont list...");
 
 		OpenRegistryKey(SFDynamicLoader, L"Software\\OmniMIDI\\Watchdog", TRUE);
 		RegSetValueExW(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)& CurrentList, sizeof(CurrentList));
 		
-		if (!whichsf) swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, CSFFileTemplate);
-		else swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, OMFileTemplate, L"lists", OMLetters[whichsf], L"omlist");
+		if (V) swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, CSFFileTemplate);
+		else swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, OMFileTemplate, L"lists", OMLetters[whichsf - 1], L"omlist");
 		
 		PrintMessageWToDebugLog(L"LoadSoundFontFunc", ListToLoad);
 		RET = FontLoader(ListToLoad);
@@ -957,56 +959,56 @@ void KeyShortcuts()
 				// ALT + 1
 				if (Keys[0x31])
 				{
-					ReloadSFList((ControlPressed && ManagedSettings.Extra8Lists) ? 8 : 0);
+					ReloadSFList(0);
 					return;
 				}
 
 				// ALT + 2
 				if (Keys[0x32]) 
 				{
-					ReloadSFList((ControlPressed && ManagedSettings.Extra8Lists) ? 9 : 1);
+					ReloadSFList(1);
 					return;
 				}
 
 				// ALT + 3
 				if (Keys[0x33]) 
 				{
-					ReloadSFList((ControlPressed && ManagedSettings.Extra8Lists) ? 10 : 2);
+					ReloadSFList(2);
 					return;
 				}
 
 				// ALT + 4
 				if (Keys[0x34]) 
 				{
-					ReloadSFList((ControlPressed && ManagedSettings.Extra8Lists) ? 11 : 3);
+					ReloadSFList(3);
 					return;
 				}
 
 				// ALT + 5
 				if (Keys[0x35])
 				{
-					ReloadSFList((ControlPressed && ManagedSettings.Extra8Lists) ? 12 : 4);
+					ReloadSFList(4);
 					return;
 				}
 
 				// ALT + 6
 				if (Keys[0x36])
 				{
-					ReloadSFList((ControlPressed && ManagedSettings.Extra8Lists) ? 13 : 5);
+					ReloadSFList(5);
 					return;
 				}
 
 				// ALT + 7
 				if (Keys[0x37])
 				{
-					ReloadSFList((ControlPressed && ManagedSettings.Extra8Lists) ? 14 : 6);
+					ReloadSFList(6);
 					return;
 				}
 
 				// ALT + 8
 				if (Keys[0x38])
 				{
-					ReloadSFList((ControlPressed && ManagedSettings.Extra8Lists) ? 15 : 7);
+					ReloadSFList(7);
 					return;
 				}
 
