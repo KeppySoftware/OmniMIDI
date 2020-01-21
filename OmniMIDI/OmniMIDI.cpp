@@ -685,7 +685,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		}
 		else {
 			PreventInit = FALSE;
-			return DebugResult("MODM_OPEN", MMSYSERR_ALLOCATED, "The driver has already been initialized. Cannot initialize it twice!");
+			PrintMessageToDebugLog("MODM_OPEN", "The driver has already been initialized.");
 		}
 
 		return MMSYSERR_NOERROR;
@@ -714,13 +714,13 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		else PrintMessageToDebugLog("MODM_CLOSE", "The driver is already in use via KDMAPI. Cannot terminate it!");
 
 		PreventInit = FALSE;
-		return DebugResult("MODM_CLOSE", MMSYSERR_NOERROR, "The driver has been stopped");
+		return DebugResult("MODM_CLOSE", MMSYSERR_NOERROR, "The driver has been stopped.");
 	}
 	case MODM_CACHEPATCHES:
 	case MODM_CACHEDRUMPATCHES:
 	case DRV_QUERYDEVICEINTERFACESIZE:
 	case DRV_QUERYDEVICEINTERFACE:
-		return MMSYSERR_NOTSUPPORTED;
+		return MMSYSERR_NOERROR;
 	default: {
 		// Unrecognized uMsg
 		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);

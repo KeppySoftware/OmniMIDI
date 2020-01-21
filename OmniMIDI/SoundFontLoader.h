@@ -290,7 +290,14 @@ static BOOL FontLoader(LPWSTR in_path) {
 					}
 
 					PrintSoundFontToDebugLog(CurrentSF->Path, "Preparing BASS_MIDI_FONTEX...");
-					BASS_MIDI_FONTEX FEX = { font, CurrentSF->SourcePreset, CurrentSF->SourceBank, CurrentSF->DestinationPreset, CurrentSF->DestinationBank, CurrentSF->DestinationBankLSB };
+					BASS_MIDI_FONTEX FEX = { 
+						font, 
+						CurrentSF->SourcePreset,
+						CurrentSF->SourceBank, 
+						CurrentSF->DestinationPreset, 
+						CurrentSF->DestinationBank, 
+						CurrentSF->DestinationBankLSB 
+					};
 
 					if (ManagedSettings.PreloadSoundFonts && CurrentSF->Preload) {
 						PrintSoundFontToDebugLog(CurrentSF->Path, "Preloading SoundFont...");

@@ -379,48 +379,61 @@ namespace OmniMIDIConfigurator
 
         private void EBPV_Click(object sender, EventArgs e)
         {
+            Boolean ToReload = false;
             List<String> SFErr = new List<String>();
 
             foreach (ListViewItem Item in Lis.SelectedItems)
             {
-                try {
-                    Int32[] OldValues = {
-                        Convert.ToInt32(Item.SubItems[1].Text),
-                        Convert.ToInt32(Item.SubItems[2].Text),
-                        Convert.ToInt32(Item.SubItems[3].Text),
-                        Convert.ToInt32(Item.SubItems[4].Text),
-                        Convert.ToInt32(Item.SubItems[5].Text),
-                        Convert.ToInt32(Item.SubItems[6].Text.ToLowerInvariant().Equals("yes") ? 1 : 0)
-                    };
-
-                    using (var BPOW = new BankNPresetSel(Path.GetFileName(Item.Text), true, Path.GetExtension(Item.Text).ToLowerInvariant() != ".sfz", OldValues))
+                try
+                {
+                    try
                     {
-                        var RES = BPOW.ShowDialog();
+                        Int32[] OldValues = {
+                            Convert.ToInt32(Item.SubItems[1].Text),
+                            Convert.ToInt32(Item.SubItems[2].Text),
+                            Convert.ToInt32(Item.SubItems[3].Text),
+                            Convert.ToInt32(Item.SubItems[4].Text),
+                            Convert.ToInt32(Item.SubItems[5].Text),
+                            Convert.ToInt32(Item.SubItems[6].Text.ToLowerInvariant().Equals("yes") ? 1 : 0)
+                        };
 
-                        if (RES == DialogResult.OK)
+                        using (var BPOW = new BankNPresetSel(Path.GetFileName(Item.Text), true, Path.GetExtension(Item.Text).ToLowerInvariant() != ".sfz", OldValues))
                         {
-                            Item.SubItems[1].Text = BPOW.BankValueReturn.ToString();
-                            Item.SubItems[2].Text = BPOW.PresetValueReturn.ToString();
-                            Item.SubItems[3].Text = BPOW.DesBankValueReturn.ToString();
-                            Item.SubItems[4].Text = BPOW.DesPresetValueReturn.ToString();
-                            Item.SubItems[5].Text = BPOW.DesBankLSBValueReturn.ToString();
-                            Item.SubItems[6].Text = BPOW.XGModeC ? "Yes" : "No";
-                        }
-                        else continue;
-                    }
-                }
-                catch { SFErr.Add(Item.Text); }
-            }
+                            var RES = BPOW.ShowDialog();
 
-            if (SFErr.Count > 0)
-            {
-                Program.ShowError(
-                    2,
-                    "Unable to edit SoundFont(s)",
-                    String.Format(
-                        "The configurator was unable to edit the following SoundFont(s).\n\n{0}\n\nPress OK to continue.",
-                        String.Join(Environment.NewLine, SFErr.ToArray())),
-                    null);
+                            if (RES == DialogResult.OK)
+                            {
+                                ToReload = true;
+                                Item.SubItems[1].Text = BPOW.BankValueReturn.ToString();
+                                Item.SubItems[2].Text = BPOW.PresetValueReturn.ToString();
+                                Item.SubItems[3].Text = BPOW.DesBankValueReturn.ToString();
+                                Item.SubItems[4].Text = BPOW.DesPresetValueReturn.ToString();
+                                Item.SubItems[5].Text = BPOW.DesBankLSBValueReturn.ToString();
+                                Item.SubItems[6].Text = BPOW.XGModeC ? "Yes" : "No";
+                            }
+                            else continue;
+                        }
+                    }
+                    catch { SFErr.Add(Item.Text); }
+
+                    if (SFErr.Count > 0)
+                    {
+                        Program.ShowError(
+                            2,
+                            "Unable to edit SoundFont(s)",
+                            String.Format(
+                                "The configurator was unable to edit the following SoundFont(s).\n\n{0}\n\nPress OK to continue.",
+                                String.Join(Environment.NewLine, SFErr.ToArray())),
+                            null);
+                    }
+
+                    if (ToReload) SoundFontListExtension.SaveList(ref Lis, SelectedListBox.SelectedIndex, null);
+                }
+                catch (Exception ex)
+                {
+                    ReloadListAfterError(ex);
+                }
+
             }
         }
 

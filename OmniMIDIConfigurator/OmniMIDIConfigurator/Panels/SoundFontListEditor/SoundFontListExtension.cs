@@ -110,8 +110,7 @@ namespace OmniMIDIConfigurator
             List<ListViewItem> iSFs = new List<ListViewItem>();
             List<String> SFErrs = new List<String>();
 
-            int BV = -1, PV = -1, DBV = 0, DPV = -1, DBLSBV = 0;
-            bool XGMode = false;
+            int[] TV = new int[] { -1, -1, 0, -1, 0, 0 };
 
             foreach (String SF in SFs)
             {
@@ -126,20 +125,31 @@ namespace OmniMIDIConfigurator
                     {
                         BassMidi.BASS_MIDI_FontFree(SFH);
 
+                        // Split filename in case of automatic preset/bank assign values
+                        String[] Values = Path.GetFileNameWithoutExtension(SF).Split('-')[0].Split('.');
+                        for (int i = 0; i < Values.Length && i < TV.Length; i++)
+                        {
+                            Int32 T = -1;
+                            if (Int32.TryParse(Values[i], out T))
+                            {
+                                TV[i] = T;
+                            }
+                        }
+
                         if (BPO | Path.GetExtension(SF).ToLowerInvariant() == ".sfz")
                         {
-                            using (var BPOW = new BankNPresetSel(Path.GetFileName(SF), false, (BPO && Path.GetExtension(SF).ToLowerInvariant() != ".sfz"), null))
+                            using (var BPOW = new BankNPresetSel(Path.GetFileName(SF), false, (BPO && Path.GetExtension(SF).ToLowerInvariant() != ".sfz"), TV))
                             {
                                 var RES = BPOW.ShowDialog();
 
                                 if (RES == DialogResult.OK)
                                 {
-                                    BV = BPOW.BankValueReturn;
-                                    PV = BPOW.PresetValueReturn;
-                                    DBV = BPOW.DesBankValueReturn;
-                                    DPV = BPOW.DesPresetValueReturn;
-                                    DBLSBV = BPOW.DesBankLSBValueReturn;
-                                    XGMode = BPOW.XGModeC;
+                                    TV[0] = BPOW.BankValueReturn;
+                                    TV[1] = BPOW.PresetValueReturn;
+                                    TV[2] = BPOW.DesBankValueReturn;
+                                    TV[3] = BPOW.DesPresetValueReturn;
+                                    TV[4] = BPOW.DesBankLSBValueReturn;
+                                    TV[5] = Convert.ToInt32(BPOW.XGModeC);
                                 }
                                 else continue;
                             }
@@ -149,7 +159,7 @@ namespace OmniMIDIConfigurator
                         ListViewItem iSF = new ListViewItem(new[]
                         {
                             SF,
-                            BV.ToString(), PV.ToString(), DBV.ToString(), DPV.ToString(), DBLSBV.ToString(), XGMode ? "Yes" : "No", "Yes",
+                            TV[0].ToString(), TV[1].ToString(), TV[2].ToString(), TV[3].ToString(), TV[4].ToString(), Convert.ToBoolean(TV[5]) ? "Yes" : "No", "Yes",
                             ReturnSoundFontFormat(Path.GetExtension(SF)),
                             ReturnSoundFontSize(SF, Path.GetExtension(SF), file.Length)
                         });
