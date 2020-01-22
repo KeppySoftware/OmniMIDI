@@ -182,10 +182,7 @@ namespace OmniMIDIDebugWindow
                 }
                 else
                 {
-                    if (length >= 1 && length < 10)
-                        size = (length).ToString("0.00 B");
-                    else
-                        size = (length / 1024f).ToString("0.0 B");
+                        size = (length).ToString("0 B");
                 }
             }
             catch { size = "-"; }
