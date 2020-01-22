@@ -123,8 +123,6 @@ namespace OmniMIDIDebugWindow
                 SynthDbg.ContextMenu = MainCont;        // Assign ContextMenu (Not the strip one) to the tab
                 ChannelVoices.ContextMenu = MainCont;   // Assign ContextMenu (Not the strip one) to the tab
                 PCSpecs.ContextMenu = MainCont;         // Assign ContextMenu (Not the strip one) to the tab
-                Tabs.SelectedIndex = 1;
-                Tabs.SelectedIndex = 0;
 
                 CheckMem.RunWorkerAsync();
 
@@ -156,35 +154,35 @@ namespace OmniMIDIDebugWindow
             {
                 if (length >= 1099511627776)
                 {
-                    if (length >= 1099511627776 && length < 10995116277760)
+                    if (length < 10995116277760)
                         size = ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.00 TB");
                     else
                         size = ((((length / 1024f) / 1024f) / 1024f) / 1024f).ToString("0.0 TB");
                 }
                 else if (length >= 1073741824)
                 {
-                    if (length >= 1073741824 && length < 10737418240)
+                    if (length < 10737418240)
                         size = (((length / 1024f) / 1024f) / 1024f).ToString("0.00 GB");
                     else
                         size = (((length / 1024f) / 1024f) / 1024f).ToString("0.0 GB");
                 }
                 else if (length >= 1048576)
                 {
-                    if (length >= 1048576 && length < 10485760)
+                    if (length < 10485760)
                         size = ((length / 1024f) / 1024f).ToString("0.00 MB");
                     else
                         size = ((length / 1024f) / 1024f).ToString("0.0 MB");
                 }
                 else if (length >= 1024)
                 {
-                    if (length >= 1024 && length < 10240)
+                    if (length < 10240)
                         size = (length / 1024f).ToString("0.00 KB");
                     else
                         size = (length / 1024f).ToString("0.0 KB");
                 }
                 else
                 {
-                    if (length >= 1 && length < 1024)
+                    if (length >= 1 && length < 10)
                         size = (length).ToString("0.00 B");
                     else
                         size = (length / 1024f).ToString("0.0 B");
