@@ -159,9 +159,10 @@ namespace OmniMIDIDebugWindow
             get
             {
                 string servicePack = String.Empty;
-                OSVERSIONINFOEX osVersionInfo = new OSVERSIONINFOEX();
-
-                osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX));
+                OSVERSIONINFOEX osVersionInfo = new OSVERSIONINFOEX
+                {
+                    dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX))
+                };
 
                 if (GetVersionEx(ref osVersionInfo))
                 {
