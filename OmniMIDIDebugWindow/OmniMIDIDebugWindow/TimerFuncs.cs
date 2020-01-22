@@ -38,9 +38,10 @@ namespace OmniMIDIDebugWindow
         public static void MicroSleep(Int64 MicroSec)
         {
             IntPtr timer;
-            LARGE_INTEGER ft = new LARGE_INTEGER();
-
-            ft.QuadPart = -(10 * MicroSec);
+            LARGE_INTEGER ft = new LARGE_INTEGER
+            {
+                QuadPart = -(10 * MicroSec)
+            };
 
             timer = CreateWaitableTimer(IntPtr.Zero, true, null);
             SetWaitableTimer(timer, ref ft, 0, null, IntPtr.Zero, false);

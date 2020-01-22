@@ -431,7 +431,7 @@ namespace OmniMIDIDebugWindow
 
                 COS.Text = String.Format("{0} ({1}, {2})", OSInfo.Name.Replace("Microsoft ", ""), FullVersion, bit);
                 CPU.Text = String.Format("{0} ({1} architecture)", cpuname, cpubit);
-                CPUInfo.Text = String.Format("{0}, {1}/{2} cores, {3} ({4}MHz)", cpumanufacturer, coreCount, Environment.ProcessorCount, Frequency, cpuclock);
+                CPUInfo.Text = String.Format("{0}, {1} cores, {2} threads, {3} ({4}MHz)", cpumanufacturer, coreCount, Environment.ProcessorCount, Frequency, cpuclock);
                 GPU.Text = gpuname;
                 GPUInternalChip.Text = gpuchip;
                 GPUInfo.Text = String.Format("{0}MB VRAM, driver version {1}", (gpuvram / 1048576), gpuver);
@@ -561,7 +561,7 @@ namespace OmniMIDIDebugWindow
         {
             try
             {
-                if (DebugName(Value).Equals("OMDirect")) ValueToChange = Convert.ToInt32(DebugValue(Value));
+                if (DebugName(Value).Equals(RequestedValue)) ValueToChange = Convert.ToInt32(DebugValue(Value));
                 return true;
             }
             catch { return false; }
@@ -665,6 +665,7 @@ namespace OmniMIDIDebugWindow
 
         private void GetInfo()
         {
+            this.DebugInfo.Interval = 10;
             if (Tabs.SelectedIndex == 0)
             {
                 // Time to write all the stuff to the string builder
@@ -768,8 +769,8 @@ namespace OmniMIDIDebugWindow
             }
             else if (Tabs.SelectedIndex == 2)
             {
-                TM.Text = String.Format("{0} ({1} bytes)", (tlmem / (1024 * 1024) + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
-                AM.Text = String.Format("{0} ({1:0.#}%, {2} bytes)", (avmem / (1024 * 1024) + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
+                this.DebugInfo.Interval = 1000;
+                AM.Text = String.Format("{0} ({1:0.#}%, {2} bytes)", (avmemint + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", CultureInfo.GetCultureInfo("de")));
             }
         }
 
@@ -912,15 +913,16 @@ namespace OmniMIDIDebugWindow
         static double percentage = 0.0;
         private void CheckMem_DoWork(object sender, DoWorkEventArgs e)
         {
-            ComputerInfo CI = new ComputerInfo();
+            CI = new ComputerInfo();
+            tlmem = CI.TotalPhysicalMemory;
+            tlmemint = tlmem / (1024 * 1024);
+            TM.Text = String.Format("{0} ({1} bytes)", (tlmemint + "MB").ToString(), tlmem.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")));
             while (CI != null)
             {
                 avmem = CI.AvailablePhysicalMemory;
-                tlmem = CI.TotalPhysicalMemory;
                 avmemint = avmem / (1024 * 1024);
-                tlmemint = tlmem / (1024 * 1024);
                 percentage = avmem * 100.0 / tlmem;
-                Thread.Sleep(50);
+                Thread.Sleep(DebugInfo.Interval);
             }
         }
     }

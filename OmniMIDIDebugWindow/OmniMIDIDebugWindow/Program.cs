@@ -82,15 +82,13 @@ namespace OmniMIDIDebugWindow
         public const short PROCESSOR_ARCHITECTURE_INTEL = 0;
 
         public static uint BringToFrontMessage;
-        static EventWaitHandle m;
         public static Int32 SelectedDebugVal = 1;
 
         [STAThread]
         static void Main()
         {
-            bool ok;
             BringToFrontMessage = WinAPI.RegisterWindowMessage("OmniMIDIDebugWindowToFront");
-            m = new EventWaitHandle(false, EventResetMode.ManualReset, "OmniMIDIDebugWindow", out ok);
+            new EventWaitHandle(false, EventResetMode.ManualReset, "OmniMIDIDebugWindow", out bool ok);
             if (!ok)
             {
                 WinAPI.PostMessage((IntPtr)WinAPI.HWND_BROADCAST, BringToFrontMessage, IntPtr.Zero, IntPtr.Zero);
@@ -110,9 +108,8 @@ namespace OmniMIDIDebugWindow
             {
                 Int32 Found = 0;
                 String PipeToAdd;
-                WIN32_FIND_DATA lpFindFileData;
 
-                IntPtr ptr = FindFirstFile(@"\\.\pipe\*", out lpFindFileData);
+                IntPtr ptr = FindFirstFile(@"\\.\pipe\*", out WIN32_FIND_DATA lpFindFileData);
                 PipeToAdd = Path.GetFileName(lpFindFileData.cFileName);
                 if (PipeToAdd.Contains("OmniMIDIDbg"))
                 {
