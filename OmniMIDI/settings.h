@@ -126,14 +126,17 @@ BOOL LoadSoundfont(int whichsf) {
 	if (!SHGetFolderPathW(NULL, V ? CSIDL_APPDATA : CSIDL_PROFILE, NULL, SHGFP_TYPE_CURRENT, ListToLoad)) {
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Loading soundfont list...");
 
-		OpenRegistryKey(SFDynamicLoader, L"Software\\OmniMIDI\\Watchdog", TRUE);
-		RegSetValueExW(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)& CurrentList, sizeof(CurrentList));
-		
 		if (V) swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, CSFFileTemplate);
 		else swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, OMFileTemplate, L"lists", OMLetters[whichsf - 1], L"omlist");
 		
-		PrintMessageWToDebugLog(L"LoadSoundFontFunc", ListToLoad);
-		RET = FontLoader(ListToLoad);
+		if (PathFileExists(ListToLoad)) {
+			PrintMessageWToDebugLog(L"LoadSoundFontFunc", ListToLoad);
+
+			OpenRegistryKey(SFDynamicLoader, L"Software\\OmniMIDI\\Watchdog", TRUE);
+			RegSetValueExW(SFDynamicLoader.Address, L"currentsflist", 0, REG_DWORD, (LPBYTE)&CurrentList, sizeof(CurrentList));
+
+			RET = FontLoader(ListToLoad);
+		}
 
 		if (RET) {
 			ManagedDebugInfo.CurrentSFList = CurrentList;
@@ -928,9 +931,9 @@ void RevbNChor() {
 }
 
 void ReloadSFList(DWORD whichsflist){
-	try {
-		ResetSynth(FALSE);
-		LoadSoundfont(whichsflist);
+	try {	
+		if (LoadSoundfont(whichsflist))
+			ResetSynth(FALSE);
 	}
 	catch (...) {
 		CrashMessage(L"ReloadListCheck");

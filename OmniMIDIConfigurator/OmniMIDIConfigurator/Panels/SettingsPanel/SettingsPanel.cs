@@ -546,6 +546,8 @@ namespace OmniMIDIConfigurator
             DelayNoteOff.Enabled = !HMode.Checked;
             NoteOffDelayValue.Enabled = (HMode.Checked) ? false : DelayNoteOff.Checked;
 
+            PitchShifting.Enabled = !HMode.Checked;
+
             IgnoreNotes.Enabled = !HMode.Checked;
             IgnoreNotesLL.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
             IgnoreNotesLV.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;

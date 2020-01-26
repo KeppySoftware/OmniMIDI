@@ -665,7 +665,7 @@ namespace OmniMIDIDebugWindow
 
         private void GetInfo()
         {
-            this.DebugInfo.Interval = 10;
+            this.DebugInfo.Interval = 1;
             if (Tabs.SelectedIndex == 0)
             {
                 // Time to write all the stuff to the string builder
@@ -769,7 +769,7 @@ namespace OmniMIDIDebugWindow
             }
             else if (Tabs.SelectedIndex == 2)
             {
-                this.DebugInfo.Interval = 1000;
+                this.DebugInfo.Interval = 500;
                 AM.Text = String.Format("{0} ({1:0.#}%, {2} bytes)", (avmemint + "MB").ToString(), Math.Round(percentage, 1).ToString(), avmem.ToString("N0", CultureInfo.GetCultureInfo("de")));
             }
         }

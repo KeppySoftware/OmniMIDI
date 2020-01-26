@@ -647,7 +647,7 @@ namespace OmniMIDIConfigurator
         public static void LoadSoundFontList(int list)
         {
             Program.Watchdog.SetValue("currentsflist", list, RegistryValueKind.DWord);
-            Program.Watchdog.SetValue(String.Format("rel{0}", list), "1", RegistryValueKind.DWord);
+            Program.Watchdog.SetValue(String.Format("rel{0}", list), list, RegistryValueKind.DWord);
         }
 
         public static void ResetSpecificSetting(string PN)

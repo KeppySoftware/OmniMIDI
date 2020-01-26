@@ -545,14 +545,14 @@ namespace OmniMIDIConfigurator
                 {
                     for (int i = Lis.SelectedIndices.Count - 1; i >= 0; i--)
                     {
-                        switch (Lis.SelectedItems[i].SubItems[6].Text.ToLowerInvariant())
+                        switch (Lis.SelectedItems[i].SubItems[7].Text.ToLowerInvariant())
                         {
                             default:
                             case "yes":
-                                Lis.SelectedItems[i].SubItems[6].Text = "No";
+                                Lis.SelectedItems[i].SubItems[7].Text = "No";
                                 break;
                             case "no":
-                                Lis.SelectedItems[i].SubItems[6].Text = "Yes";
+                                Lis.SelectedItems[i].SubItems[7].Text = "Yes";
                                 break;
                         }
                     }

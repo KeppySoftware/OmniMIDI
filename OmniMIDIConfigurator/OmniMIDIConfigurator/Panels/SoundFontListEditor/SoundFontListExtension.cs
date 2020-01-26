@@ -4,7 +4,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Un4seen.Bass;
 using Un4seen.Bass.AddOn.Midi;
@@ -126,13 +126,16 @@ namespace OmniMIDIConfigurator
                         BassMidi.BASS_MIDI_FontFree(SFH);
 
                         // Split filename in case of automatic preset/bank assign values
-                        String[] Values = Path.GetFileNameWithoutExtension(SF).Split('-')[0].Split('.');
-                        for (int i = 0; i < Values.Length && i < TV.Length; i++)
+                        Match match = Regex.Match(Path.GetFileNameWithoutExtension(SF), @"\d{3}\.\d{3}\.\d{3}\.\d{3}\.\d{1}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                        if (match.Success)
                         {
-                            Int32 T = -1;
-                            if (Int32.TryParse(Values[i], out T))
+                            String[] Values = Path.GetFileNameWithoutExtension(SF).Split('-')[0].Split('.');
+                            MessageBox.Show(Values.ToString());
+                            for (int i = 0; i < Values.Length && i < TV.Length; i++)
                             {
-                                TV[i] = T;
+                                Int32 T = -1;
+                                if (Int32.TryParse(Values[i], out T))
+                                    TV[i] = T;
                             }
                         }
 
@@ -259,7 +262,7 @@ namespace OmniMIDIConfigurator
                     if (!ImportMode) SoundFontListEditor.Delegate.Lis.Items.Clear();
                 }
 
-                if (!Directory.Exists(Program.OMFixedPath))
+                if (!Directory.Exists(Program.OMFixedPath) || !Directory.Exists(Program.OMSFPath))
                 {
                     // OM's directory doesn't exist, create it
                     Directory.CreateDirectory(Program.OMFixedPath);
