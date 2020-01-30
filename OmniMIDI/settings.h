@@ -167,7 +167,7 @@ bool LoadSoundfontStartup() {
 
 					if (!_wcsicmp(AppNameW, CurrentString) || !_wcsicmp(AppPathW, CurrentString)) {
 						PrintMessageToDebugLog("LoadSoundfontStartup", "Found list. Loading...");
-						LoadSoundfont(i);
+						LoadSoundfont(i + 1);
 						return TRUE;
 					}
 				}
