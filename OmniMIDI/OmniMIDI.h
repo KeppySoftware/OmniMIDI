@@ -22,7 +22,7 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
 
-#define DEFAULT_DEBUG { 0.0f, { 0 } }
+#define DEFAULT_DEBUG { 0.0f, { 0 }, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0 }
 
 // Settings
 #define OM_SET						0x0
@@ -198,5 +198,5 @@ DebugInfo* KDMAPI(GetDriverDebugInfo)();
 VOID KDMAPI(LoadCustomSoundFontsList)(LPWSTR Directory);
 
 // timeGetTime, but 64-bit
-UINT DWORD64(timeGetTime64)(MIDIHDR* IIMidiHdr);
+DWORD64 KDMAPI(timeGetTime64)();
 #endif

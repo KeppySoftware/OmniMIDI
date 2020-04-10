@@ -697,6 +697,9 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 			// Prevent the app from calling MODM_CLOSE again...
 			PreventInit = TRUE;
 
+			// Prevent BASS from reinitializing itself
+			block_bassinit = TRUE;
+
 			PrintMessageToDebugLog("MODM_CLOSE", "The app requested the driver to terminate its audio stream.");
 			ResetSynth(TRUE);
 
@@ -706,6 +709,9 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 				DoStopClient();
 				DisableBuiltInHandler("MODM_CLOSE");
 			}
+
+			// OK now it's fine
+			block_bassinit = FALSE;
 
 			DoCallback(MOM_CLOSE, 0, 0);
 

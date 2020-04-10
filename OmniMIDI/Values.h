@@ -81,6 +81,7 @@ BOOL ASIOReady = FALSE;
 BOOL DisableChime = FALSE;
 BOOL KDMAPIEnabled = FALSE;
 BOOL IsKDMAPIViaWinMM = FALSE;
+BOOL HostSessionMode = FALSE;
 WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
 
 // Stream

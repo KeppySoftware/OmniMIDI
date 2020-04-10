@@ -321,7 +321,7 @@ void Supervisor(LPVOID lpV) {
 }
 
 BOOL DoStartClient() {
-	if (!DriverInitStatus) {
+	if (!DriverInitStatus && !block_bassinit) {
 		PrintMessageToDebugLog("StartDriver", "Checking if app is allowed to use RTSS OSD...");
 		GetAppName();
 		CheckIfAppIsAllowedToUseOSD();
@@ -395,9 +395,6 @@ BOOL DoStopClient() {
 
 		PrintMessageToDebugLog("StopDriver", "Terminating driver...");
 
-		// Prevent BASS from reinitializing itself
-		block_bassinit = TRUE;
-
 		// Close the threads and free up the allocated memory
 		PrintMessageToDebugLog("StopDriver", "Freeing memory...");
 		bass_initialized = FALSE;
@@ -418,10 +415,6 @@ BOOL DoStopClient() {
 		PrintMessageToDebugLog("StopDriver", "Closed ChanOverride...");
 		CloseRegistryKey(SFDynamicLoader);
 		PrintMessageToDebugLog("StopDriver", "Closed SFDynamicLoader...");
-
-		// OK now it's fine
-		PrintMessageToDebugLog("StopDriver", "Just a few more things...");
-		block_bassinit = FALSE;
 
 		// Unload BASS functions
 		UnloadBASSFunctions();
@@ -495,12 +488,18 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 BOOL KDMAPI TerminateKDMAPIStream() {
 	// If the driver is already initialized, close it
 	if (AlreadyInitializedViaKDMAPI && bass_initialized) {
+		// Prevent BASS from reinitializing itself
+		block_bassinit = TRUE;
+
 		PrintMessageToDebugLog("KDMAPI_TKS", "The app requested the driver to terminate its audio stream.");
 		DoStopClient();
 		AlreadyInitializedViaKDMAPI = FALSE;
 		KDMAPIEnabled = FALSE;
 		DisableBuiltInHandler("KDMAPI_TKS");
 		PrintMessageToDebugLog("KDMAPI_TKS", "KDMAPI is now in sleep mode.");
+
+		// OK now it's fine
+		block_bassinit = FALSE;
 
 		return TRUE;
 	}

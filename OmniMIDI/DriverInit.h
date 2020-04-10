@@ -380,10 +380,12 @@ void FreeUpBASS() {
 	PrintMessageToDebugLog("FreeUpBASSFunc", "BASS stream freed.");
 	//BASS_PluginFree(0);
 	//PrintMessageToDebugLog("FreeUpBASSFunc", "Plug-ins freed.");
-	BASS_Stop();
-	PrintMessageToDebugLog("FreeUpBASSFunc", "BASS stopped.");
-	BASS_Free();
-	PrintMessageToDebugLog("FreeUpBASSFunc", "BASS freed.");
+	if (!HostSessionMode) {
+		BASS_Stop();
+		PrintMessageToDebugLog("FreeUpBASSFunc", "BASS stopped.");
+		BASS_Free();
+		PrintMessageToDebugLog("FreeUpBASSFunc", "BASS freed.");
+	}
 }
 
 void FreeUpBASSASIO() {
@@ -472,7 +474,18 @@ BOOL InitializeBASSLibrary() {
 		(isds ? ((ManagedSettings.ReduceBootUpDelay ? 0 : BASS_DEVICE_LATENCY) | BASS_DEVICE_CPSPEAKERS) : NULL) | flags,
 		GetActiveWindow(), 
 		NULL);
-	CheckUp(FALSE, ERRORCODE, "BASS Lib Initialization", TRUE);
+	DWORD BERR = BASS_ErrorGetCode();
+
+	if (!init && BERR == BASS_ERROR_ALREADY) {
+		PrintMessageToDebugLog("InitializeBASSLibraryFunc", "BASS reported an error!");
+		PrintStreamValueToDebugLog("InitializeBASSLibraryFunc", "BERR", BERR);
+
+		if (HostSessionMode != TRUE) 
+			HostSessionMode = TRUE;
+
+		return TRUE;
+	}
+	else CheckUp(FALSE, ERRORCODE, "BASS Lib Initialization", TRUE);
 
 	/*
 	if (isds) {
@@ -539,7 +552,9 @@ void PrepareVolumeKnob() {
 	CheckUp(FALSE, ERRORCODE, "Stream Volume FX Preparation", FALSE);
 }
 
-bool InitializeBASS(BOOL restart) {
+BOOL InitializeBASS(BOOL restart) {
+	if (block_bassinit) return FALSE;
+
 	PrintMessageToDebugLog("InitializeBASSFunc", "The driver is now initializing BASS. Please wait...");
 
 	// The user restarted the synth, add 1 to RestartValue, for the ".WAV mode"
@@ -826,10 +841,12 @@ void FreeUpStream() {
 		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream freed.");
 
 		// Deinitialize the BASS output and free it, since we need to restart it
-		BASS_Stop();
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stopped.");
-		BASS_Free();
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS freed.");
+		if (!HostSessionMode) {
+			BASS_Stop();
+			PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stopped.");
+			BASS_Free();
+			PrintMessageToDebugLog("FreeUpStreamFunc", "BASS freed.");
+		}
 	}
 
 	// Send dummy values to the mixer

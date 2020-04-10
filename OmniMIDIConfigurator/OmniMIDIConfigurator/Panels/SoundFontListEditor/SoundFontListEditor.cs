@@ -534,7 +534,7 @@ namespace OmniMIDIConfigurator
 
         private void LoadToApp_Click(object sender, EventArgs e)
         {
-            Functions.LoadSoundFontList(SelectedListBox.SelectedIndex);
+            Functions.LoadSoundFontList(SelectedListBox.SelectedIndex + 1);
         }
 
         private void Preload_Click(object sender, EventArgs e)
