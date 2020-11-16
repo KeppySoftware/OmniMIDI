@@ -1,7 +1,3 @@
-This driver is now abandoned.
-
-Further development is moved here: https://github.com/KaleidonKep99/Shakra
-
 <p align="center">
   <img src="https://i.imgur.com/noVfUG6.png">
   <br />
