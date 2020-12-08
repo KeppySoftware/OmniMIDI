@@ -47,6 +47,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="RTSSOSD.h" />
     <ClInclude Include="Settings.h" />
+    <ClInclude Include="ShakraRegSystem.h" />
     <ClInclude Include="SoundFontLoader.h" />
     <ClInclude Include="Values.h" />
   </ItemGroup>

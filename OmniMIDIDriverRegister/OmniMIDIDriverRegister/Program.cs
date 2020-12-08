@@ -30,15 +30,15 @@ namespace OmniMIDIDriverRegister
                 System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIConfigurator.exe");
                 return;
             }
-            else if (arg == "/register")
+            else if (arg == "/register" || arg == "/registerv")
             {
                 Register(true, "x86", clsid32);
-                if (Environment.Is64BitOperatingSystem) Register(true, "x64", clsid64);
+                if (Environment.Is64BitOperatingSystem) Register(arg == "/register" ? true : false, "x64", clsid64);
             }
-            else if (arg == "/unregister")
+            else if (arg == "/unregister" || arg == "/unregisterv")
             {
                 Unregister(true, "x86", clsid32);
-                if (Environment.Is64BitOperatingSystem) Unregister(true, "x64", clsid64);
+                if (Environment.Is64BitOperatingSystem) Unregister(arg == "/unregister" ? true : false, "x64", clsid64);
             }
             else if (arg == "/registerv")
             {
@@ -49,44 +49,6 @@ namespace OmniMIDIDriverRegister
             {
                 Unregister(false, "x86", clsid32);
                 if (Environment.Is64BitOperatingSystem) Unregister(false, "x64", clsid64);
-            }
-            else if (arg == "/associate")
-            {
-                string ExecutableName = "OmniMIDIConfigurator.exe";
-                string OpenWith = Path.GetFullPath("OmniMIDIConfigurator.exe");
-                string[] extensions = { "sf2", "sfz", "sfpack" };
-                try
-                {
-                    foreach (string ext in extensions)
-                    {
-                        using (RegistryKey User_Classes = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Classes\\", true))
-                        using (RegistryKey User_Ext = User_Classes.CreateSubKey("." + ext))
-                        using (RegistryKey User_AutoFile = User_Classes.CreateSubKey(ext + "_auto_file"))
-                        using (RegistryKey User_AutoFile_Command = User_AutoFile.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command"))
-                        using (RegistryKey ApplicationAssociationToasts = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\ApplicationAssociationToasts\\", true))
-                        using (RegistryKey User_Classes_Applications = User_Classes.CreateSubKey("Applications"))
-                        using (RegistryKey User_Classes_Applications_Exe = User_Classes_Applications.CreateSubKey(ExecutableName))
-                        using (RegistryKey User_Application_Command = User_Classes_Applications_Exe.CreateSubKey("shell").CreateSubKey("open").CreateSubKey("command"))
-                        using (RegistryKey User_Explorer = Registry.CurrentUser.CreateSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\FileExts\\." + ext))
-                        using (RegistryKey User_Choice = User_Explorer.OpenSubKey("UserChoice"))
-                        {
-                            User_Classes_Applications_Exe.SetValue("", "SoundFont file", RegistryValueKind.String);
-                            User_Ext.SetValue("", ext + "_auto_file", RegistryValueKind.String);
-                            User_Classes.SetValue("", ext + "_auto_file", RegistryValueKind.String);
-                            User_Classes.CreateSubKey(ext + "_auto_file");
-                            User_AutoFile_Command.SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
-                            ApplicationAssociationToasts.SetValue(ext + "_auto_file_." + ext, 0);
-                            ApplicationAssociationToasts.SetValue(@"Applications\" + ext + "_." + ext, 0);
-                            User_Application_Command.SetValue("", "\"" + OpenWith + "\"" + " \"%1\"");
-                            User_Explorer.CreateSubKey("OpenWithList").SetValue("a", ExecutableName);
-                            User_Explorer.CreateSubKey("OpenWithProgids").SetValue(ext + "_auto_file", "0");
-                            if (User_Choice != null) User_Explorer.DeleteSubKey("UserChoice");
-                            User_Explorer.CreateSubKey("UserChoice").SetValue("ProgId", @"Applications\" + ExecutableName);
-                        }
-                    }
-                    SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
-                }
-                catch { }
             }
             else if (arg == "/rmidimap")
             {
@@ -128,7 +90,8 @@ namespace OmniMIDIDriverRegister
             }
         }
 
-        public static void ShowMessage(bool IsSilent, String Text, String Title, MessageBoxIcon TypeOfError) {
+        public static void ShowMessage(bool IsSilent, String Text, String Title, MessageBoxIcon TypeOfError)
+        {
             if (!IsSilent)
             {
                 MessageBox.Show(Text, String.Format("OmniMIDI R/U Tool ~ {0}", Title), MessageBoxButtons.OK, TypeOfError);

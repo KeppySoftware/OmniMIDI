@@ -1,6 +1,7 @@
 LIBRARY	OmniMIDI
 EXPORTS
 	DriverProc
+	DriverRegistration
 	modMessage
 	ReturnKDMAPIVer
 	IsKDMAPIAvailable

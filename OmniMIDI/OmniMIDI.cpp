@@ -76,6 +76,9 @@ typedef long NTSTATUS;
 #include "Values.h"
 #include "Debug.h"
 
+// Shakra backport
+#include "ShakraRegSystem.h"
+
 // NTSTATUS
 #define NT_SUCCESS(StatCode) ((NTSTATUS)(StatCode) == 0)
 #define NTAPI __stdcall
