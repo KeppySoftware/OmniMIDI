@@ -189,7 +189,7 @@ void LoadDriverModule(HMODULE * Target, wchar_t* RequestedLib, BOOL Mandatory) {
 		if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
 		{
 			PathRemoveFileSpec(InstallPath);
-			swprintf_s(DLLPath, MAX_PATH, L"%s\\%s", InstallPath, RequestedLib);
+			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", InstallPath, RequestedLib);
 			if (!(*Target = LoadLibraryEx(DLLPath, NULL, 0))) {
 				if (Mandatory) {
 					DLLLoadError(DLLPath);
@@ -212,7 +212,7 @@ void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 		if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
 		{
 			PathRemoveFileSpec(InstallPath);
-			swprintf_s(DLLPath, MAX_PATH, L"%s\\%s", InstallPath, RequestedLib);
+			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", InstallPath, RequestedLib);
 			*Target = BASS_PluginLoad((char*)&DLLPath, BASS_UNICODE);
 			if (BASS_ErrorGetCode() != 0) {
 				if (Mandatory) {

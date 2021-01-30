@@ -373,7 +373,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			RegCloseKey(DeviceRegKey);
 			RegCloseKey(DriversSubKey);
 
-			MessageBox(HWND, L"Driver successfully registered!", L"Shakra - Success", MB_OK | MB_ICONINFORMATION);
+			MessageBox(HWND, L"Driver successfully registered!", L"OmniMIDI - Success", MB_OK | MB_ICONINFORMATION);
 		}
 		else
 		{
@@ -419,7 +419,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 #endif
 			SetupDiDestroyDeviceInfoList(DeviceInfo);
 
-			MessageBox(HWND, L"Driver successfully unregistered!", L"Shakra - Success", MB_OK | MB_ICONINFORMATION);
+			MessageBox(HWND, L"Driver successfully unregistered!", L"OmniMIDI - Success", MB_OK | MB_ICONINFORMATION);
 		}
 
 		return;
@@ -430,7 +430,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 		MessageBoxA(
 			HWND,
 			"RunDLL32 sent an empty or unrecognized command line.\n\nThe driver doesn't know what to do, so press OK to quit.",
-			"Shakra", MB_ICONERROR | MB_OK);
+			"OmniMIDI", MB_ICONERROR | MB_OK);
 		return;
 	}
 }

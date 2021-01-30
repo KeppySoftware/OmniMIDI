@@ -275,7 +275,7 @@ namespace OmniMIDIConfigurator
 
                 try
                 {
-                    if (WhichKey.GetValue(String.Format("midi{0}", iS), "wdmaud.drv").ToString() == "OmniMIDI\\OmniMIDI.dll")
+                    if (WhichKey.GetValue(String.Format("midi{0}", iS), "wdmaud.drv").ToString() == "OmniMIDI.dll")
                     {
                         Registered = true;
                         break;
@@ -433,6 +433,7 @@ namespace OmniMIDIConfigurator
             {
                 Process Proc = Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", Uninstall ? "/unregisterv" : "/registerv");
                 Proc.WaitForExit();
+                MessageBox.Show("Please restart Windows to apply the changes.", "OmniMIDI", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {

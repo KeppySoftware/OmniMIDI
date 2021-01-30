@@ -20,6 +20,9 @@ namespace OmniMIDIDriverRegister
 
         private void RD_Click(object sender, EventArgs e)
         {
+            Program.Register();
+
+            /*
             if (Environment.Is64BitOperatingSystem)
             {
                 Program.Register(false, "x86", Program.clsid32);
@@ -29,10 +32,14 @@ namespace OmniMIDIDriverRegister
             {
                 Program.Register(false, "x86", Program.clsid32);
             }
+            */
         }
 
         private void UnRD_Click(object sender, EventArgs e)
         {
+            Program.Unregister();
+
+            /*
             if (Environment.Is64BitOperatingSystem)
             {
                 Program.Unregister(false, "x86", Program.clsid32);
@@ -42,6 +49,7 @@ namespace OmniMIDIDriverRegister
             {
                 Program.Unregister(false, "x86", Program.clsid32);
             }
+            */
         }
     }
 }

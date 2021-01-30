@@ -12,7 +12,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDIUpdate"
 #define ProductName "OmniMIDI"
-#define Version '11.2.0.0'
+#define Version '12.0.0.0'
                          
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -26,6 +26,7 @@
 AllowCancelDuringInstall=False
 AlwaysShowDirOnReadyPage=True
 AlwaysShowGroupOnReadyPage=True
+AlwaysRestart=true
 AppComments={#Description}     
 AppContact={#Email}
 AppCopyright={#Copyright}
@@ -77,7 +78,7 @@ DisableReadyMemo=True
 [Files]
 ; 64-bit OS
 Source: "{#outputdir64}\{#DevEnum}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DevEnum}.exe"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
-Source: "{#outputdir64}\{#InstallDir}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
+Source: "{#outputdir64}\{#InstallDir}.dll"; DestDir: "{sys}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
 Source: "{#outputdir64}\{#MIDIMapper}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
 
 ; ARM64 OS
@@ -90,7 +91,7 @@ Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{syswow64}\{#InstallDir}
 Source: "{#outputdir32}\{#DebugWindow}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#DebugWindow}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#outputdir32}\{#DevEnum}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#DevEnum}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#outputdir32}\{#MixerWindow}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#MixerWindow}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
-Source: "{#outputdir32}\{#InstallDir}.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: Windows64
+Source: "{#outputdir32}\{#InstallDir}.dll"; DestDir: "{syswow64}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: Windows64
 Source: "{#outputdir32}\{#MIDIMapper}.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: Windows64
 Source: "{#outputdir32}\{#DriverRegister}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#DriverRegister}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#outputdir32}\sfzguide.txt"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; Check: Windows64
@@ -100,7 +101,7 @@ Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{sys}\{#InstallDir}"; De
 Source: "{#outputdir32}\{#DebugWindow}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DebugWindow}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#DevEnum}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DevEnum}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#MixerWindow}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MixerWindow}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
-Source: "{#outputdir32}\{#InstallDir}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: not WindowsAMD64
+Source: "{#outputdir32}\{#InstallDir}.dll"; DestDir: "{sys}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#MIDIMapper}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#DriverRegister}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DriverRegister}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#outputdir32}\sfzguide.txt"; DestDir: "{sys}\{#InstallDir}"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
@@ -250,6 +251,8 @@ Type: filesandordirs; Name: "{sys}\keppysynth\"
 Type: filesandordirs; Name: "{group}\"
 Type: files; Name: "{syswow64}\{#InstallDir}\bass_fx.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\{#InstallDir}\bass_fx.dll"
+Type: files; Name: "{syswow64}\{#InstallDir}.dll"
+Type: files; Name: "{sys}\{#InstallDir}.dll"
 Type: files; Name: "{tmp}\LoudMax.dll"
 Type: files; Name: "{tmp}\LoudMax64.dll"
 
@@ -265,6 +268,8 @@ Type: filesandordirs; Name: "{sys}\keppysynth\"
 Type: filesandordirs; Name: "{group}\"
 Type: files; Name: "{syswow64}\{#InstallDir}\bass_fx.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\{#InstallDir}\bass_fx.dll"
+Type: files; Name: "{syswow64}\{#InstallDir}.dll"
+Type: files; Name: "{sys}\{#InstallDir}.dll"
 Type: files; Name: "{tmp}\LoudMax.dll"
 Type: files; Name: "{tmp}\LoudMax64.dll"
 
@@ -273,6 +278,10 @@ Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/showchan
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/showchangelog"; Flags: runascurrentuser postinstall skipifnotsilent waituntilidle; Check: WindowsIA32
 Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall unchecked waituntilidle; Description: "Run the configurator, to set up soundfonts"; Check: Windows64
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall unchecked waituntilidle; Description: "Run the configurator, to set up soundfonts"; Check: WindowsIA32
+
+// Create symlink
+Filename: "cmd.exe"; Parameters: "/C mklink {syswow64}\{#InstallDir}\{#InstallDir}.dll {syswow64}\{#InstallDir}.dll"; Flags: waituntilterminated; StatusMsg: "Symlinking for KDMAPI..."
+Filename: "cmd.exe"; Parameters: "/C mklink {sys}\{#InstallDir}\{#InstallDir}.dll {sys}\{#InstallDir}.dll"; Flags: waituntilterminated; StatusMsg: "Symlinking for KDMAPI..."
 
 [Messages]
 WindowsVersionNotSupported={#ProductName} support for Windows XP ended on October 29th, 2016.%n%nIf you want to get further updates, please update to Windows Vista or newer.

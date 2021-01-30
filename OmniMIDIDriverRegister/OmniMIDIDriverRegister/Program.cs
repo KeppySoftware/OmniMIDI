@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Win32;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace OmniMIDIDriverRegister
 {
@@ -23,23 +24,25 @@ namespace OmniMIDIDriverRegister
             string arg = "/showdialog";
             if (args.Length > 0) arg = args[0];
 
-            if (arg == "/omcrecover")
+            if (arg == "/register" || arg == "/registerv")
             {
-                Register(true, "x86", clsid32);
-                if (Environment.Is64BitOperatingSystem) Register(true, "x64", clsid64);
-                System.Diagnostics.Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIConfigurator.exe");
-                return;
-            }
-            else if (arg == "/register" || arg == "/registerv")
-            {
+                Register();
+
+                /*
                 Register(true, "x86", clsid32);
                 if (Environment.Is64BitOperatingSystem) Register(arg == "/register" ? true : false, "x64", clsid64);
+                */
             }
             else if (arg == "/unregister" || arg == "/unregisterv")
             {
+                Unregister();
+
+                /*
                 Unregister(true, "x86", clsid32);
                 if (Environment.Is64BitOperatingSystem) Unregister(arg == "/unregister" ? true : false, "x64", clsid64);
+                */
             }
+            /*
             else if (arg == "/registerv")
             {
                 Register(false, "x86", clsid32);
@@ -50,6 +53,7 @@ namespace OmniMIDIDriverRegister
                 Unregister(false, "x86", clsid32);
                 if (Environment.Is64BitOperatingSystem) Unregister(false, "x64", clsid64);
             }
+            */
             else if (arg == "/rmidimap")
             {
                 RegisterMidiMapper(true, false);
@@ -98,8 +102,22 @@ namespace OmniMIDIDriverRegister
             }
         }
 
-        public static void Register(bool IsSilent, String WhichBit, RegistryKey WhichKey)
+        public static void Register(/* bool IsSilent, String WhichBit, RegistryKey WhichKey */)
         {
+            ProcessStartInfo SI = new ProcessStartInfo();
+            SI.UseShellExecute = true;
+            SI.Verb = "RunAs";
+
+            if (Environment.Is64BitOperatingSystem)
+                SI.FileName = Environment.ExpandEnvironmentVariables(@"%windir%\Sysnative\rundll32.exe");
+            else
+                SI.FileName = Environment.ExpandEnvironmentVariables(@"%windir%\System32\rundll32.exe");
+
+            SI.Arguments = "OmniMIDI.dll,DriverRegistration RegisterDrv";
+            var P = Process.Start(SI);
+            P.WaitForExit();
+
+            /*
             for (int i = 1; i <= 32; i++)
             {
                 try
@@ -133,10 +151,25 @@ namespace OmniMIDIDriverRegister
                     break;
                 }
             }
+            */
         }
 
-        public static void Unregister(bool IsSilent, String WhichBit, RegistryKey WhichKey)
+        public static void Unregister(/* bool IsSilent, String WhichBit, RegistryKey WhichKey */)
         {
+            ProcessStartInfo SI = new ProcessStartInfo();
+            SI.UseShellExecute = true;
+            SI.Verb = "RunAs";
+
+            if (Environment.Is64BitOperatingSystem)
+                SI.FileName = Environment.ExpandEnvironmentVariables(@"%windir%\Sysnative\rundll32.exe");
+            else
+                SI.FileName = Environment.ExpandEnvironmentVariables(@"%windir%\System32\rundll32.exe");
+
+            SI.Arguments = "OmniMIDI.dll,DriverRegistration UnregisterDrv";
+            var P = Process.Start(SI);
+            P.WaitForExit();
+
+            /*
             for (int i = 1; i <= 32; i++)
             {
                 String iS = (i < 1) ? "" : i.ToString();
@@ -160,6 +193,7 @@ namespace OmniMIDIDriverRegister
                     break;
                 }
             }
+            */
         }
 
         public static void RegisterMidiMapper(bool IsSilent, bool Uninstall)
