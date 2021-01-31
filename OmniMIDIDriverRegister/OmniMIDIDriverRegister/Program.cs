@@ -79,17 +79,17 @@ namespace OmniMIDIDriverRegister
             else if (arg == "/help")
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine("Keppy's Synthesizer Register/Unregister Tool\n");
+                sb.AppendLine("OmniMIDI Register/Unregister Tool\n");
                 sb.AppendLine("/showdialog = Show a dialog that allows you to register/unregister the driver manually");
                 sb.AppendLine("/register = Register the driver as a MIDI device");
                 sb.AppendLine("/unregister = Unregister the driver");
                 sb.AppendLine("/help = This list");
-                MessageBox.Show(sb.ToString(), "Keppy's Synthesizer R/U Tool ~ Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(sb.ToString(), "OmniMIDI R/U Tool ~ Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Application.Exit();
             }
             else
             {
-                MessageBox.Show("Invalid argument.\nType \"OmniMIDIDriverRegister.exe /help\" to see the available commands.", "Keppy's Synthesizer R/U Tool ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                MessageBox.Show("Invalid argument.\nType \"OmniMIDIDriverRegister.exe /help\" to see the available commands.", "OmniMIDI R/U Tool ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
                 Application.Exit();
             }
         }

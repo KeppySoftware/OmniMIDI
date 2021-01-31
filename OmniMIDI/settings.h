@@ -181,38 +181,46 @@ bool LoadSoundfontStartup() {
 }
 
 void LoadDriverModule(HMODULE * Target, wchar_t* RequestedLib, BOOL Mandatory) {
-	wchar_t InstallPath[MAX_PATH] = { 0 };
+	PWSTR SysDir = NULL;
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
-	if (!(*Target = LoadLibrary(RequestedLib))) {
+	if (!(*Target)) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No library has been found in memory. The driver will now load the DLL...");
-		if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
-		{
-			PathRemoveFileSpec(InstallPath);
-			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", InstallPath, RequestedLib);
+		HRESULT hr = SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir);
+
+		if (SUCCEEDED(hr)) {
+			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", SysDir, RequestedLib);
+
 			if (!(*Target = LoadLibraryEx(DLLPath, NULL, 0))) {
+				PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It probably requires some missing dependencies.");
 				if (Mandatory) {
 					DLLLoadError(DLLPath);
 					exit(0);
 				}
-				else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It probably requires some missing dependencies.");
 			}
 			else PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
+
+			CoTaskMemFree(SysDir);
+		}
+		else {
+			DLLLoadError(DLLPath);
+			exit(0);
 		}
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The library is already in memory. The HMODULE will be a pointer to that address.");
 }
 
 void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
-	wchar_t InstallPath[MAX_PATH] = { 0 };
+	PWSTR SysDir = NULL;
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
 	if (!(*Target)) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No plugin has been found in memory. The driver will now load the DLL...");
-		if (GetModuleFileName(hinst, InstallPath, MAX_PATH))
-		{
-			PathRemoveFileSpec(InstallPath);
-			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", InstallPath, RequestedLib);
+		HRESULT hr = SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir);
+
+		if (SUCCEEDED(hr)) {
+			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", SysDir, RequestedLib);
+
 			*Target = BASS_PluginLoad((char*)&DLLPath, BASS_UNICODE);
 			if (BASS_ErrorGetCode() != 0) {
 				if (Mandatory) {
@@ -222,6 +230,12 @@ void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 				else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested plugin. It probably requires some missing dependencies or isn't supported by this version of BASS.");
 			}
 			else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is now in memory.");
+
+			CoTaskMemFree(SysDir);
+		}
+		else {
+			DLLLoadError(DLLPath);
+			exit(0);
 		}
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is already in memory. The HPLUGIN will be a pointer to that address.");

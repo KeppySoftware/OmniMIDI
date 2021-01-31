@@ -20,7 +20,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '12.0.0.0'
+#define Version '12.1.0.0'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -275,6 +275,8 @@ Type: files; Name: "{syswow64}\{#InstallDir}\bass_fx.dll"; Check: Is64BitInstall
 Type: files; Name: "{sys}\{#InstallDir}\bass_fx.dll"
 Type: files; Name: "{syswow64}\{#InstallDir}.dll"
 Type: files; Name: "{sys}\{#InstallDir}.dll"
+Type: files; Name: "{syswow64}\{#InstallDir}\{#InstallDir}.dll"
+Type: files; Name: "{sys}\{#InstallDir}\{#InstallDir}.dll"
 Type: files; Name: "{tmp}\LoudMax.dll"
 Type: files; Name: "{tmp}\LoudMax64.dll"
 
@@ -298,9 +300,6 @@ Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuse
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: WindowsIA32
 Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/register"; Flags: waituntilterminated; StatusMsg: "Registering driver..."; Check: Windows64
 Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/register"; Flags: waituntilterminated; StatusMsg: "Registering driver..."; Check: WindowsIA32
-
-Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/associate"; Flags: waituntilterminated; StatusMsg: "Registering associations..."; Tasks: registerassociation; Check: Windows64
-Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/associate"; Flags: waituntilterminated; StatusMsg: "Registering associations..."; Tasks: registerassociation; Check: WindowsIA32
 
 // Create symlink
 Filename: "cmd.exe"; Parameters: "/C mklink {syswow64}\{#InstallDir}\{#InstallDir}.dll {syswow64}\{#InstallDir}.dll"; Flags: waituntilterminated; StatusMsg: "Symlinking for KDMAPI..."

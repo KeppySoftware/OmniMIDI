@@ -253,6 +253,8 @@ Type: files; Name: "{syswow64}\{#InstallDir}\bass_fx.dll"; Check: Is64BitInstall
 Type: files; Name: "{sys}\{#InstallDir}\bass_fx.dll"
 Type: files; Name: "{syswow64}\{#InstallDir}.dll"
 Type: files; Name: "{sys}\{#InstallDir}.dll"
+Type: files; Name: "{syswow64}\{#InstallDir}\{#InstallDir}.dll"
+Type: files; Name: "{sys}\{#InstallDir}\{#InstallDir}.dll"
 Type: files; Name: "{tmp}\LoudMax.dll"
 Type: files; Name: "{tmp}\LoudMax64.dll"
 
@@ -270,6 +272,8 @@ Type: files; Name: "{syswow64}\{#InstallDir}\bass_fx.dll"; Check: Is64BitInstall
 Type: files; Name: "{sys}\{#InstallDir}\bass_fx.dll"
 Type: files; Name: "{syswow64}\{#InstallDir}.dll"
 Type: files; Name: "{sys}\{#InstallDir}.dll"
+Type: files; Name: "{syswow64}\{#InstallDir}\{#InstallDir}.dll"
+Type: files; Name: "{sys}\{#InstallDir}\{#InstallDir}.dll"
 Type: files; Name: "{tmp}\LoudMax.dll"
 Type: files; Name: "{tmp}\LoudMax64.dll"
 
