@@ -136,7 +136,7 @@ namespace OmniMIDIConfigurator.Forms
                         DLSystem.Dispose();
 
                         MessageBox.Show("Be sure to save all your data in the apps using OmniMIDI, before updating.\n\nClick OK when you're ready.", "OmniMIDI - Update warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, DriverReinstall ? MessageBoxDefaultButton.Button1 : 0, DriverReinstall ? MessageBoxOptions.DefaultDesktopOnly : 0);
-                        Process.Start(String.Format("{0}{1}", Path.GetTempPath() , DriverReinstall ? "OmniMIDISetup.exe" : "OmniMIDIUpdate.exe"), "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /NOCANCEL /SP-");
+                        Process.Start(String.Format("{0}{1}", Path.GetTempPath() , DriverReinstall ? "OmniMIDISetup.exe" : "OmniMIDIUpdate.exe"), "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /NOCANCEL /NORESTART /SP-");
 
                         if (DriverReinstall && InstallMode == UpdateSystem.WIPE_SETTINGS)
                         {

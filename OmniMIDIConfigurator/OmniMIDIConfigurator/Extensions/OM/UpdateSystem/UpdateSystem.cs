@@ -19,8 +19,9 @@ namespace OmniMIDIConfigurator
         public static string ProductName = "OmniMIDI";
         public static Octokit.GitHubClient UpdateClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue(ProductName));
 
-        public static string UpdateFile = Properties.Settings.Default.ProjectLink + "/releases/download/{0}/OmniMIDIUpdate.exe";
+        // public static string UpdateFile = Properties.Settings.Default.ProjectLink + "/releases/download/{0}/OmniMIDIUpdate.exe";
         public static string SetupFile = Properties.Settings.Default.ProjectLink + "/releases/download/{0}/OmniMIDISetup.exe";
+        public static string UpdateFile = SetupFile;
         public static string UpdatePage = Properties.Settings.Default.ProjectLink + "/releases/tag/{0}";
         public static string UpdateFileVersion = String.Format("{0}\\OmniMIDI\\OmniMIDI.dll", Environment.GetFolderPath(Environment.SpecialFolder.System));
 
