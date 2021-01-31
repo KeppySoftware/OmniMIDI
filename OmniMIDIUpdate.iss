@@ -12,7 +12,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDIUpdate"
 #define ProductName "OmniMIDI"
-#define Version '12.0.0.0'
+#define Version '12.1.0.0'
                          
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
