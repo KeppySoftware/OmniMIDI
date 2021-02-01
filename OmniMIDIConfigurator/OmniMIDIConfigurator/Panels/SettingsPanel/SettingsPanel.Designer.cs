@@ -49,6 +49,7 @@
             this.VolLabel = new System.Windows.Forms.Label();
             this.DrvHzLabel = new System.Windows.Forms.Label();
             this.Frequency = new System.Windows.Forms.ComboBox();
+            this.VolTrackBar = new KnobControl.KnobControl();
             this.BufferText = new System.Windows.Forms.Label();
             this.bufsize = new System.Windows.Forms.NumericUpDown();
             this.SincConv = new System.Windows.Forms.ComboBox();
@@ -68,6 +69,7 @@
             this.SlowDownPlayback = new System.Windows.Forms.CheckBox();
             this.OldBuff = new System.Windows.Forms.CheckBox();
             this.SynthBox = new System.Windows.Forms.GroupBox();
+            this.PitchShifting = new OmniMIDIConfigurator.LinkLabelEx();
             this.AutoLoad = new System.Windows.Forms.CheckBox();
             this.PrioLab = new System.Windows.Forms.Label();
             this.IgnoreNotesLV = new System.Windows.Forms.NumericUpDown();
@@ -111,15 +113,13 @@
             this.DebugMode = new System.Windows.Forms.CheckBox();
             this.LegacySetDia = new System.Windows.Forms.GroupBox();
             this.IgnoreCloseCalls = new System.Windows.Forms.CheckBox();
+            this.WinMMSpeedDiag = new OmniMIDIConfigurator.LinkLabelEx();
             this.UseTGT = new System.Windows.Forms.CheckBox();
             this.ShowChangelogUpdate = new System.Windows.Forms.CheckBox();
-            this.PitchShifting = new OmniMIDIConfigurator.LinkLabelEx();
-            this.WinMMSpeedDiag = new OmniMIDIConfigurator.LinkLabelEx();
             this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
             this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeEVBuf = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeSynthMask = new OmniMIDIConfigurator.LinkLabelEx();
-            this.VolTrackBar = new KnobControl.KnobControl();
             this.EnginesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChorusV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReverbV)).BeginInit();
@@ -422,6 +422,33 @@
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 6;
             // 
+            // VolTrackBar
+            // 
+            this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.VolTrackBar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.VolTrackBar.EndAngle = 405F;
+            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
+            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
+            this.VolTrackBar.LargeChange = 1000;
+            this.VolTrackBar.Location = new System.Drawing.Point(586, 312);
+            this.VolTrackBar.Maximum = 10000;
+            this.VolTrackBar.Minimum = 0;
+            this.VolTrackBar.Name = "VolTrackBar";
+            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
+            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
+            this.VolTrackBar.ScaleDivisions = 10;
+            this.VolTrackBar.ScaleSubDivisions = 10;
+            this.VolTrackBar.ShowLargeScale = false;
+            this.VolTrackBar.ShowSmallScale = false;
+            this.VolTrackBar.Size = new System.Drawing.Size(80, 80);
+            this.VolTrackBar.SmallChange = 500;
+            this.VolTrackBar.StartAngle = 135F;
+            this.VolTrackBar.TabIndex = 16;
+            this.VolTrackBar.Value = 10000;
+            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
+            // 
             // BufferText
             // 
             this.BufferText.AutoSize = true;
@@ -688,6 +715,18 @@
             this.SynthBox.TabIndex = 1;
             this.SynthBox.TabStop = false;
             this.SynthBox.Text = "Synthesizer settings";
+            // 
+            // PitchShifting
+            // 
+            this.PitchShifting.AutoSize = true;
+            this.PitchShifting.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.PitchShifting.Location = new System.Drawing.Point(6, 219);
+            this.PitchShifting.Name = "PitchShifting";
+            this.PitchShifting.Size = new System.Drawing.Size(338, 13);
+            this.PitchShifting.TabIndex = 25;
+            this.PitchShifting.TabStop = true;
+            this.PitchShifting.Text = ">>> Change transposing and concert pitch settings (Separate window)";
+            this.PitchShifting.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PitchShifting_LinkClicked);
             // 
             // AutoLoad
             // 
@@ -1159,6 +1198,19 @@
     "to keep OmniMIDI ready for new events)";
             this.IgnoreCloseCalls.UseVisualStyleBackColor = true;
             // 
+            // WinMMSpeedDiag
+            // 
+            this.WinMMSpeedDiag.AutoSize = true;
+            this.WinMMSpeedDiag.Enabled = false;
+            this.WinMMSpeedDiag.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.WinMMSpeedDiag.Location = new System.Drawing.Point(6, 216);
+            this.WinMMSpeedDiag.Name = "WinMMSpeedDiag";
+            this.WinMMSpeedDiag.Size = new System.Drawing.Size(338, 13);
+            this.WinMMSpeedDiag.TabIndex = 48;
+            this.WinMMSpeedDiag.TabStop = true;
+            this.WinMMSpeedDiag.Text = "Change speed of the Windows Multimedia Wrapper (Not yet available)";
+            this.WinMMSpeedDiag.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WinMMSpeedDiag_LinkClicked);
+            // 
             // UseTGT
             // 
             this.UseTGT.AutoSize = true;
@@ -1179,31 +1231,6 @@
             this.ShowChangelogUpdate.TabIndex = 46;
             this.ShowChangelogUpdate.Text = "Always show changelog on start-up, after applying an update";
             this.ShowChangelogUpdate.UseVisualStyleBackColor = true;
-            // 
-            // PitchShifting
-            // 
-            this.PitchShifting.AutoSize = true;
-            this.PitchShifting.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.PitchShifting.Location = new System.Drawing.Point(6, 219);
-            this.PitchShifting.Name = "PitchShifting";
-            this.PitchShifting.Size = new System.Drawing.Size(338, 13);
-            this.PitchShifting.TabIndex = 25;
-            this.PitchShifting.TabStop = true;
-            this.PitchShifting.Text = ">>> Change transposing and concert pitch settings (Separate window)";
-            this.PitchShifting.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PitchShifting_LinkClicked);
-            // 
-            // WinMMSpeedDiag
-            // 
-            this.WinMMSpeedDiag.AutoSize = true;
-            this.WinMMSpeedDiag.Enabled = false;
-            this.WinMMSpeedDiag.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.WinMMSpeedDiag.Location = new System.Drawing.Point(6, 216);
-            this.WinMMSpeedDiag.Name = "WinMMSpeedDiag";
-            this.WinMMSpeedDiag.Size = new System.Drawing.Size(338, 13);
-            this.WinMMSpeedDiag.TabIndex = 48;
-            this.WinMMSpeedDiag.TabStop = true;
-            this.WinMMSpeedDiag.Text = "Change speed of the Windows Multimedia Wrapper (Not yet available)";
-            this.WinMMSpeedDiag.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WinMMSpeedDiag_LinkClicked);
             // 
             // DebugModeFolder
             // 
@@ -1254,33 +1281,6 @@
             this.ChangeSynthMask.TabStop = true;
             this.ChangeSynthMask.Text = "Change how applications identify the synthesizer (Mask mode)";
             this.ChangeSynthMask.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeSynthMask_LinkClicked);
-            // 
-            // VolTrackBar
-            // 
-            this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolTrackBar.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.VolTrackBar.EndAngle = 405F;
-            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
-            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
-            this.VolTrackBar.LargeChange = 1000;
-            this.VolTrackBar.Location = new System.Drawing.Point(586, 312);
-            this.VolTrackBar.Maximum = 10000;
-            this.VolTrackBar.Minimum = 0;
-            this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
-            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
-            this.VolTrackBar.ScaleDivisions = 10;
-            this.VolTrackBar.ScaleSubDivisions = 10;
-            this.VolTrackBar.ShowLargeScale = false;
-            this.VolTrackBar.ShowSmallScale = false;
-            this.VolTrackBar.Size = new System.Drawing.Size(80, 80);
-            this.VolTrackBar.SmallChange = 500;
-            this.VolTrackBar.StartAngle = 135F;
-            this.VolTrackBar.TabIndex = 16;
-            this.VolTrackBar.Value = 10000;
-            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
             // 
             // SettingsPanel
             // 

@@ -28,22 +28,19 @@ namespace OmniMIDIConfigurator
                 if (IsIt)
                 {
                     Text = String.Format(Text, "WASAPI");
-                    UseNewWASAPI.Visible = true; 
+                    UseNewWASAPI.Visible = true;
+                    ReduceBootUpDelay.Enabled = false;
                 }
                 else Text = String.Format(Text, "DirectSound");
 
                 int selecteddeviceprev = (int)Program.SynthSettings.GetValue("AudioOutput", 0);
                 SwitchDefaultAudio.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("FollowDefaultAudioDevice", 0));
+                ReduceBootUpDelay.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("ReduceBootUpDelay", 0));
 
                 BASS_DEVICEINFO info = new BASS_DEVICEINFO();
                 DevicesList.Items.Add("Default Windows audio output");
                 Bass.BASS_GetDeviceInfo(selecteddeviceprev - 1, info);
                 Bass.BASS_GetDeviceInfo(-1, info);
-
-                if (selecteddeviceprev < 1)
-                    DefOut.Text = String.Format("Def. Windows audio output: Default Windows audio output", info.ToString());
-                else
-                    DefOut.Text = String.Format("Def. Windows audio output: {0}", (info.ToString() == "") ? "No devices have been found" : info.ToString());
 
                 for (int n = 0; Bass.BASS_GetDeviceInfo(n, info); n++)
                     DevicesList.Items.Add(info.ToString());
@@ -69,6 +66,11 @@ namespace OmniMIDIConfigurator
         private void SwitchDefaultAudio_CheckedChanged(object sender, EventArgs e)
         {
             Program.SynthSettings.SetValue("FollowDefaultAudioDevice", SwitchDefaultAudio.Checked, Microsoft.Win32.RegistryValueKind.DWord);
+        }
+
+        private void ReduceBootUpDelay_CheckedChanged(object sender, EventArgs e)
+        {
+            Program.SynthSettings.SetValue("ReduceBootUpDelay", ReduceBootUpDelay.Checked, Microsoft.Win32.RegistryValueKind.DWord);
         }
 
         private void Quit_Click(object sender, EventArgs e)

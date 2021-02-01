@@ -547,6 +547,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"OldWASAPIMode", NULL, &dwType, (LPBYTE)&ManagedSettings.OldWASAPIMode, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"WASAPIRAWMode", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIRAWMode, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"WASAPIDoubleBuf", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIDoubleBuf, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"ReduceBootUpDelay", NULL, &dwType, (LPBYTE)&ManagedSettings.ReduceBootUpDelay, &dwSize);	
 		}
 
 		RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);

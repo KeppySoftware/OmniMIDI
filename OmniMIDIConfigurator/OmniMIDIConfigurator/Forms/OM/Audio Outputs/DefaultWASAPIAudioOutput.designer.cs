@@ -54,7 +54,7 @@
             // Quit
             // 
             this.Quit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Quit.Location = new System.Drawing.Point(435, 252);
+            this.Quit.Location = new System.Drawing.Point(434, 251);
             this.Quit.Name = "Quit";
             this.Quit.Size = new System.Drawing.Size(75, 23);
             this.Quit.TabIndex = 7;
@@ -65,7 +65,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 14);
+            this.label1.Location = new System.Drawing.Point(9, 14);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(77, 13);
             this.label1.TabIndex = 5;
@@ -77,7 +77,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DevicesList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.DevicesList.FormattingEnabled = true;
-            this.DevicesList.Location = new System.Drawing.Point(95, 11);
+            this.DevicesList.Location = new System.Drawing.Point(94, 11);
             this.DevicesList.Name = "DevicesList";
             this.DevicesList.Size = new System.Drawing.Size(414, 21);
             this.DevicesList.TabIndex = 4;
@@ -106,7 +106,7 @@
             this.InfoGroupBox.Controls.Add(this.IDLab);
             this.InfoGroupBox.Controls.Add(this.FreqLab);
             this.InfoGroupBox.Controls.Add(this.DeviceNameLab);
-            this.InfoGroupBox.Location = new System.Drawing.Point(10, 38);
+            this.InfoGroupBox.Location = new System.Drawing.Point(9, 38);
             this.InfoGroupBox.Name = "InfoGroupBox";
             this.InfoGroupBox.Size = new System.Drawing.Size(499, 115);
             this.InfoGroupBox.TabIndex = 13;
@@ -209,7 +209,7 @@
             // OldWASAPIMode
             // 
             this.OldWASAPIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OldWASAPIMode.Location = new System.Drawing.Point(329, 252);
+            this.OldWASAPIMode.Location = new System.Drawing.Point(328, 251);
             this.OldWASAPIMode.Name = "OldWASAPIMode";
             this.OldWASAPIMode.Size = new System.Drawing.Size(102, 23);
             this.OldWASAPIMode.TabIndex = 15;
@@ -224,7 +224,7 @@
             this.groupBox1.Controls.Add(this.NoDoubleBuffering);
             this.groupBox1.Controls.Add(this.WASAPIRawMode);
             this.groupBox1.Controls.Add(this.ExclusiveMode);
-            this.groupBox1.Location = new System.Drawing.Point(10, 159);
+            this.groupBox1.Location = new System.Drawing.Point(9, 159);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(499, 84);
             this.groupBox1.TabIndex = 16;
@@ -258,7 +258,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(518, 284);
+            this.ClientSize = new System.Drawing.Size(518, 283);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.OldWASAPIMode);
             this.Controls.Add(this.InfoGroupBox);
