@@ -279,7 +279,9 @@ BOOL StreamHealthCheck(BOOL & Initialized) {
 		return FALSE;
 	}
 	else { 
-		if (stop_thread || (!ATThread.ThreadHandle && ManagedSettings.CurrentEngine != ASIO_ENGINE)) CreateThreads(FALSE);
+		if (stop_thread || 
+			(!ATThread.ThreadHandle && (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE))) 
+			CreateThreads(FALSE);
 	}
 
 	return TRUE;

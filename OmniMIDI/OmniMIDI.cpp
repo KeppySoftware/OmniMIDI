@@ -25,6 +25,7 @@ typedef long NTSTATUS;
 #define BASSDEF(f) (WINAPI *f)
 #define BASSENCDEF(f) (WINAPI *f)	
 #define BASSMIDIDEF(f) (WINAPI *f)	
+#define BASSWASAPIDEF(f) (WINAPI *f)	
 #define BASS_VSTDEF(f) (WINAPI *f)
 #define Between(value, a, b) ((value) >= a && (value) <= b)
 
@@ -69,6 +70,7 @@ typedef long NTSTATUS;
 #include <bassmidi.h>
 #include <bassenc.h>
 #include <bassasio.h>
+#include <basswasapi.h>
 #include <bass_vst.h>
 
 // Important
@@ -92,8 +94,8 @@ NQST NtQuerySystemTime = 0;
 DDP DefDriverProcImp = 0;
 
 // BASS (and plugins) handles
-HMODULE bass = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst = NULL;
-HPLUGIN bassflac = NULL;
+HMODULE bass = NULL, basswasapi = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst = NULL;
+HPLUGIN bassflac = NULL, basswv = NULL, bassopus = NULL;
 
 #define LOADLIBFUNCTION(l, f) *((void**)&f)=GetProcAddress(l,#f)
 

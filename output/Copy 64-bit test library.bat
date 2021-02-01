@@ -1,2 +1,2 @@
-copy "64\OmniMIDI.dll" "C:\Windows\System32\OmniMIDI.dll"
+copy "E:\GitHub\OmniMIDI\output\64\OmniMIDI.dll" "C:\Windows\System32\OmniMIDI.dll"
 @if NOT ["%errorlevel%"]==["0"] pause

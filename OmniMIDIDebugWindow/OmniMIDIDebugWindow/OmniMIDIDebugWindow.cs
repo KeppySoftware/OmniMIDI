@@ -76,6 +76,7 @@ namespace OmniMIDIDebugWindow
         string bitappreturn;
 
         // Required for KS
+        Random RND = new Random();
         FileVersionInfo Driver { get; set; }
         RegistryKey Settings = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Configuration", false);
         RegistryKey WinVer = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
@@ -107,7 +108,6 @@ namespace OmniMIDIDebugWindow
 
         private string ParseEgg()
         {
-            Random RND = new Random();
             int ThisOne = RND.Next(0, Properties.Settings.Default.LeMessages.Count - 1);
             return Properties.Settings.Default.LeMessages[ThisOne];
         }
@@ -919,6 +919,11 @@ namespace OmniMIDIDebugWindow
                 percentage = avmem * 100.0 / tlmem;
                 Thread.Sleep(DebugInfo.Interval);
             }
+        }
+
+        private void KSLogo_Click(object sender, EventArgs e)
+        {
+            VersionLabel.Text = String.Format("{0}", ParseEgg());
         }
     }
 }

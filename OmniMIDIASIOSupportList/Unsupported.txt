@@ -1,5 +1,4 @@
 ASIO ADSP24(WDM)|The computer hangs.
 ASIO for PHASE 22/28|The PC crashes if OmniMIDI tries to initialize an audio stream.
-Focusrite USB ASIO|The device refuses to communicate with OmniMIDI.
 JRiver Media Center|OmniMIDI is not allowed to use this interface.
 Waves SoundGrid ASIO|OmniMIDI is not allowed to use this interface.

@@ -112,6 +112,12 @@
     <Compile Include="Extensions\OM\UpdateSystem\SelectBranch.designer.cs">
       <DependentUpon>SelectBranch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OM\Audio Outputs\DefaultWASAPIAudioOutput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OM\Audio Outputs\DefaultWASAPIAudioOutput.designer.cs">
+      <DependentUpon>DefaultWASAPIAudioOutput.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\OM\Audio Outputs\DefaultASIOAudioOutput.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -297,6 +303,9 @@
     <EmbeddedResource Include="Extensions\OM\UpdateSystem\SelectBranch.resx">
       <DependentUpon>SelectBranch.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OM\Audio Outputs\DefaultWASAPIAudioOutput.resx">
+      <DependentUpon>DefaultWASAPIAudioOutput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Audio Outputs\DefaultASIOAudioOutput.resx">
       <DependentUpon>DefaultASIOAudioOutput.cs</DependentUpon>

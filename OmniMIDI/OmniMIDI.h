@@ -21,6 +21,7 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 #define DXAUDIO_ENGINE 1
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
+#define OLD_WASAPI 69420
 
 #define DEFAULT_DEBUG { 0.0f, { 0 }, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0 }
 
@@ -148,6 +149,11 @@ typedef struct
 	BOOL ReduceBootUpDelay = FALSE;			// Reduce boot-up delay when using DirectSound
 
 	DWORD ConcertPitch = 8192;				// Concert pitch
+
+	BOOL WASAPIExclusive = FALSE;			// WASAPI Exclusive Mode
+	BOOL OldWASAPIMode = FALSE;				// Old WASAPI mode
+	BOOL WASAPIRAWMode = FALSE;				// WASAPI raw mode
+	BOOL WASAPIDoubleBuf = TRUE;			// WASAPI double buffer (for volume monitoring)
 } Settings;
 #endif
 

@@ -11,11 +11,11 @@ using Un4seen.Bass;
 
 namespace OmniMIDIConfigurator
 {
-    public partial class DefaultOutput : Form
+    public partial class DefaultAudioOutput : Form
     {
         bool IsIt = false;
 
-        public DefaultOutput(bool IsItWasapi)
+        public DefaultAudioOutput(bool IsItWasapi)
         {
             InitializeComponent();
             IsIt = IsItWasapi;
@@ -25,7 +25,11 @@ namespace OmniMIDIConfigurator
         {
             try
             {
-                if (IsIt) Text = String.Format(Text, "WASAPI");
+                if (IsIt)
+                {
+                    Text = String.Format(Text, "WASAPI");
+                    UseNewWASAPI.Visible = true; 
+                }
                 else Text = String.Format(Text, "DirectSound");
 
                 int selecteddeviceprev = (int)Program.SynthSettings.GetValue("AudioOutput", 0);
@@ -71,6 +75,18 @@ namespace OmniMIDIConfigurator
         {
             Close();
             Dispose();
+        }
+
+        private void UseNewWASAPI_Click(object sender, EventArgs e)
+        {
+            DialogResult RES = Program.ShowError(1, "Use new WASAPI", "Are you sure you want to switch to the new WASAPI engine?\n\nYou can switch back anytime.", null);
+
+            if (RES == DialogResult.Yes)
+            {
+                Program.SynthSettings.SetValue("OldWASAPIMode", "0", Microsoft.Win32.RegistryValueKind.DWord);
+                DialogResult = RES;
+                Close();
+            }
         }
     }
 }

@@ -137,7 +137,7 @@ void InitializeEventsProcesserThreads() {
 void AudioEngine(LPVOID lpParam) {
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	try {
-		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
+		if (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 			while (!stop_thread) {
 				// Check if HyperMode has been disabled
 				if (HyperMode) break;
@@ -169,7 +169,7 @@ void AudioEngine(LPVOID lpParam) {
 void FastAudioEngine(LPVOID lpParam) {
 	PrintMessageToDebugLog("FastAudioEngine", "Initializing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
 	try {
-		if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
+		if (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 			while (!stop_thread) {
 				// Check if HyperMode has been disabled
 				if (!HyperMode) break;
@@ -197,7 +197,8 @@ void FastAudioEngine(LPVOID lpParam) {
 	TerminateThread(&ATThread, TRUE, 0);
 }
 
-DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user) {
+DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
+{
 	// If the EventProcesser is disabled, then process the events from the audio thread instead
 	if (ManagedSettings.NotesCatcherWithAudio) {
 		SetNoteValuesFromSettings();
@@ -206,12 +207,18 @@ DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, v
 	// Else, open the EventProcesser thread
 	else if (!EPThread.ThreadHandle) InitializeEventsProcesserThreads();
 
-	// Get the processed audio data, and send it to the ASIO device
+	// Get the processed audio data, and send it to the WASAPI device
 	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
 
 	// If no data is available, then return NULL
 	if (data == -1) return NULL;
 	return data;
+}
+
+DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user) 
+{
+	// Redundant code
+	return WASAPIProc(buffer, length, user);
 }
 
 // Extremely useful to check if a thread is alive
@@ -280,8 +287,8 @@ BOOL CreateThreads(BOOL startup) {
 
 	PrintMessageToDebugLog("CreateThreadsFunc", "Creating threads...");
 
-	// Check if the current engine is ASIO
-	if (ManagedSettings.CurrentEngine != ASIO_ENGINE) {
+	// Check if the current engine is ASIO or WASAPI
+	if (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 		// It's not, we need a separate thread to render the audio
 		PrintMessageToDebugLog("CreateThreadsFunc", "Opening audio thread...");
 
@@ -352,7 +359,7 @@ void InitializeStream(INT32 mixfreq) {
 	PrintMessageToDebugLog("InitializeStreamFunc", "Creating stream...");
 
 	// If the current audio engine is DS or WASAPI, then it's not a decoding channel, else it is
-	bool isdecode = ((ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE) ? FALSE : TRUE);
+	bool isdecode = !(ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == OLD_WASAPI);
 		
 	// If the stream is still active, free it up again
 	if (OMStream) {
@@ -370,6 +377,10 @@ void InitializeStream(INT32 mixfreq) {
 		mixfreq);
 
 	CheckUp(FALSE, ERRORCODE, "MIDI Stream Initialization", TRUE);
+
+	if (!OMStream) {
+		MessageBox(NULL, L"There were no errors reported by BASS during the creation of the stream, but the stream handle is empty\n\nCan not continue, press OK to quit.", L"OmniMIDI - ERROR", MB_ICONINFORMATION | MB_OK | MB_SYSTEMMODAL);
+	}
 	
 	PrintMessageToDebugLog("InitializeStreamFunc", "Stream is now active!");
 }
@@ -388,6 +399,16 @@ void FreeUpBASS() {
 	}
 }
 
+void FreeUpBASSWASAPI() {
+	if (BASSLoadedToMemory) {
+		// Free up WASAPI before doing anything
+		BASS_WASAPI_Stop(TRUE);
+		PrintMessageToDebugLog("FreeUpBASSWASAPIFunc", "BASSWASAPI stopped.");
+		BASS_WASAPI_Free();
+		PrintMessageToDebugLog("FreeUpBASSWASAPIFunc", "BASSWASAPI freed.");
+	}
+}
+
 void FreeUpBASSASIO() {
 #if !defined(_M_ARM64) // Only do this if on x86 and x64
 
@@ -401,6 +422,58 @@ void FreeUpBASSASIO() {
 	}
 
 #endif
+}
+
+DWORD WASAPIDevicesCount() {
+	// Initialize BASSASIO device info
+	DWORD count = 0;
+	BASS_WASAPI_DEVICEINFO info;
+
+	// Count the devices
+	for (/* NULL */; BASS_WASAPI_GetDeviceInfo(count, &info); count++);
+
+	// Return the count
+	return count;
+}
+
+LONG WASAPIDetectID() {
+	try {
+		//BASSWASAPI info
+		BASS_WASAPI_DEVICEINFO info;
+		char OutputName[MAX_PATH] = "None\0";
+
+		// Initialize registry values
+		DWORD WSType = REG_SZ;
+		DWORD WSSize = sizeof(OutputName);
+
+		// Open the registry, and get the name of the selected ASIO device
+		PrintMessageToDebugLog("WASAPIDetectIDFunc", "Importing default WASAPI device from registry...");
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
+		RegQueryValueExA(Configuration.Address, "WASAPIOutput", NULL, &WSType, (LPBYTE)&OutputName, &WSSize);
+
+		// Loop through the available devices
+		for (DWORD CurrentDevice = 0; BASS_WASAPI_GetDeviceInfo(CurrentDevice, &info); CurrentDevice++)
+		{
+			// Found an item, check if it's a playback device
+			if ((strcmp(OutputName, info.id) == 0) &&
+				!(info.flags & BASS_DEVICE_LOOPBACK) &&
+				!(info.flags & BASS_DEVICE_INPUT) &&
+				!(info.flags & BASS_DEVICE_UNPLUGGED) &&
+				!(info.flags & BASS_DEVICE_DISABLED))
+			{
+				// It is POG, return the device
+				PrintMessageToDebugLog("WASAPIDetectIDFunc", "Device found. Returning its ID...");
+				return CurrentDevice;
+			}
+		}
+
+		// No device found, return -1 for default output device
+		PrintMessageToDebugLog("WASAPIDetectIDFunc", "Device not found. Returning -1...");
+		return -1;
+	}
+	catch (...) {
+		CrashMessage(L"WASAPIDetectID");
+	}
 }
 
 DWORD ASIODevicesCount() {
@@ -419,7 +492,7 @@ LONG ASIODetectID() {
 	try {
 		// Initialize BASSASIO info
 		BASS_ASIO_DEVICEINFO info;
-		char OutputName[MAX_PATH] = "None";
+		char OutputName[MAX_PATH] = "None\0";
 
 		// Initialize registry values
 		DWORD ASType = REG_SZ;
@@ -452,7 +525,7 @@ LONG ASIODetectID() {
 
 BOOL InitializeBASSLibrary() {
 	// If DS or WASAPI are selected, then the final stream will not be a decoding channel
-	BOOL isds = (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE);
+	BOOL isds = (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == OLD_WASAPI);
 	
 	// Stream flags
 	BOOL flags = BASS_DEVICE_STEREO | ((ManagedSettings.CurrentEngine == DXAUDIO_ENGINE) ? BASS_DEVICE_DSOUND : 0);
@@ -503,7 +576,8 @@ BOOL InitializeBASSLibrary() {
 
 BOOL ApplyStreamSettings() {
 	if (!OMStream) {
-		// Free BASS and BASSASIO
+		// Free BASS, BASSASIO and BASSWASAPI
+		FreeUpBASSWASAPI();
 		FreeUpBASSASIO();
 		FreeUpBASS();
 
@@ -553,6 +627,8 @@ void PrepareVolumeKnob() {
 }
 
 BOOL InitializeBASS(BOOL restart) {
+	BOOL InitializationCompleted = FALSE;
+
 	if (block_bassinit) return FALSE;
 
 	PrintMessageToDebugLog("InitializeBASSFunc", "The driver is now initializing BASS. Please wait...");
@@ -562,20 +638,16 @@ BOOL InitializeBASS(BOOL restart) {
 		PrintMessageToDebugLog("InitializeBASSFunc", "The driver had to restart the stream.");
 		if (ManagedSettings.CurrentEngine == AUDTOWAV) RestartValue++;
 
+		FreeUpBASSWASAPI();
 		FreeUpBASSASIO();
 		FreeUpBASS();
 	}
 
-	// Initialize BASS
-	BOOL init = InitializeBASSLibrary();
-
-	if (init)
+BEGSWITCH:
+	switch (ManagedSettings.CurrentEngine) {
+	case AUDTOWAV:
 	{
-		SWITCHCHECK:
-		switch (ManagedSettings.CurrentEngine) {
-
-		case AUDTOWAV:
-		{
+		if (InitializeBASSLibrary()) {
 			InitializeStream(ManagedSettings.AudioFrequency);
 
 			PrintMessageToDebugLog("InitializeBASSEncFunc", "Initializing BASSenc output...");
@@ -607,7 +679,7 @@ BOOL InitializeBASS(BOOL restart) {
 			DWORD dwType = REG_SZ;
 			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
-			if (!RegQueryValueEx(Configuration.Address, L"AudToWAVFolder", NULL, &dwType, (LPBYTE)& confpath, &cbValueLength)) {
+			if (!RegQueryValueEx(Configuration.Address, L"AudToWAVFolder", NULL, &dwType, (LPBYTE)&confpath, &cbValueLength)) {
 				// If the folder exists, then set the path to that
 				PathAppend(encpath, confpath);
 				PathAppend(encpath, result2);
@@ -638,12 +710,16 @@ BOOL InitializeBASS(BOOL restart) {
 			}
 
 			PrintMessageToDebugLog("InitializeBASSEncFunc", "BASSenc is now ready!");
-			break;
+			InitializationCompleted = TRUE;
 		}
 
-		case WASAPI_ENGINE:
-		case DXAUDIO_ENGINE:
-		{
+		break;
+	}
+
+	case OLD_WASAPI:
+	case DXAUDIO_ENGINE:
+	{
+		if (InitializeBASSLibrary()) {
 			// Final BASS initialization, set some settings
 			PrintMessageToDebugLog("InitializeBASSOutput", "Configuring stream...");
 			BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
@@ -675,23 +751,95 @@ BOOL InitializeBASS(BOOL restart) {
 			if (AudioOutput != NULL)
 			{
 				// If using WASAPI, disable playback buffering
-				if (ManagedSettings.CurrentEngine == WASAPI_ENGINE) {
+				if (ManagedSettings.CurrentEngine == OLD_WASAPI) {
 					PrintMessageToDebugLog("InitializeBASSOutput", "Disabling buffering, this should only be visible when using WASAPI...");
-					if (BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_BUFFER, 0))
+
+					BOOL NoBufferCheck = BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_BUFFER, 0);
+					CheckUp(FALSE, ERRORCODE, "No Buffer Mode 1", TRUE);
+
+					if (NoBufferCheck)
+					{
 						BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
+						CheckUp(FALSE, ERRORCODE, "No Buffer Mode 2", TRUE);
+					}
 				}
 
 				// And finally, open the stream
 				PrintMessageToDebugLog("InitializeBASSOutput", "Starting stream...");
 				BASS_ChannelPlay(OMStream, FALSE);
 				CheckUp(FALSE, ERRORCODE, "Channel Play", TRUE);
+
+				InitializationCompleted = TRUE;
 			}
-			break;
 		}
 
-#if !defined(_M_ARM64)
-		case ASIO_ENGINE:
+		break;
+	}
+
+	case WASAPI_ENGINE:
+	{
+		if (ManagedSettings.OldWASAPIMode)
 		{
+			ManagedSettings.CurrentEngine = OLD_WASAPI;
+			goto BEGSWITCH;
+		}
+
+		if (InitializeBASSLibrary()) {
+			// Free UP WASAPI again, just to be sure
+			FreeUpBASSWASAPI();
+
+			BASS_WASAPI_INFO infoW;
+			BASS_WASAPI_DEVICEINFO infoDW;
+			LONG DeviceID = WASAPIDetectID();
+
+			// Get device frequency
+			PrintMessageToDebugLog("WASAPIDetectIDFunc", "Initializing device to gather information...");
+			BASS_WASAPI_Init(DeviceID, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
+			CheckUp(FALSE, ERRORCODE, "WASAPI device information (Init)", TRUE);
+			BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoDW);
+			CheckUp(FALSE, ERRORCODE, "WASAPI device information (Gathering)", TRUE);
+			BASS_WASAPI_Free();
+			CheckUp(FALSE, ERRORCODE, "WASAPI device information (Free)", TRUE);
+
+			// Initialize BASS stream
+			InitializeStream(ManagedSettings.AudioFrequency);
+			BOOL WInit = BASS_WASAPI_Init(DeviceID, ManagedSettings.AudioFrequency, (ManagedSettings.MonoRendering ? 1 : 2),
+				(ManagedSettings.WASAPIExclusive) ? BASS_WASAPI_EXCLUSIVE : 0 | 
+				(ManagedSettings.WASAPIRAWMode ? BASS_WASAPI_RAW : 0) |
+				(ManagedSettings.WASAPIDoubleBuf ? BASS_WASAPI_BUFFER : 0) |
+				BASS_WASAPI_EVENT | BASS_WASAPI_CATEGORY_MEDIA,
+				(float)ManagedSettings.BufferLength / 1000.0f,
+				0, WASAPIProc, NULL);
+
+			// Check if it's working
+			CheckUp(FALSE, ERRORCODE, "WASAPI initialization", TRUE);
+
+			if (WInit)
+			{
+				BASS_WASAPI_Start();
+				CheckUp(FALSE, ERRORCODE, "WASAPI start-up", TRUE);
+			}
+			else 
+			{
+				// Return an error, and switch to DirectSound
+				ManagedSettings.CurrentEngine = DXAUDIO_ENGINE;
+				FreeUpBASSWASAPI();
+				FreeUpBASS();
+				PrintMessageToDebugLog("InitializeWASAPIFunc", "Can not initialize BASSWASAPI.");
+				MessageBox(NULL, L"An error has occurred while initializing WASAPI.\n\nPress OK to fallback to DirectSound.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+				goto BEGSWITCH;
+			}
+
+			InitializationCompleted = TRUE;
+		}
+
+		break;
+	}
+
+#if !defined(_M_ARM64)
+	case ASIO_ENGINE:
+	{
+		if (InitializeBASSLibrary()) {
 			// Free BASSASIO again, just to be sure
 			FreeUpBASSASIO();
 
@@ -703,7 +851,7 @@ BOOL InitializeBASS(BOOL restart) {
 				FreeUpBASS();
 				PrintMessageToDebugLog("InitializeASIOFunc", "No ASIO devices available.");
 				MessageBox(NULL, L"No ASIO devices available!\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-				goto SWITCHCHECK;
+				goto BEGSWITCH;
 			}
 
 			// Check if driver is supposed to run in a separate thread (TURNED ON PERMANENTLY ATM)
@@ -720,7 +868,7 @@ BOOL InitializeBASS(BOOL restart) {
 				FreeUpBASS();
 				PrintMessageToDebugLog("InitializeASIOFunc", "Failed to get a valid ASIO device.");
 				MessageBox(NULL, L"Failed to get a valid ASIO device.\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-				goto SWITCHCHECK;
+				goto BEGSWITCH;
 			}
 
 			// If ASIO is successfully initialized, go on with the initialization process
@@ -773,33 +921,34 @@ BOOL InitializeBASS(BOOL restart) {
 			else CheckUp(TRUE, ERRORCODE, "ASIO Initialization", TRUE);
 
 			ASIOReady = TRUE;
-
-			break;
+			InitializationCompleted = TRUE;
 		}
+
+		break;
+	}
 #endif
 
-		default:
-		{
-			PrintMessageToDebugLog("InitializeBASSFunc", "Unknown engine, falling back to WASAPI...");
-			ManagedSettings.CurrentEngine = WASAPI_ENGINE;
-			RegSetValueEx(Configuration.Address, L"CurrentEngine", NULL, dwType, (LPBYTE)& ManagedSettings.CurrentEngine, sizeof(DWORD));
-			goto SWITCHCHECK;
-		}
-
-		}
-
-		if (!ApplyStreamSettings()) return FALSE;
-
-		// Enable the volume knob in the configurator
-		if (ManagedSettings.CurrentEngine != AUDTOWAV) PrepareVolumeKnob();
-		
-#if !defined(_M_ARM64)
-		// Apply LoudMax, if requested
-		InitializeBASSVST();
-#endif
+	default:
+	{
+		PrintMessageToDebugLog("InitializeBASSFunc", "Unknown engine, falling back to WASAPI...");
+		ManagedSettings.CurrentEngine = WASAPI_ENGINE;
+		RegSetValueEx(Configuration.Address, L"CurrentEngine", NULL, dwType, (LPBYTE)&ManagedSettings.CurrentEngine, sizeof(DWORD));
+		goto BEGSWITCH;
 	}
 
-	return init;
+	}
+
+	if (!ApplyStreamSettings()) return FALSE;
+
+	// Enable the volume knob in the configurator
+	if (ManagedSettings.CurrentEngine != AUDTOWAV) PrepareVolumeKnob();
+
+#if !defined(_M_ARM64)
+	// Apply LoudMax, if requested
+	InitializeBASSVST();
+#endif
+
+	return InitializationCompleted;
 }
 
 void LoadSoundFontsToStream() {
@@ -826,8 +975,14 @@ void FreeUpStream() {
 		// Reset synth
 		ResetSynth(0);
 
+		// Free up BASSWASAPI before doing anything
+		BASS_WASAPI_Stop(TRUE);
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSWASAPI stopped.");
+		BASS_WASAPI_Free();
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSWASAPI freed.");
+
 #if !defined(_M_ARM64)
-		// Free up ASIO before doing anything
+		// Free up ASIO as well
 		BASS_ASIO_Stop();
 		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO stopped.");
 		BASS_ASIO_Free();

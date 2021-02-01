@@ -1,5 +1,5 @@
 ﻿namespace OmniMIDIConfigurator{
-    partial class DefaultOutput
+    partial class DefaultAudioOutput
     {
         /// <summary>
         /// Required designer variable.
@@ -32,6 +32,7 @@
             this.DefOut = new System.Windows.Forms.Label();
             this.Quit = new System.Windows.Forms.Button();
             this.SwitchDefaultAudio = new System.Windows.Forms.CheckBox();
+            this.UseNewWASAPI = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // DevicesList
@@ -64,7 +65,7 @@
             // Quit
             // 
             this.Quit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Quit.Location = new System.Drawing.Point(308, 64);
+            this.Quit.Location = new System.Drawing.Point(308, 96);
             this.Quit.Name = "Quit";
             this.Quit.Size = new System.Drawing.Size(75, 23);
             this.Quit.TabIndex = 3;
@@ -83,12 +84,25 @@
             this.SwitchDefaultAudio.UseVisualStyleBackColor = true;
             this.SwitchDefaultAudio.CheckedChanged += new System.EventHandler(this.SwitchDefaultAudio_CheckedChanged);
             // 
-            // DefaultOutput
+            // UseNewWASAPI
+            // 
+            this.UseNewWASAPI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.UseNewWASAPI.Location = new System.Drawing.Point(198, 96);
+            this.UseNewWASAPI.Name = "UseNewWASAPI";
+            this.UseNewWASAPI.Size = new System.Drawing.Size(104, 23);
+            this.UseNewWASAPI.TabIndex = 5;
+            this.UseNewWASAPI.Text = "Use new WASAPI";
+            this.UseNewWASAPI.UseVisualStyleBackColor = true;
+            this.UseNewWASAPI.Visible = false;
+            this.UseNewWASAPI.Click += new System.EventHandler(this.UseNewWASAPI_Click);
+            // 
+            // DefaultAudioOutput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(394, 98);
+            this.ClientSize = new System.Drawing.Size(394, 130);
+            this.Controls.Add(this.UseNewWASAPI);
             this.Controls.Add(this.SwitchDefaultAudio);
             this.Controls.Add(this.Quit);
             this.Controls.Add(this.DefOut);
@@ -97,7 +111,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "DefaultOutput";
+            this.Name = "DefaultAudioOutput";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -115,5 +129,6 @@
         private System.Windows.Forms.Label DefOut;
         private System.Windows.Forms.Button Quit;
         private System.Windows.Forms.CheckBox SwitchDefaultAudio;
+        private System.Windows.Forms.Button UseNewWASAPI;
     }
 }

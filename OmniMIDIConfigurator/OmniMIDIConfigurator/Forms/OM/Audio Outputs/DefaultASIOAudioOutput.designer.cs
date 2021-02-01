@@ -46,8 +46,8 @@
             this.InputsLab = new System.Windows.Forms.Label();
             this.DeviceNameLab = new System.Windows.Forms.Label();
             this.ASIOSeparateThread = new System.Windows.Forms.CheckBox();
-            this.ASIODevicesSupport = new OmniMIDIConfigurator.LinkLabelEx();
             this.LatencyWarning = new OmniMIDIConfigurator.LinkLabelEx();
+            this.ASIODevicesSupport = new OmniMIDIConfigurator.LinkLabelEx();
             this.InfoGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -239,20 +239,6 @@
             this.ASIOSeparateThread.UseVisualStyleBackColor = true;
             this.ASIOSeparateThread.CheckedChanged += new System.EventHandler(this.ASIOSeparateThread_CheckedChanged);
             // 
-            // ASIODevicesSupport
-            // 
-            this.ASIODevicesSupport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ASIODevicesSupport.AutoSize = true;
-            this.ASIODevicesSupport.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ASIODevicesSupport.Location = new System.Drawing.Point(427, 8);
-            this.ASIODevicesSupport.Name = "ASIODevicesSupport";
-            this.ASIODevicesSupport.Size = new System.Drawing.Size(85, 26);
-            this.ASIODevicesSupport.TabIndex = 10;
-            this.ASIODevicesSupport.TabStop = true;
-            this.ASIODevicesSupport.Text = "List of supported\r\nASIO devices";
-            this.ASIODevicesSupport.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ASIODevicesSupport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ASIODevicesSupport_LinkClicked);
-            // 
             // LatencyWarning
             // 
             this.LatencyWarning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -267,6 +253,20 @@
             this.LatencyWarning.Text = "Read me! It\'s important!";
             this.LatencyWarning.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.LatencyWarning.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LatencyWarning_LinkClicked);
+            // 
+            // ASIODevicesSupport
+            // 
+            this.ASIODevicesSupport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ASIODevicesSupport.AutoSize = true;
+            this.ASIODevicesSupport.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.ASIODevicesSupport.Location = new System.Drawing.Point(427, 8);
+            this.ASIODevicesSupport.Name = "ASIODevicesSupport";
+            this.ASIODevicesSupport.Size = new System.Drawing.Size(85, 26);
+            this.ASIODevicesSupport.TabIndex = 10;
+            this.ASIODevicesSupport.TabStop = true;
+            this.ASIODevicesSupport.Text = "List of supported\r\nASIO devices";
+            this.ASIODevicesSupport.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ASIODevicesSupport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ASIODevicesSupport_LinkClicked);
             // 
             // DefaultASIOAudioOutput
             // 

@@ -1090,7 +1090,8 @@
             // 
             this.VersionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.VersionLabel.BackColor = System.Drawing.Color.Transparent;
-            this.VersionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionLabel.Cursor = System.Windows.Forms.Cursors.Arrow;
+            this.VersionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.VersionLabel.Location = new System.Drawing.Point(42, 207);
             this.VersionLabel.Name = "VersionLabel";
@@ -1115,12 +1116,14 @@
             // 
             this.KSLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.KSLogo.BackgroundImage = global::OmniMIDIDebugWindow.Properties.Resources.DebugIcon;
+            this.KSLogo.Cursor = System.Windows.Forms.Cursors.Help;
             this.KSLogo.Location = new System.Drawing.Point(9, 207);
             this.KSLogo.Name = "KSLogo";
             this.KSLogo.Size = new System.Drawing.Size(32, 32);
             this.KSLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.KSLogo.TabIndex = 25;
             this.KSLogo.TabStop = false;
+            this.KSLogo.Click += new System.EventHandler(this.KSLogo_Click);
             // 
             // WinLogoTT
             // 

@@ -442,11 +442,37 @@ namespace OmniMIDIConfigurator
 
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
+
             switch (AudioEngBox.SelectedIndex)
             {
                 case AudioEngine.DSOUND_ENGINE:
+                    new DefaultAudioOutput(false).ShowDialog(this);
+                    break;
                 case AudioEngine.WASAPI_ENGINE:
-                    new DefaultOutput((AudioEngBox.SelectedIndex == AudioEngine.WASAPI_ENGINE)).ShowDialog(this);
+                ReturnHere:
+                    Boolean OWM = Convert.ToBoolean(Convert.ToInt32(Program.SynthSettings.GetValue("OldWASAPIMode", "0")));
+
+                    if (OWM)
+                    {
+                        DefaultAudioOutput Dlg = new DefaultAudioOutput(true);
+                        if (Dlg.ShowDialog() == DialogResult.Yes)
+                        {
+                            if (Properties.Settings.Default.LiveChanges)
+                                Program.SynthSettings.SetValue("LiveChanges", 1, RegistryValueKind.DWord);
+                            goto ReturnHere;
+                        }
+                    }
+                    else
+                    {
+                        DefaultWASAPIAudioOutput Dlg = new DefaultWASAPIAudioOutput();
+                        if (Dlg.ShowDialog() == DialogResult.Yes)
+                        {
+                            if (Properties.Settings.Default.LiveChanges)
+                                Program.SynthSettings.SetValue("LiveChanges", 1, RegistryValueKind.DWord);
+                            goto ReturnHere;
+                        }
+                    }
+
                     break;
                 case AudioEngine.ASIO_ENGINE:
                     new DefaultASIOAudioOutput().ShowDialog();

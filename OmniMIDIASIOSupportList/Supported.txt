@@ -12,6 +12,7 @@ E-MU ASIO|No issues.
 FL Studio ASIO|No issues, but you can NOT change the buffer size without restarting the stream.
 FlexASIO|Only one issue, the pitch of the output isn't right.
 Focusrite USB 2.0 Audio Driver|No issues.
+Focusrite USB ASIO|No issues.
 Generic Low Latency ASIO Driver|No issues, useful for exclusive usage of an output.
 JACK ASIO Driver|No issues, guaranteed to work.
 Komplete Audio 6|No issues, guaranteed to work.

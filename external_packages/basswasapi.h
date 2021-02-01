@@ -1,6 +1,6 @@
 /*
 	BASSWASAPI 2.4 C/C++ header file
-	Copyright (c) 2009-2017 Un4seen Developments Ltd.
+	Copyright (c) 2009-2020 Un4seen Developments Ltd.
 
 	See the BASSWASAPI.CHM file for more detailed documentation
 */
@@ -20,7 +20,9 @@ extern "C" {
 
 // Additional error codes returned by BASS_ErrorGetCode
 #define BASS_ERROR_WASAPI			5000	// no WASAPI
-#define BASS_ERROR_WASAPI_BUFFER	5001	// buffer is too large
+#define BASS_ERROR_WASAPI_BUFFER	5001	// buffer size is invalid
+#define BASS_ERROR_WASAPI_CATEGORY	5002	// can't set category
+#define BASS_ERROR_WASAPI_DENIED	5003	// access denied
 
 // Device info structure
 typedef struct {
@@ -74,6 +76,22 @@ typedef struct {
 #define BASS_WASAPI_EVENT		16
 #define BASS_WASAPI_SAMPLES		32
 #define BASS_WASAPI_DITHER		64
+#define BASS_WASAPI_RAW			128
+#define BASS_WASAPI_ASYNC		0x100
+
+#define BASS_WASAPI_CATEGORY_MASK					0xf000
+#define BASS_WASAPI_CATEGORY_OTHER					0x0000
+#define BASS_WASAPI_CATEGORY_FOREGROUNDONLYMEDIA	0x1000
+#define BASS_WASAPI_CATEGORY_BACKGROUNDCAPABLEMEDIA	0x2000
+#define BASS_WASAPI_CATEGORY_COMMUNICATIONS			0x3000
+#define BASS_WASAPI_CATEGORY_ALERTS					0x4000
+#define BASS_WASAPI_CATEGORY_SOUNDEFFECTS			0x5000
+#define BASS_WASAPI_CATEGORY_GAMEEFFECTS			0x6000
+#define BASS_WASAPI_CATEGORY_GAMEMEDIA				0x7000
+#define BASS_WASAPI_CATEGORY_GAMECHAT				0x8000
+#define BASS_WASAPI_CATEGORY_SPEECH					0x9000
+#define BASS_WASAPI_CATEGORY_MOVIE					0xa000
+#define BASS_WASAPI_CATEGORY_MEDIA					0xb000
 
 // BASS_WASAPI_INFO "format"
 #define BASS_WASAPI_FORMAT_FLOAT	0
@@ -94,6 +112,10 @@ buffer : Buffer containing the sample data
 length : Number of bytes
 user   : The 'user' parameter given when calling BASS_WASAPI_Init
 RETURN : The number of bytes written (output devices), 0/1 = stop/continue (input devices) */
+
+// Special WASAPIPROCs
+#define WASAPIPROC_PUSH		(WASAPIPROC*)0		// push output
+#define WASAPIPROC_BASS		(WASAPIPROC*)-1		// BASS channel
 
 typedef void (CALLBACK WASAPINOTIFYPROC)(DWORD notify, DWORD device, void *user);
 /* WASAPI device notification callback function.

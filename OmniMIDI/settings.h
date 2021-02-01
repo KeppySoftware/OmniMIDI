@@ -180,32 +180,31 @@ bool LoadSoundfontStartup() {
 	return FALSE;
 }
 
-void LoadDriverModule(HMODULE * Target, wchar_t* RequestedLib, BOOL Mandatory) {
+void LoadDriverModule(HMODULE* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 	PWSTR SysDir = NULL;
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
 	if (!(*Target)) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No library has been found in memory. The driver will now load the DLL...");
-		HRESULT hr = SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir);
 
-		if (SUCCEEDED(hr)) {
+		if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
 			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", SysDir, RequestedLib);
 
-			if (!(*Target = LoadLibraryEx(DLLPath, NULL, 0))) {
-				PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It probably requires some missing dependencies.");
+			if (!((*Target) = LoadLibrary(DLLPath))) {
+				PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It's either missing or requires some missing dependencies.");
 				if (Mandatory) {
 					DLLLoadError(DLLPath);
 					exit(0);
 				}
 			}
 			else PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
-
-			CoTaskMemFree(SysDir);
 		}
 		else {
 			DLLLoadError(DLLPath);
 			exit(0);
 		}
+
+		CoTaskMemFree(SysDir);
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The library is already in memory. The HMODULE will be a pointer to that address.");
 }
@@ -216,27 +215,26 @@ void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 
 	if (!(*Target)) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No plugin has been found in memory. The driver will now load the DLL...");
-		HRESULT hr = SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir);
 
-		if (SUCCEEDED(hr)) {
+		if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
 			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", SysDir, RequestedLib);
 
-			*Target = BASS_PluginLoad((char*)&DLLPath, BASS_UNICODE);
+			(*Target) = BASS_PluginLoad((char*)&DLLPath, BASS_UNICODE);
 			if (BASS_ErrorGetCode() != 0) {
 				if (Mandatory) {
 					DLLLoadError(DLLPath);
 					exit(0);
 				}
-				else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested plugin. It probably requires some missing dependencies or isn't supported by this version of BASS.");
+				else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested plugin. It's either missing, requires some missing dependencies or isn't supported by this version of BASS.");
 			}
 			else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is now in memory.");
-
-			CoTaskMemFree(SysDir);
 		}
 		else {
 			DLLLoadError(DLLPath);
 			exit(0);
 		}
+
+		CoTaskMemFree(SysDir);
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is already in memory. The HPLUGIN will be a pointer to that address.");
 }
@@ -249,6 +247,7 @@ VOID LoadBASSFunctions()
 
 			// Load modules
 			LoadDriverModule(&bass, L"bass.dll", TRUE);
+			LoadDriverModule(&basswasapi, L"basswasapi.dll", TRUE);
 			LoadDriverModule(&bassmidi, L"bassmidi.dll", TRUE);
 			LoadDriverModule(&bassenc, L"bassenc.dll", TRUE);
 			LoadDriverModule(&bassasio, L"bassasio.dll", TRUE);
@@ -307,6 +306,15 @@ VOID LoadBASSFunctions()
 			LOADLIBFUNCTION(bass, BASS_Stop);
 			LOADLIBFUNCTION(bass, BASS_StreamFree);
 			LOADLIBFUNCTION(bass, BASS_Update);
+			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_Init);
+			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_Free);
+			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_IsStarted);
+			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_PutData);
+			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_Start);
+			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_Stop);
+			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_GetDeviceInfo);
+			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_GetDevice);
+			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_GetLevelEx);
 			LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontFree);
 			LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontInit);
 			LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontLoad);
@@ -321,6 +329,8 @@ VOID LoadBASSFunctions()
 
 			// Load plugins
 			LoadPluginModule(&bassflac, L"bassflac.dll", TRUE);
+			LoadPluginModule(&basswv, L"basswv.dll", FALSE);
+			LoadPluginModule(&bassopus, L"bassopus.dll", FALSE);
 
 			PrintMessageToDebugLog("ImportBASS", "Function pointers loaded into memory.");
 		}
@@ -339,12 +349,30 @@ VOID UnloadBASSFunctions() {
 		if (BASSLoadedToMemory) {
 			PrintMessageToDebugLog("UnloadBASS", "Freeing BASS libraries...");
 			_BMSE = DummyBMSE;
+
 			BASS_PluginFree(bassflac);
-			FreeLibrary(bass);
-			FreeLibrary(bassmidi);
-			FreeLibrary(bassenc);
-			FreeLibrary(bassasio);
-			if (bass_vst) FreeLibrary(bass_vst);
+			BASS_PluginFree(basswv);
+			BASS_PluginFree(bassopus);
+
+			if (FreeLibrary(bass))
+				bass = NULL;
+
+			if (FreeLibrary(bassmidi))
+				bassmidi = NULL;
+
+			if (FreeLibrary(bassenc))
+				bassenc = NULL;
+
+			if (FreeLibrary(bassasio))
+				bassasio = NULL;
+
+			if (FreeLibrary(basswasapi))
+				basswasapi = NULL;
+
+			if (bass_vst)
+				if (!FreeLibrary(bass_vst))
+					PrintMessageToDebugLog("UnloadBASS", "FreeLibrary returned false for BASSVST?");
+
 			PrintMessageToDebugLog("UnloadBASS", "The BASS libraries have been freed from the app's working set.");
 		}
 		else PrintMessageToDebugLog("UnloadBASS", "BASS hasn't been loaded by the driver yet.");
@@ -515,6 +543,10 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"LiveChanges", NULL, &dwType, (LPBYTE)&ManagedSettings.LiveChanges, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"MonoRendering", NULL, &dwType, (LPBYTE)&ManagedSettings.MonoRendering, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&ManagedSettings.VolumeMonitor, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"WASAPIExclusive", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIExclusive, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"OldWASAPIMode", NULL, &dwType, (LPBYTE)&ManagedSettings.OldWASAPIMode, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"WASAPIRAWMode", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIRAWMode, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"WASAPIDoubleBuf", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIDoubleBuf, &dwSize);
 		}
 
 		RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
@@ -728,6 +760,14 @@ void CheckVolume(BOOL Closing) {
 
 				switch (ManagedSettings.CurrentEngine) {
 				case WASAPI_ENGINE:
+					if (ManagedSettings.WASAPIDoubleBuf)
+						BASS_WASAPI_GetLevelEx(levels, (ManagedSettings.MonoRendering ? 0.01f : 0.02f), (ManagedSettings.MonoRendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
+					else {
+						left = 0;	// the left level
+						right = 0;	// the right level
+					}
+
+					break;
 				case DXAUDIO_ENGINE:
 					BASS_ChannelGetLevelEx(OMStream, levels, (ManagedSettings.MonoRendering ? 0.01f : 0.02f), (ManagedSettings.MonoRendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
 					break;
