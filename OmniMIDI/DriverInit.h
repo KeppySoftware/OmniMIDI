@@ -355,7 +355,7 @@ void InitializeBASSVST() {
 	}
 }
 
-void InitializeStream(INT32 mixfreq) {
+BOOL InitializeStream(INT32 mixfreq) {
 	PrintMessageToDebugLog("InitializeStreamFunc", "Creating stream...");
 
 	// If the current audio engine is DS or WASAPI, then it's not a decoding channel, else it is
@@ -379,10 +379,12 @@ void InitializeStream(INT32 mixfreq) {
 	CheckUp(FALSE, ERRORCODE, "MIDI Stream Initialization", TRUE);
 
 	if (!OMStream) {
-		MessageBox(NULL, L"There were no errors reported by BASS during the creation of the stream, but the stream handle is empty\n\nCan not continue, press OK to quit.", L"OmniMIDI - ERROR", MB_ICONINFORMATION | MB_OK | MB_SYSTEMMODAL);
+		MessageBox(NULL, L"BASS reported no error during the initialization, but the stream handle is NULL.\n\nThis is a clear sign of DLL hell.\nPlease report the issue to the app developer, or check if there are any BASS libraries inside the app's folder.\n\nCan not continue, press OK to quit.", L"OmniMIDI - FATAL ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+		exit(-1);
 	}
 	
 	PrintMessageToDebugLog("InitializeStreamFunc", "Stream is now active!");
+	return TRUE;
 }
 
 void FreeUpBASS() {
@@ -648,7 +650,8 @@ BEGSWITCH:
 	case AUDTOWAV:
 	{
 		if (InitializeBASSLibrary()) {
-			InitializeStream(ManagedSettings.AudioFrequency);
+			if (!InitializeStream(ManagedSettings.AudioFrequency))
+				break;
 
 			PrintMessageToDebugLog("InitializeBASSEncFunc", "Initializing BASSenc output...");
 
@@ -746,7 +749,13 @@ BEGSWITCH:
 			PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from registry (in ms)", false, ManagedSettings.BufferLength);
 
 			PrintMessageToDebugLog("InitializeBASSOutput", "Initializing stream...");
-			InitializeStream(ManagedSettings.AudioFrequency);
+
+			// Initialize BASS stream
+			if (!InitializeStream(ManagedSettings.AudioFrequency))
+			{
+				PrintMessageToDebugLog("InitializeBASSOutput", "An error has occurred during BASS' initialization! Freeing audio stream...");
+				break;
+			}
 
 			if (AudioOutput != NULL)
 			{
@@ -788,6 +797,13 @@ BEGSWITCH:
 			// Free UP WASAPI again, just to be sure
 			FreeUpBASSWASAPI();
 
+			// Initialize BASS stream
+			if (!InitializeStream(ManagedSettings.AudioFrequency))
+			{
+				PrintMessageToDebugLog("InitializeWASAPIFunc", "An error has occurred during BASS' initialization! Freeing WASAPI...");
+				break;
+			}
+
 			BASS_WASAPI_INFO infoW;
 			BASS_WASAPI_DEVICEINFO infoDW;
 			LONG DeviceID = WASAPIDetectID();
@@ -801,8 +817,7 @@ BEGSWITCH:
 			BASS_WASAPI_Free();
 			CheckUp(FALSE, ERRORCODE, "WASAPI device information (Free)", TRUE);
 
-			// Initialize BASS stream
-			InitializeStream(ManagedSettings.AudioFrequency);
+			// Initialize WASAPI
 			BOOL WInit = BASS_WASAPI_Init(DeviceID, ManagedSettings.AudioFrequency, (ManagedSettings.MonoRendering ? 1 : 2),
 				(ManagedSettings.WASAPIExclusive) ? BASS_WASAPI_EXCLUSIVE : 0 | 
 				(ManagedSettings.WASAPIRAWMode ? BASS_WASAPI_RAW : 0) |
@@ -913,7 +928,13 @@ BEGSWITCH:
 				CheckUp(TRUE, ERRORCODE, "ASIO Start Output", TRUE);
 
 				// Initialize the stream
-				InitializeStream(ManagedSettings.AudioFrequency);
+				if (!InitializeStream(ManagedSettings.AudioFrequency))
+				{
+					PrintMessageToDebugLog("InitializeASIOFunc", "An error has occurred during BASS' initialization! Freeing ASIO...");
+					BASS_ASIO_Stop();
+					BASS_ASIO_Free();
+					break;
+				}
 
 				PrintMessageToDebugLog("InitializeASIOFunc", "Done!");
 			}

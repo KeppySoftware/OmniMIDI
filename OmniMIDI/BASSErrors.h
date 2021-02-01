@@ -45,6 +45,10 @@ LPCWSTR ReturnBASSError(INT ErrorCode) {
 	Case(BASS_ERROR_TIMEOUT)
 	Case(BASS_ERROR_UNKNOWN)
 	Case(BASS_ERROR_VERSION)
+	Case(BASS_ERROR_WASAPI)
+	Case(BASS_ERROR_WASAPI_BUFFER)
+	Case(BASS_ERROR_WASAPI_RAW)
+	Case(BASS_ERROR_WASAPI_DENIED)
 	Case(BASS_OK)
 	default: return L"Unknown error.";
 	}
@@ -90,7 +94,10 @@ LPCWSTR ReturnBASSErrorDesc(INT ErrorCode) {
 	case 44: return L"Codec is not available or supported.";
 	case 45: return L"The stream has ended.";
 	case 46: return L"The device is busy. (eg. in 'exclusive' use by another process)";
-	case 7000: return L"An SFZ #include directive file could not be opened.";
+	case 5000: return L"WASAPI is not available in this system.";
+	case 5001: return L"WASAPI buffer size is not valid.";
+	case 5002: return L"RAW mode is unsupported on this output device.";
+	case 5003: return L"Couldn't open the WASAPI device, access denied.";
 	default: return L"No description available.";
 	}
 }
@@ -127,9 +134,13 @@ LPCWSTR ReturnBASSErrorFix(INT ErrorCode) {
 		return L"BASS is unable to use the selected output. Make sure nothing is having exclusive control over it.";
 	case 46:
 		return L"Another app might've took exclusive use of the selected audio device. Try closing all the other audio applications, then try again. Ensure you're not running another exclusive-mode instance of OmniMIDI.";
+	case 5001:
+		return L"The buffer size you specified is either not valid or too small for the device to work. Try specifying another value.";
+	case 5002:
+		return L"This error could happen if the device driver is meant for Windows 8.0 and older, or if the APO filters don't support RAW mode. Try downgrading the audio driver to the stock Microsoft High Definition Audio driver.";
 	case 7000:
 		return L"The SoundFont preset might be corrupted or invalid. Contact the original developer of the SoundFont, or use another one instead.";
-	case 5: case 8: case 11: case 12: case 13: case 15: case 16: case 17: case 19: case 38: case 43:
+	case 5: case 8: case 11: case 12: case 13: case 15: case 16: case 17: case 19: case 38: case 43: case 5000: case 5003:
 		return L"This is a serious error, please restart the application.\nIf it happens again, contact KaleidonKep99.";
 	default: 
 		return L"The cause of the error is unknown, no description is available.";
