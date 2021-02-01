@@ -370,8 +370,8 @@ VOID UnloadBASSFunctions() {
 				basswasapi = NULL;
 
 			if (bass_vst)
-				if (!FreeLibrary(bass_vst))
-					PrintMessageToDebugLog("UnloadBASS", "FreeLibrary returned false for BASSVST?");
+				if (FreeLibrary(bass_vst))
+					bass_vst = NULL;
 
 			PrintMessageToDebugLog("UnloadBASS", "The BASS libraries have been freed from the app's working set.");
 		}
