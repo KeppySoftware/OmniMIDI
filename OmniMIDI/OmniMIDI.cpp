@@ -13,8 +13,9 @@ typedef long NTSTATUS;
 #define CUR_MAJOR	2
 #define CUR_MINOR	1
 #define CUR_BUILD	0
-#define CUR_REV		0
+#define CUR_REV		69
 
+#define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
 #define STRICT
 #define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN
@@ -149,7 +150,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 		}
 
 		hinst = hModule;
-		DisableThreadLibraryCalls(hinst);
 		BASS_MIDI_StreamEvent = DummyBMSE;
 
 		if (!NtDelayExecution || !NtQuerySystemTime) {
@@ -283,7 +283,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 				wcsncpy(SynthNameW, L"OmniMIDI\0", MAXPNAMELEN);
 			}
 
-			StreamCapable = (ManagedSettings.DisableCookedPlayer || CPBlacklisted) ? 0 : MIDICAPS_STREAM;
+			StreamCapable = !(ManagedSettings.DisableCookedPlayer && CPBlacklisted) ? MIDICAPS_STREAM : 0;
 			if (!StreamCapable)
 				PrintMessageToDebugLog("MODM_GETDEVCAPS", "Either the app is blacklisted, or the user requested to disable CookedPlayer globally.");
 
@@ -397,18 +397,18 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 	}
 }
 
-MMRESULT DequeueMIDIHDRs(DWORD_PTR dwUser) 
+MMRESULT DequeueMIDIHDRs() 
 {
-	if (!dwUser)
+	if (OMCookedPlayer == nullptr)
 		return DebugResult("DequeueMIDIHDRs", MMSYSERR_INVALPARAM, "dwUser is not valid.");
 
-	for (LPMIDIHDR hdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue; hdr; hdr = hdr->lpNext)
+	for (LPMIDIHDR hdr = OMCookedPlayer->MIDIHeaderQueue; hdr; hdr = hdr->lpNext)
 	{
-		LockForWriting(&((CookedPlayer*)dwUser)->Lock);
+		LockForWriting(&OMCookedPlayer->Lock);
 		PrintMessageToDebugLog("MODM_RESET", "Marking buffer as done and not in queue anymore...");
 		hdr->dwFlags &= ~MHDR_INQUEUE;
 		hdr->dwFlags |= MHDR_DONE;
-		UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
+		UnlockForWriting(&OMCookedPlayer->Lock);
 
 		DoCallback(MOM_DONE, (DWORD_PTR)hdr, 0);
 	}
@@ -419,6 +419,8 @@ MMRESULT DequeueMIDIHDRs(DWORD_PTR dwUser)
 MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
 	static BOOL PreventInit = FALSE;
+
+	// Return value
 	MMRESULT RetVal = MMSYSERR_NOERROR;
 	
 	/*
@@ -432,126 +434,142 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 	case MODM_DATA:
 		// Parse the data lol
 		return _PrsData(dwParam1);
-	case MODM_LONGDATA: {
+	case MODM_LONGDATA: 
+	{
+		MIDIHDR* MIDIHeader = (MIDIHDR*)dwParam1;
+
 		// Pass it to a KDMAPI function
-		RetVal = SendDirectLongData((MIDIHDR*)dwParam1);
+		RetVal = SendDirectLongData(MIDIHeader);
 
 		// Tell the app that the buffer has been played
 		DoCallback(MOM_DONE, dwParam1, 0);
 		// if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, dwParam1, 0);
+
 		return RetVal;
 	}
-	case MODM_STRMDATA: {
-		if (!bass_initialized || !dwUser)
+	case MODM_STRMDATA: 
+	{		
+		MIDIHDR* MIDIHeader = (MIDIHDR*)dwParam1;
+		DWORD HeaderLength = (DWORD)dwParam2;
+
+		if (!bass_initialized || OMCookedPlayer == nullptr)
 			return DebugResult("MODM_STRMDATA", MIDIERR_NOTREADY, "You can't call midiStreamData with a normal MIDI stream, or the driver isn't ready.");
 
-		if ((DWORD)dwParam2 < offsetof(MIDIHDR, dwOffset) ||
-			!((MIDIHDR*)dwParam1) || !((MIDIHDR*)dwParam1)->lpData ||
-			((MIDIHDR*)dwParam1)->dwBufferLength < ((MIDIHDR*)dwParam1)->dwBytesRecorded ||
-			((MIDIHDR*)dwParam1)->dwBytesRecorded % 4)
+		if (HeaderLength < offsetof(MIDIHDR, dwOffset) ||
+			!MIDIHeader || !MIDIHeader->lpData ||
+			MIDIHeader->dwBufferLength < MIDIHeader->dwBytesRecorded ||
+			MIDIHeader->dwBytesRecorded % 4)
 		{
 			return DebugResult("MODM_STRMDATA", MMSYSERR_INVALPARAM, "The buffer doesn't exist, hasn't been allocated or is not valid.");
 		}
 
-		if (!(((MIDIHDR*)dwParam1)->dwFlags & MHDR_PREPARED))
+		if (!(MIDIHeader->dwFlags & MHDR_PREPARED))
 			return DebugResult("MODM_STRMDATA", MIDIERR_UNPREPARED, "The buffer is not prepared.");
 
-		if (!(((MIDIHDR*)dwParam1)->dwFlags & MHDR_DONE)) {
-			if (((MIDIHDR*)dwParam1)->dwFlags & MHDR_INQUEUE)
+		if (!(MIDIHeader->dwFlags & MHDR_DONE)) 
+		{
+			if (MIDIHeader->dwFlags & MHDR_INQUEUE)
 				return DebugResult("MODM_STRMDATA", MIDIERR_STILLPLAYING, "The buffer is still being played.");
 		}
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "Locking for writing...");
-		LockForWriting(&((CookedPlayer*)dwUser)->Lock);
+		LockForWriting(&OMCookedPlayer->Lock);
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "Copying pointer of buffer...");
 
-		PrintMIDIHDRToDebugLog("MODM_STRMDATA", (MIDIHDR*)dwParam1);
+		PrintMIDIHDRToDebugLog("MODM_STRMDATA", MIDIHeader);
 
-		((MIDIHDR*)dwParam1)->dwFlags &= ~MHDR_DONE;
-		((MIDIHDR*)dwParam1)->dwFlags |= MHDR_INQUEUE;
-		((MIDIHDR*)dwParam1)->lpNext = 0;
-		((MIDIHDR*)dwParam1)->dwOffset = 0;
-		if (((CookedPlayer*)dwUser)->MIDIHeaderQueue)
+		MIDIHeader->dwFlags &= ~MHDR_DONE;
+		MIDIHeader->dwFlags |= MHDR_INQUEUE;
+		MIDIHeader->lpNext = 0;
+		MIDIHeader->dwOffset = 0;
+		if (OMCookedPlayer->MIDIHeaderQueue)
 		{
 			PrintMessageToDebugLog("MODM_STRMDATA", "Another buffer is already present. Adding it to queue...");
-			LPMIDIHDR phdr = ((CookedPlayer*)dwUser)->MIDIHeaderQueue;
+			MIDIHDR* PMIDIHeader = OMCookedPlayer->MIDIHeaderQueue;
+			PrintMessageToDebugLog("MODM_STRMDATA", "nig");
 
-			if (phdr == (MIDIHDR*)dwParam1) {
+			if (PMIDIHeader == MIDIHeader) {
 				PrintMessageToDebugLog("MODM_STRMDATA", "Unlocking...");
-				UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
+				UnlockForWriting(&OMCookedPlayer->Lock);
 				return MIDIERR_STILLPLAYING;
 			}
-			while (phdr->lpNext)
+			while (PMIDIHeader->lpNext)
 			{
-				phdr = phdr->lpNext;
-				if (phdr == (MIDIHDR*)dwParam1)
+				PMIDIHeader = PMIDIHeader->lpNext;
+				if (PMIDIHeader == MIDIHeader)
 				{
 					PrintMessageToDebugLog("MODM_STRMDATA", "Unlocking...");
-					UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
+					UnlockForWriting(&OMCookedPlayer->Lock);
 					return MIDIERR_STILLPLAYING;
 				}
 			}
-			phdr->lpNext = (MIDIHDR*)dwParam1;
+			PMIDIHeader->lpNext = MIDIHeader;
 		}
-		else ((CookedPlayer*)dwUser)->MIDIHeaderQueue = (MIDIHDR*)dwParam1;
+		else OMCookedPlayer->MIDIHeaderQueue = MIDIHeader;
 		PrintMessageToDebugLog("MODM_STRMDATA", "Copied.");
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "Unlocking...");
-		UnlockForWriting(&((CookedPlayer*)dwUser)->Lock);
+		UnlockForWriting(&OMCookedPlayer->Lock);
 
 		PrintMessageToDebugLog("MODM_STRMDATA", "All done!");
 		return MMSYSERR_NOERROR;
 	}
-	case MODM_PROPERTIES: {
-		if (!bass_initialized || !dwUser)
+	case MODM_PROPERTIES: 
+	{
+		MIDIPROPTIMEDIV* MPropTimeDiv = (MIDIPROPTIMEDIV*)dwParam1;
+		MIDIPROPTEMPO* MPropTempo = (MIDIPROPTEMPO*)dwParam1;
+		DWORD MPropFlags = (DWORD)dwParam2;
+
+		if (!bass_initialized || OMCookedPlayer == nullptr)
 			return DebugResult("MODM_PROPERTIES", MIDIERR_NOTREADY, "You can't call midiStreamProperties with a normal MIDI stream, or the driver isn't ready.");
 
-		if (!((DWORD)dwParam2 & (MIDIPROP_GET | MIDIPROP_SET)))
+		if (!(MPropFlags & (MIDIPROP_GET | MIDIPROP_SET)))
 			return DebugResult("MODM_PROPERTIES", MMSYSERR_INVALPARAM, "The MIDI application is confused, and didn't specify if it wanted to get the properties or set them.");
 
-		if ((DWORD)dwParam2 & MIDIPROP_TEMPO) {
-			MIDIPROPTEMPO* MPropTempo = (MIDIPROPTEMPO*)dwParam1;
-
-			if (sizeof(MIDIPROPTEMPO) != MPropTempo->cbStruct) {
+		if (MPropFlags & MIDIPROP_TEMPO) 
+		{
+			if (MPropTempo->cbStruct != sizeof(MIDIPROPTEMPO)) {
 				return DebugResult("MODM_PROPERTIES", MMSYSERR_INVALPARAM, "Invalid pointer to MIDIPROPTEMPO struct.");
 			}
-			else if ((DWORD)dwParam2 & MIDIPROP_SET) {
+			else if (MPropFlags & MIDIPROP_SET) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "CookedPlayer's tempo set to received value.");
-				((CookedPlayer*)dwUser)->Tempo = MPropTempo->dwTempo;
-				PrintStreamValueToDebugLog("MODM_PROPERTIES", "Received Tempo", ((CookedPlayer*)dwUser)->Tempo);
-				((CookedPlayer*)dwUser)->TempoMulti = ((((CookedPlayer*)dwUser)->Tempo * 10) / ((CookedPlayer*)dwUser)->TimeDiv);
-				PrintStreamValueToDebugLog("MODM_PROPERTIES", "New TempoMulti", ((CookedPlayer*)dwUser)->TempoMulti);
+				OMCookedPlayer->Tempo = MPropTempo->dwTempo;
+				PrintStreamValueToDebugLog("MODM_PROPERTIES", "Received Tempo", OMCookedPlayer->Tempo);
+				OMCookedPlayer->TempoMulti = ((OMCookedPlayer->Tempo * 10) / OMCookedPlayer->TimeDiv);
+				PrintStreamValueToDebugLog("MODM_PROPERTIES", "New TempoMulti", OMCookedPlayer->TempoMulti);
 			}
-			else if ((DWORD)dwParam2 & MIDIPROP_GET) {
+			else if (MPropFlags & MIDIPROP_GET) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "CookedPlayer's tempo sent to MIDI application.");
-				MPropTempo->dwTempo = ((CookedPlayer*)dwUser)->Tempo;
+				MPropTempo->dwTempo = OMCookedPlayer->Tempo;
 			}
 		}
-		else if ((DWORD)dwParam2 & MIDIPROP_TIMEDIV) {
-			MIDIPROPTIMEDIV* MPropTimeDiv = (MIDIPROPTIMEDIV*)dwParam1;
+		else if (MPropFlags & MIDIPROP_TIMEDIV) {
 
-			if (sizeof(MIDIPROPTIMEDIV) != MPropTimeDiv->cbStruct) {
+			if (MPropTimeDiv->cbStruct != sizeof(MIDIPROPTIMEDIV)) {
 				return DebugResult("MODM_PROPERTIES", MMSYSERR_INVALPARAM, "Invalid pointer to MIDIPROPTIMEDIV struct.");
 			}
-			else if ((DWORD)dwParam2 & MIDIPROP_SET) {
+			else if (MPropFlags & MIDIPROP_SET) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "CookedPlayer's time division set to received value.");
-				((CookedPlayer*)dwUser)->TimeDiv = MPropTimeDiv->dwTimeDiv;
-				PrintStreamValueToDebugLog("MODM_PROPERTIES", "Received TimeDiv", ((CookedPlayer*)dwUser)->TimeDiv);
-				((CookedPlayer*)dwUser)->TempoMulti = ((((CookedPlayer*)dwUser)->Tempo * 10) / ((CookedPlayer*)dwUser)->TimeDiv);
-				PrintStreamValueToDebugLog("MODM_PROPERTIES", "New TempoMulti", ((CookedPlayer*)dwUser)->TempoMulti);
+				OMCookedPlayer->TimeDiv = MPropTimeDiv->dwTimeDiv;
+				PrintStreamValueToDebugLog("MODM_PROPERTIES", "Received TimeDiv", OMCookedPlayer->TimeDiv);
+				OMCookedPlayer->TempoMulti = ((OMCookedPlayer->Tempo * 10) / OMCookedPlayer->TimeDiv);
+				PrintStreamValueToDebugLog("MODM_PROPERTIES", "New TempoMulti", OMCookedPlayer->TempoMulti);
 			}
-			else if ((DWORD)dwParam2 & MIDIPROP_GET) {
+			else if (MPropFlags & MIDIPROP_GET) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "CookedPlayer's time division sent to MIDI application.");
-				MPropTimeDiv->dwTimeDiv = ((CookedPlayer*)dwUser)->TimeDiv;
+				MPropTimeDiv->dwTimeDiv = OMCookedPlayer->TimeDiv;
 			}
 		}
 		else return DebugResult("MODM_PROPERTIES", MMSYSERR_INVALPARAM, "Invalid properties.");
 
 		return MMSYSERR_NOERROR;
 	}
-	case MODM_GETPOS: {
-		if (!bass_initialized || !dwUser)
+	case MODM_GETPOS: 
+	{
+		MMTIME* MMTime = (MMTIME*)dwParam1;
+
+		if (!bass_initialized || OMCookedPlayer == nullptr)
 			return DebugResult("MODM_GETPOS", MIDIERR_NOTREADY, "You can't call midiStreamPosition with a normal MIDI stream, or the driver isn't ready.");
 
 		if (!dwParam1 || !dwParam2)
@@ -560,22 +578,22 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		PrintMessageToDebugLog("MODM_GETPOS", "The app wants to know the current position of the stream.");
 
 		RESET:
-		switch (((MMTIME*)dwParam1)->wType) {
+		switch (MMTime->wType) {
 		case TIME_BYTES:
 			PrintMessageToDebugLog("TIME_BYTES", "The app wanted it in bytes.");
-			((MMTIME*)dwParam1)->u.cb = ((CookedPlayer*)dwUser)->ByteAccumulator;
+			MMTime->u.cb = OMCookedPlayer->ByteAccumulator;
 			break;
 		case TIME_MS:
 			PrintMessageToDebugLog("TIME_MS", "The app wanted it in milliseconds.");
-			((MMTIME*)dwParam1)->u.ms = ((CookedPlayer*)dwUser)->TimeAccumulator / 10000;
+			MMTime->u.ms = OMCookedPlayer->TimeAccumulator / 10000;
 			break;
 		case TIME_TICKS:
 			PrintMessageToDebugLog("TIME_TICKS", "The app wanted it in ticks.");
-			((MMTIME*)dwParam1)->u.ticks = ((CookedPlayer*)dwUser)->TickAccumulator;
+			MMTime->u.ticks = OMCookedPlayer->TickAccumulator;
 			break;
 		default:
 			PrintMessageToDebugLog("TIME_UNK", "Unrecognized wType. Parsing in the default format of ticks.");
-			((MMTIME*)dwParam1)->wType = TIME_TICKS;
+			MMTime->wType = TIME_TICKS;
 			goto RESET;
 			break;
 		}
@@ -583,38 +601,41 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		PrintMessageToDebugLog("MODM_GETPOS", "The app now knows the position.");
 		return MMSYSERR_NOERROR;
 	}
-	case MODM_RESTART: {
-		if (!bass_initialized || !dwUser)
+	case MODM_RESTART: 
+	{
+		if (!bass_initialized || OMCookedPlayer == nullptr)
 			return DebugResult("MODM_RESTART", MMSYSERR_NOTENABLED, "You can't call midiStreamRestart with a normal MIDI stream, or the driver isn't ready.");
 
-		if (((CookedPlayer*)dwUser)->Paused) {
-			((CookedPlayer*)dwUser)->Paused = FALSE;
+		if (OMCookedPlayer->Paused) {
+			OMCookedPlayer->Paused = FALSE;
 			PrintMessageToDebugLog("MODM_RESTART", "CookedPlayer is now playing.");
 		}
 
 		return MMSYSERR_NOERROR;
 	}
-	case MODM_PAUSE: {
-		if (!bass_initialized || !dwUser)
+	case MODM_PAUSE: 
+	{
+		if (!bass_initialized || OMCookedPlayer == nullptr)
 			return DebugResult("MODM_PAUSE", MMSYSERR_NOTENABLED, "You can't call midiStreamPause with a normal MIDI stream, or the driver isn't ready.");
 
-		if (!((CookedPlayer*)dwUser)->Paused) {
-			((CookedPlayer*)dwUser)->Paused = TRUE;
+		if (!OMCookedPlayer->Paused) {
+			OMCookedPlayer->Paused = TRUE;
 			ResetSynth(FALSE);
 			PrintMessageToDebugLog("MODM_PAUSE", "CookedPlayer is now paused.");
 		}
 
 		return MMSYSERR_NOERROR;
 	}
-	case MODM_STOP: {
-		if (!bass_initialized || !dwUser)
+	case MODM_STOP:
+	{
+		if (!bass_initialized || OMCookedPlayer == nullptr)
 			return DebugResult("MODM_STOP", MIDIERR_NOTREADY, "You can't call midiStreamStop with a normal MIDI stream, or the driver isn't ready.");
 
 		PrintMessageToDebugLog("MODM_STOP", "The app requested OmniMIDI to stop CookedPlayer.");
-		((CookedPlayer*)dwUser)->Paused = TRUE;
+		OMCookedPlayer->Paused = TRUE;
 
 		ResetSynth(FALSE);
-		RetVal = DequeueMIDIHDRs(dwUser);
+		RetVal = DequeueMIDIHDRs();
 
 		if (!RetVal) PrintMessageToDebugLog("MODM_STOP", "CookedPlayer is now stopped.");
 		return RetVal;
@@ -623,14 +644,22 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		// Stop all the current active voices
 		ResetSynth(FALSE);
 
-		PrintMessageToDebugLog("MODM_RESET", (dwUser ? "The app requested OmniMIDI to reset CookedPlayer." : "The app sent a reset command."));
-		return (dwUser ? DequeueMIDIHDRs(dwUser) : MMSYSERR_NOERROR);
+		PrintMessageToDebugLog("MODM_RESET", (OMCookedPlayer != nullptr ? "The app requested OmniMIDI to reset CookedPlayer." : "The app sent a reset command."));
+		return (dwUser ? DequeueMIDIHDRs() : MMSYSERR_NOERROR);
 	case MODM_PREPARE:
+	{
+		MIDIHDR* MIDIHeader = (MIDIHDR*)dwParam1;
+
 		// Pass it to a KDMAPI function
-		return PrepareLongData((MIDIHDR*)dwParam1);
-	case MODM_UNPREPARE:
+		return PrepareLongData(MIDIHeader);
+	}
+	case MODM_UNPREPARE: 
+	{
+		MIDIHDR* MIDIHeader = (MIDIHDR*)dwParam1;
+
 		// Pass it to a KDMAPI function
-		return UnprepareLongData((MIDIHDR*)dwParam1);
+		return UnprepareLongData(MIDIHeader);
+	}
 	case MODM_GETNUMDEVS:
 		// Return "1" if the process isn't blacklisted, otherwise the driver doesn't exist OwO
 		return BlackListSystem();
@@ -649,7 +678,8 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		PrintMessageToDebugLog("MODM_SETVOLUME", "Dummy, the app has no control over the driver's audio output.");
 		return MMSYSERR_NOERROR;
 	}
-	case MODM_OPEN: {
+	case MODM_OPEN: 
+	{
 		if (PreventInit) {
 			PrintMessageToDebugLog("MODM_OPEN", "The app is dumb and requested to open the stream again during the initialization process...");
 			return MIDIERR_NOTREADY;
@@ -663,15 +693,19 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 			// Parse callback and instance
 			// AddVectoredExceptionHandler(1, OmniMIDICrashHandler);
 			PrintMessageToDebugLog("MODM_OPEN", "Preparing callback data (If present)...");
-			LPMIDIOPENDESC OMMPD = ((MIDIOPENDESC*)dwParam1);
+			LPMIDIOPENDESC OMMPD = reinterpret_cast<MIDIOPENDESC*>(dwParam1);
 			PrintMIDIOPENDESCToDebugLog("MODM_OPEN", OMMPD, dwUser, (DWORD)dwParam2);
 
-			InitializeCallbackFeatures(
+			if (!InitializeCallbackFeatures(
 				OMMPD->hMidi,
 				OMMPD->dwCallback,
 				OMMPD->dwInstance,
 				dwUser,
-				(DWORD)dwParam2);
+				(DWORD)dwParam2))
+			{
+				PrintMessageToDebugLog("MODM_OPEN", "InitializeCallbackFeatures failed. Unable to complete MODM_OPEN.");
+				return MMSYSERR_INVALPARAM;
+			}
 
 			// Enable handler if required
 			EnableBuiltInHandler("MODM_OPEN");
@@ -734,12 +768,12 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		return MMSYSERR_NOERROR;
 	default: {
 		// Unrecognized uMsg
-		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
+		char* Msg = new char[NTFS_MAX_PATH];
 		sprintf(Msg, 
 			"The application sent an unknown message! ID: 0x%08x - dwUser: 0x%08x - dwParam1: 0x%08x - dwParam2: 0x%08x", 
 			uMsg, dwUser, dwParam1, dwParam2);
 		RetVal = DebugResult("modMessage", MMSYSERR_ERROR, Msg);
-		free(Msg);
+		delete[] Msg;
 		return RetVal;
 	}
 	}

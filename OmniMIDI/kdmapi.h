@@ -54,18 +54,20 @@ void DoCallback(DWORD M, DWORD_PTR P1, DWORD_PTR P2) {
 }
 
 // CookedPlayer system
-VOID KillOldCookedPlayer(DWORD_PTR dwUser) {
+VOID KillOldCookedPlayer(DWORD_PTR OMU) {
 	if (IsThisThreadActive(CookedThread.ThreadHandle)) {
 		CookedPlayerHasToGo = TRUE;
 		if (WaitForSingleObject(CookedThread.ThreadHandle, INFINITE) == WAIT_OBJECT_0) {
 			CloseHandle(CookedThread.ThreadHandle);
 			CookedThread.ThreadHandle = nullptr;
 			CookedThread.ThreadAddress = NULL;
+			delete OMCookedPlayer;
 			CookedPlayerHasToGo = FALSE;
 		}
 	}
 }
 
+// Code by SonoSooS
 void CookedPlayerSystem(CookedPlayer* Player)
 {
 	QWORD ticker = 0;
@@ -77,8 +79,8 @@ void CookedPlayerSystem(CookedPlayer* Player)
 	DWORD delaytick = 0;
 	BOOL barrier = TRUE;			// This is horrible :s
 
-	const DWORD maxdelay = 10e4;	// Adjust responsiveness here
-	const DWORD adaption = 1e5;		// Adaptive timer nice time >:3
+	constexpr DWORD maxdelay = 100000;	// Adjust responsiveness here
+	constexpr DWORD adaption = 100000;	// Adaptive timer nice time >:3
 
 	PrintMessageToDebugLog("CookedPlayerSystem", "Thread is alive!");
 
@@ -515,14 +517,23 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 	return FALSE;
 }
 
-VOID KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM) {
+BOOL KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM) {
 	// Copy values to memory
-	BOOL NV = ((OMCM != NULL) && (!OMCB && !OMI));
+	const BOOL NV = ((OMCM != NULL) && (!OMCB && !OMI));
 
 	OMHMIDI = OMHM;
 	OMCallback = NV ? NULL : OMCB;
 	OMInstance = NV ? NULL : OMI;
 	OMCallbackMode = NV ? NULL : OMCM;
+
+	if ((OMCM & CALLBACK_TYPEMASK) == CALLBACK_WINDOW) 
+	{
+		if (OMCallback && !IsWindow((HWND)OMCallback))
+		{
+			PrintMessageToDebugLog("ICF", "The application requested a CALLBACK_WINDOW, but the HWND passed to OMCallback isn't valid.");
+			return FALSE;
+		}
+	}
 
 	if (NV) PrintMessageToDebugLog("ICF", "The application requested the driver to use callbacks, but no callback address has been given.");
 
@@ -535,29 +546,37 @@ VOID KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI
 
 		if (ManagedSettings.DisableCookedPlayer) {
 			PrintMessageToDebugLog("ICF", "CookedPlayer has been disabled in the configurator.");
-			return;
+			return TRUE;
 		}
 
 		// Prepare the CookedPlayer
 		PrintMessageToDebugLog("ICF", "Preparing CookedPlayer struct...");
 
-		*(CookedPlayer**)OMU = (CookedPlayer*)malloc(sizeof(CookedPlayer));
-		memset(*(CookedPlayer**)OMU, 0, sizeof(**(CookedPlayer**)OMU));
+		OMCookedPlayer = new (std::nothrow) CookedPlayer();
+		if (OMCookedPlayer != nullptr)
+		{
+			OMCookedPlayer->Paused = TRUE;
+			OMCookedPlayer->Tempo = 500000;
+			OMCookedPlayer->TimeDiv = 384;
+			OMCookedPlayer->TempoMulti = ((OMCookedPlayer->Tempo * 10) / OMCookedPlayer->TimeDiv);
+			PrintStreamValueToDebugLog("ICF", "TempoMulti", OMCookedPlayer->TempoMulti);
 
-		(*(CookedPlayer**)OMU)->Paused = TRUE;
-		(*(CookedPlayer**)OMU)->Tempo = 500000;
-		(*(CookedPlayer**)OMU)->TimeDiv = 384;
-		(*(CookedPlayer**)OMU)->TempoMulti = (((*(CookedPlayer**)OMU)->Tempo * 10) / (*(CookedPlayer**)OMU)->TimeDiv);
-		PrintStreamValueToDebugLog("ICF", "TempoMulti", (*(CookedPlayer**)OMU)->TempoMulti);
+			PrintMessageToDebugLog("ICF", "CookedPlayer struct prepared.");
 
-		PrintMessageToDebugLog("ICF", "CookedPlayer struct prepared.");
+			// Create player thread
+			PrintMessageToDebugLog("ICF", "Preparing thread for CookedPlayer...");
+			CookedThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)CookedPlayerSystem, OMCookedPlayer, 0, &CookedThread.ThreadAddress);
 
-		// Create player thread
-		PrintMessageToDebugLog("ICF", "Preparing thread for CookedPlayer...");
-		CookedThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)CookedPlayerSystem, *(LPVOID*)OMU, 0, &CookedThread.ThreadAddress);
+			PrintMessageToDebugLog("ICF", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
 
-		PrintMessageToDebugLog("ICF", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
+			return TRUE;
+		}
+
+		PrintMessageToDebugLog("ICF", "An error has occured while preparing CookedPlayer.");
+		return FALSE;
 	}		
+
+	return TRUE;
 }
 
 VOID KDMAPI RunCallbackFunction(DWORD Msg, DWORD_PTR P1, DWORD_PTR P2) {
@@ -569,16 +588,16 @@ VOID KDMAPI ResetKDMAPIStream() {
 	if (bass_initialized) ResetSynth(FALSE);
 }
 
-BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) {
+BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) noexcept {
 	return _BMSE(OMStream, chan, eventtype, param);
 }
 
-MMRESULT KDMAPI SendDirectData(DWORD dwMsg) {
+MMRESULT KDMAPI SendDirectData(DWORD dwMsg) noexcept {
 	// Send it to the pointed ParseData function (Either ParseData or ParseDataHyper)
 	return _PrsData(dwMsg);
 }
 
-MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) {
+MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) noexcept {
 	// Send the data directly to BASSMIDI, bypassing the buffer altogether
 	_PforBASSMIDI(0, dwMsg);
 	return MMSYSERR_NOERROR;
@@ -628,7 +647,7 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr) {
+MMRESULT KDMAPI SendDirectLongData(LPMIDIHDR IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid and if the stream is alive
 	if (!bass_initialized)						// The driver isn't ready
 		return DebugResult("SendDirectLongData", MIDIERR_NOTREADY, "BASS hasn't been initialized yet.");

@@ -236,7 +236,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Full</Optimization>
-      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -272,7 +272,7 @@
       </OpenMPSupport>
       <DisableLanguageExtensions>false</DisableLanguageExtensions>
       <OmitDefaultLibName>false</OmitDefaultLibName>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <SDLCheck>false</SDLCheck>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <TreatWarningAsError>true</TreatWarningAsError>
@@ -281,6 +281,11 @@
       <BasicRuntimeChecks>
       </BasicRuntimeChecks>
       <CallingConvention>StdCall</CallingConvention>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <GuardEHContMetadata>false</GuardEHContMetadata>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>
@@ -316,7 +321,7 @@
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
       <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
-      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
@@ -486,7 +491,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Full</Optimization>
-      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -528,6 +533,12 @@
       <ControlFlowGuard>false</ControlFlowGuard>
       <BasicRuntimeChecks>
       </BasicRuntimeChecks>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <GuardEHContMetadata>false</GuardEHContMetadata>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>
@@ -561,7 +572,7 @@
       <Version>
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
-      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
       <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
@@ -712,7 +723,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Full</Optimization>
-      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -754,6 +765,12 @@
       <ControlFlowGuard>false</ControlFlowGuard>
       <BasicRuntimeChecks>
       </BasicRuntimeChecks>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <GuardEHContMetadata>false</GuardEHContMetadata>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>
@@ -787,14 +804,14 @@
       <Version>
       </Version>
       <PreventDllBinding>false</PreventDllBinding>
-      <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
+      <LinkErrorReporting>PromptImmediately</LinkErrorReporting>
       <TurnOffAssemblyGeneration>true</TurnOffAssemblyGeneration>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
       <GenerateMapFile>false</GenerateMapFile>
       <ProfileGuidedDatabase>$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
-      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <EnableUAC>true</EnableUAC>
       <SetChecksum>true</SetChecksum>
       <EntryPointSymbol>

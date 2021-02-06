@@ -35,9 +35,9 @@ BOOL AlreadyStartedOnce = FALSE;
 
 // EVBuffer
 typedef struct EventsBuffer {
-	DWORD* Buffer;
-	volatile ULONGLONG		ReadHead;
-	ULONGLONG				WriteHead;
+	DWORD*				Buffer;
+	volatile ULONGLONG	ReadHead;
+	volatile ULONGLONG	WriteHead;
 };
 // The buffer's structure
 EventsBuffer EVBuffer;							// The buffer
@@ -47,10 +47,9 @@ DWORD EvBufferMultRatio = 1;
 DWORD GetEvBuffSizeFromRAM = 0;
 
 // Cooked player struct
-static BOOL CookedPlayerHasToGo = FALSE;
 typedef struct CookedPlayer
 {
-	LPMIDIHDR MIDIHeaderQueue;			// MIDIHDR buffer
+	MIDIHDR* MIDIHeaderQueue;			// MIDIHDR buffer
 	BOOL Paused;						// Is the player paused?
 	DWORD Tempo;						// Player tempo
 	DWORD TimeDiv;						// Player time division
@@ -61,6 +60,9 @@ typedef struct CookedPlayer
 	LockSystem Lock;					// LockSystem
 	DWORD_PTR dwInstance;
 } CookedPlayer, *LPCookedPlayer;
+// CookedPlayer
+BOOL CookedPlayerHasToGo = FALSE;
+CookedPlayer* OMCookedPlayer;
 
 // Device stuff
 const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };
@@ -144,6 +146,7 @@ BOOL UnlimitedChannels = 0;			// For KDMAPI
 
 const FLOAT sndbflen = 256.0f;		// AudToWAV
 FLOAT* sndbf;						// AudToWAV
+DWORD RtrnBf;						// AudToWAV
 
 // Settings and debug
 wchar_t ListToLoad[NTFS_MAX_PATH] = { 0 };

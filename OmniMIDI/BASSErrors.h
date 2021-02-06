@@ -196,7 +196,7 @@ void ShowError(int error, int mode, CHAR* engine, CHAR* codeline, int showerror)
 			error >= 24 && error <= 26 ||
 			error == 44) && showerror)
 		{
-			exit(error);
+			exit(ERROR_INVALID_FUNCTION);
 		}
 	}
 }

@@ -195,7 +195,7 @@ void __inline PrepareForBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
 	SendToBASSMIDI(dwParam1);
 }
 
-BOOL __inline SendLongToBASSMIDI(MIDIHDR* IIMidiHdr) {
+BOOL __inline SendLongToBASSMIDI(LPMIDIHDR IIMidiHdr) {
 	// The buffer doesn't exist or isn't ready
 	if (!IIMidiHdr && !(IIMidiHdr->dwFlags & MHDR_PREPARED)) return FALSE;								
 

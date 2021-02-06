@@ -15,7 +15,6 @@ void SetNoteValuesFromSettings() {
 	for (int i = 0; i <= 15; ++i) {
 		if (pitchshiftchan[i]) {
 			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_FINETUNE, ManagedSettings.ConcertPitch);
-
 		}
 	}
 }
@@ -209,10 +208,7 @@ DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
 
 	// Get the processed audio data, and send it to the WASAPI device
 	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
-
-	// If no data is available, then return NULL
-	if (data == -1) return NULL;
-	return data;
+	return (data == -1) ? NULL : data;
 }
 
 DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user) 
@@ -380,7 +376,7 @@ BOOL InitializeStream(INT32 mixfreq) {
 
 	if (!OMStream) {
 		MessageBox(NULL, L"BASS reported no error during the initialization, but the stream handle is NULL.\n\nThis is a clear sign of DLL hell.\nPlease report the issue to the app developer, or check if there are any BASS libraries inside the app's folder.\n\nCan not continue, press OK to quit.", L"OmniMIDI - FATAL ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-		exit(-1);
+		exit(ERROR_INVALID_HANDLE);
 	}
 	
 	PrintMessageToDebugLog("InitializeStreamFunc", "Stream is now active!");
@@ -697,7 +693,7 @@ BEGSWITCH:
 			{
 			case IDYES:
 				// If the user chose to output to WAV, then continue initializing BASSEnc
-				BASS_Encode_Start(OMStream, (const char*)encpath, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT | BASS_UNICODE, NULL, 0);
+				BASS_Encode_Start(OMStream, (const char*)encpath, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT | BASS_ENCODE_RF64 | BASS_UNICODE, 0, 0);
 				// Error handling
 				CheckUp(FALSE, ERRORCODE, "Encoder Start", TRUE);
 				break;

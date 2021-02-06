@@ -39,7 +39,7 @@ void ResetSynth(BOOL SwitchingBufferMode) {
 	if (SwitchingBufferMode) {	
 		EVBuffer.ReadHead = 0;
 		EVBuffer.WriteHead = 0;
-		memset(EVBuffer.Buffer, -1, sizeof(EVBuffer.Buffer));
+		memset(EVBuffer.Buffer, 0, sizeof(EVBuffer.Buffer));
 	}
 
 	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);
@@ -106,7 +106,7 @@ void DLLLoadError(LPWSTR dll) {
 	// Show error message
 	swprintf_s(Error, L"An error has occurred while loading the following library: %s\n\nClick OK to close the program.", dll);
 	MessageBoxW(NULL, Error, L"OmniMIDI - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
-	exit(0);
+	exit(ERROR_PATH_NOT_FOUND);
 }
 
 long long TimeNow() {
@@ -194,14 +194,14 @@ void LoadDriverModule(HMODULE* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 				PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It's either missing or requires some missing dependencies.");
 				if (Mandatory) {
 					DLLLoadError(DLLPath);
-					exit(0);
+					exit(ERROR_BAD_FORMAT);
 				}
 			}
 			else PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
 		}
 		else {
 			DLLLoadError(DLLPath);
-			exit(0);
+			exit(ERROR_BAD_FORMAT);
 		}
 
 		CoTaskMemFree(SysDir);
@@ -223,7 +223,7 @@ void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 			if (BASS_ErrorGetCode() != 0) {
 				if (Mandatory) {
 					DLLLoadError(DLLPath);
-					exit(0);
+					exit(ERROR_BAD_FORMAT);
 				}
 				else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested plugin. It's either missing, requires some missing dependencies or isn't supported by this version of BASS.");
 			}
@@ -231,7 +231,7 @@ void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 		}
 		else {
 			DLLLoadError(DLLPath);
-			exit(0);
+			exit(ERROR_BAD_FORMAT);
 		}
 
 		CoTaskMemFree(SysDir);
@@ -396,14 +396,12 @@ void ResetEVBufferSettings() {
 void FreeUpMemory() {
 	// Free up the memory, since it's not needed or it has to be reinitialized
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing EV buffer...");
-	RtlSecureZeroMemory(EVBuffer.Buffer, sizeof(EVBuffer.Buffer));
-	free(EVBuffer.Buffer);
+	delete[] EVBuffer.Buffer;
 	EVBuffer.Buffer = NULL;
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freed.");
 
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing audio buffer...");
-	RtlSecureZeroMemory(sndbf, sizeof(sndbf));
-	free(sndbf);
+	delete[] sndbf;
 	sndbf = NULL;
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freed.");
 }
@@ -464,33 +462,36 @@ void AllocateMemory(BOOL restart) {
 		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "Total RAM available (in bytes)", FALSE, status.ullTotalPhys);
 
 		// Begin allocating the EVBuffer
-		if (EVBuffer.Buffer != NULL) PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer already allocated.");
+		if (EVBuffer.Buffer != nullptr) PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer already allocated.");
 		else {
 			PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating EV buffer...");
-			EVBuffer.Buffer = (DWORD*)calloc(EvBufferSize, sizeof(DWORD));
-			if (!EVBuffer.Buffer) {
+			EVBuffer.Buffer = new (std::nothrow) DWORD[EvBufferSize];
+			if (EVBuffer.Buffer == nullptr) {
 				MessageBox(NULL, L"An error has occured while allocating the events buffer!\nIt will now default to 4096 bytes.\n\nThe EVBuffer settings have been reset.", L"OmniMIDI - Error allocating memory", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 				ResetEVBufferSettings();
-				EVBuffer.Buffer = (DWORD*)calloc(EvBufferSize, sizeof(DWORD));
-				if (!EVBuffer.Buffer) {
+				EVBuffer.Buffer = new (std::nothrow) DWORD[EvBufferSize];
+				if (EVBuffer.Buffer == nullptr) {
 					MessageBox(NULL, L"Fatal error while allocating the events buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-					exit(0x3623);
+					exit(ERROR_NOT_ENOUGH_MEMORY);
 				}
 			}
 			PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer allocated.");
 		}
 
 		// Done, now allocate the buffer for the ".WAV mode"
-		if (sndbf != NULL) PrintMessageToDebugLog("AllocateMemoryFunc", "Audio buffer already allocated.");
-		else {
-			PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating audio buffer...");
-			sndbf = (float *)calloc(sndbflen, sizeof(float));
-			if (!sndbf) {
-				PrintMessageToDebugLog("AllocateMemoryFunc", "An error has occurred while allocating the audio buffer.");
-				MessageBox(NULL, L"Fatal error while allocating the sound buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-				exit(0x3623);
+		if (ManagedSettings.CurrentEngine == AUDTOWAV)
+		{
+			if (sndbf != nullptr) PrintMessageToDebugLog("AllocateMemoryFunc", "Audio buffer already allocated.");
+			else {
+				PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating audio buffer...");
+				sndbf = new (std::nothrow) float[sndbflen];
+				if (sndbf == nullptr) {
+					PrintMessageToDebugLog("AllocateMemoryFunc", "An error has occurred while allocating the audio buffer.");
+					MessageBox(NULL, L"Fatal error while allocating the sound buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+					exit(ERROR_NOT_ENOUGH_MEMORY);
+				}
+				PrintMessageToDebugLog("AllocateMemoryFunc", "Audio buffer allocated.");
 			}
-			PrintMessageToDebugLog("AllocateMemoryFunc", "Audio buffer allocated.");
 		}
 	}
 	catch (...) {
