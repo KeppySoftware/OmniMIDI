@@ -237,6 +237,7 @@ namespace OmniMIDIConfigurator
                 Functions.LiveChanges.PreviousBuffer = (int)Program.SynthSettings.GetValue("BufferLength", 50);
                 Functions.LiveChanges.MonophonicRender = (int)Program.SynthSettings.GetValue("MonoRendering", 0);
                 Functions.LiveChanges.AudioBitDepth = (int)Program.SynthSettings.GetValue("AudioBitDepth", 1);
+                Functions.LiveChanges.NotesCatcherWithAudio = (int)Program.SynthSettings.GetValue("NotesCatcherWithAudio", 0);
             }
             catch (Exception ex)
             {
@@ -253,6 +254,7 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("MaxRenderingTime", MaxCPU.Value, RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("FastHotkeys", Convert.ToInt32(FastHotKeys.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("DebugMode", Convert.ToInt32(DebugMode.Checked), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("NotesCatcherWithAudio", Convert.ToInt32(OldBuff.Checked), RegistryValueKind.DWord);
 
             Program.SynthSettings.SetValue("DriverPriority", PrioBox.SelectedIndex, RegistryValueKind.DWord);
             Program.SynthSettings.GetValue("AudioBitDepth", AudioBitDepth.SelectedIndex + 1);
@@ -277,7 +279,6 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("DontMissNotes", Convert.ToInt32(SlowDownPlayback.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("KDMAPIEnabled", Convert.ToInt32(KSDAPIBox.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("HyperPlayback", Convert.ToInt32(HMode.Checked), RegistryValueKind.DWord);
-            Program.SynthSettings.SetValue("NotesCatcherWithAudio", Convert.ToInt32(OldBuff.Checked), RegistryValueKind.DWord);
 
             Program.SynthSettings.SetValue("Reverb", ReverbV.Value, RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("Chorus", ChorusV.Value, RegistryValueKind.DWord);
@@ -313,6 +314,7 @@ namespace OmniMIDIConfigurator
                 Functions.LiveChanges.PreviousBuffer = (int)Program.SynthSettings.GetValue("BufferLength", 50);
                 Functions.LiveChanges.MonophonicRender = (int)Program.SynthSettings.GetValue("MonoRendering", 0);
                 Functions.LiveChanges.AudioBitDepth = (int)Program.SynthSettings.GetValue("AudioBitDepth", 1);
+                Functions.LiveChanges.NotesCatcherWithAudio = (int)Program.SynthSettings.GetValue("NotesCatcherWithAudio", 0);
             }
             else
             {
@@ -322,7 +324,8 @@ namespace OmniMIDIConfigurator
                         Functions.LiveChanges.PreviousFrequency != (int)Program.SynthSettings.GetValue("AudioFrequency", 44100) ||
                         Functions.LiveChanges.PreviousBuffer != (int)Program.SynthSettings.GetValue("BufferLength", 50) ||
                         Functions.LiveChanges.MonophonicRender != (int)Program.SynthSettings.GetValue("MonoRendering", 0) ||
-                        Functions.LiveChanges.AudioBitDepth != (int)Program.SynthSettings.GetValue("AudioBitDepth", 1))
+                        Functions.LiveChanges.AudioBitDepth != (int)Program.SynthSettings.GetValue("AudioBitDepth", 1) ||
+                        Functions.LiveChanges.NotesCatcherWithAudio != (int)Program.SynthSettings.GetValue("NoteCatcherWithAudio", 0))
                     {
                         Program.SynthSettings.SetValue("LiveChanges", 1, RegistryValueKind.DWord);
                         Functions.LiveChanges.PreviousEngine = (int)Program.SynthSettings.GetValue("CurrentEngine", AudioEngine.WASAPI_ENGINE);
@@ -330,6 +333,7 @@ namespace OmniMIDIConfigurator
                         Functions.LiveChanges.PreviousBuffer = (int)Program.SynthSettings.GetValue("BufferLength", 50);
                         Functions.LiveChanges.MonophonicRender = (int)Program.SynthSettings.GetValue("MonoRendering", 0);
                         Functions.LiveChanges.AudioBitDepth = (int)Program.SynthSettings.GetValue("AudioBitDepth", 1);
+                        Functions.LiveChanges.NotesCatcherWithAudio = (int)Program.SynthSettings.GetValue("NotesCatcherWithAudio", 0);
                     }
                 }
             }
@@ -566,24 +570,7 @@ namespace OmniMIDIConfigurator
 
         private void HMode_CheckedChanged(object sender, EventArgs e)
         {
-            OverrideNoteLength.Enabled = !HMode.Checked;
-            NoteLengthValue.Enabled = (HMode.Checked) ? false : OverrideNoteLength.Checked;
 
-            DelayNoteOff.Enabled = !HMode.Checked;
-            NoteOffDelayValue.Enabled = (HMode.Checked) ? false : DelayNoteOff.Checked;
-
-            PitchShifting.Enabled = !HMode.Checked;
-
-            IgnoreNotes.Enabled = !HMode.Checked;
-            IgnoreNotesLL.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
-            IgnoreNotesLV.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
-            IgnoreNotesHL.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
-            IgnoreNotesHV.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
-   
-            SysResetIgnore.Enabled = !HMode.Checked;
-            FullVelocityMode.Enabled = !HMode.Checked;
-            Limit88.Enabled = !HMode.Checked;
-            AllNotesIgnore.Enabled = !HMode.Checked;
         }
 
         public void ButtonToSaveSettings(object sender, EventArgs e)

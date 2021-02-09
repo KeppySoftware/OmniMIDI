@@ -255,6 +255,7 @@ VOID LoadBASSFunctions()
 			PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
 
 			// Load all the functions into memory
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_CheckRate);
 			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelEnable);
 			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelEnableMirror);
 			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelGetLevel);
@@ -266,6 +267,7 @@ VOID LoadBASSFunctions()
 			LOADLIBFUNCTION(bassasio, BASS_ASIO_ControlPanel);
 			LOADLIBFUNCTION(bassasio, BASS_ASIO_ErrorGetCode);
 			LOADLIBFUNCTION(bassasio, BASS_ASIO_Free);
+			LOADLIBFUNCTION(bassasio, BASS_ASIO_GetDevice);
 			LOADLIBFUNCTION(bassasio, BASS_ASIO_GetDeviceInfo);
 			LOADLIBFUNCTION(bassasio, BASS_ASIO_GetLatency);
 			LOADLIBFUNCTION(bassasio, BASS_ASIO_GetRate);
@@ -313,6 +315,7 @@ VOID LoadBASSFunctions()
 			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_Start);
 			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_Stop);
 			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_GetDeviceInfo);
+			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_GetInfo);
 			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_GetDevice);
 			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_GetLevelEx);
 			LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontFree);
@@ -549,6 +552,8 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"WASAPIRAWMode", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIRAWMode, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"WASAPIDoubleBuf", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIDoubleBuf, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"ReduceBootUpDelay", NULL, &dwType, (LPBYTE)&ManagedSettings.ReduceBootUpDelay, &dwSize);	
+			if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(Configuration.Address, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&ManagedSettings.NotesCatcherWithAudio, &dwSize);
+			else ManagedSettings.NotesCatcherWithAudio = FALSE;
 		}
 
 		RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
@@ -582,14 +587,11 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		RegQueryValueEx(Configuration.Address, L"CPitchValue", NULL, &dwType, (LPBYTE)&ManagedSettings.ConcertPitch, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&ManagedSettings.VolumeMonitor, &dwSize);
 
-		if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(Configuration.Address, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&ManagedSettings.NotesCatcherWithAudio, &dwSize);
-		else ManagedSettings.NotesCatcherWithAudio = FALSE;
-
 		// Stuff that works so don't bother
 		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
 		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
 
-		if (!RT) RegSetValueEx(Configuration.Address, L"LiveChanges", 0, REG_DWORD, (LPBYTE)& Blank, sizeof(Blank));
+		if (!RT) RegSetValueEx(Configuration.Address, L"LiveChanges", 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
 
 		// Volume
 		if (TempOV != ManagedSettings.OutputVolume || SettingsManagedByClient) {
@@ -850,8 +852,9 @@ void FillContentDebug() {
 	PipeContent.append(L"|Handles = " + std::to_wstring(handleCount));
 	PipeContent.append(L"|RAMUsage = " + std::to_wstring(static_cast<QWORD>(RU)));
 	PipeContent.append(L"|OMDirect = " + std::to_wstring(KDMAPIEnabled));
-	PipeContent.append(L"|ASIOInLat = " + std::to_wstring(ManagedDebugInfo.ASIOInputLatency));
-	PipeContent.append(L"|ASIOOutLat = " + std::to_wstring(ManagedDebugInfo.ASIOOutputLatency));
+	PipeContent.append(L"|WinMMKDMAPI = " + std::to_wstring(IsKDMAPIViaWinMM));
+	PipeContent.append(L"|AudioBufSize = " + std::to_wstring(ManagedDebugInfo.AudioBufferSize));
+	PipeContent.append(L"|AudioLatency = " + std::to_wstring(ManagedDebugInfo.AudioLatency));
 	PipeContent.append(L"|SFsList = " + std::to_wstring(ManagedDebugInfo.CurrentSFList));
 
 	PipeContent.append(L"\n\0");
@@ -888,29 +891,10 @@ void FillContentDebug() {
 }
 
 void ParseDebugData() {
-	DWORD ASIOTempInLatency, ASIOTempOutLatency;
-	DOUBLE ASIORate;
+	DWORD ASIOTempOutLatency;
 
 	if (BASSLoadedToMemory && bass_initialized) {
 		BASS_ChannelGetAttribute(OMStream, BASS_ATTRIB_CPU, &ManagedDebugInfo.RenderingTime);
-
-		if (ASIOReady != FALSE && ManagedSettings.CurrentEngine == ASIO_ENGINE) {
-			ASIOTempInLatency = BASS_ASIO_GetLatency(TRUE);
-			if (BASS_ASIO_ErrorGetCode()) ASIOTempInLatency = 0;
-
-			ASIOTempOutLatency = BASS_ASIO_GetLatency(FALSE);
-			if (BASS_ASIO_ErrorGetCode()) ASIOTempOutLatency = 0;
-
-			ASIORate = BASS_ASIO_GetRate();
-			if (BASS_ASIO_ErrorGetCode()) ASIORate = 0.0;
-
-			// CheckUpASIO(ERRORCODE, L"OMGetRateASIO", TRUE);
-			if (ASIORate != 0.0) {
-				ManagedDebugInfo.ASIOInputLatency = (ASIOTempInLatency) ? ((DOUBLE)ASIOTempInLatency * 1000.0 / ASIORate) : 0.0;
-				ManagedDebugInfo.ASIOOutputLatency = (ASIOTempOutLatency) ? ((DOUBLE)ASIOTempOutLatency * 1000.0 / ASIORate) : 0.0;
-			}
-		}
-		else ManagedDebugInfo.ASIOOutputLatency = ManagedDebugInfo.ASIOInputLatency = 0.0;
 
 		for (int i = 0; i <= 15; ++i) {
 			int temp = BASS_MIDI_StreamGetEvent(OMStream, i, MIDI_EVENT_VOICES);
@@ -926,8 +910,7 @@ void ParseDebugData() {
 	}
 	else {
 		ManagedDebugInfo.RenderingTime = 0.0f;
-		ManagedDebugInfo.ASIOInputLatency = 0;
-		ManagedDebugInfo.ASIOOutputLatency = 0;
+		ManagedDebugInfo.AudioLatency = 0.0;
 		for (int i = 0; i <= 15; ++i) ManagedDebugInfo.ActiveVoices[i] = 0;
 	}
 }

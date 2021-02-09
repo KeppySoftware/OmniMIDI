@@ -23,8 +23,6 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 #define WASAPI_ENGINE 3
 #define OLD_WASAPI 69420
 
-#define DEFAULT_DEBUG { 0.0f, { 0 }, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0 }
-
 // Settings
 #define OM_SET						0x0
 #define OM_GET						0x1
@@ -79,21 +77,25 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 // The debug info struct, you can set the default values by assigning DEFAULT_DEBUG
 typedef struct
 {
-	FLOAT RenderingTime;			// Current BASS rendering time
-	DWORD ActiveVoices[16];			// Active voices for each channel
+	FLOAT RenderingTime = 0.0f;				// Current BASS rendering time
+	DWORD ActiveVoices[16] = { 0 };			// Active voices for each channel
 
-	// ASIO debug info
-	DOUBLE ASIOInputLatency;
-	DOUBLE ASIOOutputLatency;
+	// ASIO debug info (DO NOT USE)
+	DOUBLE ASIOInputLatency = 0.0f;
+	DOUBLE ASIOOutputLatency = 0.0f;
 
 	// Threads info
-	DOUBLE HealthThreadTime;
-	DOUBLE ATThreadTime;
-	DOUBLE EPThreadTime;
-	DOUBLE CookedThreadTime;
+	DOUBLE HealthThreadTime = 0.0;
+	DOUBLE ATThreadTime = 0.0;
+	DOUBLE EPThreadTime = 0.0;
+	DOUBLE CookedThreadTime = 0.0;
 
 	// SoundFonts list
 	DWORD CurrentSFList;
+
+	// Audio latency
+	DOUBLE AudioLatency = 0.0f;
+	DWORD AudioBufferSize = 0;
 
 	// Add more down here
 	// ------------------

@@ -134,7 +134,6 @@ CHAR AppPath[NTFS_MAX_PATH] = { 0 };		// debug info
 TCHAR AppPathW[NTFS_MAX_PATH] = { 0 };	// debug info
 CHAR AppName[MAX_PATH] = { 0 };			// debug info
 TCHAR AppNameW[MAX_PATH] = { 0 };		// debug info
-
 HANDLE hPipe = INVALID_HANDLE_VALUE;		// debug info
 
 // Main values
@@ -166,7 +165,7 @@ typedef struct SoundFontList
 FILE* DebugLog = NULL;
 BOOL SettingsManagedByClient;
 Settings ManagedSettings = Settings();
-DebugInfo ManagedDebugInfo = DEFAULT_DEBUG;
+DebugInfo ManagedDebugInfo = DebugInfo();
 
 // Priority values
 const DWORD prioval[] =

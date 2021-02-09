@@ -51,8 +51,8 @@
             this.CurSFsListLabel = new System.Windows.Forms.Label();
             this.KDMAPI = new System.Windows.Forms.Label();
             this.KDMAPILabel = new System.Windows.Forms.Label();
-            this.ASIOL = new System.Windows.Forms.Label();
-            this.ASIOLLabel = new System.Windows.Forms.Label();
+            this.Latency = new System.Windows.Forms.Label();
+            this.LatencyLabel = new System.Windows.Forms.Label();
             this.AvV = new System.Windows.Forms.Label();
             this.AvVLabel = new System.Windows.Forms.Label();
             this.HCountV = new System.Windows.Forms.Label();
@@ -210,8 +210,8 @@
             this.SynthDbg.Controls.Add(this.CurSFsListLabel);
             this.SynthDbg.Controls.Add(this.KDMAPI);
             this.SynthDbg.Controls.Add(this.KDMAPILabel);
-            this.SynthDbg.Controls.Add(this.ASIOL);
-            this.SynthDbg.Controls.Add(this.ASIOLLabel);
+            this.SynthDbg.Controls.Add(this.Latency);
+            this.SynthDbg.Controls.Add(this.LatencyLabel);
             this.SynthDbg.Controls.Add(this.AvV);
             this.SynthDbg.Controls.Add(this.AvVLabel);
             this.SynthDbg.Controls.Add(this.HCountV);
@@ -235,7 +235,7 @@
             // 
             this.CurSFsList.AutoSize = true;
             this.CurSFsList.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurSFsList.Location = new System.Drawing.Point(185, 150);
+            this.CurSFsList.Location = new System.Drawing.Point(186, 150);
             this.CurSFsList.Name = "CurSFsList";
             this.CurSFsList.Size = new System.Drawing.Size(32, 13);
             this.CurSFsList.TabIndex = 49;
@@ -257,7 +257,7 @@
             // 
             this.KDMAPI.AutoSize = true;
             this.KDMAPI.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.KDMAPI.Location = new System.Drawing.Point(96, 132);
+            this.KDMAPI.Location = new System.Drawing.Point(97, 132);
             this.KDMAPI.Name = "KDMAPI";
             this.KDMAPI.Size = new System.Drawing.Size(56, 13);
             this.KDMAPI.TabIndex = 47;
@@ -275,27 +275,27 @@
             this.KDMAPILabel.Text = "KDMAPI status:";
             this.KDMAPILabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ASIOL
+            // Latency
             // 
-            this.ASIOL.AutoSize = true;
-            this.ASIOL.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ASIOL.Location = new System.Drawing.Point(131, 78);
-            this.ASIOL.Name = "ASIOL";
-            this.ASIOL.Size = new System.Drawing.Size(113, 13);
-            this.ASIOL.TabIndex = 45;
-            this.ASIOL.Text = "Input 0ms, Output 0ms";
-            this.ASIOL.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Latency.AutoSize = true;
+            this.Latency.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Latency.Location = new System.Drawing.Point(89, 78);
+            this.Latency.Name = "Latency";
+            this.Latency.Size = new System.Drawing.Size(113, 13);
+            this.Latency.TabIndex = 45;
+            this.Latency.Text = "Input 0ms, Output 0ms";
+            this.Latency.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // ASIOLLabel
+            // LatencyLabel
             // 
-            this.ASIOLLabel.AutoSize = true;
-            this.ASIOLLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ASIOLLabel.Location = new System.Drawing.Point(2, 78);
-            this.ASIOLLabel.Name = "ASIOLLabel";
-            this.ASIOLLabel.Size = new System.Drawing.Size(130, 13);
-            this.ASIOLLabel.TabIndex = 44;
-            this.ASIOLLabel.Text = "ASIO driver\'s latency:";
-            this.ASIOLLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LatencyLabel.AutoSize = true;
+            this.LatencyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LatencyLabel.Location = new System.Drawing.Point(2, 78);
+            this.LatencyLabel.Name = "LatencyLabel";
+            this.LatencyLabel.Size = new System.Drawing.Size(88, 13);
+            this.LatencyLabel.TabIndex = 44;
+            this.LatencyLabel.Text = "Audio latency:";
+            this.LatencyLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // AvV
             // 
@@ -327,7 +327,7 @@
             // 
             this.HCountV.AutoSize = true;
             this.HCountV.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.HCountV.Location = new System.Drawing.Point(128, 114);
+            this.HCountV.Location = new System.Drawing.Point(127, 114);
             this.HCountV.Name = "HCountV";
             this.HCountV.Size = new System.Drawing.Size(13, 13);
             this.HCountV.TabIndex = 39;
@@ -349,7 +349,7 @@
             // 
             this.RAMUsageV.AutoSize = true;
             this.RAMUsageV.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RAMUsageV.Location = new System.Drawing.Point(139, 96);
+            this.RAMUsageV.Location = new System.Drawing.Point(138, 96);
             this.RAMUsageV.Name = "RAMUsageV";
             this.RAMUsageV.Size = new System.Drawing.Size(32, 13);
             this.RAMUsageV.TabIndex = 37;
@@ -415,7 +415,7 @@
             // 
             this.CMA.AutoSize = true;
             this.CMA.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CMA.Location = new System.Drawing.Point(110, 6);
+            this.CMA.Location = new System.Drawing.Point(109, 6);
             this.CMA.Name = "CMA";
             this.CMA.Size = new System.Drawing.Size(124, 13);
             this.CMA.TabIndex = 9;
@@ -1278,8 +1278,8 @@
         private System.Windows.Forms.Label RAMUsageV;
         private System.Windows.Forms.Label RAMUsageVLabel;
         public System.Windows.Forms.Timer DebugInfo;
-        private System.Windows.Forms.Label ASIOL;
-        private System.Windows.Forms.Label ASIOLLabel;
+        private System.Windows.Forms.Label Latency;
+        private System.Windows.Forms.Label LatencyLabel;
         private System.ComponentModel.BackgroundWorker DebugInfoCheck;
         private System.Windows.Forms.ToolTip ReloadDebugInfo;
         private System.ComponentModel.BackgroundWorker CheckMem;

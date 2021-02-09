@@ -84,14 +84,10 @@ void EventsProcesser(LPVOID lpV) {
 	PrintMessageToDebugLog("EventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
-			// If the notes catcher thread is supposed to run together with the audio thread,
-			// break from the EventProcesser's loop, and close the thread, and move the processing to AudioThread
-			if (ManagedSettings.NotesCatcherWithAudio) break;
-
 			SetNoteValuesFromSettings();
 
 			// Parse the notes until the audio thread is done
-			if (_PlayBufData() && !stop_thread) _FWAIT;
+			if (_PlayBufData()) _FWAIT;
 			if (ManagedSettings.CapFramerate) _CFRWAIT;
 		}
 	}
@@ -109,10 +105,6 @@ void FastEventsProcesser(LPVOID lpV) {
 	PrintMessageToDebugLog("FastEventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
-			// If the notes catcher thread is supposed to run together with the audio thread,
-			// break from the EventProcesser's loop, and close the thread, and move the processing to AudioThread
-			if (ManagedSettings.NotesCatcherWithAudio) break;
-
 			// Parse the notes until the audio thread is done
 			if (_PlayBufData()) _FWAIT;
 		}
@@ -196,25 +188,33 @@ void FastAudioEngine(LPVOID lpParam) {
 	TerminateThread(&ATThread, TRUE, 0);
 }
 
-DWORD CALLBACK WASAPIProc(void *buffer, DWORD length, void *user)
+DWORD CALLBACK ProcData(void* buffer, DWORD length, void* user)
 {
-	// If the EventProcesser is disabled, then process the events from the audio thread instead
-	if (ManagedSettings.NotesCatcherWithAudio) {
-		SetNoteValuesFromSettings();
-		_PlayBufDataChk();
-	}
-	// Else, open the EventProcesser thread
-	else if (!EPThread.ThreadHandle) InitializeEventsProcesserThreads();
-
 	// Get the processed audio data, and send it to the WASAPI device
 	DWORD data = BASS_ChannelGetData(OMStream, buffer, length);
 	return (data == -1) ? NULL : data;
 }
 
-DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void *buffer, DWORD length, void *user) 
+DWORD CALLBACK ProcDataSameThread(void* buffer, DWORD length, void* user)
 {
-	// Redundant code
-	return WASAPIProc(buffer, length, user);
+	// Process the events from the audio thread
+	SetNoteValuesFromSettings();
+	_PlayBufDataChk();
+
+	// Get the processed audio data, and send it to the engine
+	return ProcData(buffer, length, user);
+}
+
+DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void* buffer, DWORD length, void* user)
+{
+	// Get the processed audio data, and send it to the engine
+	return ProcData(buffer, length, user);
+}
+
+DWORD CALLBACK ASIOProcSameThread(BOOL input, DWORD channel, void* buffer, DWORD length, void* user)
+{	
+	// Get the processed audio data, and send it to the engine
+	return ProcDataSameThread(buffer, length, user);
 }
 
 // Extremely useful to check if a thread is alive
@@ -297,6 +297,10 @@ BOOL CreateThreads(BOOL startup) {
 
 		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
+
+	// Run the events processer thread if necessary
+	if (!ManagedSettings.NotesCatcherWithAudio)
+		InitializeEventsProcesserThreads();
 
 	// Check if the debug thread is working
 	if (!DThread.ThreadHandle)
@@ -724,25 +728,35 @@ BEGSWITCH:
 			BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 			BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 
-			DWORD minbuf = 0;
+			DWORD MinimumBuffer = 0;
+			DWORD FinalBuffer = 0;
 			if (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE) {
 				if (!ManagedSettings.ReduceBootUpDelay) {
 					PrintMessageToDebugLog("InitializeBASSOutput", "Getting buffer info...");
 					BASS_GetInfo(&info);
 
 					// The safest value is usually minbuf - 10
-					minbuf = info.minbuf - 10;
+					MinimumBuffer = info.minbuf - 10;
+
+					if (MinimumBuffer >= ManagedSettings.BufferLength)
+						FinalBuffer = MinimumBuffer;
+					else
+						FinalBuffer = ManagedSettings.BufferLength;
 				}
-				else minbuf = 0;
+				else FinalBuffer = ManagedSettings.BufferLength;
 			}
+
+			// Store the latency for debug
+			ManagedDebugInfo.AudioLatency = (DOUBLE)FinalBuffer;
 
 			// If the minimum buffer is bigger than the requested buffer length, use the minimum buffer value instead
 			PrintMessageToDebugLog("InitializeBASSOutput", "Setting buffer...");
-			BASS_SetConfig(BASS_CONFIG_BUFFER, ((minbuf > ManagedSettings.BufferLength) ? minbuf : ManagedSettings.BufferLength));
+			BASS_SetConfig(BASS_CONFIG_BUFFER, FinalBuffer);
 
 			// Print debug info
-			PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from BASS_GetInfo (in ms)", false, minbuf);
+			PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from BASS_GetInfo (in ms)", false, MinimumBuffer);
 			PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from registry (in ms)", false, ManagedSettings.BufferLength);
+			PrintMemoryMessageToDebugLog("InitializeBASSOutput", "Buffer length from calculations (in ms)", false, FinalBuffer);
 
 			PrintMessageToDebugLog("InitializeBASSOutput", "Initializing stream...");
 
@@ -801,17 +815,7 @@ BEGSWITCH:
 			}
 
 			BASS_WASAPI_INFO infoW;
-			BASS_WASAPI_DEVICEINFO infoDW;
 			LONG DeviceID = WASAPIDetectID();
-
-			// Get device frequency
-			PrintMessageToDebugLog("WASAPIDetectIDFunc", "Initializing device to gather information...");
-			BASS_WASAPI_Init(DeviceID, 0, 0, BASS_WASAPI_BUFFER, 0, 0, NULL, NULL);
-			CheckUp(FALSE, ERRORCODE, "WASAPI device information (Init)", TRUE);
-			BASS_WASAPI_GetDeviceInfo(BASS_WASAPI_GetDevice(), &infoDW);
-			CheckUp(FALSE, ERRORCODE, "WASAPI device information (Gathering)", TRUE);
-			BASS_WASAPI_Free();
-			CheckUp(FALSE, ERRORCODE, "WASAPI device information (Free)", TRUE);
 
 			// Initialize WASAPI
 			BOOL WInit = BASS_WASAPI_Init(DeviceID, ManagedSettings.AudioFrequency, (ManagedSettings.MonoRendering ? 1 : 2),
@@ -820,15 +824,25 @@ BEGSWITCH:
 				(ManagedSettings.WASAPIDoubleBuf ? BASS_WASAPI_BUFFER : 0) |
 				BASS_WASAPI_EVENT | BASS_WASAPI_CATEGORY_MEDIA,
 				(float)ManagedSettings.BufferLength / 1000.0f,
-				0, WASAPIProc, NULL);
+				0, ManagedSettings.NotesCatcherWithAudio ? ProcDataSameThread : ProcData, NULL);
 
 			// Check if it's working
 			CheckUp(FALSE, ERRORCODE, "WASAPI initialization", TRUE);
+			PrintMessageToDebugLog("InitializeWASAPIFunc", "WASAPI initialized.");
 
 			if (WInit)
-			{
+			{	
+				// Start the device
 				BASS_WASAPI_Start();
 				CheckUp(FALSE, ERRORCODE, "WASAPI start-up", TRUE);
+
+				if (BASS_WASAPI_GetInfo(&infoW))
+				{
+					// Store the latency for debug
+					ManagedDebugInfo.AudioBufferSize = infoW.buflen / 8;
+					ManagedDebugInfo.AudioLatency = ((DOUBLE)ManagedDebugInfo.AudioBufferSize * 1000.0f / (DOUBLE)ManagedSettings.AudioFrequency);
+					PrintMessageToDebugLog("InitializeWASAPIFunc", "Stored latency information.");
+				}
 			}
 			else 
 			{
@@ -887,8 +901,17 @@ BEGSWITCH:
 			if (BASS_ASIO_Init(DeviceToUse, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 				CheckUp(TRUE, ERRORCODE, "ASIO Initialized", TRUE);
 
-				// Set the audio frequency
-				BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
+				if (BASS_ASIO_CheckRate(ManagedSettings.AudioFrequency))
+				{
+					// Set the audio frequency
+					BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
+				}
+				else
+				{
+					MessageBox(NULL, L"The audio frequency you specified in the configurator is not supported by the device.\n\nPress OK to default to 48000Hz.", L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+					BASS_ASIO_SetRate(48000);
+				}
+
 				CheckUp(TRUE, ERRORCODE, "ASIO Device Frequency Set", TRUE);
 
 				// Set the bit depth for the left channel (ASIO only supports 32-bit float, on Vista+)
@@ -902,7 +925,7 @@ BEGSWITCH:
 				CheckUp(TRUE, ERRORCODE, "ASIO Channel Frequency Set", TRUE);
 
 				// Enable the channels
-				BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, NULL);
+				BASS_ASIO_ChannelEnable(FALSE, 0, ManagedSettings.NotesCatcherWithAudio ? ASIOProcSameThread : ASIOProc, NULL);
 				CheckUp(TRUE, ERRORCODE, "ASIO Channel Enable", TRUE);
 
 				// If mono rendering is enabled, mirror the left channel to the right one as well
@@ -931,6 +954,11 @@ BEGSWITCH:
 					BASS_ASIO_Free();
 					break;
 				}
+
+				// Store the latency for debug
+				ManagedDebugInfo.AudioBufferSize = BASS_ASIO_GetLatency(FALSE);
+				ManagedDebugInfo.AudioLatency = ((DOUBLE)ManagedDebugInfo.AudioBufferSize * 1000.0f / BASS_ASIO_GetRate());
+				CheckUp(TRUE, ERRORCODE, "ASIO Get Frequency", FALSE);
 
 				PrintMessageToDebugLog("InitializeASIOFunc", "Done!");
 			}

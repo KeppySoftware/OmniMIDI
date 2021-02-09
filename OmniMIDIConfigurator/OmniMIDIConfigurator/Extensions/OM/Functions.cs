@@ -71,6 +71,7 @@ namespace OmniMIDIConfigurator
             public static int PreviousBuffer = 0;
             public static int MonophonicRender = 0;
             public static int AudioBitDepth = 0;
+            public static int NotesCatcherWithAudio = 0;
         }
 
         public struct SettingStruct

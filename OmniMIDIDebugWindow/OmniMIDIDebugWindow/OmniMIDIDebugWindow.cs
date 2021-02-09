@@ -456,7 +456,7 @@ namespace OmniMIDIDebugWindow
                 sb.AppendLine(String.Format("{0} {1}", AVLabel.Text, AV.Text));
                 sb.AppendLine(String.Format("{0} {1}", AvVLabel.Text, AvV.Text));
                 sb.AppendLine(String.Format("{0} {1}", RTLabel.Text, RT.Text));
-                sb.AppendLine(String.Format("{0} {1}", ASIOL.Text, ASIOLLabel.Text));
+                sb.AppendLine(String.Format("{0} {1}", Latency.Text, LatencyLabel.Text));
                 sb.AppendLine(String.Format("{0} {1}", RAMUsageVLabel.Text, RAMUsageV.Text));
                 sb.AppendLine(String.Format("{0} {1}", HCountVLabel.Text, HCountV.Text));
                 sb.AppendLine(String.Format("{0} {1}", KDMAPILabel.Text, KDMAPI.Text));
@@ -605,12 +605,13 @@ namespace OmniMIDIDebugWindow
         String CurrentApp = "None";
         String BitApp = "N/A";
         Single CurCPU = 0.0f;
+        UInt64 AudioBufSize = 0;
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
         UInt64 SFsList = 0;
         Int32 KDMAPIStatus = 0;
-        Double ASIOInLat = 0.0f;
-        Double ASIOOutLat = 0.0f;
+        Int32 KDMAPIViaWinMM = 0;
+        Double AudioLatency = 0.0f;
         private void ParseInfoFromPipe(StreamReader StreamDebugReader, Boolean ClosingPipe)
         {
             try
@@ -628,11 +629,12 @@ namespace OmniMIDIDebugWindow
                         if (!ReadPipeString(STR, "CurrentApp", ref CurrentApp));
                         if (!ReadPipeString(STR, "BitApp", ref BitApp));
                         if (!ReadPipeSingle(STR, "CurCPU", ref CurCPU));
+                        if (!ReadPipeUInt64(STR, "AudioBufSize", ref AudioBufSize)) ;
                         if (!ReadPipeUInt64(STR, "Handles", ref Handles));
                         if (!ReadPipeUInt64(STR, "RAMUsage", ref RAMUsage));
                         if (!ReadPipeBoolean(STR, "OMDirect", ref KDMAPIStatus));
-                        if (!ReadPipeDouble(STR, "ASIOInLat", ref ASIOInLat));
-                        if (!ReadPipeDouble(STR, "ASIOOutLat", ref ASIOOutLat));
+                        if (!ReadPipeBoolean(STR, "WinMMKDMAPI", ref KDMAPIViaWinMM));
+                        if (!ReadPipeDouble(STR, "AudioLatency", ref AudioLatency));
                         if (!ReadPipeUInt64(STR, "SFsList", ref SFsList));
                         UpdateActiveVoicesPerChannel(STR, ClosingPipe);
                     }
@@ -645,8 +647,7 @@ namespace OmniMIDIDebugWindow
                     Handles = 0;
                     RAMUsage = 0;
                     KDMAPIStatus = 0;
-                    ASIOInLat = 0.0f;
-                    ASIOOutLat = 0.0f;
+                    AudioLatency = 0.0f;
                     UpdateActiveVoicesPerChannel(null, ClosingPipe);
                 }
             }
@@ -712,13 +713,15 @@ namespace OmniMIDIDebugWindow
                     RT.ForeColor = ValueBlend.GetBlendedColor(RTColor.LimitIntToRange(0, 100));
                 }
 
-                if (Convert.ToInt32(Settings.GetValue("CurrentEngine", "0")) == 2) ASIOL.Text = String.Format("Input {0}ms, Output {1}ms", ASIOInLat, ASIOOutLat);
-                else ASIOL.Text = (Handles > 0) ? "Not in use." : "Unavailable";
+                Boolean IsDX = (Convert.ToInt32(Settings.GetValue("CurrentEngine", "3")) == 1);
+                Latency.Text = (Handles > 0) ? String.Format("{0}ms{1}", AudioLatency.ToString("0.00"), IsDX ? null : String.Format(" ({0} frames)", AudioBufSize)) : "Unavailable";
 
                 if (KDMAPIStatus == 0)
                     KDMAPI.Text = (Handles > 0) ? "Disabled, using WinMM" : "Unavailable";
                 else
-                    KDMAPI.Text = "Enabled, using KDMAPI";
+                {
+                    KDMAPI.Text = String.Format("Enabled, using {0}", Convert.ToBoolean(KDMAPIViaWinMM) ? "WinMMWRP" : "KDMAPI");
+                }
 
                 CurSFsList.Text = (SFsList != 0) ? String.Format("List {0}", SFsList) : "Unavailable";
 

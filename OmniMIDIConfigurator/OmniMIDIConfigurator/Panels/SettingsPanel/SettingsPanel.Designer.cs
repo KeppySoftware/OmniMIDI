@@ -421,6 +421,7 @@
             this.Frequency.Name = "Frequency";
             this.Frequency.Size = new System.Drawing.Size(64, 21);
             this.Frequency.TabIndex = 6;
+            this.Requirements.SetToolTip(this.Frequency, "This will require a restart of the audio stream.");
             // 
             // VolTrackBar
             // 
@@ -474,6 +475,7 @@
             this.bufsize.Size = new System.Drawing.Size(64, 20);
             this.bufsize.TabIndex = 7;
             this.bufsize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.Requirements.SetToolTip(this.bufsize, "This will require a restart of the audio stream.");
             this.bufsize.Value = new decimal(new int[] {
             20,
             0,
@@ -551,6 +553,7 @@
             this.MonophonicFunc.Size = new System.Drawing.Size(389, 17);
             this.MonophonicFunc.TabIndex = 11;
             this.MonophonicFunc.Text = "Use monophonic rendering (Will downsample any stereo SoundFont to mono)";
+            this.Requirements.SetToolTip(this.MonophonicFunc, "This will require a restart of the audio stream.");
             this.MonophonicFunc.UseVisualStyleBackColor = true;
             // 
             // FadeoutDisable
@@ -577,6 +580,7 @@
             this.AudioBitDepth.Name = "AudioBitDepth";
             this.AudioBitDepth.Size = new System.Drawing.Size(85, 21);
             this.AudioBitDepth.TabIndex = 3;
+            this.Requirements.SetToolTip(this.AudioBitDepth, "This will require a restart of the audio stream.");
             // 
             // AudioBitDepthLabel
             // 
@@ -602,6 +606,7 @@
             this.AudioEngBox.Name = "AudioEngBox";
             this.AudioEngBox.Size = new System.Drawing.Size(159, 21);
             this.AudioEngBox.TabIndex = 2;
+            this.Requirements.SetToolTip(this.AudioEngBox, "This will require a restart of the audio stream.");
             this.AudioEngBox.SelectedIndexChanged += new System.EventHandler(this.AudioEngBox_SelectedIndexChanged);
             // 
             // label2
@@ -624,7 +629,6 @@
             this.HMode.Text = "Enable minimum playback mode (Will cause some checks to be completely ignored by " +
     "the driver)";
             this.HMode.UseVisualStyleBackColor = true;
-            this.HMode.CheckedChanged += new System.EventHandler(this.HMode_CheckedChanged);
             // 
             // KSDAPIBoxWhat
             // 
@@ -667,6 +671,7 @@
             this.OldBuff.TabIndex = 21;
             this.OldBuff.Text = "Run events processer and audio engine on the same thread/core (Could cause clicks" +
     " and dropouts in the audio)";
+            this.Requirements.SetToolTip(this.OldBuff, "This will require a restart of the audio stream.");
             this.OldBuff.UseVisualStyleBackColor = true;
             // 
             // SynthBox
@@ -908,6 +913,7 @@
             this.DisableCookedPlayer.TabIndex = 26;
             this.DisableCookedPlayer.Text = "Disable CookedPlayer (MIDI_IO_COOKED support, might solve playback issues with ol" +
     "d applications)";
+            this.Requirements.SetToolTip(this.DisableCookedPlayer, "This will require a restart of the audio stream.");
             this.DisableCookedPlayer.UseVisualStyleBackColor = true;
             // 
             // CBRuler
@@ -1119,6 +1125,7 @@
             this.DisableChime.Size = new System.Drawing.Size(410, 17);
             this.DisableChime.TabIndex = 41;
             this.DisableChime.Text = "Disable \"Minimum Playback\"/\"Debug Mode\" chime (Could also speed up startup)";
+            this.Requirements.SetToolTip(this.DisableChime, "This will require a restart of the audio stream.");
             this.DisableChime.UseVisualStyleBackColor = true;
             // 
             // LiveChangesTrigger
@@ -1160,6 +1167,7 @@
             this.DebugMode.Size = new System.Drawing.Size(407, 17);
             this.DebugMode.TabIndex = 39;
             this.DebugMode.Text = "Enable debug log (Will slow down the MIDI application, use it only when needed)";
+            this.Requirements.SetToolTip(this.DebugMode, "This will require a restart of the audio stream.");
             this.DebugMode.UseVisualStyleBackColor = true;
             this.DebugMode.CheckedChanged += new System.EventHandler(this.DebugMode_CheckedChanged);
             // 
@@ -1196,6 +1204,7 @@
             this.IgnoreCloseCalls.TabIndex = 45;
             this.IgnoreCloseCalls.Text = "Ignore midiOutClose/midiStreamClose calls (WinMMWRP BM patched apps only, useful " +
     "to keep OmniMIDI ready for new events)";
+            this.Requirements.SetToolTip(this.IgnoreCloseCalls, "This will require a restart of the audio stream.");
             this.IgnoreCloseCalls.UseVisualStyleBackColor = true;
             // 
             // WinMMSpeedDiag
@@ -1220,6 +1229,7 @@
             this.UseTGT.TabIndex = 44;
             this.UseTGT.Text = "Use stock timeGetTime function instead of NtDelayExecution (WinMMWRP BM/DAW patch" +
     "ed apps only, could improve audio)";
+            this.Requirements.SetToolTip(this.UseTGT, "This will require a restart of the audio stream.");
             this.UseTGT.UseVisualStyleBackColor = true;
             // 
             // ShowChangelogUpdate
