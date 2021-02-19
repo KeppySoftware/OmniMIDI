@@ -94,12 +94,6 @@ NDE NtDelayExecution = 0;
 NQST NtQuerySystemTime = 0;
 DDP DefDriverProcImp = 0;
 
-// BASS (and plugins) handles
-HMODULE bass = NULL, basswasapi = NULL, bassasio = NULL, bassenc = NULL, bassmidi = NULL, bass_vst = NULL;
-HPLUGIN bassflac = NULL, basswv = NULL, bassopus = NULL;
-
-#define LOADLIBFUNCTION(l, f) *((void**)&f)=GetProcAddress(l,#f)
-
 // Critical sections but handled by OmniMIDI functions because f**k Windows
 DWORD DummyPlayBufData() { return 0; }
 VOID DummyPrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }

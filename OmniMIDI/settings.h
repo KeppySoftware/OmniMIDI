@@ -180,17 +180,43 @@ bool LoadSoundfontStartup() {
 	return FALSE;
 }
 
-void LoadDriverModule(HMODULE* Target, wchar_t* RequestedLib, BOOL Mandatory) {
+void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory) {
+	HMODULE Temp = NULL;
 	PWSTR SysDir = NULL;
 	wchar_t DLLPath[MAX_PATH] = { 0 };
+	wchar_t Msg[1024] = { 0 };
 
-	if (!(*Target)) {
+	if (!Target->Lib) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No library has been found in memory. The driver will now load the DLL...");
+
+		// Check if another DLL is already in memory
+		Target->Lib = GetModuleHandle(RequestedLib);
+		PrintLoadedDLLToDebugLog(RequestedLib, "Checking through GetModuleHandle...");
+
+		// It is, sigh
+		if (Target->Lib != NULL)
+		{
+			PrintLoadedDLLToDebugLog(RequestedLib, "Found a library through GetModuleHandle.");
+
+			swprintf_s(Msg, 1024, L"One of the required DLLs (%s) is already loaded in memory.\nThe currently loaded version might be older than OmniMIDI's own library, and could cause audio issues and crashes.\n\nDo you want to use the library anyway?\nPress YES to use the library, or NO to quit.", RequestedLib);
+			const int result = MessageBox(NULL, Msg, L"OmniMIDI - WARNING", MB_ICONWARNING | MB_YESNO | MB_SYSTEMMODAL);
+			switch (result)
+			{
+			case IDYES:
+				PrintLoadedDLLToDebugLog(RequestedLib, "OmniMIDI will use the app's own library. This could cause issues...");
+				Target->AppOwnDLL = TRUE;
+				return;
+			case IDNO:
+				DLLLoadError(DLLPath);
+				exit(ERROR_BAD_FORMAT);
+				break;
+			}
+		}
 
 		if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
 			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", SysDir, RequestedLib);
 
-			if (!((*Target) = LoadLibrary(DLLPath))) {
+			if (!(Target->Lib = LoadLibrary(DLLPath))) {
 				PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It's either missing or requires some missing dependencies.");
 				if (Mandatory) {
 					DLLLoadError(DLLPath);
@@ -246,87 +272,87 @@ VOID LoadBASSFunctions()
 			PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
 
 			// Load modules
-			LoadDriverModule(&bass, L"bass.dll", TRUE);
-			LoadDriverModule(&basswasapi, L"basswasapi.dll", TRUE);
-			LoadDriverModule(&bassmidi, L"bassmidi.dll", TRUE);
-			LoadDriverModule(&bassenc, L"bassenc.dll", TRUE);
-			LoadDriverModule(&bassasio, L"bassasio.dll", TRUE);
+			LoadDriverModule(&BASS, L"bass.dll", TRUE);
+			LoadDriverModule(&BASSWASAPI, L"basswasapi.dll", TRUE);
+			LoadDriverModule(&BASSMIDI, L"bassmidi.dll", TRUE);
+			LoadDriverModule(&BASSENC, L"bassenc.dll", TRUE);
+			LoadDriverModule(&BASSASIO, L"bassasio.dll", TRUE);
 
 			PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
 
 			// Load all the functions into memory
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_CheckRate);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelEnable);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelEnableMirror);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelGetLevel);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelJoin);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelReset);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelSetFormat);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelSetRate);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelSetVolume);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_ControlPanel);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_ErrorGetCode);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_Free);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_GetDevice);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_GetDeviceInfo);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_GetLatency);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_GetRate);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_Init);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_SetRate);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_Start);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_Stop);
-			LOADLIBFUNCTION(bassasio, BASS_ASIO_ChannelPause);
-			LOADLIBFUNCTION(bassenc, BASS_Encode_Start);
-			LOADLIBFUNCTION(bassenc, BASS_Encode_Stop);
-			LOADLIBFUNCTION(bass, BASS_ChannelFlags);
-			LOADLIBFUNCTION(bass, BASS_ChannelGetAttribute);
-			LOADLIBFUNCTION(bass, BASS_ChannelGetData);
-			LOADLIBFUNCTION(bass, BASS_ChannelGetLevelEx);
-			LOADLIBFUNCTION(bass, BASS_ChannelIsActive);
-			LOADLIBFUNCTION(bass, BASS_ChannelPlay);
-			LOADLIBFUNCTION(bass, BASS_ChannelRemoveFX);
-			LOADLIBFUNCTION(bass, BASS_ChannelSeconds2Bytes);
-			LOADLIBFUNCTION(bass, BASS_ChannelSeconds2Bytes);
-			LOADLIBFUNCTION(bass, BASS_ChannelSetAttribute);
-			LOADLIBFUNCTION(bass, BASS_ChannelSetDevice);
-			LOADLIBFUNCTION(bass, BASS_ChannelSetFX);
-			LOADLIBFUNCTION(bass, BASS_ChannelSetSync);
-			LOADLIBFUNCTION(bass, BASS_ChannelStop);
-			LOADLIBFUNCTION(bass, BASS_ChannelUpdate);
-			LOADLIBFUNCTION(bass, BASS_ErrorGetCode);
-			LOADLIBFUNCTION(bass, BASS_FXSetParameters);
-			LOADLIBFUNCTION(bass, BASS_Free);
-			LOADLIBFUNCTION(bass, BASS_GetDevice);
-			LOADLIBFUNCTION(bass, BASS_GetDeviceInfo);
-			LOADLIBFUNCTION(bass, BASS_GetInfo);
-			LOADLIBFUNCTION(bass, BASS_Init);
-			LOADLIBFUNCTION(bass, BASS_PluginFree);
-			LOADLIBFUNCTION(bass, BASS_PluginLoad);
-			LOADLIBFUNCTION(bass, BASS_SetConfig);
-			LOADLIBFUNCTION(bass, BASS_SetDevice);
-			LOADLIBFUNCTION(bass, BASS_SetVolume);
-			LOADLIBFUNCTION(bass, BASS_Stop);
-			LOADLIBFUNCTION(bass, BASS_StreamFree);
-			LOADLIBFUNCTION(bass, BASS_Update);
-			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_Init);
-			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_Free);
-			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_IsStarted);
-			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_PutData);
-			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_Start);
-			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_Stop);
-			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_GetDeviceInfo);
-			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_GetInfo);
-			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_GetDevice);
-			LOADLIBFUNCTION(basswasapi, BASS_WASAPI_GetLevelEx);
-			LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontFree);
-			LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontInit);
-			LOADLIBFUNCTION(bassmidi, BASS_MIDI_FontLoad);
-			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamCreate);
-			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamEvent);
-			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamEvents);
-			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamGetEvent);
-			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamLoadSamples);
-			LOADLIBFUNCTION(bassmidi, BASS_MIDI_StreamSetFonts);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_CheckRate);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelEnable);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelEnableMirror);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelGetLevel);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelJoin);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelReset);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelSetFormat);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelSetRate);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelSetVolume);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ControlPanel);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ErrorGetCode);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_Free);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_GetDevice);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_GetDeviceInfo);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_GetLatency);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_GetRate);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_Init);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_SetRate);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_Start);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_Stop);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelPause);
+			LOADLIBFUNCTION(BASSENC.Lib, BASS_Encode_Start);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_Encode_Stop);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelFlags);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelGetAttribute);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelGetData);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelGetLevelEx);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelIsActive);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelPlay);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelRemoveFX);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelSeconds2Bytes);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelSeconds2Bytes);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelSetAttribute);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelSetDevice);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelSetFX);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelSetSync);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelStop);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelUpdate);
+			LOADLIBFUNCTION(BASS.Lib, BASS_ErrorGetCode);
+			LOADLIBFUNCTION(BASS.Lib, BASS_FXSetParameters);
+			LOADLIBFUNCTION(BASS.Lib, BASS_Free);
+			LOADLIBFUNCTION(BASS.Lib, BASS_GetDevice);
+			LOADLIBFUNCTION(BASS.Lib, BASS_GetDeviceInfo);
+			LOADLIBFUNCTION(BASS.Lib, BASS_GetInfo);
+			LOADLIBFUNCTION(BASS.Lib, BASS_Init);
+			LOADLIBFUNCTION(BASS.Lib, BASS_PluginFree);
+			LOADLIBFUNCTION(BASS.Lib, BASS_PluginLoad);
+			LOADLIBFUNCTION(BASS.Lib, BASS_SetConfig);
+			LOADLIBFUNCTION(BASS.Lib, BASS_SetDevice);
+			LOADLIBFUNCTION(BASS.Lib, BASS_SetVolume);
+			LOADLIBFUNCTION(BASS.Lib, BASS_Stop);
+			LOADLIBFUNCTION(BASS.Lib, BASS_StreamFree);
+			LOADLIBFUNCTION(BASS.Lib, BASS_Update);
+			LOADLIBFUNCTION(BASSWASAPI.Lib, BASS_WASAPI_Init);
+			LOADLIBFUNCTION(BASSWASAPI.Lib, BASS_WASAPI_Free);
+			LOADLIBFUNCTION(BASSWASAPI.Lib, BASS_WASAPI_IsStarted);
+			LOADLIBFUNCTION(BASSWASAPI.Lib, BASS_WASAPI_PutData);
+			LOADLIBFUNCTION(BASSWASAPI.Lib, BASS_WASAPI_Start);
+			LOADLIBFUNCTION(BASSWASAPI.Lib, BASS_WASAPI_Stop);
+			LOADLIBFUNCTION(BASSWASAPI.Lib, BASS_WASAPI_GetDeviceInfo);
+			LOADLIBFUNCTION(BASSWASAPI.Lib, BASS_WASAPI_GetInfo);
+			LOADLIBFUNCTION(BASSWASAPI.Lib, BASS_WASAPI_GetDevice);
+			LOADLIBFUNCTION(BASSWASAPI.Lib, BASS_WASAPI_GetLevelEx);
+			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_FontFree);
+			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_FontInit);
+			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_FontLoad);
+			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamCreate);
+			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamEvent);
+			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamEvents);
+			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamGetEvent);
+			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamLoadSamples);
+			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamSetFonts);
 
 			_BMSE = BASS_MIDI_StreamEvent;
 
@@ -357,24 +383,42 @@ VOID UnloadBASSFunctions() {
 			BASS_PluginFree(basswv);
 			BASS_PluginFree(bassopus);
 
-			if (FreeLibrary(bass))
-				bass = NULL;
+			if (!BASS.AppOwnDLL)
+			{
+				if (FreeLibrary(BASS.Lib))
+					BASS.Lib = NULL;
+			}
 
-			if (FreeLibrary(bassmidi))
-				bassmidi = NULL;
+			if (!BASSMIDI.AppOwnDLL)
+			{
+				if (FreeLibrary(BASSMIDI.Lib))
+					BASSMIDI.Lib = NULL;
+			}
 
-			if (FreeLibrary(bassenc))
-				bassenc = NULL;
+			if (!BASSENC.AppOwnDLL)
+			{
+				if (FreeLibrary(BASSENC.Lib))
+					BASSENC.Lib = NULL;
+			}
 
-			if (FreeLibrary(bassasio))
-				bassasio = NULL;
+			if (!BASSASIO.AppOwnDLL) 
+			{
+				if (FreeLibrary(BASSASIO.Lib))
+					BASSASIO.Lib = NULL;
+			}
 
-			if (FreeLibrary(basswasapi))
-				basswasapi = NULL;
+			if (!BASSWASAPI.AppOwnDLL)
+			{
+				if (FreeLibrary(BASSWASAPI.Lib))
+					BASSWASAPI.Lib = NULL;
+			}
 
-			if (bass_vst)
-				if (FreeLibrary(bass_vst))
-					bass_vst = NULL;
+			if (!BASS_VST.AppOwnDLL)
+			{
+				if (BASS_VST.Lib)
+					if (FreeLibrary(BASS_VST.Lib))
+						BASS_VST.Lib = NULL;
+			}
 
 			PrintMessageToDebugLog("UnloadBASS", "The BASS libraries have been freed from the app's working set.");
 		}
@@ -586,6 +630,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		RegQueryValueEx(Configuration.Address, L"TransposeValue", NULL, &dwType, (LPBYTE)&ManagedSettings.TransposeValue, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"CPitchValue", NULL, &dwType, (LPBYTE)&ManagedSettings.ConcertPitch, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&ManagedSettings.VolumeMonitor, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"AudioRampIn", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioRampIn, &dwSize);
 
 		// Stuff that works so don't bother
 		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }

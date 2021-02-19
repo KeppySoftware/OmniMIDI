@@ -20,7 +20,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '13.3.0.0'
+#define Version '13.5.0.0'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -290,11 +290,13 @@ Type: files; Name: "{tmp}\LoudMax64.dll"
 Type: filesandordirs; Name: "{syswow64}\{#InstallDir}\amidimap.cpl"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\{#InstallDir}\amidimap.cpl"
 Type: filesandordirs; Name: "{syswow64}\{#InstallDir}\"; Check: Is64BitInstallMode
-Type: filesandordirs; Name: "{sys}\{#InstallDir}\"Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{sys}\{#InstallDir}\"
+Type: filesandordirs; Name: "{syswow64}\keppydrv\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppydrv\"
 Type: filesandordirs; Name: "{syswow64}\keppysynth\"; Check: Is64BitInstallMode
 Type: filesandordirs; Name: "{sys}\keppysynth\"
-Type: filesandordirs; Name: "{group}\"Type: files; Name: "{syswow64}\{#InstallDir}\bass_fx.dll"; Check: Is64BitInstallMode
+Type: filesandordirs; Name: "{group}\"
+Type: files; Name: "{syswow64}\{#InstallDir}\bass_fx.dll"; Check: Is64BitInstallMode
 Type: files; Name: "{sys}\{#InstallDir}\bass_fx.dll"
 Type: files; Name: "{syswow64}\{#InstallDir}.dll"
 Type: files; Name: "{sys}\{#InstallDir}.dll"

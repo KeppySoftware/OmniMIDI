@@ -189,6 +189,7 @@ namespace OmniMIDIConfigurator
                 DisableCookedPlayer.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("DisableCookedPlayer", 0));
                 AllNotesIgnore.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreAllNotes", 0));
                 IgnoreNotes.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
+                AudioRampIn.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("AudioRampIn", 1));
 
                 Int32 LV = Convert.ToInt32(Program.SynthSettings.GetValue("MinVelIgnore", 1));
                 Int32 HV = Convert.ToInt32(Program.SynthSettings.GetValue("MaxVelIgnore", 2));
@@ -287,6 +288,7 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("DisableCookedPlayer", Convert.ToInt32(DisableCookedPlayer.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("IgnoreAllNotes", Convert.ToInt32(AllNotesIgnore.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("IgnoreNotesBetweenVel", Convert.ToInt32(IgnoreNotes.Checked), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("AudioRampIn", Convert.ToInt32(AudioRampIn.Checked), RegistryValueKind.DWord);
 
             if (IgnoreNotesLV.Value > IgnoreNotesHV.Value) IgnoreNotesLV.Value = IgnoreNotesHV.Value;
             Program.SynthSettings.SetValue("MinVelIgnore", IgnoreNotesLV.Value, RegistryValueKind.DWord);
@@ -325,7 +327,7 @@ namespace OmniMIDIConfigurator
                         Functions.LiveChanges.PreviousBuffer != (int)Program.SynthSettings.GetValue("BufferLength", 50) ||
                         Functions.LiveChanges.MonophonicRender != (int)Program.SynthSettings.GetValue("MonoRendering", 0) ||
                         Functions.LiveChanges.AudioBitDepth != (int)Program.SynthSettings.GetValue("AudioBitDepth", 1) ||
-                        Functions.LiveChanges.NotesCatcherWithAudio != (int)Program.SynthSettings.GetValue("NoteCatcherWithAudio", 0))
+                        Functions.LiveChanges.NotesCatcherWithAudio != (int)Program.SynthSettings.GetValue("NotesCatcherWithAudio", 0))
                     {
                         Program.SynthSettings.SetValue("LiveChanges", 1, RegistryValueKind.DWord);
                         Functions.LiveChanges.PreviousEngine = (int)Program.SynthSettings.GetValue("CurrentEngine", AudioEngine.WASAPI_ENGINE);
@@ -570,7 +572,24 @@ namespace OmniMIDIConfigurator
 
         private void HMode_CheckedChanged(object sender, EventArgs e)
         {
+            OverrideNoteLength.Enabled = !HMode.Checked;
+            NoteLengthValue.Enabled = (HMode.Checked) ? false : OverrideNoteLength.Checked;
 
+            DelayNoteOff.Enabled = !HMode.Checked;
+            NoteOffDelayValue.Enabled = (HMode.Checked) ? false : DelayNoteOff.Checked;
+
+            PitchShifting.Enabled = !HMode.Checked;
+
+            IgnoreNotes.Enabled = !HMode.Checked;
+            IgnoreNotesLL.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
+            IgnoreNotesLV.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
+            IgnoreNotesHL.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
+            IgnoreNotesHV.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
+
+            SysResetIgnore.Enabled = !HMode.Checked;
+            FullVelocityMode.Enabled = !HMode.Checked;
+            Limit88.Enabled = !HMode.Checked;
+            AllNotesIgnore.Enabled = !HMode.Checked;
         }
 
         public void ButtonToSaveSettings(object sender, EventArgs e)

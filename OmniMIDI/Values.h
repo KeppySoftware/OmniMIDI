@@ -7,6 +7,8 @@
 // Things
 UINT CPUThreadsAvailable = 0;
 
+#define LOADLIBFUNCTION(l, f) *((void**)&f)=GetProcAddress(l,#f)
+
 #define GETCMD(f) (f & 0xF0)
 #define GETSP(f) ((f & 0xFF0000) >> 16)
 #define GETFP(f) ((f & 0x00FF00) >> 8)
@@ -46,6 +48,14 @@ QWORD EvBufferSize = 4096;
 DWORD EvBufferMultRatio = 1;
 DWORD GetEvBuffSizeFromRAM = 0;
 
+// BASS lib
+typedef struct OMLib {
+	HMODULE Lib = NULL;
+	BOOL AppOwnDLL = FALSE;
+};
+OMLib BASS = {}, BASSWASAPI = {}, BASSASIO = {}, BASSENC = {}, BASSMIDI = {}, BASS_VST = {};
+HPLUGIN bassflac = NULL, basswv = NULL, bassopus = NULL;
+
 // Cooked player struct
 typedef struct CookedPlayer
 {
@@ -66,13 +76,13 @@ CookedPlayer* OMCookedPlayer;
 
 // Device stuff
 const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };
-ULONGLONG TickStart = 0;			// For TGT64
-HSTREAM OMStream = NULL;
-HANDLE OMReady = NULL;
-HMIDI OMHMIDI = NULL;
-HDRVR OMHDRVR = NULL;
-DWORD_PTR OMCallback = NULL;
-DWORD_PTR OMInstance = NULL;
+static ULONGLONG TickStart = 0;			// For TGT64
+static HSTREAM OMStream = NULL;
+static HANDLE OMReady = NULL;
+static HMIDI OMHMIDI = NULL;
+static HDRVR OMHDRVR = NULL;
+static DWORD_PTR OMCallback = NULL;
+static DWORD_PTR OMInstance = NULL;
 
 // Important stuff
 const std::locale UTF8Support(std::locale(), new std::codecvt_utf8<wchar_t>);

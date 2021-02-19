@@ -156,6 +156,8 @@ typedef struct
 	BOOL OldWASAPIMode = FALSE;				// Old WASAPI mode
 	BOOL WASAPIRAWMode = FALSE;				// WASAPI raw mode
 	BOOL WASAPIDoubleBuf = TRUE;			// WASAPI double buffer (for volume monitoring)
+
+	BOOL AudioRampIn = TRUE;				// Enables the audio ramp-in, to gracefully play new notes without audible clicks
 } Settings;
 #endif
 

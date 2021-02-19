@@ -338,16 +338,16 @@ void InitializeBASSVST() {
 	// If the DLL exists, begin the loading process
 	if (PathFileExists(LoudMax)) {
 		// Initialize BASS_VST
-		LoadDriverModule(&bass_vst, L"bass_vst.dll", FALSE);
+		LoadDriverModule(&BASS_VST, L"bass_vst.dll", FALSE);
 
 		// If BASS_VST has been loaded succesfully, load the functions too
-		if (bass_vst)
+		if (BASS_VST.Lib)
 		{
-			LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelSetDSP);
-			LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelFree);
-			LOADLIBFUNCTION(bass_vst, BASS_VST_ChannelCreate);
-			LOADLIBFUNCTION(bass_vst, BASS_VST_ProcessEvent);
-			LOADLIBFUNCTION(bass_vst, BASS_VST_ProcessEventRaw);
+			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ChannelSetDSP);
+			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ChannelFree);
+			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ChannelCreate);
+			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ProcessEvent);
+			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ProcessEventRaw);
 
 			BASS_VST_ChannelSetDSP(OMStream, LoudMax, BASS_UNICODE, 1);
 		}
@@ -372,15 +372,21 @@ BOOL InitializeStream(INT32 mixfreq) {
 
 	// Create the stream with 16 MIDI channels, and the various settings
 	OMStream = BASS_MIDI_StreamCreate(16,
-		(isdecode ? BASS_STREAM_DECODE : 0) | (ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0) | (ManagedSettings.MonoRendering ? BASS_SAMPLE_MONO : 0) |
-		AudioRenderingType(TRUE, ManagedSettings.AudioBitDepth) | (ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0) | (ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX) | (ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0),
+		(isdecode ? BASS_STREAM_DECODE : 0) | 
+		(ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0) |
+		(ManagedSettings.MonoRendering ? BASS_SAMPLE_MONO : 0) |
+		AudioRenderingType(TRUE, ManagedSettings.AudioBitDepth) | 
+		(ManagedSettings.NoteOff1 ? BASS_MIDI_NOTEOFF1 : 0) | 
+		(ManagedSettings.EnableSFX ? 0 : BASS_MIDI_NOFX) | 
+		(ManagedSettings.SincInter ? BASS_MIDI_SINCINTER : 0),
 		mixfreq);
 
-	CheckUp(FALSE, ERRORCODE, "MIDI Stream Initialization", TRUE);
-
-	if (!OMStream) {
-		MessageBox(NULL, L"BASS reported no error during the initialization, but the stream handle is NULL.\n\nThis is a clear sign of DLL hell.\nPlease report the issue to the app developer, or check if there are any BASS libraries inside the app's folder.\n\nCan not continue, press OK to quit.", L"OmniMIDI - FATAL ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-		exit(ERROR_INVALID_HANDLE);
+	if (!OMStream)
+	{
+		if (CheckUp(FALSE, ERRORCODE, "MIDI Stream Initialization", TRUE)) {
+			MessageBox(NULL, L"BASS reported no error during the initialization, but the stream handle is NULL.\n\nThis is a clear sign of DLL hell.\nPlease report the issue to the app developer, or check if there are any BASS libraries inside the app's folder.\n\nCan not continue, press OK to quit.", L"OmniMIDI - FATAL ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+			exit(ERROR_INVALID_HANDLE);
+		}
 	}
 	
 	PrintMessageToDebugLog("InitializeStreamFunc", "Stream is now active!");
