@@ -196,21 +196,9 @@ void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 		// It is, sigh
 		if (Target->Lib != NULL)
 		{
-			PrintLoadedDLLToDebugLog(RequestedLib, "Found a library through GetModuleHandle.");
-
-			swprintf_s(Msg, 1024, L"One of the required DLLs (%s) is already loaded in memory.\nThe currently loaded version might be older than OmniMIDI's own library, and could cause audio issues and crashes.\n\nDo you want to use the library anyway?\nPress YES to use the library, or NO to quit.", RequestedLib);
-			const int result = MessageBox(NULL, Msg, L"OmniMIDI - WARNING", MB_ICONWARNING | MB_YESNO | MB_SYSTEMMODAL);
-			switch (result)
-			{
-			case IDYES:
-				PrintLoadedDLLToDebugLog(RequestedLib, "OmniMIDI will use the app's own library. This could cause issues...");
-				Target->AppOwnDLL = TRUE;
-				return;
-			case IDNO:
-				DLLLoadError(DLLPath);
-				exit(ERROR_BAD_FORMAT);
-				break;
-			}
+			PrintLoadedDLLToDebugLog(RequestedLib, "OmniMIDI will use the app's own library. This could cause issues...");
+			Target->AppOwnDLL = TRUE;
+			return;
 		}
 
 		if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
@@ -303,7 +291,7 @@ VOID LoadBASSFunctions()
 			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_Stop);
 			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelPause);
 			LOADLIBFUNCTION(BASSENC.Lib, BASS_Encode_Start);
-			LOADLIBFUNCTION(BASSASIO.Lib, BASS_Encode_Stop);
+			LOADLIBFUNCTION(BASSENC.Lib, BASS_Encode_Stop);
 			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelFlags);
 			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelGetAttribute);
 			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelGetData);
@@ -377,6 +365,11 @@ VOID UnloadBASSFunctions() {
 	try {
 		if (BASSLoadedToMemory) {
 			PrintMessageToDebugLog("UnloadBASS", "Freeing BASS libraries...");
+
+			_PrsData = DummyParseData;
+			_PforBASSMIDI = DummyPrepareForBASSMIDI;
+			_PlayBufData = DummyPlayBufData;
+			_PlayBufDataChk = DummyPlayBufData;
 			_BMSE = DummyBMSE;
 
 			BASS_PluginFree(bassflac);
@@ -405,6 +398,10 @@ VOID UnloadBASSFunctions() {
 			{
 				if (FreeLibrary(BASSASIO.Lib))
 					BASSASIO.Lib = NULL;
+
+				// BASSASIO won't wait for us...
+				if (ManagedSettings.CurrentEngine = ASIO_ENGINE)
+					Sleep(200);
 			}
 
 			if (!BASSWASAPI.AppOwnDLL)
