@@ -442,6 +442,8 @@ void FreeUpMemory() {
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing EV buffer...");
 	delete[] EVBuffer.Buffer;
 	EVBuffer.Buffer = NULL;
+	EVBuffer.WriteHead = 0;
+	EVBuffer.ReadHead = 0;
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freed.");
 
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing audio buffer...");
@@ -521,6 +523,10 @@ void AllocateMemory(BOOL restart) {
 			}
 			PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer allocated.");
 		}
+
+		// Set heads to 0
+		EVBuffer.WriteHead = 0;
+		EVBuffer.ReadHead = 0;
 
 		// Done, now allocate the buffer for the ".WAV mode"
 		if (ManagedSettings.CurrentEngine == AUDTOWAV)
@@ -665,7 +671,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		}
 
 		// Check if the value is different from the temporary one
-		if (IsBootUp || TempHP != HyperMode || SettingsManagedByClient) {
+		if (TempHP != HyperMode || SettingsManagedByClient) {
 			if (!SettingsManagedByClient) HyperMode = TempHP;
 
 			// Close the threads for safety reasons
@@ -684,7 +690,6 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		if (IsBootUp || (TEvBufferSize != EvBufferSize || TEvBufferMultRatio != EvBufferMultRatio)) {
 			EvBufferSize = TEvBufferSize;
 			EvBufferMultRatio = TEvBufferMultRatio;
-			AllocateMemory(Restart);
 		}
 
 		// Load the settings by comparing the temporary values to the driver's ones, to prevent overhead

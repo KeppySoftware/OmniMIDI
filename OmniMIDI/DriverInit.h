@@ -828,7 +828,7 @@ BEGSWITCH:
 				(ManagedSettings.WASAPIExclusive) ? BASS_WASAPI_EXCLUSIVE : 0 | 
 				(ManagedSettings.WASAPIRAWMode ? BASS_WASAPI_RAW : 0) |
 				(ManagedSettings.WASAPIDoubleBuf ? BASS_WASAPI_BUFFER : 0) |
-				BASS_WASAPI_EVENT | BASS_WASAPI_CATEGORY_MEDIA,
+				BASS_WASAPI_EVENT,
 				(float)ManagedSettings.BufferLength / 1000.0f,
 				0, ManagedSettings.NotesCatcherWithAudio ? ProcDataSameThread : ProcData, NULL);
 
@@ -993,6 +993,16 @@ BEGSWITCH:
 
 	// Enable the volume knob in the configurator
 	if (ManagedSettings.CurrentEngine != AUDTOWAV) PrepareVolumeKnob();
+
+	// Allocate EVBuffer
+	AllocateMemory(restart);
+
+	// Check if "Hyper-playback" mode has been enabled
+	_PrsData = HyperMode ? ParseDataHyper : ParseData;
+	_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
+	_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
+	_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
+
 
 #if !defined(_M_ARM64)
 	// Apply LoudMax, if requested

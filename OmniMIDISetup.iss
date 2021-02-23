@@ -20,7 +20,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '13.5.1.0'
+#define Version '13.5.2.0'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -62,6 +62,7 @@ OutputBaseFilename={#OutputName}
 SetupIconFile={#Icon}
 ShowLanguageDialog=no
 SolidCompression=yes
+SetupMutex=OmniMIDISetup,KeppySoftware\OmniMIDISetup
 TimeStampsInUTC=True
 UninstallDisplayIcon={syswow64}\{#InstallDir}\OmniMIDI.exe
 UninstallDisplayName={#ProductName} (Uninstall only)

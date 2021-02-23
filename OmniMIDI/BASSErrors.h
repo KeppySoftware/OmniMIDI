@@ -58,7 +58,7 @@ LPCWSTR ReturnBASSErrorDesc(INT ErrorCode) {
 	switch (ErrorCode) {
 	case -1: return L"Unknown error.";
 	case 0: return L"No error detected.";
-	case 1: return L"The app is out of memory.";
+	case 1: return L"No enough memory available.";
 	case 2: return L"The file could not be opened.";
 	case 3: return L"There is no available device driver. The device may already be in use.";
 	case 4: return L"The sample buffer was lost.";
@@ -67,13 +67,13 @@ LPCWSTR ReturnBASSErrorDesc(INT ErrorCode) {
 	case 7: return L"The requested position is invalid, eg. it is beyond the end or the download has not yet reached it.";
 	case 8: return L"BASS_Init has not been called yet.";
 	case 9: return L"BASS_Start has not been called yet.";
-	case 10: return L"SSL/HTTPS support isn't available. Are you using Windows 95?";
-	case 14: return L"Stream already initialized, or BASS_Init already called.";
+	case 10: return L"SSL/HTTPS support isn't available.";
+	case 14: return L"The stream handle has been already initialized, or BASS_Init has been already called.";
 	case 18: return L"No free channels are available.";
 	case 19: return L"An illegal definition was specified.";
 	case 20: return L"An illegal parameter was specified.";
-	case 21: return L"The selected DirectSound output doesn't support DirectSound3D.";
-	case 22: return L"The selected DirectSound output doesn't support hardware EAX.";
+	case 21: return L"The selected DirectSound output does not support DirectSound3D.";
+	case 22: return L"The selected DirectSound output does not support hardware EAX.";
 	case 23: return L"Invalid device ID.";
 	case 24: return L"The stream is not playing.";
 	case 25: return L"Invalid audio frequency selected.";
@@ -86,18 +86,19 @@ LPCWSTR ReturnBASSErrorDesc(INT ErrorCode) {
 	case 35: return L"The stream is already playing.";
 	case 37: return L"The requested data is not available yet.";
 	case 38: return L"The stream is a \"decoding stream\"";
-	case 39: return L"DirectX8 is not installed.";
+	case 39: return L"DirectSoundCreate8 failed.";
 	case 40: return L"Connection timed out.";
 	case 41: return L"Unsupported file format.";
 	case 42: return L"Speakers configuration unavailable.";
 	case 43: return L"BASS version mismatch.";
 	case 44: return L"Codec is not available or supported.";
 	case 45: return L"The stream has ended.";
-	case 46: return L"The device is busy. (eg. in 'exclusive' use by another process)";
+	case 46: return L"The device is busy. It might be in use in exclusive mode by another application, or it might not be ready to accept incoming streams.";
 	case 5000: return L"WASAPI is not available in this system.";
 	case 5001: return L"WASAPI buffer size is not valid.";
-	case 5002: return L"RAW mode is unsupported on this output device.";
+	case 5002: return L"RAW mode is not supported by your output device's APO filters.";
 	case 5003: return L"Couldn't open the WASAPI device, access denied.";
+	case 7000: return L"An SFZ #include directive file could not be opened.";
 	default: return L"No description available.";
 	}
 }
@@ -137,7 +138,7 @@ LPCWSTR ReturnBASSErrorFix(INT ErrorCode) {
 	case 5001:
 		return L"The buffer size you specified is either not valid or too small for the device to work. Try specifying another value.";
 	case 5002:
-		return L"This error could happen if the device driver is meant for Windows 8.0 and older, or if the APO filters don't support RAW mode. Try downgrading the audio driver to the stock Microsoft High Definition Audio driver.";
+		return L"This error could happen if the device driver is meant for Windows Vista/7, or if the APO filters don't support RAW mode. Try switching the audio driver to the stock Microsoft High Definition Audio driver, through Device Manager.";
 	case 7000:
 		return L"The SoundFont preset might be corrupted or invalid. Contact the original developer of the SoundFont, or use another one instead.";
 	case 5: case 8: case 11: case 12: case 13: case 15: case 16: case 17: case 19: case 38: case 43: case 5000: case 5003:
