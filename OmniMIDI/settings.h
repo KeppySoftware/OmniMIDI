@@ -3,38 +3,6 @@ OmniMIDI settings loading system
 */
 #pragma once
 
-void CheckIfAppIsAllowedToUseOSD() {
-	// OSD system init
-	std::wstring OSDDir;
-
-	wchar_t UserProfile[MAX_PATH] = { 0 };
-	wchar_t TempString[NTFS_MAX_PATH] = { 0 };
-
-	// Start the system
-	SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, UserProfile);
-
-	OSDDir.append(UserProfile);
-	OSDDir.append(_T("\\OmniMIDI\\lists\\OmniMIDI.osdlist"));
-
-	try {
-		if (PathFileExistsW(OSDDir.c_str())) {
-			std::wifstream file(OSDDir.c_str());
-
-			if (file) {
-				file.imbue(UTF8Support);
-
-				while (file.getline(TempString, sizeof(TempString) / sizeof(*TempString)))
-				{
-					if (_wcsicmp(AppNameW, TempString) == 0) CanUseOSD = TRUE;
-				}
-			}
-		}
-	}
-	catch (...) {
-		CrashMessage(L"OSDCheckUp");
-	}
-}
-
 void ResetSynth(BOOL SwitchingBufferMode) {
 	if (SwitchingBufferMode) {	
 		EVBuffer.ReadHead = 0;
@@ -909,32 +877,6 @@ void FillContentDebug() {
 	const WCHAR* PCW = PipeContent.c_str();
 	WriteFile(hPipe, (LPVOID)PCW, wcslen(PCW) * sizeof(wchar_t), &bytesWritten, NULL);
 	if (hPipe == INVALID_HANDLE_VALUE || (GetLastError() != ERROR_SUCCESS && GetLastError() != ERROR_PIPE_LISTENING)) StartDebugPipe(TRUE);
-
-	// Check if RTSS OSD is available
-	if (IsOSDAvailable()) {
-		// It is, go push some data fam
-		std::string RTSSContent;
-
-		DWORD ActiveVoices = 0;
-		for (int i = 0; i <= 15; ++i)
-			ActiveVoices += ManagedDebugInfo.ActiveVoices[i];
-
-		RTSSContent += "<A0=-5><A1=4><C0=FFA0A0><C1=FF0000><C2=FFFFFF><C3=33FF33><C4=FF3333><C5=FFFF00><S0=-50><S1=50>";
-		RTSSContent += "<C0>Rendering time:<S>	 <A0>" + draw_number(ManagedDebugInfo.RenderingTime, 1, ManagedSettings.MaxRenderingTime, "<C1>", "<C>") + "%<A>\n";
-		RTSSContent += "<C0>Active voices:<S>	 <A0>" + draw_number(ActiveVoices, 0, ManagedSettings.MaxVoices, "<C1>", "<C>") + "<A>\n";
-		RTSSContent += "<C0>Init mode:<S><C>	 <A0>";
-		if (KDMAPIEnabled) {
-			if (IsKDMAPIViaWinMM)
-				RTSSContent += "<C5>WinMMWRP\n<A>\n";
-			else
-				RTSSContent += "<C3>KDMAPI\n<A>\n";
-		} 
-		else RTSSContent += "<C4>WinMM\n<A>\n";
-		RTSSContent += "<C2>Framerate (<APP>):<C>	 <A0><FR><A>";
-
-		// Send the data to RTSS
-		UpdateOSD(RTSSContent.c_str());
-	}
 }
 
 void ParseDebugData() {

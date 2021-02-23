@@ -136,6 +136,7 @@ nvxdsync.exe
 nvxdsync.exe
 origin.exe
 originwebhelperservice.exe
+outlook.exe
 paladins.exe
 paladinseac.exe
 pcsx2.exe
@@ -236,6 +237,7 @@ wininit.exe
 winlogon.exe
 wisptis.exe
 wlanext.exe
+wlmail.exe
 wmiprvse.exe
 wuauclt.exe
 wudfhost.exe

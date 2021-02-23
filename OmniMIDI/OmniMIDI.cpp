@@ -64,7 +64,6 @@ typedef long NTSTATUS;
 #include <assert.h>
 #include "Resource.h"
 #include "OmniMIDI.h"
-#include "RTSSOSD.h"
 
 // BASS headers
 #include <bass.h>

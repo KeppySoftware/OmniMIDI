@@ -328,7 +328,6 @@ BOOL DoStartClient() {
 	if (!DriverInitStatus && !block_bassinit) {
 		PrintMessageToDebugLog("StartDriver", "Checking if app is allowed to use RTSS OSD...");
 		GetAppName();
-		CheckIfAppIsAllowedToUseOSD();
 
 		PrintMessageToDebugLog("StartDriver", "Initializing driver...");
 
@@ -394,9 +393,6 @@ BOOL DoStartClient() {
 
 BOOL DoStopClient() {
 	if (DriverInitStatus) {
-		PrintMessageToDebugLog("StopDriver", "Releasing RTSS OSD...");
-		ReleaseOSD();
-
 		PrintMessageToDebugLog("StopDriver", "Terminating driver...");
 
 		// Close the threads and free up the allocated memory

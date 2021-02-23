@@ -336,16 +336,6 @@ namespace OmniMIDIConfigurator
             new WinMMPatches().ShowDialog();
         }
 
-        private void KACGuide_Click(object sender, EventArgs e)
-        {
-            Process.Start(
-                String.Format(
-                    "{0}#how-can-i-get-rid-of-the-annoying-smartscreen-block-screen-and-stop-chrome-from-warning-me-not-to-download-your-driver",
-                    Properties.Settings.Default.ProjectLink
-                    )
-                );
-        }
-
         private void MIDIInOutTest_Click(object sender, EventArgs e)
         {
             new MIDIInPlay().ShowDialog();

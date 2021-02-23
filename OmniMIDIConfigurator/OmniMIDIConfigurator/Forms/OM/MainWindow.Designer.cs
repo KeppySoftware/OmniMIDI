@@ -76,8 +76,6 @@
             this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.KACGuide = new System.Windows.Forms.MenuItem();
-            this.menuItem13 = new System.Windows.Forms.MenuItem();
             this.MIDIInOutTest = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
             this.DeleteUserData = new System.Windows.Forms.MenuItem();
@@ -479,8 +477,6 @@
             // 
             this.menuItem1.Index = 2;
             this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.KACGuide,
-            this.menuItem13,
             this.MIDIInOutTest,
             this.menuItem15,
             this.DeleteUserData,
@@ -491,61 +487,50 @@
             this.DWCF});
             this.menuItem1.Text = "Tools";
             // 
-            // KACGuide
-            // 
-            this.KACGuide.Index = 0;
-            this.KACGuide.Text = "Install the Keppy\'s Authentication Certificate";
-            this.KACGuide.Click += new System.EventHandler(this.KACGuide_Click);
-            // 
-            // menuItem13
-            // 
-            this.menuItem13.Index = 1;
-            this.menuItem13.Text = "-";
-            // 
             // MIDIInOutTest
             // 
-            this.MIDIInOutTest.Index = 2;
+            this.MIDIInOutTest.Index = 0;
             this.MIDIInOutTest.Text = "Test MIDI input and output";
             this.MIDIInOutTest.Click += new System.EventHandler(this.MIDIInOutTest_Click);
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 3;
+            this.menuItem15.Index = 1;
             this.menuItem15.Text = "-";
             // 
             // DeleteUserData
             // 
-            this.DeleteUserData.Index = 4;
+            this.DeleteUserData.Index = 2;
             this.DeleteUserData.Text = "Reinstall OmniMIDI from scratch";
             this.DeleteUserData.Click += new System.EventHandler(this.DeleteUserData_Click);
             // 
             // ReinstallDriver
             // 
-            this.ReinstallDriver.Index = 5;
+            this.ReinstallDriver.Index = 3;
             this.ReinstallDriver.Text = "Delete OmniMIDI\'s user data";
             this.ReinstallDriver.Click += new System.EventHandler(this.ReinstallDriver_Click);
             // 
             // menuItem17
             // 
-            this.menuItem17.Index = 6;
+            this.menuItem17.Index = 4;
             this.menuItem17.Text = "-";
             // 
             // RestoreSFListEdWidth
             // 
-            this.RestoreSFListEdWidth.Index = 7;
+            this.RestoreSFListEdWidth.Index = 5;
             this.RestoreSFListEdWidth.Text = "Restore default SoundFonts list editor\'s column width";
             this.RestoreSFListEdWidth.Visible = false;
             this.RestoreSFListEdWidth.Click += new System.EventHandler(this.RestoreSFListEdWidth_Click);
             // 
             // RestoreConfSettings
             // 
-            this.RestoreConfSettings.Index = 8;
+            this.RestoreConfSettings.Index = 6;
             this.RestoreConfSettings.Text = "Restore all the configurator\'s internal settings";
             this.RestoreConfSettings.Click += new System.EventHandler(this.RestoreConfSettings_Click);
             // 
             // DWCF
             // 
-            this.DWCF.Index = 9;
+            this.DWCF.Index = 7;
             this.DWCF.Text = "Enable UI performance mode";
             this.DWCF.Click += new System.EventHandler(this.DWCF_Click);
             // 
@@ -673,8 +658,6 @@
         private System.Windows.Forms.MenuItem menuItem8;
         private System.Windows.Forms.MenuItem WMWPatch;
         private System.Windows.Forms.MenuItem menuItem10;
-        private System.Windows.Forms.MenuItem KACGuide;
-        private System.Windows.Forms.MenuItem menuItem13;
         private System.Windows.Forms.MenuItem MIDIInOutTest;
         private System.Windows.Forms.MenuItem menuItem15;
         private System.Windows.Forms.MenuItem DeleteUserData;

@@ -55,9 +55,6 @@
     <ClInclude Include="LockSystem.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="RTSSOSD.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="ShakraRegSystem.h">
       <Filter>Headers</Filter>
     </ClInclude>
