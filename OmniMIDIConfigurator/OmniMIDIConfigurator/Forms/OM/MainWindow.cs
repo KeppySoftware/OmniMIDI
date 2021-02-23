@@ -256,11 +256,6 @@ namespace OmniMIDIConfigurator
             new BlacklistSystem().ShowDialog();
         }
 
-        private void OpenRTSSOSDM_Click(object sender, EventArgs e)
-        {
-            new RivaTunerSettings().ShowDialog();
-        }
-
         private void AssignListToApp_Click(object sender, EventArgs e)
         {
             new SFListAssign().ShowDialog();

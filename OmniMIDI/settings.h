@@ -346,44 +346,46 @@ VOID UnloadBASSFunctions() {
 
 			if (!BASS.AppOwnDLL)
 			{
-				if (FreeLibrary(BASS.Lib))
-					BASS.Lib = NULL;
+				if (!FreeLibrary(BASS.Lib))
+					CrashMessage(L"FreeLibrary to BASS");
 			}
+			BASS.Lib = NULL;
 
 			if (!BASSMIDI.AppOwnDLL)
 			{
-				if (FreeLibrary(BASSMIDI.Lib))
-					BASSMIDI.Lib = NULL;
+				if (!FreeLibrary(BASSMIDI.Lib))
+					CrashMessage(L"FreeLibrary to BASSMIDI");
 			}
+			BASSMIDI.Lib = NULL;
 
 			if (!BASSENC.AppOwnDLL)
 			{
-				if (FreeLibrary(BASSENC.Lib))
-					BASSENC.Lib = NULL;
+				if (!FreeLibrary(BASSENC.Lib))
+					CrashMessage(L"FreeLibrary to BASSENC");
 			}
+			BASSENC.Lib = NULL;
 
-			if (!BASSASIO.AppOwnDLL) 
+			if (!BASSASIO.AppOwnDLL)
 			{
-				if (FreeLibrary(BASSASIO.Lib))
-					BASSASIO.Lib = NULL;
-
-				// BASSASIO won't wait for us...
-				if (ManagedSettings.CurrentEngine = ASIO_ENGINE)
-					Sleep(200);
+				if (!FreeLibrary(BASSASIO.Lib))
+					CrashMessage(L"FreeLibrary to BASSASIO");
 			}
+			BASSASIO.Lib = NULL;
 
 			if (!BASSWASAPI.AppOwnDLL)
 			{
-				if (FreeLibrary(BASSWASAPI.Lib))
-					BASSWASAPI.Lib = NULL;
+				if (!FreeLibrary(BASSWASAPI.Lib))
+					CrashMessage(L"FreeLibrary to BASSWASAPI");
 			}
+			BASSWASAPI.Lib = NULL;
 
 			if (!BASS_VST.AppOwnDLL)
 			{
 				if (BASS_VST.Lib)
-					if (FreeLibrary(BASS_VST.Lib))
-						BASS_VST.Lib = NULL;
+					if (!FreeLibrary(BASS_VST.Lib))
+						CrashMessage(L"FreeLibrary to BASS");
 			}
+			BASS_VST.Lib = NULL;
 
 			PrintMessageToDebugLog("UnloadBASS", "The BASS libraries have been freed from the app's working set.");
 		}

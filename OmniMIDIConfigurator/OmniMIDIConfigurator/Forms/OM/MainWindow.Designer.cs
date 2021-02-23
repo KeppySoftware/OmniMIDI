@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.MWTab = new System.Windows.Forms.TabControl();
             this.ListsEdt = new System.Windows.Forms.TabPage();
-            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.Set = new System.Windows.Forms.TabPage();
             this.ExportPres = new System.Windows.Forms.Button();
             this.ImportPres = new System.Windows.Forms.Button();
@@ -41,7 +40,6 @@
             this.QILabel = new System.Windows.Forms.Label();
             this.RestoreDefault = new System.Windows.Forms.Button();
             this.ApplySettings = new System.Windows.Forms.Button();
-            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWSStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -50,31 +48,27 @@
             this.OpenDW = new System.Windows.Forms.MenuItem();
             this.OpenM = new System.Windows.Forms.MenuItem();
             this.OpenBM = new System.Windows.Forms.MenuItem();
-            this.OpenRTSSOSDM = new System.Windows.Forms.MenuItem();
             this.menuItem18 = new System.Windows.Forms.MenuItem();
             this.AssignListToApp = new System.Windows.Forms.MenuItem();
             this.ChangeWAVOutput = new System.Windows.Forms.MenuItem();
             this.menuItem21 = new System.Windows.Forms.MenuItem();
             this.CloseConfigurator = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.menuItem4 = new System.Windows.Forms.MenuItem();
-            this.InstallLM = new System.Windows.Forms.MenuItem();
-            this.UninstallLM = new System.Windows.Forms.MenuItem();
-            this.menuItem7 = new System.Windows.Forms.MenuItem();
-            this.menuItem8 = new System.Windows.Forms.MenuItem();
-            this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.WMWPatch = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.menuItem16 = new System.Windows.Forms.MenuItem();
             this.OMDRegister = new System.Windows.Forms.MenuItem();
             this.OMDUnregister = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.InstallLM = new System.Windows.Forms.MenuItem();
+            this.UninstallLM = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
+            this.menuItem8 = new System.Windows.Forms.MenuItem();
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.menuItem10 = new System.Windows.Forms.MenuItem();
             this.OMAPInstall = new System.Windows.Forms.MenuItem();
             this.OMAPUninstall = new System.Windows.Forms.MenuItem();
             this.OMAPCpl = new System.Windows.Forms.MenuItem();
-            this.menuItem9 = new System.Windows.Forms.MenuItem();
-            this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.MIDIInOutTest = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
@@ -95,6 +89,8 @@
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.DLDriverSrc = new System.Windows.Forms.MenuItem();
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
+            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
+            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWTab.SuspendLayout();
             this.ListsEdt.SuspendLayout();
             this.Set.SuspendLayout();
@@ -111,7 +107,7 @@
             this.MWTab.Location = new System.Drawing.Point(0, 0);
             this.MWTab.Name = "MWTab";
             this.MWTab.SelectedIndex = 0;
-            this.MWTab.Size = new System.Drawing.Size(706, 461);
+            this.MWTab.Size = new System.Drawing.Size(706, 482);
             this.MWTab.TabIndex = 0;
             this.MWTab.SelectedIndexChanged += new System.EventHandler(this.MWTab_SelectedIndexChanged);
             // 
@@ -121,20 +117,10 @@
             this.ListsEdt.Location = new System.Drawing.Point(4, 22);
             this.ListsEdt.Name = "ListsEdt";
             this.ListsEdt.Padding = new System.Windows.Forms.Padding(3);
-            this.ListsEdt.Size = new System.Drawing.Size(698, 435);
+            this.ListsEdt.Size = new System.Drawing.Size(698, 456);
             this.ListsEdt.TabIndex = 0;
             this.ListsEdt.Text = "Lists editor";
             this.ListsEdt.UseVisualStyleBackColor = true;
-            // 
-            // SFLEPanel
-            // 
-            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
-            this.SFLEPanel.Name = "SFLEPanel";
-            this.SFLEPanel.Size = new System.Drawing.Size(698, 435);
-            this.SFLEPanel.TabIndex = 0;
             // 
             // Set
             // 
@@ -232,16 +218,6 @@
             this.ApplySettings.Text = "Apply";
             this.ApplySettings.UseVisualStyleBackColor = true;
             // 
-            // SETPanel
-            // 
-            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SETPanel.Location = new System.Drawing.Point(0, 0);
-            this.SETPanel.Name = "SETPanel";
-            this.SETPanel.Size = new System.Drawing.Size(698, 401);
-            this.SETPanel.TabIndex = 1;
-            // 
             // MWSStrip
             // 
             this.MWSStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -285,7 +261,6 @@
             this.OpenDW,
             this.OpenM,
             this.OpenBM,
-            this.OpenRTSSOSDM,
             this.menuItem18,
             this.AssignListToApp,
             this.ChangeWAVOutput,
@@ -311,37 +286,31 @@
             this.OpenBM.Text = "Open blacklist manager";
             this.OpenBM.Click += new System.EventHandler(this.OpenBM_Click);
             // 
-            // OpenRTSSOSDM
-            // 
-            this.OpenRTSSOSDM.Index = 3;
-            this.OpenRTSSOSDM.Text = "Open RTSS OSD manager";
-            this.OpenRTSSOSDM.Click += new System.EventHandler(this.OpenRTSSOSDM_Click);
-            // 
             // menuItem18
             // 
-            this.menuItem18.Index = 4;
+            this.menuItem18.Index = 3;
             this.menuItem18.Text = "-";
             // 
             // AssignListToApp
             // 
-            this.AssignListToApp.Index = 5;
+            this.AssignListToApp.Index = 4;
             this.AssignListToApp.Text = "Assign a soundfont list to a specific app";
             this.AssignListToApp.Click += new System.EventHandler(this.AssignListToApp_Click);
             // 
             // ChangeWAVOutput
             // 
-            this.ChangeWAVOutput.Index = 6;
+            this.ChangeWAVOutput.Index = 5;
             this.ChangeWAVOutput.Text = "Change WAV output directory";
             this.ChangeWAVOutput.Click += new System.EventHandler(this.ChangeWAVOutput_Click);
             // 
             // menuItem21
             // 
-            this.menuItem21.Index = 7;
+            this.menuItem21.Index = 6;
             this.menuItem21.Text = "-";
             // 
             // CloseConfigurator
             // 
-            this.CloseConfigurator.Index = 8;
+            this.CloseConfigurator.Index = 7;
             this.CloseConfigurator.Text = "Exit";
             this.CloseConfigurator.Click += new System.EventHandler(this.CloseConfigurator_Click);
             // 
@@ -349,21 +318,49 @@
             // 
             this.menuItem3.Index = 1;
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem4,
-            this.menuItem6,
             this.WMWPatch,
             this.menuItem5,
             this.menuItem16,
+            this.menuItem4,
             this.menuItem20,
             this.menuItem10,
-            this.OMAPCpl,
-            this.menuItem9,
-            this.menuItem12});
+            this.OMAPCpl});
             this.menuItem3.Text = "Extensions";
+            // 
+            // WMWPatch
+            // 
+            this.WMWPatch.Index = 0;
+            this.WMWPatch.Text = "Windows Multimedia Wrapper";
+            this.WMWPatch.Click += new System.EventHandler(this.WMWPatch_Click);
+            // 
+            // menuItem5
+            // 
+            this.menuItem5.Index = 1;
+            this.menuItem5.Text = "-";
+            // 
+            // menuItem16
+            // 
+            this.menuItem16.Index = 2;
+            this.menuItem16.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.OMDRegister,
+            this.OMDUnregister});
+            this.menuItem16.Text = "OmniMIDI register tool";
+            // 
+            // OMDRegister
+            // 
+            this.OMDRegister.Index = 0;
+            this.OMDRegister.Text = "Register the driver";
+            this.OMDRegister.Click += new System.EventHandler(this.OMDRegister_Click);
+            // 
+            // OMDUnregister
+            // 
+            this.OMDUnregister.Index = 1;
+            this.OMDUnregister.Text = "Unregister the driver";
+            this.OMDUnregister.Click += new System.EventHandler(this.OMDUnregister_Click);
             // 
             // menuItem4
             // 
-            this.menuItem4.Index = 0;
+            this.menuItem4.Index = 3;
             this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.InstallLM,
             this.UninstallLM,
@@ -394,50 +391,14 @@
             this.menuItem8.Index = 3;
             this.menuItem8.Text = "LoudMax is not available on ARM64 installs";
             // 
-            // menuItem6
-            // 
-            this.menuItem6.Index = 1;
-            this.menuItem6.Text = "-";
-            // 
-            // WMWPatch
-            // 
-            this.WMWPatch.Index = 2;
-            this.WMWPatch.Text = "Windows Multimedia Wrapper";
-            this.WMWPatch.Click += new System.EventHandler(this.WMWPatch_Click);
-            // 
-            // menuItem5
-            // 
-            this.menuItem5.Index = 3;
-            this.menuItem5.Text = "-";
-            // 
-            // menuItem16
-            // 
-            this.menuItem16.Index = 4;
-            this.menuItem16.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.OMDRegister,
-            this.OMDUnregister});
-            this.menuItem16.Text = "OmniMIDI register tool";
-            // 
-            // OMDRegister
-            // 
-            this.OMDRegister.Index = 0;
-            this.OMDRegister.Text = "Register the driver";
-            this.OMDRegister.Click += new System.EventHandler(this.OMDRegister_Click);
-            // 
-            // OMDUnregister
-            // 
-            this.OMDUnregister.Index = 1;
-            this.OMDUnregister.Text = "Unregister the driver";
-            this.OMDUnregister.Click += new System.EventHandler(this.OMDUnregister_Click);
-            // 
             // menuItem20
             // 
-            this.menuItem20.Index = 5;
+            this.menuItem20.Index = 4;
             this.menuItem20.Text = "-";
             // 
             // menuItem10
             // 
-            this.menuItem10.Index = 6;
+            this.menuItem10.Index = 5;
             this.menuItem10.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.OMAPInstall,
             this.OMAPUninstall});
@@ -457,21 +418,10 @@
             // 
             // OMAPCpl
             // 
-            this.OMAPCpl.Index = 7;
+            this.OMAPCpl.Index = 6;
             this.OMAPCpl.Text = "OmniMapper control panel";
             this.OMAPCpl.Visible = false;
             this.OMAPCpl.Click += new System.EventHandler(this.OMAPCpl_Click);
-            // 
-            // menuItem9
-            // 
-            this.menuItem9.Index = 8;
-            this.menuItem9.Text = "-";
-            // 
-            // menuItem12
-            // 
-            this.menuItem12.Enabled = false;
-            this.menuItem12.Index = 9;
-            this.menuItem12.Text = "More to come...";
             // 
             // menuItem1
             // 
@@ -605,6 +555,26 @@
             // 
             this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
             // 
+            // SFLEPanel
+            // 
+            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
+            this.SFLEPanel.Name = "SFLEPanel";
+            this.SFLEPanel.Size = new System.Drawing.Size(698, 456);
+            this.SFLEPanel.TabIndex = 0;
+            // 
+            // SETPanel
+            // 
+            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SETPanel.Location = new System.Drawing.Point(0, 0);
+            this.SETPanel.Name = "SETPanel";
+            this.SETPanel.Size = new System.Drawing.Size(698, 401);
+            this.SETPanel.TabIndex = 1;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -665,9 +635,6 @@
         private System.Windows.Forms.MenuItem OMAPInstall;
         private System.Windows.Forms.MenuItem OMAPUninstall;
         private System.Windows.Forms.MenuItem OMAPCpl;
-        private System.Windows.Forms.MenuItem menuItem9;
-        private System.Windows.Forms.MenuItem menuItem12;
-        private System.Windows.Forms.MenuItem menuItem6;
         private System.Windows.Forms.MenuItem menuItem5;
         private System.Windows.Forms.MenuItem BugReport;
         private System.Windows.Forms.MenuItem menuItem14;
@@ -681,7 +648,6 @@
         private System.Windows.Forms.MenuItem OpenDW;
         private System.Windows.Forms.MenuItem OpenM;
         private System.Windows.Forms.MenuItem OpenBM;
-        private System.Windows.Forms.MenuItem OpenRTSSOSDM;
         private System.Windows.Forms.MenuItem menuItem21;
         private System.Windows.Forms.MenuItem CloseConfigurator;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
