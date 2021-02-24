@@ -154,8 +154,10 @@ void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 	wchar_t Msg[1024] = { 0 };
 
-	if (!Target->Lib) {
+	if (Target->Lib == nullptr) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No library has been found in memory. The driver will now load the DLL...");
+
+		Target->AppOwnDLL = FALSE;
 
 		// Check if another DLL is already in memory
 		Target->Lib = GetModuleHandle(RequestedLib);
@@ -349,35 +351,35 @@ VOID UnloadBASSFunctions() {
 				if (!FreeLibrary(BASS.Lib))
 					CrashMessage(L"FreeLibrary to BASS");
 			}
-			BASS.Lib = NULL;
+			BASS.Lib = nullptr;
 
 			if (!BASSMIDI.AppOwnDLL)
 			{
 				if (!FreeLibrary(BASSMIDI.Lib))
 					CrashMessage(L"FreeLibrary to BASSMIDI");
 			}
-			BASSMIDI.Lib = NULL;
+			BASSMIDI.Lib = nullptr;
 
 			if (!BASSENC.AppOwnDLL)
 			{
 				if (!FreeLibrary(BASSENC.Lib))
 					CrashMessage(L"FreeLibrary to BASSENC");
 			}
-			BASSENC.Lib = NULL;
+			BASSENC.Lib = nullptr;
 
 			if (!BASSASIO.AppOwnDLL)
 			{
 				if (!FreeLibrary(BASSASIO.Lib))
 					CrashMessage(L"FreeLibrary to BASSASIO");
 			}
-			BASSASIO.Lib = NULL;
+			BASSASIO.Lib = nullptr;
 
 			if (!BASSWASAPI.AppOwnDLL)
 			{
 				if (!FreeLibrary(BASSWASAPI.Lib))
 					CrashMessage(L"FreeLibrary to BASSWASAPI");
 			}
-			BASSWASAPI.Lib = NULL;
+			BASSWASAPI.Lib = nullptr;
 
 			if (!BASS_VST.AppOwnDLL)
 			{
@@ -385,7 +387,7 @@ VOID UnloadBASSFunctions() {
 					if (!FreeLibrary(BASS_VST.Lib))
 						CrashMessage(L"FreeLibrary to BASS");
 			}
-			BASS_VST.Lib = NULL;
+			BASS_VST.Lib = nullptr;
 
 			PrintMessageToDebugLog("UnloadBASS", "The BASS libraries have been freed from the app's working set.");
 		}

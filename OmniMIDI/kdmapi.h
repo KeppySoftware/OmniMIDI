@@ -256,7 +256,7 @@ void CookedPlayerSystem(CookedPlayer* Player)
 }
 
 // KDMAPI calls
-BOOL StreamHealthCheck(BOOL & Initialized) {
+BOOL StreamHealthCheck() {
 	// If BASS is forbidden from initializing itself, then abort immediately
 	if (block_bassinit) return FALSE;
 
@@ -274,7 +274,7 @@ BOOL StreamHealthCheck(BOOL & Initialized) {
 			LoadSoundFontsToStream();
 
 			// Done, now initialize the threads
-			Initialized = CreateThreads(TRUE);
+			CreateThreads();
 		}
 		else PrintMessageToDebugLog("StreamWatchdog", "Failed to initialize stream! Retrying...");
 
@@ -283,7 +283,7 @@ BOOL StreamHealthCheck(BOOL & Initialized) {
 	else { 
 		if (stop_thread || 
 			(!ATThread.ThreadHandle && (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE))) 
-			CreateThreads(FALSE);
+			CreateThreads();
 	}
 
 	return TRUE;
@@ -296,7 +296,7 @@ void Supervisor(LPVOID lpV) {
 
 		while (!stop_thread) {
 			// Check if the threads and streams are still alive
-			if (StreamHealthCheck(bass_initialized));
+			if (StreamHealthCheck());
 			{
 				// It's alive, do registry stuff
 
@@ -346,27 +346,25 @@ BOOL DoStartClient() {
 			TEXT("OMReady")		// object name
 		);
 
-		// Initialize the stream
-		bass_initialized = FALSE;
-		while (!bass_initialized) {
-			// Load the BASS functions
-			LoadBASSFunctions();
+		// Load the BASS functions
+		LoadBASSFunctions();
 
-			// If BASS is still unavailable, commit suicide
-			if (!BASSLoadedToMemory) CrashMessage(L"NoBASSFound");
+		// If BASS is still unavailable, commit suicide
+		if (!BASSLoadedToMemory) CrashMessage(L"NoBASSFound");
 
-			// Load the settings, and allocate the memory for the EVBuffer
-			LoadSettings(FALSE, FALSE);
+		// Load the settings, and allocate the memory for the EVBuffer
+		LoadSettings(FALSE, FALSE);
 
-			// Initialize the BASS output device, and set up the streams
-			if (InitializeBASS(FALSE)) {
-				SetUpStream();
-				LoadSoundFontsToStream();
+		// Initialize the BASS output device, and set up the streams
+		if (InitializeBASS(FALSE)) {
+			SetUpStream();
+			LoadSoundFontsToStream();
 
-				// Done, now initialize the threads
-				bass_initialized = CreateThreads(TRUE);
-			}
+			// Done, now initialize the threads
+			CreateThreads();
 		}
+
+		SetEvent(OMReady);
 
 		// Create the main thread
 		PrintMessageToDebugLog("StartDriver", "Starting main watchdog thread...");
@@ -383,6 +381,7 @@ BOOL DoStartClient() {
 		// Ok, everything's ready, do not open more debug pipes from now on
 		DriverInitStatus = TRUE;
 		AlreadyStartedOnce = TRUE;
+		bass_initialized = TRUE;
 
 		PrintMessageToDebugLog("StartDriver", "Driver initialized.");
 		return TRUE;

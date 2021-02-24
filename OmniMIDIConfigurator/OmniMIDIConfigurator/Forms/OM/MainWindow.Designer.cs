@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.MWTab = new System.Windows.Forms.TabControl();
             this.ListsEdt = new System.Windows.Forms.TabPage();
+            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.Set = new System.Windows.Forms.TabPage();
             this.ExportPres = new System.Windows.Forms.Button();
             this.ImportPres = new System.Windows.Forms.Button();
@@ -40,6 +41,7 @@
             this.QILabel = new System.Windows.Forms.Label();
             this.RestoreDefault = new System.Windows.Forms.Button();
             this.ApplySettings = new System.Windows.Forms.Button();
+            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWSStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -89,8 +91,6 @@
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.DLDriverSrc = new System.Windows.Forms.MenuItem();
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
-            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
-            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWTab.SuspendLayout();
             this.ListsEdt.SuspendLayout();
             this.Set.SuspendLayout();
@@ -107,7 +107,7 @@
             this.MWTab.Location = new System.Drawing.Point(0, 0);
             this.MWTab.Name = "MWTab";
             this.MWTab.SelectedIndex = 0;
-            this.MWTab.Size = new System.Drawing.Size(706, 482);
+            this.MWTab.Size = new System.Drawing.Size(706, 460);
             this.MWTab.TabIndex = 0;
             this.MWTab.SelectedIndexChanged += new System.EventHandler(this.MWTab_SelectedIndexChanged);
             // 
@@ -117,10 +117,20 @@
             this.ListsEdt.Location = new System.Drawing.Point(4, 22);
             this.ListsEdt.Name = "ListsEdt";
             this.ListsEdt.Padding = new System.Windows.Forms.Padding(3);
-            this.ListsEdt.Size = new System.Drawing.Size(698, 456);
+            this.ListsEdt.Size = new System.Drawing.Size(698, 434);
             this.ListsEdt.TabIndex = 0;
             this.ListsEdt.Text = "Lists editor";
             this.ListsEdt.UseVisualStyleBackColor = true;
+            // 
+            // SFLEPanel
+            // 
+            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
+            this.SFLEPanel.Name = "SFLEPanel";
+            this.SFLEPanel.Size = new System.Drawing.Size(698, 434);
+            this.SFLEPanel.TabIndex = 0;
             // 
             // Set
             // 
@@ -135,7 +145,7 @@
             this.Set.Location = new System.Drawing.Point(4, 22);
             this.Set.Name = "Set";
             this.Set.Padding = new System.Windows.Forms.Padding(3);
-            this.Set.Size = new System.Drawing.Size(698, 435);
+            this.Set.Size = new System.Drawing.Size(698, 434);
             this.Set.TabIndex = 1;
             this.Set.Text = "Settings";
             this.Set.UseVisualStyleBackColor = true;
@@ -143,7 +153,7 @@
             // ExportPres
             // 
             this.ExportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ExportPres.Location = new System.Drawing.Point(269, 407);
+            this.ExportPres.Location = new System.Drawing.Point(269, 406);
             this.ExportPres.Name = "ExportPres";
             this.ExportPres.Size = new System.Drawing.Size(45, 23);
             this.ExportPres.TabIndex = 6;
@@ -154,7 +164,7 @@
             // ImportPres
             // 
             this.ImportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ImportPres.Location = new System.Drawing.Point(222, 407);
+            this.ImportPres.Location = new System.Drawing.Point(222, 406);
             this.ImportPres.Name = "ImportPres";
             this.ImportPres.Size = new System.Drawing.Size(45, 23);
             this.ImportPres.TabIndex = 5;
@@ -167,7 +177,7 @@
             this.SeparatorPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SeparatorPres.Enabled = false;
             this.SeparatorPres.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SeparatorPres.Location = new System.Drawing.Point(208, 406);
+            this.SeparatorPres.Location = new System.Drawing.Point(208, 405);
             this.SeparatorPres.Name = "SeparatorPres";
             this.SeparatorPres.Size = new System.Drawing.Size(10, 23);
             this.SeparatorPres.TabIndex = 50;
@@ -182,7 +192,7 @@
             "Audio engine settings",
             "Synthesizer settings",
             "Debug & legacy set."});
-            this.QICombo.Location = new System.Drawing.Point(77, 408);
+            this.QICombo.Location = new System.Drawing.Point(77, 407);
             this.QICombo.Name = "QICombo";
             this.QICombo.Size = new System.Drawing.Size(130, 21);
             this.QICombo.TabIndex = 4;
@@ -192,7 +202,7 @@
             // 
             this.QILabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.QILabel.AutoSize = true;
-            this.QILabel.Location = new System.Drawing.Point(7, 412);
+            this.QILabel.Location = new System.Drawing.Point(7, 411);
             this.QILabel.Name = "QILabel";
             this.QILabel.Size = new System.Drawing.Size(66, 13);
             this.QILabel.TabIndex = 4;
@@ -201,7 +211,7 @@
             // RestoreDefault
             // 
             this.RestoreDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.RestoreDefault.Location = new System.Drawing.Point(516, 407);
+            this.RestoreDefault.Location = new System.Drawing.Point(516, 406);
             this.RestoreDefault.Name = "RestoreDefault";
             this.RestoreDefault.Size = new System.Drawing.Size(95, 23);
             this.RestoreDefault.TabIndex = 3;
@@ -211,12 +221,22 @@
             // ApplySettings
             // 
             this.ApplySettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ApplySettings.Location = new System.Drawing.Point(617, 407);
+            this.ApplySettings.Location = new System.Drawing.Point(617, 406);
             this.ApplySettings.Name = "ApplySettings";
             this.ApplySettings.Size = new System.Drawing.Size(75, 23);
             this.ApplySettings.TabIndex = 2;
             this.ApplySettings.Text = "Apply";
             this.ApplySettings.UseVisualStyleBackColor = true;
+            // 
+            // SETPanel
+            // 
+            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SETPanel.Location = new System.Drawing.Point(0, 0);
+            this.SETPanel.Name = "SETPanel";
+            this.SETPanel.Size = new System.Drawing.Size(698, 400);
+            this.SETPanel.TabIndex = 1;
             // 
             // MWSStrip
             // 
@@ -554,26 +574,6 @@
             // CheckUpdates
             // 
             this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
-            // 
-            // SFLEPanel
-            // 
-            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
-            this.SFLEPanel.Name = "SFLEPanel";
-            this.SFLEPanel.Size = new System.Drawing.Size(698, 456);
-            this.SFLEPanel.TabIndex = 0;
-            // 
-            // SETPanel
-            // 
-            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SETPanel.Location = new System.Drawing.Point(0, 0);
-            this.SETPanel.Name = "SETPanel";
-            this.SETPanel.Size = new System.Drawing.Size(698, 401);
-            this.SETPanel.TabIndex = 1;
             // 
             // MainWindow
             // 

@@ -277,7 +277,7 @@ void CloseThreads(BOOL MainClose) {
 	stop_thread = FALSE;
 }
 
-BOOL CreateThreads(BOOL startup) {
+void CreateThreads() {
 	PrintMessageToDebugLog("CreateThreadsFunc", "Closing existing threads, if they're open...");
 	CloseThreads(FALSE);
 
@@ -314,11 +314,7 @@ BOOL CreateThreads(BOOL startup) {
 		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
 
-	// The threads are ready!
-	if (startup) SetEvent(OMReady);
-
 	PrintMessageToDebugLog("CreateThreadsFunc", "Threads are now active!");
-	return TRUE;
 }
 
 void InitializeBASSVST() {
@@ -531,7 +527,10 @@ LONG ASIODetectID() {
 	}
 }
 
-BOOL InitializeBASSLibrary() {
+BOOL InitializeBASSLibrary()
+{
+	if (HostSessionMode) return TRUE;
+
 	// If DS or WASAPI are selected, then the final stream will not be a decoding channel
 	BOOL isds = (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == OLD_WASAPI);
 	

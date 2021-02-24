@@ -18,46 +18,97 @@ namespace OmniMIDIConfigurator
 {
     public partial class DefaultASIOAudioOutput : Form
     {
+        List<ASIODevice> Devices = new List<ASIODevice>();
+
         public DefaultASIOAudioOutput()
         {
             InitializeComponent();
+        }
 
+        private void DefaultASIOAudioOutput_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DefaultASIOAudioOutput_Shown(object sender, EventArgs e)
+        {
             try
             {
+                this.Text = "Probing ASIO devices, please wait...";
+                this.Enabled = false;
+
                 if (GetASIODevicesCount() < 1)
                 {
                     Program.ShowError(4, "Error", "No ASIO devices installed!\n\nClick OK to close this window.", null);
                     Close();
                 }
 
-                BASS_ASIO_DEVICEINFO info = new BASS_ASIO_DEVICEINFO();
+                BASS_ASIO_DEVICEINFO dInfo = new BASS_ASIO_DEVICEINFO();
 
                 // Populate devices list
-                for (int n = 0; BassAsio.BASS_ASIO_GetDeviceInfo(n, info); n++)
-                    DevicesList.Items.Add(info.ToString());
+                for (int n = 0; BassAsio.BASS_ASIO_GetDeviceInfo(n, dInfo); n++)
+                {
+                    try
+                    {
+                        BassAsio.BASS_ASIO_Init(n, BASSASIOInit.BASS_ASIO_DEFAULT);
+
+                        BASS_ASIO_INFO fInfo = BassAsio.BASS_ASIO_GetInfo();
+                        ASIODevice NewDev = new ASIODevice();
+
+                        NewDev.Name = dInfo.name;
+                        NewDev.Driver = dInfo.driver;
+                        NewDev.ID = n;
+
+                        if (fInfo != null)
+                        {
+                            NewDev.Status = GetDeviceDescription(NewDev.Name);
+                            NewDev.Inputs = fInfo.inputs;
+                            NewDev.Outputs = fInfo.outputs;
+                            NewDev.BufMin = fInfo.bufmin;
+                            NewDev.BufMax = fInfo.bufmax;
+                            NewDev.BufPref = fInfo.bufmax;
+                            NewDev.BufGran = fInfo.bufgran;
+                        }
+                        else 
+                        {
+                            NewDev.Status = new ASIOStatus { Description = BassAsio.BASS_ASIO_ErrorGetCode().ToString(), Flag = DevStatusEnum.DEVICE_UNKNOWN };
+                            NewDev.NoData = true; 
+                        }
+
+                        Devices.Add(NewDev);
+
+                        BassAsio.BASS_ASIO_Free();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+                }
+
+                DevicesList.DataSource = Devices;
+                DevicesList.DisplayMember = "Name";
 
                 // Load previous device from registry
                 String PreviousDevice = (String)Program.SynthSettings.GetValue("ASIOOutput", "None");
-                DefOut.Text = String.Format("Def. ASIO output: {0}", PreviousDevice);
-
-                DevicesList.SelectedIndex = 0;
                 for (int n = 0; n < DevicesList.Items.Count; n++)
                 {
-                    if (DevicesList.Items[n].Equals(PreviousDevice))
+                    ASIODevice TmpDev = (ASIODevice)DevicesList.Items[n];
+                    if (TmpDev.Name.Equals(PreviousDevice))
                     {
                         DevicesList.SelectedIndex = n;
+                        DefOut.Text = String.Format("Default ASIO output: {0}", PreviousDevice);
                         break;
                     }
                 }
 
                 MaxThreads.Text = String.Format("ASIO is allowed to use a maximum of {0} threads.", Environment.ProcessorCount);
 
-                BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, BASSASIOInit.BASS_ASIO_THREAD | BASSASIOInit.BASS_ASIO_JOINORDER);
-                GetASIODeviceInfo();
-
-                DeviceTrigger(true);
                 DevicesList.SelectedIndexChanged += new EventHandler(DevicesList_SelectedIndexChanged);
 
+                GetASIODeviceInfo();
+
+                this.Text = "Change default ASIO output";
+                this.Enabled = true;
                 /* 
                  * Unavailable at the moment
                  * 
@@ -68,7 +119,7 @@ namespace OmniMIDIConfigurator
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to load the dialog.\nBASS is probably unable to start, or it's missing.\n\nError:\n" + ex.Message.ToString(), "Oh no! OmniMIDI encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unable to load the dialog.\nBASS is probably unable to start, or it's missing.\n\nError:\n" + ex.ToString(), "Oh no! OmniMIDI encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
                 Dispose();
             }
@@ -97,45 +148,100 @@ namespace OmniMIDIConfigurator
             }
         }
 
-        private void GetASIODeviceInfo()
+        private ASIOStatus GetDeviceDescription(String DeviceToCompare)
         {
-            try
+            DevStatusEnum Status = DevStatusEnum.DEVICE_UNKNOWN;
+            String Desc = String.Empty;
+
+            foreach (String Device in DownloadDatabase(TestedASIODevices.Supported))
             {
-                BASS_ASIO_INFO dInfo = BassAsio.BASS_ASIO_GetInfo();
-                BASS_ASIO_DEVICEINFO fInfo = new BASS_ASIO_DEVICEINFO();
-
-                BassAsio.BASS_ASIO_GetDeviceInfo(DevicesList.SelectedIndex, fInfo);
-
-                DeviceName.Text =
-                    String.Format("{0} (Driver library: {1})", dInfo.name, Path.GetFileName(fInfo.driver).ToUpperInvariant());
-                Inputs.Text =
-                    String.Format("{0} input channels available.", dInfo.inputs);
-                Outputs.Text =
-                    String.Format("{0} output channels available.", dInfo.outputs);
-                BufferInfo.Text =
-                    String.Format("Min/Max size {0}/{1} samples, set to {2} samples (Granularity value: {3})",
-                                  dInfo.bufmin, dInfo.bufmax, dInfo.bufpref, GetASIOGranularity(dInfo.bufgran));
+                String[] Content = Device.Split('|');
+                if (DeviceToCompare.Contains(Content[0]))
+                {
+                    Status = DevStatusEnum.DEVICE_SUPPORTED;
+                    Desc = Content[1];
+                }
             }
-            catch { SetDummyASIOInfo(); }
+
+            foreach (String Device in DownloadDatabase(TestedASIODevices.Unstable))
+            {
+                String[] Content = Device.Split('|');
+                if (DeviceToCompare.Contains(Content[0]))
+                {
+                    Status = DevStatusEnum.DEVICE_UNSTABLE;
+                    Desc = Content[1];
+                }
+            }
+
+            foreach (String Device in DownloadDatabase(TestedASIODevices.Unsupported))
+            {
+                String[] Content = Device.Split('|');
+                if (DeviceToCompare.Contains(Content[0]))
+                {
+                    Status = DevStatusEnum.DEVICE_UNSUPPORTED;
+                    Desc = Content[1];
+                }
+            }
+
+            return new ASIOStatus { Flag = Status, Description = Desc };
         }
 
-        private void SetDummyASIOInfo()
+        private void GetASIODeviceInfo()
         {
-            DeviceName.Text = String.Format("The device refused to be interrogated by BASSASIO. ({0})", BassAsio.BASS_ASIO_ErrorGetCode().ToString());
-            Inputs.Text = "N/A";
-            Outputs.Text = "N/A";
-            BufferInfo.Text = "N/A";
+            ASIODevice TmpDev = (ASIODevice)DevicesList.SelectedItem;
+
+            // Set the name of the driver, before the check
+            DeviceName.Text =
+                String.Format("{0} (Driver library: {1})", TmpDev.Name, Path.GetFileName(TmpDev.Driver).ToUpperInvariant());
+
+            if (TmpDev.NoData)
+            {
+                // Some of the info were missing, the device didn't want to be interrogated
+                Inputs.Text = "N/A";
+                Outputs.Text = "N/A";
+                BufferInfo.Text = "N/A";
+
+                Status.ForeColor = Color.DarkGray;
+                Status.Font = new Font(Status.Font, FontStyle.Bold);
+                Status.Text = String.Format("BASSASIO failed to probe the driver, and returned {0}.", TmpDev.Status.Description);
+            }
+            else
+            {
+                // Get all the info
+                Inputs.Text =
+                    String.Format("{0} input channels available.", TmpDev.Inputs);
+                Outputs.Text =
+                    String.Format("{0} output channels available.", TmpDev.Outputs);
+                BufferInfo.Text =
+                    String.Format("Min/Max size {0}/{1} samples, set to {2} samples (Granularity value: {3})",
+                                  TmpDev.BufMin, TmpDev.BufMax, TmpDev.BufPref, GetASIOGranularity(TmpDev.BufGran));
+
+                // Set the color
+                switch (TmpDev.Status.Flag)
+                {
+                    case DevStatusEnum.DEVICE_SUPPORTED:
+                        Status.ForeColor = Color.DarkOliveGreen;
+                        break;
+                    case DevStatusEnum.DEVICE_UNSTABLE:
+                        Status.ForeColor = Color.DarkOrange;
+                        break;
+                    case DevStatusEnum.DEVICE_UNSUPPORTED:
+                        Status.ForeColor = Color.Red;
+                        break;
+                    default:
+                        Status.ForeColor = Color.DarkGray;
+                        break;
+                }
+
+                Status.Font = new Font(Status.Font, (TmpDev.Status.Flag == DevStatusEnum.DEVICE_SUPPORTED) ? FontStyle.Regular : FontStyle.Bold);
+                Status.Text = TmpDev.Status.Description;
+            }
         }
 
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
             DeviceCP.Enabled = true;
-
-            BassAsio.BASS_ASIO_Free();
-            BassAsio.BASS_ASIO_Init(DevicesList.SelectedIndex, BASSASIOInit.BASS_ASIO_THREAD | BASSASIOInit.BASS_ASIO_JOINORDER);
             GetASIODeviceInfo();
-
-            DeviceTrigger(false);
         }
 
         private void ASIOSeparateThread_CheckedChanged(object sender, EventArgs e)
@@ -146,26 +252,39 @@ namespace OmniMIDIConfigurator
 
         private void Quit_Click(object sender, EventArgs e)
         {
-            BassAsio.BASS_ASIO_Free();
-            Functions.SetDefaultDevice(AudioEngine.ASIO_ENGINE, 0, DevicesList.GetItemText(DevicesList.SelectedItem));
+            Functions.SetDefaultDevice(AudioEngine.ASIO_ENGINE, 0, ((ASIODevice)DevicesList.SelectedItem).Name);
             Close();
             Dispose();
         }
 
         private void DeviceCP_Click(object sender, EventArgs e)
         {
+            BASS_ASIO_INFO fInfo;
+            ASIODevice Dev = (ASIODevice)DevicesList.SelectedItem;
+
+            BassAsio.BASS_ASIO_Init(Dev.ID, BASSASIOInit.BASS_ASIO_DEFAULT);
+
             Boolean StatusCP = BassAsio.BASS_ASIO_ControlPanel();
-            if (!StatusCP && BassAsio.BASS_ASIO_ErrorGetCode() != BASSError.BASS_OK)
+            BASSError Err = BassAsio.BASS_ASIO_ErrorGetCode();
+
+            if (!StatusCP && Err == BASSError.BASS_ERROR_INIT)
             {
                 MessageBox.Show(
-                    String.Format(
-                        "An error has occured while showing the control panel for this device.\nThe button will be disabled.\n\nError: {0}",
-                        BassAsio.BASS_ASIO_ErrorGetCode()),
+                    String.Format("The ASIO driver was unable to start.\nError: {0}\n\nPress OK to continue.", Err.ToString()),
                     "ASIO control panel - ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DeviceCP.Enabled = false;
                 return;
             }
-            GetASIODeviceInfo();
+
+            fInfo = BassAsio.BASS_ASIO_GetInfo();
+            Dev.Inputs = fInfo.inputs;
+            Dev.Outputs = fInfo.outputs;
+            Dev.BufMin = fInfo.bufmin;
+            Dev.BufMax = fInfo.bufmax;
+            Dev.BufPref = fInfo.bufmax;
+            Dev.BufGran = fInfo.bufgran;
+
+            BassAsio.BASS_ASIO_Free();
         }
 
         private void ASIODevicesSupport_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -190,39 +309,6 @@ namespace OmniMIDIConfigurator
             }
         }
 
-        private int CompareToDatabase(String DeviceToCompare)
-        {
-            foreach (String Device in DownloadDatabase(TestedASIODevices.Supported))
-            {
-                String[] Content = Device.Split('|');
-                if (DeviceToCompare.Contains(Content[0])) return SupportedDevice(Content[1]);
-            }
-
-            foreach (String Device in DownloadDatabase(TestedASIODevices.Unstable))
-            {
-                String[] Content = Device.Split('|');
-                if (DeviceToCompare.Contains(Content[0])) return UnstableDevice(Content[1]);
-            }
-
-            foreach (String Device in DownloadDatabase(TestedASIODevices.Unsupported))
-            {
-                String[] Content = Device.Split('|');
-                if (DeviceToCompare.Contains(Content[0])) return UnsupportedDevice(Content[1]);
-            }
-
-            return UnknownDevice();
-        }
-
-        private void DeviceTrigger(Boolean startup)
-        {
-            int Trigger = CompareToDatabase(DevicesList.Text);
-
-            if (!startup)
-            {
-                if (Trigger == DeviceStatus.DEVICE_UNSTABLE) MessageBox.Show("This device might crash the app, while in use.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                else if (Trigger == DeviceStatus.DEVICE_UNSUPPORTED) MessageBox.Show("This device is unsupported.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
 
         private void LatencyWarning_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -231,52 +317,42 @@ namespace OmniMIDIConfigurator
                 "Always keep the buffer size to the smallest size possible, and the update rate to the highest value your sound card can handle with no dropouts, " +
                 "if you want to avoid this issue.", "OmniMIDI Configurator ~ ASIO warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
-
-        private int SupportedDevice(String Info)
-        {
-            Status.Font = new Font(Status.Font, FontStyle.Regular);
-            Status.ForeColor = Color.DarkOliveGreen;
-            Status.Text = String.Format("Supported device. {0}", Info);
-            return DeviceStatus.DEVICE_SUPPORTED;
-        }
-
-        private int UnstableDevice(String Info)
-        {
-            Status.Font = new Font(Status.Font, FontStyle.Bold);
-            Status.ForeColor = Color.DarkOrange;
-            Status.Text = String.Format("Supported device, might be unstable. {0}", Info);
-            return DeviceStatus.DEVICE_UNSTABLE;
-        }
-
-        private int UnsupportedDevice(String Info)
-        {
-            Status.Font = new Font(Status.Font, FontStyle.Bold);
-            Status.ForeColor = Color.Red;
-            Status.Text = String.Format("Unsupported device. {0}", Info);
-            return DeviceStatus.DEVICE_UNSUPPORTED;
-        }
-
-        private int UnknownDevice()
-        {
-            Status.Font = new Font(Status.Font, FontStyle.Bold);
-            Status.ForeColor = Color.DarkGray;
-            Status.Text = "Unknown device. Either it's missing from the database, or there's no Internet.";
-            return DeviceStatus.DEVICE_UNKNOWN;
-        }
     }
 
-    static class DeviceStatus
-    {
-        public const int DEVICE_SUPPORTED = 0;
-        public const int DEVICE_UNSTABLE = 1;
-        public const int DEVICE_UNSUPPORTED = 2;
-        public const int DEVICE_UNKNOWN = 3;
-    }
-
-    static class TestedASIODevices
+    class TestedASIODevices
     {
         public static string Supported = "https://raw.githubusercontent.com/KeppySoftware/OmniMIDI/master/OmniMIDIASIOSupportList/Supported.txt";
         public static string Unstable = "https://raw.githubusercontent.com/KeppySoftware/OmniMIDI/master/OmniMIDIASIOSupportList/Unstable.txt";
         public static string Unsupported = "https://raw.githubusercontent.com/KeppySoftware/OmniMIDI/master/OmniMIDIASIOSupportList/Unsupported.txt";
     }
+
+    enum DevStatusEnum
+    {
+        DEVICE_SUPPORTED,
+        DEVICE_UNSTABLE,
+        DEVICE_UNSUPPORTED,
+        DEVICE_UNKNOWN
+    }
+
+    class ASIOStatus
+    {
+        public DevStatusEnum Flag { get; set; }
+        public string Description { get; set; }
+    }
+
+    class ASIODevice
+    {
+        public string Name { get; set; }
+        public string Driver { get; set; }
+        public ASIOStatus Status { get; set; }
+        public int Inputs { get; set; }
+        public int Outputs { get; set; }
+        public int BufMin { get; set; }
+        public int BufMax { get; set; }
+        public int BufPref { get; set; }
+        public int BufGran { get; set; }
+        public bool NoData { get; set; }
+        public int ID { get; set; }
+    }
+
 }

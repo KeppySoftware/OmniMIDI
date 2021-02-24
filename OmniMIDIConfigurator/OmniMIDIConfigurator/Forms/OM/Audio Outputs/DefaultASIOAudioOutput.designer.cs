@@ -69,7 +69,7 @@
             this.DefOut.Name = "DefOut";
             this.DefOut.Size = new System.Drawing.Size(339, 13);
             this.DefOut.TabIndex = 6;
-            this.DefOut.Text = "Default ASIO output: NaN";
+            this.DefOut.Text = "Default ASIO output: Loading...";
             // 
             // label1
             // 
@@ -90,7 +90,6 @@
             this.DevicesList.Name = "DevicesList";
             this.DevicesList.Size = new System.Drawing.Size(326, 21);
             this.DevicesList.TabIndex = 4;
-            this.DevicesList.SelectedIndexChanged += new System.EventHandler(this.DevicesList_SelectedIndexChanged);
             // 
             // DeviceCP
             // 
@@ -130,7 +129,7 @@
             this.Status.Name = "Status";
             this.Status.Size = new System.Drawing.Size(442, 26);
             this.Status.TabIndex = 12;
-            this.Status.Text = "NaN\r\nNaN";
+            this.Status.Text = "Loading...";
             // 
             // InfoGroupBox
             // 
@@ -158,36 +157,36 @@
             this.BufferInfo.AutoSize = true;
             this.BufferInfo.Location = new System.Drawing.Point(62, 73);
             this.BufferInfo.Name = "BufferInfo";
-            this.BufferInfo.Size = new System.Drawing.Size(53, 13);
+            this.BufferInfo.Size = new System.Drawing.Size(54, 13);
             this.BufferInfo.TabIndex = 16;
-            this.BufferInfo.Text = "BUFINFO";
+            this.BufferInfo.Text = "Loading...";
             // 
             // Outputs
             // 
             this.Outputs.AutoSize = true;
             this.Outputs.Location = new System.Drawing.Point(51, 55);
             this.Outputs.Name = "Outputs";
-            this.Outputs.Size = new System.Drawing.Size(59, 13);
+            this.Outputs.Size = new System.Drawing.Size(54, 13);
             this.Outputs.TabIndex = 15;
-            this.Outputs.Text = "OUTPUTS";
+            this.Outputs.Text = "Loading...";
             // 
             // Inputs
             // 
             this.Inputs.AutoSize = true;
             this.Inputs.Location = new System.Drawing.Point(43, 37);
             this.Inputs.Name = "Inputs";
-            this.Inputs.Size = new System.Drawing.Size(47, 13);
+            this.Inputs.Size = new System.Drawing.Size(54, 13);
             this.Inputs.TabIndex = 14;
-            this.Inputs.Text = "INPUTS";
+            this.Inputs.Text = "Loading...";
             // 
             // DeviceName
             // 
             this.DeviceName.AutoSize = true;
             this.DeviceName.Location = new System.Drawing.Point(77, 19);
             this.DeviceName.Name = "DeviceName";
-            this.DeviceName.Size = new System.Drawing.Size(77, 13);
+            this.DeviceName.Size = new System.Drawing.Size(54, 13);
             this.DeviceName.TabIndex = 13;
-            this.DeviceName.Text = "DEVICENAME";
+            this.DeviceName.Text = "Loading...";
             // 
             // BufferInfoLab
             // 
@@ -291,6 +290,8 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change default ASIO output";
+            this.Load += new System.EventHandler(this.DefaultASIOAudioOutput_Load);
+            this.Shown += new System.EventHandler(this.DefaultASIOAudioOutput_Shown);
             this.InfoGroupBox.ResumeLayout(false);
             this.InfoGroupBox.PerformLayout();
             this.ResumeLayout(false);
