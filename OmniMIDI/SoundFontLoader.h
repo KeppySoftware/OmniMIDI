@@ -75,7 +75,9 @@ static BOOL FontLoader(LPWSTR in_path) {
 			if (PathFileExists(in_path))
 			{
 				PrintMessageToDebugLog("NewSFLoader", "Initializing SoundFont...");
-				HSOUNDFONT SF = BASS_MIDI_FontInit(in_path, BASS_UNICODE | 0x400000);
+				HSOUNDFONT SF = BASS_MIDI_FontInit(in_path, 
+					BASS_UNICODE | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP |
+					(ManagedSettings.AudioRampIn ? NULL : BASS_MIDI_FONT_NORAMPIN));
 				if (!SF) {
 					PrintMessageToDebugLog("NewSFLoader", "An error has occurred while initializing the SoundFont.");
 					SoundFontError(L"An error has occurred while initializing the SoundFont.", in_path);

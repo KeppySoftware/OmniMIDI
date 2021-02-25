@@ -139,7 +139,7 @@ void __inline SendToBASSMIDI(DWORD dwParam1) {
 	}
 }
 
-void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
+void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD_PTR dwParam1) {
 	if (!(dwParam1 & 0x80))
 		dwParam1 = dwParam1 << 8 | LastRunningStatus;
 
@@ -188,7 +188,7 @@ void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 	SendToBASSMIDI(dwParam1);
 }
 
-void __inline PrepareForBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
+void __inline PrepareForBASSMIDIHyper(DWORD LastRunningStatus, DWORD_PTR dwParam1) {
 	if (!(dwParam1 & 0x80))
 		dwParam1 = dwParam1 << 8 | LastRunningStatus;
 
@@ -299,7 +299,7 @@ DWORD __inline PlayBufferedDataChunkHyper(void) {
 	return 0;
 }
 
-MMRESULT __inline ParseData(DWORD dwParam1) {
+MMRESULT __inline ParseData(DWORD_PTR dwParam1) {
 	// Some checks
 	if (CheckIfEventIsToIgnore(dwParam1))
 		return MMSYSERR_NOERROR;
@@ -351,7 +351,7 @@ MMRESULT __inline ParseData(DWORD dwParam1) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT __inline ParseDataHyper(DWORD dwParam1)
+MMRESULT __inline ParseDataHyper(DWORD_PTR dwParam1)
 {
 	// LockForWriting(&EPThreadsL);
 

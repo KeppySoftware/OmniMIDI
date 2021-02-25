@@ -24,9 +24,9 @@ typedef long NTSTATUS;
 
 #define BASSASIODEF(f) (WINAPI *f)
 #define BASSDEF(f) (WINAPI *f)
-#define BASSENCDEF(f) (WINAPI *f)	
-#define BASSMIDIDEF(f) (WINAPI *f)	
-#define BASSWASAPIDEF(f) (WINAPI *f)	
+#define BASSENCDEF(f) (WINAPI *f)
+#define BASSMIDIDEF(f) (WINAPI *f)
+#define BASSWASAPIDEF(f) (WINAPI *f)
 #define BASS_VSTDEF(f) (WINAPI *f)
 #define Between(value, a, b) ((value) >= a && (value) <= b)
 
@@ -95,14 +95,14 @@ DDP DefDriverProcImp = 0;
 
 // Critical sections but handled by OmniMIDI functions because f**k Windows
 DWORD DummyPlayBufData() { return 0; }
-VOID DummyPrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) { return; }
-MMRESULT DummyParseData(DWORD dwParam1) { return MIDIERR_NOTREADY; }
+VOID DummyPrepareForBASSMIDI(DWORD LastRunningStatus, DWORD_PTR dwParam1) { return; }
+MMRESULT DummyParseData(DWORD_PTR dwParam1) { return MIDIERR_NOTREADY; }
 BOOL WINAPI DummyBMSE(HSTREAM handle, DWORD chan, DWORD event, DWORD param) { return FALSE; }
 
 // Hyper switch
 BOOL HyperMode = 0;
-MMRESULT(*_PrsData)(DWORD dwParam1) = DummyParseData;
-VOID(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD dwParam1) = DummyPrepareForBASSMIDI;
+MMRESULT(*_PrsData)(DWORD_PTR dwParam1) = DummyParseData;
+VOID(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD_PTR dwParam1) = DummyPrepareForBASSMIDI;
 DWORD(*_PlayBufData)(void) = DummyPlayBufData;
 DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
 BOOL(WINAPI*_BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = DummyBMSE;
@@ -171,7 +171,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 		break;
 	}
 	case DLL_THREAD_ATTACH:
-	case DLL_THREAD_DETACH: 
+	case DLL_THREAD_DETACH:
 		break;
 	}
 
@@ -332,7 +332,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			break;
 		}
 		case (sizeof(MIDIOUTCAPS2A)):
-		{	
+		{
 			if (capsPtr == NULL || capsSize != sizeof(MIDIOUTCAPS2A))
 				return MMSYSERR_INVALPARAM;
 
@@ -357,7 +357,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			break;
 		}
 		case (sizeof(MIDIOUTCAPS2W)):
-		{	
+		{
 			if (capsPtr == NULL || capsSize != sizeof(MIDIOUTCAPS2W))
 				return MMSYSERR_INVALPARAM;
 
@@ -390,7 +390,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 	}
 }
 
-MMRESULT DequeueMIDIHDRs() 
+MMRESULT DequeueMIDIHDRs()
 {
 	if (OMCookedPlayer == nullptr)
 		return DebugResult("DequeueMIDIHDRs", MMSYSERR_INVALPARAM, "dwUser is not valid.");
@@ -415,7 +415,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 
 	// Return value
 	MMRESULT RetVal = MMSYSERR_NOERROR;
-	
+
 	/*
 	char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 	sprintf(Msg, "Received modMessage(%u, %u, %X, %X, %X)", uDeviceID, uMsg, dwUser, dwParam1, dwParam2);
@@ -427,9 +427,9 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 	case MODM_DATA:
 		// Parse the data lol
 		return _PrsData(dwParam1);
-	case MODM_LONGDATA: 
+	case MODM_LONGDATA:
 	{
-		MIDIHDR* MIDIHeader = (MIDIHDR*)dwParam1;
+		LPMIDIHDR MIDIHeader = (LPMIDIHDR)dwParam1;
 
 		// Pass it to a KDMAPI function
 		RetVal = SendDirectLongData(MIDIHeader);
@@ -440,8 +440,8 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 
 		return RetVal;
 	}
-	case MODM_STRMDATA: 
-	{		
+	case MODM_STRMDATA:
+	{
 		MIDIHDR* MIDIHeader = (MIDIHDR*)dwParam1;
 		DWORD HeaderLength = (DWORD)dwParam2;
 
@@ -459,7 +459,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		if (!(MIDIHeader->dwFlags & MHDR_PREPARED))
 			return DebugResult("MODM_STRMDATA", MIDIERR_UNPREPARED, "The buffer is not prepared.");
 
-		if (!(MIDIHeader->dwFlags & MHDR_DONE)) 
+		if (!(MIDIHeader->dwFlags & MHDR_DONE))
 		{
 			if (MIDIHeader->dwFlags & MHDR_INQUEUE)
 				return DebugResult("MODM_STRMDATA", MIDIERR_STILLPLAYING, "The buffer is still being played.");
@@ -508,7 +508,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		PrintMessageToDebugLog("MODM_STRMDATA", "All done!");
 		return MMSYSERR_NOERROR;
 	}
-	case MODM_PROPERTIES: 
+	case MODM_PROPERTIES:
 	{
 		MIDIPROPTIMEDIV* MPropTimeDiv = (MIDIPROPTIMEDIV*)dwParam1;
 		MIDIPROPTEMPO* MPropTempo = (MIDIPROPTEMPO*)dwParam1;
@@ -520,7 +520,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		if (!(MPropFlags & (MIDIPROP_GET | MIDIPROP_SET)))
 			return DebugResult("MODM_PROPERTIES", MMSYSERR_INVALPARAM, "The MIDI application is confused, and didn't specify if it wanted to get the properties or set them.");
 
-		if (MPropFlags & MIDIPROP_TEMPO) 
+		if (MPropFlags & MIDIPROP_TEMPO)
 		{
 			if (MPropTempo->cbStruct != sizeof(MIDIPROPTEMPO)) {
 				return DebugResult("MODM_PROPERTIES", MMSYSERR_INVALPARAM, "Invalid pointer to MIDIPROPTEMPO struct.");
@@ -558,7 +558,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 
 		return MMSYSERR_NOERROR;
 	}
-	case MODM_GETPOS: 
+	case MODM_GETPOS:
 	{
 		MMTIME* MMTime = (MMTIME*)dwParam1;
 
@@ -594,7 +594,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		PrintMessageToDebugLog("MODM_GETPOS", "The app now knows the position.");
 		return MMSYSERR_NOERROR;
 	}
-	case MODM_RESTART: 
+	case MODM_RESTART:
 	{
 		if (!bass_initialized || OMCookedPlayer == nullptr)
 			return DebugResult("MODM_RESTART", MMSYSERR_NOTENABLED, "You can't call midiStreamRestart with a normal MIDI stream, or the driver isn't ready.");
@@ -606,7 +606,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 
 		return MMSYSERR_NOERROR;
 	}
-	case MODM_PAUSE: 
+	case MODM_PAUSE:
 	{
 		if (!bass_initialized || OMCookedPlayer == nullptr)
 			return DebugResult("MODM_PAUSE", MMSYSERR_NOTENABLED, "You can't call midiStreamPause with a normal MIDI stream, or the driver isn't ready.");
@@ -646,7 +646,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		// Pass it to a KDMAPI function
 		return PrepareLongData(MIDIHeader);
 	}
-	case MODM_UNPREPARE: 
+	case MODM_UNPREPARE:
 	{
 		MIDIHDR* MIDIHeader = (MIDIHDR*)dwParam1;
 
@@ -671,7 +671,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		PrintMessageToDebugLog("MODM_SETVOLUME", "Dummy, the app has no control over the driver's audio output.");
 		return MMSYSERR_NOERROR;
 	}
-	case MODM_OPEN: 
+	case MODM_OPEN:
 	{
 		if (PreventInit) {
 			PrintMessageToDebugLog("MODM_OPEN", "The app is dumb and requested to open the stream again during the initialization process...");
@@ -762,8 +762,8 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 	default: {
 		// Unrecognized uMsg
 		char* Msg = new char[NTFS_MAX_PATH];
-		sprintf(Msg, 
-			"The application sent an unknown message! ID: 0x%08x - dwUser: 0x%08x - dwParam1: 0x%08x - dwParam2: 0x%08x", 
+		sprintf(Msg,
+			"The application sent an unknown message! ID: 0x%08x - dwUser: 0x%08x - dwParam1: 0x%08x - dwParam2: 0x%08x",
 			uMsg, dwUser, dwParam1, dwParam2);
 		RetVal = DebugResult("modMessage", MMSYSERR_ERROR, Msg);
 		delete[] Msg;
