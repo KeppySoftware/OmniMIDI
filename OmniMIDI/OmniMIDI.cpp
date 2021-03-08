@@ -487,6 +487,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 				UnlockForWriting(&OMCookedPlayer->Lock);
 				return MIDIERR_STILLPLAYING;
 			}
+
 			while (PMIDIHeader->lpNext)
 			{
 				PMIDIHeader = PMIDIHeader->lpNext;
@@ -497,6 +498,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 					return MIDIERR_STILLPLAYING;
 				}
 			}
+
 			PMIDIHeader->lpNext = MIDIHeader;
 		}
 		else OMCookedPlayer->MIDIHeaderQueue = MIDIHeader;
