@@ -644,8 +644,8 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 
 MMRESULT KDMAPI SendDirectLongData(LPMIDIHDR IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid and if the stream is alive
-	if (!bass_initialized)						// The driver isn't ready
-		return DebugResult("SendDirectLongData", MIDIERR_NOTREADY, "BASS hasn't been initialized yet.");
+	while (!bass_initialized)					// The driver isn't ready
+		_FWAIT;
 
 	if (!IIMidiHdr)								// The buffer doesn't exist, invalid parameter
 		return DebugResult("SendDirectLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
