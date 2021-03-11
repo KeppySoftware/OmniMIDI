@@ -153,10 +153,6 @@ HFX ChVolume;						// Volume
 DWORD RestartValue = 0;				// For AudToWAV
 BOOL UnlimitedChannels = 0;			// For KDMAPI
 
-const FLOAT sndbflen = 256.0f;		// AudToWAV
-FLOAT* sndbf;						// AudToWAV
-DWORD RtrnBf;						// AudToWAV
-
 // Settings and debug
 wchar_t ListToLoad[NTFS_MAX_PATH] = { 0 };
 typedef struct SoundFontList

@@ -600,9 +600,6 @@ MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) noexcept {
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
-	if (!bass_initialized)								// The driver isn't ready
-		return DebugResult("PrepareLongData", MIDIERR_NOTREADY, "BASS hasn't been initialized yet.");
-
 	if (!IIMidiHdr)										// Buffer doesn't exist
 		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
 
@@ -622,9 +619,6 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 
 MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
-	if (!bass_initialized)						// The driver isn't ready
-		return DebugResult("UnprepareLongData", MIDIERR_NOTREADY, "BASS hasn't been initialized yet.");
-
 	if (!IIMidiHdr)								// The buffer doesn't exist, invalid parameter
 		return DebugResult("UnprepareLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
 
@@ -645,6 +639,9 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 MMRESULT KDMAPI SendDirectLongData(LPMIDIHDR IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid and if the stream is alive
 	while (!bass_initialized)					// The driver isn't ready
+		// return DebugResult("SendDirectLongData", MIDIERR_NOTREADY, "BASS hasn't been initialized yet.");
+		// Since some apps don't listen to the MIDIERR_NOTREADY return value,
+		// I'm forced to make OmniMIDI spinlock until BASS is ready. (Thank you VanBasco.)
 		_FWAIT;
 
 	if (!IIMidiHdr)								// The buffer doesn't exist, invalid parameter

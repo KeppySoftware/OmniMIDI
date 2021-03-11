@@ -262,6 +262,8 @@ VOID LoadBASSFunctions()
 			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelPause);
 			LOADLIBFUNCTION(BASSENC.Lib, BASS_Encode_Start);
 			LOADLIBFUNCTION(BASSENC.Lib, BASS_Encode_Stop);
+			LOADLIBFUNCTION(BASSENC.Lib, BASS_Encode_Write);
+			LOADLIBFUNCTION(BASSENC.Lib, BASS_Encode_SetPaused);
 			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelFlags);
 			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelGetAttribute);
 			LOADLIBFUNCTION(BASS.Lib, BASS_ChannelGetData);
@@ -417,11 +419,6 @@ void FreeUpMemory() {
 	EVBuffer.WriteHead = 0;
 	EVBuffer.ReadHead = 0;
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freed.");
-
-	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing audio buffer...");
-	delete[] sndbf;
-	sndbf = NULL;
-	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freed.");
 }
 
 void AllocateMemory(BOOL restart) {
@@ -499,22 +496,6 @@ void AllocateMemory(BOOL restart) {
 		// Set heads to 0
 		EVBuffer.WriteHead = 0;
 		EVBuffer.ReadHead = 0;
-
-		// Done, now allocate the buffer for the ".WAV mode"
-		if (ManagedSettings.CurrentEngine == AUDTOWAV)
-		{
-			if (sndbf != nullptr) PrintMessageToDebugLog("AllocateMemoryFunc", "Audio buffer already allocated.");
-			else {
-				PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating audio buffer...");
-				sndbf = new (std::nothrow) float[sndbflen];
-				if (sndbf == nullptr) {
-					PrintMessageToDebugLog("AllocateMemoryFunc", "An error has occurred while allocating the audio buffer.");
-					MessageBox(NULL, L"Fatal error while allocating the sound buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-					exit(ERROR_NOT_ENOUGH_MEMORY);
-				}
-				PrintMessageToDebugLog("AllocateMemoryFunc", "Audio buffer allocated.");
-			}
-		}
 	}
 	catch (...) {
 		CrashMessage(L"EVBufAlloc");

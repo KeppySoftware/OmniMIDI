@@ -134,7 +134,7 @@ void AudioEngine(LPVOID lpParam) {
 				if (HyperMode) break;
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
-				if (ManagedSettings.NotesCatcherWithAudio) {
+				if (ManagedSettings.NotesCatcherWithAudio || ManagedSettings.CurrentEngine == AUDTOWAV) {
 					SetNoteValuesFromSettings();
 					_PlayBufDataChk();
 				}
@@ -142,8 +142,13 @@ void AudioEngine(LPVOID lpParam) {
 				else if (!EPThread.ThreadHandle) InitializeEventsProcesserThreads();
 
 				// If the current engine is ".WAV mode", then use AudioRender()
-				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
-				else BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
+				if (ManagedSettings.CurrentEngine == AUDTOWAV)
+				{
+					int len = BASS_ChannelSeconds2Bytes(OMStream, 0.03);
+					BASS_ChannelGetData(OMStream, nullptr, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | (len / 4));
+				}
+				else 
+					BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
 
 				_WAIT;
 			}
@@ -166,11 +171,17 @@ void FastAudioEngine(LPVOID lpParam) {
 				if (!HyperMode) break;
 
 				// If the current engine is ".WAV mode", then use AudioRender()
-				if (ManagedSettings.CurrentEngine == AUDTOWAV) BASS_ChannelGetData(OMStream, sndbf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) + sndbflen * sizeof(float));
+				if (ManagedSettings.CurrentEngine == AUDTOWAV) {
+					const int len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
+					float* buf = new float[len / 4];
+					BASS_ChannelGetData(OMStream, buf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
+					BASS_Encode_Write(OMStream, buf, len);
+					delete[] buf;
+				}
 				else BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
-				if (ManagedSettings.NotesCatcherWithAudio) {
+				if (ManagedSettings.NotesCatcherWithAudio || ManagedSettings.CurrentEngine == AUDTOWAV) {
 					_PlayBufDataChk();
 				}
 				// Else, open the EventProcesser thread
@@ -299,7 +310,7 @@ void CreateThreads() {
 	}
 
 	// Run the events processer thread if necessary
-	if (!ManagedSettings.NotesCatcherWithAudio)
+	if (!ManagedSettings.NotesCatcherWithAudio && ManagedSettings.CurrentEngine != AUDTOWAV)
 		InitializeEventsProcesserThreads();
 
 	// Check if the debug thread is working
@@ -705,6 +716,10 @@ BEGSWITCH:
 				BASS_Encode_Start(OMStream, (const char*)encpath, BASS_ENCODE_PCM | BASS_ENCODE_LIMIT | BASS_ENCODE_RF64 | BASS_UNICODE, 0, 0);
 				// Error handling
 				CheckUp(FALSE, ERRORCODE, "Encoder Start", TRUE);
+				// Stop automatic encoding 
+				BASS_Encode_SetPaused(OMStream, true);
+				// Error handling
+				CheckUp(FALSE, ERRORCODE, "Encoder No-Auto", TRUE);
 				break;
 			case IDNO:
 				// Otherwise, open the configurator
@@ -717,6 +732,7 @@ BEGSWITCH:
 				}
 			}
 
+			RestartValue++;
 			PrintMessageToDebugLog("InitializeBASSEncFunc", "BASSenc is now ready!");
 			InitializationCompleted = TRUE;
 		}
