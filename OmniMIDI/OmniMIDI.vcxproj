@@ -84,7 +84,7 @@
     <UseOfAtl>Static</UseOfAtl>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v141_xp</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CLRSupport>false</CLRSupport>
     <SpectreMitigation>false</SpectreMitigation>
   </PropertyGroup>
