@@ -105,16 +105,6 @@ namespace OmniMIDIConfigurator
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Functions.CheckDriverStatusInReg("x86", Functions.CLSID32);
-            if (Environment.Is64BitOperatingSystem)
-                Functions.CheckDriverStatusInReg("x64", Functions.CLSID64);
-
-            OpenRequiredKey(ref Mixer, MIPath);
-            OpenRequiredKey(ref Channels, CHPath);
-            OpenRequiredKey(ref SynthSettings, SSPath);
-            OpenRequiredKey(ref Mapper, MPPath);
-            OpenRequiredKey(ref Watchdog, WPath);
-
             if (!Directory.Exists(Path.GetDirectoryName(Program.ListsPath[0])))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(Program.ListsPath[0]));
@@ -133,6 +123,18 @@ namespace OmniMIDIConfigurator
             {
                 switch (Arg.ToLowerInvariant())
                 {
+                    case "/prepare":
+                        SynthSettings = Registry.CurrentUser.OpenSubKey(SSPath, true);
+                        if (SynthSettings == null)
+                        {
+                            OpenRequiredKey(ref Mixer, MIPath, true);
+                            OpenRequiredKey(ref Channels, CHPath, true);
+                            OpenRequiredKey(ref SynthSettings, SSPath, true);
+                            OpenRequiredKey(ref Mapper, MPPath, true);
+                            OpenRequiredKey(ref Watchdog, WPath, true);
+                            Functions.ResetDriverSettings();
+                        }
+                        return;
                     case "/rei":
                         var current = Process.GetCurrentProcess();
                         Process.GetProcessesByName(current.ProcessName)
@@ -163,6 +165,16 @@ namespace OmniMIDIConfigurator
                 }
             }
 
+            OpenRequiredKey(ref Mixer, MIPath, false);
+            OpenRequiredKey(ref Channels, CHPath, false);
+            OpenRequiredKey(ref SynthSettings, SSPath, false);
+            OpenRequiredKey(ref Mapper, MPPath, false);
+            OpenRequiredKey(ref Watchdog, WPath, false);
+
+            Functions.CheckDriverStatusInReg("x86", Functions.CLSID32);
+            if (Environment.Is64BitOperatingSystem)
+                Functions.CheckDriverStatusInReg("x64", Functions.CLSID64);
+
             bool dummy;
             BringToFrontMessage = WinAPI.RegisterWindowMessage("OmniMIDIConfiguratorToFront");
             m = new EventWaitHandle(false, EventResetMode.ManualReset, "OmniMIDIConfigurator", out dummy);
@@ -179,14 +191,12 @@ namespace OmniMIDIConfigurator
             DateTime CD = DateTime.Now;
             Double D = (CD.Date - Properties.Settings.Default.DonationShownWhen).TotalDays;
             if (D > 30 && !Properties.Settings.Default.DonationDoNotShow)
-            {
                 new Donate().ShowDialog();
-            }
 
             Application.Run(new MainWindow(SoundFontsToAdd.ToArray()));
         }
 
-        private static void OpenRequiredKey(ref RegistryKey Key, String KeyPath)
+        private static bool OpenRequiredKey(ref RegistryKey Key, String KeyPath, Boolean Silent)
         {
             Key = Registry.CurrentUser.OpenSubKey(KeyPath, true);
             if (Key == null)
@@ -197,14 +207,19 @@ namespace OmniMIDIConfigurator
                 }
                 catch (Exception ex)
                 {
-                    Program.ShowError(
-                        4,
-                        "FATAL ERROR",
-                        "A fatal error has occured during the startup process of the configurator.\n\nThe configurator was unable to open the required registry keys.",
-                        ex);
-                    return;
+                    if (!Silent)
+                    {
+                        Program.ShowError(
+                            4,
+                            "FATAL ERROR",
+                            "A fatal error has occured during the startup process of the configurator.\n\nThe configurator was unable to open the required registry keys.",
+                            ex);
+                    }
+                    return false;
                 }
             }
+
+            return true;
         }
 
         public static bool TLS12Available()

@@ -391,7 +391,7 @@ namespace OmniMIDIConfigurator
 
         private void DeleteUserData_Click(object sender, EventArgs e)
         {
-            DialogResult RES1 = Program.ShowError(3, "Clear user data", "Deleting the driver's user data will delete all the SoundFont lists, the DLL overrides and will also uninstall LoudMax.\nThis action is irreversible!\n\nAre you sure you want to continue?\nAfter deleting the data, the configurator will restart.", null);
+            DialogResult RES1 = Program.ShowError(3, "Clear user data", "Deleting the driver's user data will delete all the SoundFont lists, the DLL overrides and will also uninstall LoudMax.\nThis action is irreversible!\n\nAre you sure you want to continue?\nAfter deleting the data, the configurator will restart.\n\nATTENTION: This will not reset the driver settings.", null);
             if (RES1 == DialogResult.Yes)
             {
                 DialogResult RES2 = Program.ShowError(1, "Clear user data", "Would you like to restart the configurator after the process?", null);
@@ -407,7 +407,7 @@ namespace OmniMIDIConfigurator
 
         private void ReinstallDriver_Click(object sender, EventArgs e)
         {
-            DialogResult RES = Program.ShowError(3, "Reinstall the driver", "Are you sure you want to reinstall the driver?\n\nThe configurator will download the latest installer, and remove all the old registry keys.\nYou'll lose ALL the settings.", null);
+            DialogResult RES = Program.ShowError(3, "Reinstall the driver", "Are you sure you want to reinstall the driver?\n\nThe configurator will download the latest installer, and remove all the old driver settings.\nYou'll lose ALL the settings, there's no going back after you press YES.", null);
             if (RES == DialogResult.Yes)
             {
                 var p = new System.Diagnostics.Process();
@@ -490,9 +490,7 @@ namespace OmniMIDIConfigurator
                 VersionLabel.Enabled = false;
             });
 
-            String IUA = UpdateSystem.CheckForUpdatesMini().ToLowerInvariant();
-
-            switch (IUA)
+            switch (UpdateSystem.CheckForUpdatesMini().ToLowerInvariant())
             {
                 case "yes":
                     this.Invoke((MethodInvoker)delegate
