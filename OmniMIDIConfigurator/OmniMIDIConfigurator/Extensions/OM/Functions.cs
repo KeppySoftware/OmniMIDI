@@ -264,9 +264,22 @@ namespace OmniMIDIConfigurator
             Properties.Settings.Default.Save();
 
             foreach (SettingStruct Setting in DefaultSettings.ToArray())
-            {
                 Program.SynthSettings.SetValue(Setting.SettingName, Setting.Value, RegistryValueKind.DWord);
-            }
+
+            Program.SynthSettings.SetValue("SynthName", "OmniMIDI", RegistryValueKind.String);
+            Program.SynthSettings.SetValue("ASIOOutput", "FL Studio ASIO", RegistryValueKind.String);
+
+            for (int i = 1; i <= 16; i++)
+                Program.Channels.SetValue(String.Format("ch{0}", i), 100, RegistryValueKind.DWord);
+
+            Program.ChanOverride.SetValue("overrideinstruments", "0", RegistryValueKind.DWord);
+
+            for (int i = 1; i <= 8; i++)
+                Program.Watchdog.SetValue(String.Format("rel{0}", i), 0, RegistryValueKind.DWord);
+
+            Program.Watchdog.SetValue("runwd", 0, RegistryValueKind.DWord);
+            Program.Watchdog.SetValue("watchdog", 1, RegistryValueKind.DWord);
+            Program.Watchdog.SetValue("currentsflist", 1, RegistryValueKind.DWord);
         }
 
         public static bool CheckDriverStatusInReg(String WhichBit, RegistryKey WhichKey)

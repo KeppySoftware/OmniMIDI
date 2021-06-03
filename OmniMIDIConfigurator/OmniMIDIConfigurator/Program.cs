@@ -62,6 +62,7 @@ namespace OmniMIDIConfigurator
         // Mandatory values
         public static RegistryKey Mixer = null;
         public static RegistryKey Channels = null;
+        public static RegistryKey ChanOverride = null;
         public static RegistryKey SynthSettings = null;
         public static RegistryKey Mapper = null;
         public static RegistryKey Watchdog = null;
@@ -69,6 +70,7 @@ namespace OmniMIDIConfigurator
         public const string HKCU = "HKEY_CURRENT_USER\\";
         public const string MIPath = "SOFTWARE\\OmniMIDI";
         public const string CHPath = "SOFTWARE\\OmniMIDI\\Channels";
+        public const string COPath = "SOFTWARE\\OmniMIDI\\ChanOverride";
         public const string SSPath = "SOFTWARE\\OmniMIDI\\Configuration";
         public const string MPPath = "SOFTWARE\\OmniMIDI\\Mapper";
         public const string WPath = "SOFTWARE\\OmniMIDI\\Watchdog";
@@ -129,6 +131,7 @@ namespace OmniMIDIConfigurator
                         {
                             OpenRequiredKey(ref Mixer, MIPath, true);
                             OpenRequiredKey(ref Channels, CHPath, true);
+                            OpenRequiredKey(ref ChanOverride, COPath, true);
                             OpenRequiredKey(ref SynthSettings, SSPath, true);
                             OpenRequiredKey(ref Mapper, MPPath, true);
                             OpenRequiredKey(ref Watchdog, WPath, true);
@@ -167,6 +170,7 @@ namespace OmniMIDIConfigurator
 
             OpenRequiredKey(ref Mixer, MIPath, false);
             OpenRequiredKey(ref Channels, CHPath, false);
+            OpenRequiredKey(ref ChanOverride, COPath, false);
             OpenRequiredKey(ref SynthSettings, SSPath, false);
             OpenRequiredKey(ref Mapper, MPPath, false);
             OpenRequiredKey(ref Watchdog, WPath, false);
