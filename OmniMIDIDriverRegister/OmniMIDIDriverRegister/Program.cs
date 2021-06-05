@@ -104,16 +104,14 @@ namespace OmniMIDIDriverRegister
 
         public static void Register(/* bool IsSilent, String WhichBit, RegistryKey WhichKey */)
         {
+            String SysDir = Environment.ExpandEnvironmentVariables(String.Format(@"%windir%\{0}", Environment.Is64BitOperatingSystem ? "Sysnative" : "System32"));
+
             ProcessStartInfo SI = new ProcessStartInfo();
             SI.UseShellExecute = true;
             SI.Verb = "RunAs";
-
-            if (Environment.Is64BitOperatingSystem)
-                SI.FileName = Environment.ExpandEnvironmentVariables(@"%windir%\Sysnative\rundll32.exe");
-            else
-                SI.FileName = Environment.ExpandEnvironmentVariables(@"%windir%\System32\rundll32.exe");
-
+            SI.FileName = String.Format("{0}\\rundll32.exe", SysDir);
             SI.Arguments = "OmniMIDI.dll,DriverRegistration RegisterDrv";
+
             var P = Process.Start(SI);
             P.WaitForExit();
 

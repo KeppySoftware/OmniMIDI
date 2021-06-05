@@ -50,7 +50,7 @@ namespace OmniMIDIConfigurator
                     Ex = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\OmniMIDI\\OmniMIDIDevEnum.exe";
                     break;
                 case "ARM64":
-                    if (!Environment.Is64BitOperatingSystem && !(Functions.GetProcessorArchitecture() == "ARM64"))
+                    if (Functions.GetProcessorArchitecture() != "ARM64")
                         return new String[0];
 
                     Ex = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\OmniMIDI\\OmniMIDIDevEnum.exe";
@@ -86,9 +86,16 @@ namespace OmniMIDIConfigurator
                 ActiveMovieKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\ActiveMovie\devenum\{4EFE2452-168A-11D1-BC76-00C04FB9453B}\Default MidiOut Device", true);
                 MIDIMapperKey = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Multimedia\MIDIMap", true);
 
+                Boolean IsARM64 = Functions.GetProcessorArchitecture() == "ARM64";
                 String[] i386 = ReturnMIDIDevices("i386");
                 String[] AMD64 = ReturnMIDIDevices("AMD64");
                 String[] ARM64 = ReturnMIDIDevices("ARM64");
+
+                PAMD64.Visible = Environment.Is64BitOperatingSystem;
+                label3.Visible = Environment.Is64BitOperatingSystem;
+
+                PAarch64.Visible = IsARM64;
+                label4.Visible = IsARM64;
 
                 foreach (String D in i386)
                 {
