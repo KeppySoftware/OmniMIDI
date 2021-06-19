@@ -305,6 +305,7 @@ namespace OmniMIDIConfigurator
         public const int DSOUND_ENGINE = 1;
         public const int ASIO_ENGINE = 2;
         public const int WASAPI_ENGINE = 3;
+        public const int XA_ENGINE = 4;
     }
 
 }

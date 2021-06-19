@@ -80,6 +80,9 @@
     <ClCompile Include="OmniMIDI.cpp">
       <Filter>Runtime</Filter>
     </ClCompile>
+    <ClCompile Include="sound_out_xa.cpp">
+      <Filter>Runtime</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="OmniMIDI.def">

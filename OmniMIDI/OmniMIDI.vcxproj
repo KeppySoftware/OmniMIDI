@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OmniMIDI.cpp" />
+    <ClCompile Include="sound_out_xa.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\external_packages\bass.h" />
@@ -186,9 +187,9 @@
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" />
     <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" />
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);$(ProjectDir)\..\external_packages\lib</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);$(DXSDK_DIR)lib\x86;$(ProjectDir)\..\external_packages\lib</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);$(ProjectDir)\..\external_packages\lib</LibraryPath>
-    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath);$(ProjectDir)\..\external_packages\lib64</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(LibraryPath);$(DXSDK_DIR)lib\x64;$(ProjectDir)\..\external_packages\lib64</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(LibraryPath);$(ProjectDir)\..\external_packages\lib64</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">$(LibraryPath);$(ProjectDir)\..\external_packages\libARM64</LibraryPath>
     <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">$(LibraryPath);$(ProjectDir)\..\external_packages\libARM64</LibraryPath>

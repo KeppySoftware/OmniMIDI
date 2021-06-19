@@ -76,10 +76,8 @@ namespace OmniMIDIConfigurator
 
             switch (AudioEngBox.SelectedIndex)
             {
-                case AudioEngine.WASAPI_ENGINE:
-                case AudioEngine.DSOUND_ENGINE:
-                default:
-                    BufferText.Text = "Output buffer (in ms, from 1 to 1000. If the buffer is too small, it'll be set automatically to the lowest value possible)";
+                case AudioEngine.XA_ENGINE:
+                    BufferText.Text = "Output buffer (in ms, from 1 to 1000)";
                     break;
                 case AudioEngine.AUDTOWAV:
                     BufferText.Text = "The output buffer isn't needed when outputting to a .WAV file";
@@ -107,6 +105,11 @@ namespace OmniMIDIConfigurator
 
                     BufferText.Text = "The output buffer is controlled by the ASIO device itself";
                     break;
+                case AudioEngine.WASAPI_ENGINE:
+                case AudioEngine.DSOUND_ENGINE:
+                default:
+                    BufferText.Text = "Output buffer (in ms, from 1 to 1000. If the buffer is too small, it'll be set automatically to the lowest value possible)";
+                    break;
             }
 
             ChangeDefaultOutput.Enabled = NoAtW ? true : false;
@@ -122,7 +125,7 @@ namespace OmniMIDIConfigurator
             OldBuff.Enabled = NoAtW ? true : false;
 
             PreviousValue = AudioEngBox.SelectedIndex;
-            if (S) Program.SynthSettings.SetValue("xaudiodisabled", AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
+            if (S) Program.SynthSettings.SetValue("CurrentEngine", AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
         }
 
         private void LoadSettings()
@@ -211,10 +214,6 @@ namespace OmniMIDIConfigurator
                 AudioEngBox.SelectedIndexChanged -= AudioEngBox_SelectedIndexChanged;
                 switch (Convert.ToInt32(Program.SynthSettings.GetValue("CurrentEngine", AudioEngine.WASAPI_ENGINE)))
                 {
-                    case AudioEngine.WASAPI_ENGINE:
-                    default:
-                        AudioEngBox.SelectedIndex = AudioEngine.WASAPI_ENGINE;
-                        break;
                     case AudioEngine.AUDTOWAV:
                         AudioEngBox.SelectedIndex = AudioEngine.AUDTOWAV;
                         break;
@@ -223,6 +222,13 @@ namespace OmniMIDIConfigurator
                         break;
                     case AudioEngine.ASIO_ENGINE:
                         AudioEngBox.SelectedIndex = AudioEngine.ASIO_ENGINE;
+                        break;
+                    case AudioEngine.XA_ENGINE:
+                        AudioEngBox.SelectedIndex = AudioEngine.XA_ENGINE;
+                        break;
+                    case AudioEngine.WASAPI_ENGINE:
+                    default:
+                        AudioEngBox.SelectedIndex = AudioEngine.WASAPI_ENGINE;
                         break;
                 }
                 PreviousValue = AudioEngBox.SelectedIndex;
@@ -482,6 +488,9 @@ namespace OmniMIDIConfigurator
                     break;
                 case AudioEngine.ASIO_ENGINE:
                     new DefaultASIOAudioOutput().ShowDialog();
+                    break;
+                case AudioEngine.XA_ENGINE:
+                    new XAOutputSettings().ShowDialog();
                     break;
                 default:
                     break;

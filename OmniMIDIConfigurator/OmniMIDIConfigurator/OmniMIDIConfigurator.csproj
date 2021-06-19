@@ -285,6 +285,12 @@
     <Compile Include="Forms\OM\Secondary\WinMMSpeed.Designer.cs">
       <DependentUpon>WinMMSpeed.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OM\Audio Outputs\XAOutputSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OM\Audio Outputs\XAOutputSettings.Designer.cs">
+      <DependentUpon>XAOutputSettings.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Donate.resx">
       <DependentUpon>Donate.cs</DependentUpon>
     </EmbeddedResource>
@@ -380,6 +386,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Secondary\WinMMSpeed.resx">
       <DependentUpon>WinMMSpeed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OM\Audio Outputs\XAOutputSettings.resx">
+      <DependentUpon>XAOutputSettings.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
     <None Include="packages.config" />

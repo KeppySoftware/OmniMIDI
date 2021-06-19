@@ -10,10 +10,10 @@ typedef unsigned __int64 QWORD;
 typedef long NTSTATUS;
 
 // KDMAPI version
-#define CUR_MAJOR	2
-#define CUR_MINOR	1
+#define CUR_MAJOR	3
+#define CUR_MINOR	0
 #define CUR_BUILD	0
-#define CUR_REV		69
+#define CUR_REV		0
 
 #define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
 #define STRICT
@@ -64,6 +64,7 @@ typedef long NTSTATUS;
 #include <assert.h>
 #include "Resource.h"
 #include "OmniMIDI.h"
+#include "sound_out.h"
 
 // BASS headers
 #include <bass.h>
@@ -144,6 +145,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 
 		hinst = hModule;
 		BASS_MIDI_StreamEvent = DummyBMSE;
+		XADummyWindow = new XAWin;
 
 		if (!NtDelayExecution || !NtQuerySystemTime) {
 			NtDelayExecution = (NDE)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtDelayExecution");
@@ -168,6 +170,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 	case DLL_PROCESS_DETACH:
 	{
 		hinst = NULL;
+		delete XADummyWindow;
 		break;
 	}
 	case DLL_THREAD_ATTACH:

@@ -20,7 +20,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '13.8.7.0'
+#define Version '13.8.15.0'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -157,9 +157,6 @@ Source: "{#lib32}\bass_vst.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass
 Source: "{#lib32}\basswasapi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "output\{#InstallDir}.dbl"; DestDir: "{sys}\{#InstallDir}"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 
-; Generic for all the OSes
-Source: "LICENSE.TXT"; DestDir: "{%USERPROFILE}\{#ProductName}"; Flags: replacesameversion ignoreversion
-
 [Dirs]
 ; 64-bit OS
 Name: "{sys}\{#InstallDir}"; Permissions: everyone-full; Flags: setntfscompression; Check: Windows64
@@ -252,6 +249,7 @@ Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/unregister"
 WindowsVersionNotSupported={#ProductName} support for Windows XP ended on October 29th, 2016.%n%nIf you want to get further updates, please update to Windows Vista or newer.
 ExitSetupMessage=The MIDI driver hasn't been installed yet.%n%nAre you sure you want to quit?
 SetupWindowTitle=Setup - %1
+BeveledLabel=OmniMIDI for Windows NT
 
 WindowsVersionNotSupported={#ProductName} support for Windows XP ended on October 29th, 2016.%n%nIf you want to get further updates, please update to Windows Vista or newer.
 ExitSetupMessage={#ProductName} hasn't been installed yet.%n%nAre you sure you want to quit?

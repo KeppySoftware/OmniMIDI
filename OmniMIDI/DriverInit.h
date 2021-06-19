@@ -142,14 +142,35 @@ void AudioEngine(LPVOID lpParam) {
 				else if (!EPThread.ThreadHandle) InitializeEventsProcesserThreads();
 
 				// If the current engine is ".WAV mode", then use AudioRender()
-				if (ManagedSettings.CurrentEngine == AUDTOWAV)
+				switch (ManagedSettings.CurrentEngine) {
+				case AUDTOWAV:
 				{
-					int len = BASS_ChannelSeconds2Bytes(OMStream, 0.03);
-					BASS_ChannelGetData(OMStream, nullptr, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | (len / 4));
+					const int len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
+					float* buf = new float[len / 4];
+					BASS_ChannelGetData(OMStream, buf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
+					BASS_Encode_Write(OMStream, buf, len);
+					delete[] buf;
 				}
-				else 
-					BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
+				case XAUDIO_ENGINE:
+				{
+					if (!COMInit) break;
 
+					float * SndBuf = new float[SamplesPerFrame];
+					int len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
+					if (len < 0) 
+						break;
+
+					SndDrv->write_frame(SndBuf, len / sizeof(float), false);
+					delete[] SndBuf;
+					break;
+				}
+				default:
+				{
+					BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
+					break;
+				}
+				}
+				
 				_WAIT;
 			}
 		}
@@ -171,14 +192,35 @@ void FastAudioEngine(LPVOID lpParam) {
 				if (!HyperMode) break;
 
 				// If the current engine is ".WAV mode", then use AudioRender()
-				if (ManagedSettings.CurrentEngine == AUDTOWAV) {
+				// If the current engine is ".WAV mode", then use AudioRender()
+				switch (ManagedSettings.CurrentEngine) {
+				case AUDTOWAV:
+				{
 					const int len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
 					float* buf = new float[len / 4];
 					BASS_ChannelGetData(OMStream, buf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
 					BASS_Encode_Write(OMStream, buf, len);
 					delete[] buf;
 				}
-				else BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
+				case XAUDIO_ENGINE:
+				{
+					if (!COMInit) break;
+
+					float* SndBuf = new float[SamplesPerFrame];
+					int len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
+					if (len < 0)
+						break;
+
+					SndDrv->write_frame(SndBuf, len / sizeof(float), false);
+					delete[] SndBuf;
+					break;
+				}
+				default:
+				{
+					BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
+					break;
+				}
+				}
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
 				if (ManagedSettings.NotesCatcherWithAudio || ManagedSettings.CurrentEngine == AUDTOWAV) {
@@ -882,6 +924,50 @@ BEGSWITCH:
 		break;
 	}
 
+	// Oh no it's back!
+	case XAUDIO_ENGINE:
+	{
+		BOOL Fail = FALSE;
+
+		if (InitializeBASSLibrary()) {
+			// Initialize BASS stream
+			if (!InitializeStream(ManagedSettings.AudioFrequency))
+			{
+				PrintMessageToDebugLog("InitializeXAFunc", "An error has occurred during BASS' initialization! Freeing XAudio2...");
+				break;
+			}
+
+			if (!COMInit) {
+				if (FAILED(CoInitialize(NULL)))
+					Fail = TRUE;
+				COMInit = TRUE;
+			}
+
+			if (SndDrv == NULL && !Fail) {
+				SndDrv = create_sound_out_xaudio2();
+				const char* XAFail = SndDrv->open(XADummyWindow->get_hwnd(), ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.BufferLength);
+				if (XAFail) Fail = TRUE;
+			}
+
+			if (Fail) {
+				ManagedSettings.CurrentEngine = WASAPI_ENGINE;
+				FreeUpBASS();
+				if (SndDrv != NULL) {
+					delete SndDrv;
+					SndDrv = NULL;
+				}
+				if (COMInit) CoUninitialize();
+				PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 encountered an error!");
+				MessageBox(NULL, L"XA failed to initialize!\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+				goto BEGSWITCH;
+			}
+
+			InitializationCompleted = TRUE;
+		}
+
+		break;
+	}
+
 #if !defined(_M_ARM64)
 	case ASIO_ENGINE:
 	{
@@ -1077,6 +1163,15 @@ void FreeUpStream() {
 			PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stopped.");
 			BASS_Free();
 			PrintMessageToDebugLog("FreeUpStreamFunc", "BASS freed.");
+		}
+
+		if (SndDrv) {
+			COMInit = FALSE;
+			Sleep(250);
+
+			delete SndDrv;
+			SndDrv = NULL;
+			CoUninitialize();
 		}
 	}
 

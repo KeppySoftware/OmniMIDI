@@ -21,6 +21,7 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 #define DXAUDIO_ENGINE 1
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
+#define XAUDIO_ENGINE 4
 #define OLD_WASAPI 69420
 
 // Settings
@@ -158,6 +159,8 @@ typedef struct
 	BOOL WASAPIDoubleBuf = TRUE;			// WASAPI double buffer (for volume monitoring)
 
 	BOOL AudioRampIn = TRUE;				// Enables the audio ramp-in, to gracefully play new notes without audible clicks
+
+	DWORD XASamplesPerFrame = 88;			// Samples per frame (XA engine)
 } Settings;
 #endif
 

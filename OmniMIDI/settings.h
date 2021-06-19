@@ -551,11 +551,13 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"OldWASAPIMode", NULL, &dwType, (LPBYTE)&ManagedSettings.OldWASAPIMode, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"WASAPIRAWMode", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIRAWMode, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"WASAPIDoubleBuf", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIDoubleBuf, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"ReduceBootUpDelay", NULL, &dwType, (LPBYTE)&ManagedSettings.ReduceBootUpDelay, &dwSize);	
+			RegQueryValueEx(Configuration.Address, L"ReduceBootUpDelay", NULL, &dwType, (LPBYTE)&ManagedSettings.ReduceBootUpDelay, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"XASamplesPerFrame", NULL, &dwType, (LPBYTE)&ManagedSettings.XASamplesPerFrame, &dwSize);
 			if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(Configuration.Address, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&ManagedSettings.NotesCatcherWithAudio, &dwSize);
 			else ManagedSettings.NotesCatcherWithAudio = FALSE;
+		
+			SamplesPerFrame = ManagedSettings.XASamplesPerFrame * (ManagedSettings.MonoRendering ? 1 : 2);
 		}
-
 		RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"ChannelUpdateLength", NULL, &dwType, (LPBYTE)&ManagedSettings.ChannelUpdateLength, &dwSize);

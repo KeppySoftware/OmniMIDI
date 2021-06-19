@@ -678,9 +678,32 @@ MMRESULT KDMAPI SendDirectLongData(LPMIDIHDR IIMidiHdr) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT KDMAPI SendDirectLongDataNoBuf(MIDIHDR * IIMidiHdr) {
-	PrintMessageToDebugLog("KDMAPI_SDLDNBuf", "Deprecated command, please use SendDirectLongData instead.");
-	return SendDirectLongData(IIMidiHdr);
+MMRESULT KDMAPI SendDirectLongDataNoBuf(LPSTR MidiHdrData, DWORD MidiHdrDataLen) {
+	if (!MidiHdrData)
+		// The buffer doesn't exist, invalid parameter
+		return DebugResult("SendDirectLongDataNoBuf", MMSYSERR_INVALPARAM, "No pointer has been passed to MidiHdrData.");
+
+	if (!MidiHdrDataLen < 1 || MidiHdrDataLen > 65535)
+		// Invalid buffer size
+		return DebugResult("SendDirectLongDataNoBuf", MMSYSERR_INVALPARAM, "Invalid value passed for MidiHdrDataLen.");
+
+	BOOL res = SendLongToBASSMIDI(MidiHdrData, MidiHdrDataLen);
+
+	// Tell the app that the buffer has failed to be played
+	if (!res) {
+		char Msg[NTFS_MAX_PATH] = { 0 };
+
+		sprintf(Msg, "The long buffer (MIDIHDR) sent to OmniMIDI wasn't able to be recognized.\n\nUnrecognized sequence: ");
+
+		for (int i = 0; i < MidiHdrDataLen; i++)
+			sprintf(Msg + strlen(Msg), "%02X", (BYTE)(MidiHdrData[i]));
+
+		sprintf(Msg + strlen(Msg), "\n");
+
+		return DebugResult("SendDirectLongDataNoBuf", MMSYSERR_INVALPARAM, Msg);
+	}
+
+	return MMSYSERR_NOERROR;
 }
 
 BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) {

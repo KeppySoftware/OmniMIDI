@@ -212,11 +212,6 @@ namespace OmniMIDIConfigurator
                 Close();
             }
         }
-
-        private void DefaultWASAPIAudioOutput_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 
     class WASAPIDevice

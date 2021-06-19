@@ -117,30 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="ButtonsDesc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <data name="MaxCPU.ToolTip" xml:space="preserve">
-    <value>It is not strictly the CPU usage that is measured, but rather how timely the stream is able to render data.
-For example, a limit of 50% would mean that the rendering would need to be at least 2x real-time speed.
-When the limit is exceeded, OmniMIDI will begin killing voices, starting with the most quiet. 
-</value>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Windows XA Gaming does not support selecting a specific output device, so it'll automatically follow Windows' default output.
+You can change the samples per frame down below.
+
+The lower the value, the tighter the timings become.
+
+In stereo mode, the value is multiplied by two. (E.g. 88 x 2 = 144 SPF)</value>
   </data>
-  <data name="RenderingTimeLabel.ToolTip" xml:space="preserve">
-    <value>It is not strictly the CPU usage that is measured, but rather how timely the stream is able to render data.
-For example, a limit of 50% would mean that the rendering would need to be at least 2x real-time speed.
-When the limit is exceeded, OmniMIDI will begin killing voices, starting with the most quiet. </value>
-  </data>
-  <metadata name="Requirements.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>137, 17</value>
-  </metadata>
-  <metadata name="VolTrackBarMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>264, 17</value>
-  </metadata>
-  <data name="label15.Text" xml:space="preserve">
-    <value>These settings are here for people who still want to access them, and they're here because they might get removed in the future to free up space for new features or because they're not meant to be edited by non tech-savvy users. If you encounter issues after editing any of these settings, please reset the synthesizer to the default settings, or reinstall the entire driver itself if needed.</value>
-  </data>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>61</value>
-  </metadata>
 </root>

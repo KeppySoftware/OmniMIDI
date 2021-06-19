@@ -602,7 +602,8 @@
             "Audio to .WAV mode",
             "Microsoft DirectX Audio",
             "Audio Stream Input/Output",
-            "Windows Audio Session API"});
+            "Windows Audio Session API",
+            "Windows XA Gaming"});
             this.AudioEngBox.Location = new System.Drawing.Point(505, 28);
             this.AudioEngBox.Name = "AudioEngBox";
             this.AudioEngBox.Size = new System.Drawing.Size(159, 21);

@@ -271,3 +271,41 @@ std::vector<BASS_MIDI_FONTEX> SoundFontPresets;
 // -----------------------------------------------------------------------
 
 DWORD pitchshiftchan[16];
+
+// -----------------------------------------------------------------------
+
+class XAWin
+{
+	HWND m_hWnd;
+	ATOM class_atom;
+
+public:
+	XAWin() {
+		static const TCHAR* class_name = _T("OmniMIDI Dummy Window");
+		WNDCLASSEX cls = { 0 };
+		cls.cbSize = sizeof(cls);
+		cls.lpfnWndProc = DefWindowProc;
+		cls.hInstance = hinst;
+		cls.lpszClassName = class_name;
+		class_atom = RegisterClassEx(&cls);
+		if (class_atom) {
+			m_hWnd = CreateWindowEx(0, (LPCTSTR)class_atom, _T("OmniMIDI"), 0, 0, 0, 0, 0, HWND_MESSAGE, NULL, hinst, NULL);
+		}
+		else {
+			m_hWnd = NULL;
+		}
+	}
+
+	~XAWin()
+	{
+		if (IsWindow(m_hWnd)) DestroyWindow(m_hWnd);
+		if (class_atom) UnregisterClass((LPCTSTR)class_atom, hinst);
+	}
+
+	HWND get_hwnd() const { return m_hWnd; }
+};
+
+int SamplesPerFrame = ManagedSettings.XASamplesPerFrame * 2;
+static sound_out* SndDrv = NULL;
+BOOL COMInit = FALSE;
+XAWin* XADummyWindow = NULL;
