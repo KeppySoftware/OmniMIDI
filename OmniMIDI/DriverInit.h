@@ -129,7 +129,7 @@ void AudioEngine(LPVOID lpParam) {
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	try {
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
-			while (!stop_thread) {
+			do {
 				// Check if HyperMode has been disabled
 				if (HyperMode) break;
 
@@ -146,33 +146,34 @@ void AudioEngine(LPVOID lpParam) {
 				case AUDTOWAV:
 				{
 					const int len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
-					float* buf = new float[len / 4];
-					BASS_ChannelGetData(OMStream, buf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
-					BASS_Encode_Write(OMStream, buf, len);
-					delete[] buf;
+					BASS_ChannelGetData(OMStream, SndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
+					BASS_Encode_Write(OMStream, SndBuf, len);
 				}
 				case XAUDIO_ENGINE:
 				{
-					if (!COMInit) break;
-
-					float * SndBuf = new float[SamplesPerFrame];
-					int len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
-					if (len < 0) 
+					if (!SndDrv || !COMInit)
 						break;
 
-					SndDrv->write_frame(SndBuf, len / sizeof(float), false);
-					delete[] SndBuf;
+					int len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
+					if (len < 0)
+						break;
+
+					SndDrv->write_frame(SndBuf, len / sizeof(float));
+
 					break;
 				}
-				default:
+				case OLD_WASAPI:
+				case DXAUDIO_ENGINE:
 				{
 					BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
 					break;
 				}
+				default:
+					break;
 				}
 				
 				_WAIT;
-			}
+			} while (!stop_thread);
 		}
 	}
 	catch (...) {
@@ -187,39 +188,39 @@ void FastAudioEngine(LPVOID lpParam) {
 	PrintMessageToDebugLog("FastAudioEngine", "Initializing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
 	try {
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
-			while (!stop_thread) {
+			do {
 				// Check if HyperMode has been disabled
 				if (!HyperMode) break;
 
-				// If the current engine is ".WAV mode", then use AudioRender()
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
 				case AUDTOWAV:
 				{
 					const int len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
-					float* buf = new float[len / 4];
-					BASS_ChannelGetData(OMStream, buf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
-					BASS_Encode_Write(OMStream, buf, len);
-					delete[] buf;
+					BASS_ChannelGetData(OMStream, SndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
+					BASS_Encode_Write(OMStream, SndBuf, len);
 				}
 				case XAUDIO_ENGINE:
 				{
-					if (!COMInit) break;
+					if (!SndDrv || !COMInit)
+						break;
 
-					float* SndBuf = new float[SamplesPerFrame];
 					int len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
 					if (len < 0)
 						break;
 
-					SndDrv->write_frame(SndBuf, len / sizeof(float), false);
-					delete[] SndBuf;
+					SndDrv->write_frame(SndBuf, len / sizeof(float));
+
 					break;
 				}
-				default:
+				case OLD_WASAPI:
+				case DXAUDIO_ENGINE:
 				{
 					BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
 					break;
 				}
+				default:
+					break;
 				}
 
 				// If the EventProcesser is disabled, then process the events from the audio thread instead
@@ -230,7 +231,7 @@ void FastAudioEngine(LPVOID lpParam) {
 				else if (!EPThread.ThreadHandle) InitializeEventsProcesserThreads();
 
 				_WAIT;
-			}
+			} while (!stop_thread);
 		}
 	}
 	catch (...) {
@@ -481,6 +482,63 @@ void FreeUpBASSASIO() {
 #endif
 }
 
+void SetUpStream() {
+	// Initialize the MIDI channels
+	PrintMessageToDebugLog("SetUpStreamFunc", "Preparing MIDI channels...");
+	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);
+	BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+	BASS_MIDI_StreamEvent(OMStream, 9, MIDI_EVENT_DRUMS, 1);
+	PrintMessageToDebugLog("SetUpStreamFunc", "MIDI channels are now ready to receive events.");
+}
+
+void FreeUpStream() {
+	if (BASSLoadedToMemory) {
+		// Reset synth
+		ResetSynth(0);
+
+		// Free up BASSWASAPI before doing anything
+		BASS_WASAPI_Stop(TRUE);
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSWASAPI stopped.");
+		BASS_WASAPI_Free();
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSWASAPI freed.");
+
+#if !defined(_M_ARM64)
+		// Free up ASIO as well
+		BASS_ASIO_Stop();
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO stopped.");
+		BASS_ASIO_Free();
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO freed.");
+#endif
+
+		// Stop the stream and free it as well
+		BASS_ChannelStop(OMStream);
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream stopped.");
+		BASS_StreamFree(OMStream);
+		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream freed.");
+
+		// Deinitialize the BASS output and free it, since we need to restart it
+		if (!HostSessionMode) {
+			BASS_Stop();
+			PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stopped.");
+			BASS_Free();
+			PrintMessageToDebugLog("FreeUpStreamFunc", "BASS freed.");
+		}
+
+		if (SndDrv) {
+			COMInit = FALSE;
+			delete SndDrv;
+			SndDrv = NULL;
+			CoUninitialize();
+		}
+
+		if (SndBuf)
+			delete[] SndBuf;
+	}
+
+	// Send dummy values to the mixer
+	CheckVolume(TRUE);
+}
+
 DWORD WASAPIDevicesCount() {
 	// Initialize BASSASIO device info
 	DWORD count = 0;
@@ -698,9 +756,7 @@ BOOL InitializeBASS(BOOL restart) {
 		PrintMessageToDebugLog("InitializeBASSFunc", "The driver had to restart the stream.");
 		if (ManagedSettings.CurrentEngine == AUDTOWAV) RestartValue++;
 
-		FreeUpBASSWASAPI();
-		FreeUpBASSASIO();
-		FreeUpBASS();
+		FreeUpStream();
 	}
 
 BEGSWITCH:
@@ -762,6 +818,8 @@ BEGSWITCH:
 				BASS_Encode_SetPaused(OMStream, true);
 				// Error handling
 				CheckUp(FALSE, ERRORCODE, "Encoder No-Auto", TRUE);
+				// Create buffer
+				SndBuf = new float[BASS_ChannelSeconds2Bytes(OMStream, 0.016) / 4];
 				break;
 			case IDNO:
 				// Otherwise, open the configurator
@@ -945,7 +1003,7 @@ BEGSWITCH:
 
 			if (SndDrv == NULL && !Fail) {
 				SndDrv = create_sound_out_xaudio2();
-				const char* XAFail = SndDrv->open(XADummyWindow->get_hwnd(), ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.BufferLength);
+				const char* XAFail = SndDrv->open(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.BufferLength);
 				if (XAFail) Fail = TRUE;
 			}
 
@@ -961,6 +1019,14 @@ BEGSWITCH:
 				MessageBox(NULL, L"XA failed to initialize!\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 				goto BEGSWITCH;
 			}
+
+			// Store the latency for debug
+			ManagedDebugInfo.AudioBufferSize = SamplesPerFrame;
+			ManagedDebugInfo.AudioLatency = ((DOUBLE)ManagedDebugInfo.AudioBufferSize * 1000.0f / (DOUBLE)ManagedSettings.AudioFrequency);
+			PrintMessageToDebugLog("InitializeWASAPIFunc", "Stored latency information.");
+
+			// Prepare audio buffer
+			SndBuf = new float[SamplesPerFrame];
 
 			InitializationCompleted = TRUE;
 		}
@@ -1121,60 +1187,4 @@ void LoadSoundFontsToStream() {
 		// Otherwise, fallback to default SoundFont
 		LoadSoundfont(0);
 	}
-}
-
-void SetUpStream() {
-	// Initialize the MIDI channels
-	PrintMessageToDebugLog("SetUpStreamFunc", "Preparing MIDI channels...");
-	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);
-	BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-	BASS_MIDI_StreamEvent(OMStream, 9, MIDI_EVENT_DRUMS, 1);
-	PrintMessageToDebugLog("SetUpStreamFunc", "MIDI channels are now ready to receive events.");
-}
-
-void FreeUpStream() {
-	if (BASSLoadedToMemory) {
-		// Reset synth
-		ResetSynth(0);
-
-		// Free up BASSWASAPI before doing anything
-		BASS_WASAPI_Stop(TRUE);
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSWASAPI stopped.");
-		BASS_WASAPI_Free();
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSWASAPI freed.");
-
-#if !defined(_M_ARM64)
-		// Free up ASIO as well
-		BASS_ASIO_Stop();
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO stopped.");
-		BASS_ASIO_Free();
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO freed.");
-#endif
-
-		// Stop the stream and free it as well
-		BASS_ChannelStop(OMStream);
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream stopped.");
-		BASS_StreamFree(OMStream);
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream freed.");
-
-		// Deinitialize the BASS output and free it, since we need to restart it
-		if (!HostSessionMode) {
-			BASS_Stop();
-			PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stopped.");
-			BASS_Free();
-			PrintMessageToDebugLog("FreeUpStreamFunc", "BASS freed.");
-		}
-
-		if (SndDrv) {
-			COMInit = FALSE;
-			Sleep(250);
-
-			delete SndDrv;
-			SndDrv = NULL;
-			CoUninitialize();
-		}
-	}
-
-	// Send dummy values to the mixer
-	CheckVolume(TRUE);
 }

@@ -145,7 +145,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 
 		hinst = hModule;
 		BASS_MIDI_StreamEvent = DummyBMSE;
-		XADummyWindow = new XAWin;
 
 		if (!NtDelayExecution || !NtQuerySystemTime) {
 			NtDelayExecution = (NDE)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtDelayExecution");
@@ -170,7 +169,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 	case DLL_PROCESS_DETACH:
 	{
 		hinst = NULL;
-		delete XADummyWindow;
 		break;
 	}
 	case DLL_THREAD_ATTACH:

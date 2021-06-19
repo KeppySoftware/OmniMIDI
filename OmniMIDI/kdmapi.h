@@ -397,9 +397,9 @@ BOOL DoStopClient() {
 		// Close the threads and free up the allocated memory
 		PrintMessageToDebugLog("StopDriver", "Freeing memory...");
 		bass_initialized = FALSE;
+		CloseThreads(TRUE);
 		FreeFonts();
 		FreeUpStream();
-		CloseThreads(TRUE);
 		FreeUpMemory();
 
 		// Close registry keys

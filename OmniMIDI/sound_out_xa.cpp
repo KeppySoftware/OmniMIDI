@@ -1,7 +1,4 @@
 #define STRICT
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT _WIN32_WINNT_WINXP
-#endif
 
 #include "sound_out.h"
 
@@ -9,7 +6,7 @@
 
 #include <stdint.h>
 #include <windows.h>
-#include "inc\XAudio2.h"
+#include <XAudio2.h>
 #include <assert.h>
 #include <mmdeviceapi.h>
 #include <vector>
@@ -191,6 +188,7 @@ class sound_out_i_xaudio2 : public sound_out
 	}
 
 	void* hwnd;
+	bool			initialized;
 	bool            paused;
 	volatile bool   device_changed;
 	unsigned        reopen_count;
@@ -230,7 +228,7 @@ public:
 	virtual ~sound_out_i_xaudio2()
 	{
 		g_notifier.do_unregister(this);
-
+		this->initialized = false;
 		close();
 	}
 
@@ -261,6 +259,12 @@ public:
 		wfx.SubFormat = floating_point ? KSDATAFORMAT_SUBTYPE_IEEE_FLOAT : KSDATAFORMAT_SUBTYPE_PCM;
 		wfx.dwChannelMask = nch == 2 ? KSAUDIO_SPEAKER_STEREO : KSAUDIO_SPEAKER_MONO;
 #else
+
+		UINT flags = 0;
+#ifdef _DEBUG
+		flags = XAUDIO2_DEBUG_ENGINE;
+#endif
+
 		WAVEFORMATEX wfx;
 		wfx.wFormatTag = floating_point ? WAVE_FORMAT_IEEE_FLOAT : WAVE_FORMAT_PCM;
 		wfx.nChannels = nch; //1;
@@ -294,6 +298,9 @@ public:
 		sample_buffer = new uint8_t[max_samples_per_frame * num_frames * bytes_per_sample];
 		samples_in_buffer = new UINT64[num_frames];
 		memset(samples_in_buffer, 0, sizeof(UINT64) * num_frames);
+
+		this->initialized = true;
+
 		return NULL;
 	}
 
@@ -323,8 +330,11 @@ public:
 		samples_in_buffer = NULL;
 	}
 
-	virtual const char* write_frame(void* buffer, unsigned num_samples, bool wait)
+	virtual const char* write_frame(void* buffer, unsigned num_samples)
 	{
+		if (!initialized)
+			return 0;
+
 		if (device_changed)
 		{
 			close();
@@ -334,10 +344,7 @@ public:
 		}
 
 		if (paused)
-		{
-			if (wait) Sleep(MulDiv(num_samples / nch, 1000, sample_rate));
 			return 0;
-		}
 
 		if (reopen_count)
 		{
@@ -350,11 +357,7 @@ public:
 					return err;
 				}
 			}
-			else
-			{
-				if (wait) Sleep(MulDiv(num_samples / nch, 1000, sample_rate));
-				return 0;
-			}
+			else return 0;
 		}
 
 		for (;;) {
@@ -366,18 +369,6 @@ public:
 				}
 				// there is at least one free buffer
 				break;
-			}
-			else {
-				// wait for one buffer to finish playing
-				const DWORD timeout_ms = (max_samples_per_frame / nch) * num_frames * 1000 / sample_rate;
-				if (WaitForSingleObject(notify.hBufferEndEvent, timeout_ms) == WAIT_TIMEOUT)
-				{
-					// buffer has stalled, likely by the whole XAudio2 system failing, so we should tear it down and attempt to reopen it
-					close();
-					reopen_count = 5;
-
-					return 0;
-				}
 			}
 		}
 		samples_in_buffer[buffer_write_cursor] = num_samples / nch;

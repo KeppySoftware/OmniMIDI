@@ -600,10 +600,10 @@
             this.AudioEngBox.FormattingEnabled = true;
             this.AudioEngBox.Items.AddRange(new object[] {
             "Audio to .WAV mode",
-            "Microsoft DirectX Audio",
+            "Microsoft DirectSound 9.0L",
             "Audio Stream Input/Output",
             "Windows Audio Session API",
-            "Windows XA Gaming"});
+            "Microsoft XAudio 2.9"});
             this.AudioEngBox.Location = new System.Drawing.Point(505, 28);
             this.AudioEngBox.Name = "AudioEngBox";
             this.AudioEngBox.Size = new System.Drawing.Size(159, 21);

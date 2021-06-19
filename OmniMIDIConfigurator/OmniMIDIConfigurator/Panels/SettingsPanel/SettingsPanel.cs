@@ -77,7 +77,7 @@ namespace OmniMIDIConfigurator
             switch (AudioEngBox.SelectedIndex)
             {
                 case AudioEngine.XA_ENGINE:
-                    BufferText.Text = "Output buffer (in ms, from 1 to 1000)";
+                    BufferText.Text = "Samples per frame for each data sweep (Value in samples, it should be under 3/4 of the SPF value):";
                     break;
                 case AudioEngine.AUDTOWAV:
                     BufferText.Text = "The output buffer isn't needed when outputting to a .WAV file";
