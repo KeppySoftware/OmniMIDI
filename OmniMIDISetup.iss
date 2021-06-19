@@ -8,7 +8,7 @@
 
 #define Author "Keppy's Software"
 #define Configurator "OmniMIDIConfigurator"
-#define Copyright "Copyright (c) 2011 Keppy's Software. All rights reserved."
+#define Copyright "Copyright (c) 2021 Keppy's Software. All rights reserved."
 #define DebugWindow "OmniMIDIDebugWindow"
 #define Description "OmniMIDI, User-Mode Windows MIDI Driver"
 #define DevEnum "OmniMIDIDevEnum"
@@ -20,7 +20,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '14.0.0.0'
+#define Version '14.1.0.0'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'

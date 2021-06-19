@@ -70,19 +70,24 @@ namespace OmniMIDIConfigurator
         private void AudioEngBoxTrigger(bool S)
         {
             int AE = AudioEngBox.SelectedIndex;
-            bool NOAtWASIOE = (AE != AudioEngine.AUDTOWAV && AE != AudioEngine.ASIO_ENGINE);
+            bool NOAtWASIOXAE = (AE != AudioEngine.AUDTOWAV && AE != AudioEngine.ASIO_ENGINE && AE != AudioEngine.XA_ENGINE);
+            bool NoASIOXAE = (AE != AudioEngine.ASIO_ENGINE && AE != AudioEngine.XA_ENGINE);
             bool NoAtW = (AE != AudioEngine.AUDTOWAV);
             bool NoASIOE = (AE != AudioEngine.ASIO_ENGINE);
+            bool NoXAE = (AE != AudioEngine.XA_ENGINE);
 
             switch (AudioEngBox.SelectedIndex)
             {
                 case AudioEngine.XA_ENGINE:
-                    BufferText.Text = "Samples per frame for each data sweep (Value in samples, it should be under 3/4 of the SPF value):";
+                    ChangeDefaultOutput.Text = "Advanced...";
+                    BufferText.Text = "The output buffer can be controlled through the engine's advanced settings";
                     break;
                 case AudioEngine.AUDTOWAV:
+                    ChangeDefaultOutput.Text = "Directory...";
                     BufferText.Text = "The output buffer isn't needed when outputting to a .WAV file";
                     break;
                 case AudioEngine.ASIO_ENGINE:
+                    ChangeDefaultOutput.Text = "Devices...";
                     if (DefaultASIOAudioOutput.GetASIODevicesCount() < 1 && !S)
                     {
                         DialogResult RES = 
@@ -108,12 +113,12 @@ namespace OmniMIDIConfigurator
                 case AudioEngine.WASAPI_ENGINE:
                 case AudioEngine.DSOUND_ENGINE:
                 default:
+                    ChangeDefaultOutput.Text = "Output...";
                     BufferText.Text = "Output buffer (in ms, from 1 to 1000. If the buffer is too small, it'll be set automatically to the lowest value possible)";
                     break;
             }
 
-            ChangeDefaultOutput.Enabled = NoAtW ? true : false;
-            BufferText.Enabled = NOAtWASIOE ? true : false;
+            BufferText.Enabled = NOAtWASIOXAE ? true : false;
             DrvHzLabel.Enabled = true;
             Frequency.Enabled = true;
             MaxCPU.Enabled = NoAtW ? true : false;
@@ -121,7 +126,7 @@ namespace OmniMIDIConfigurator
             VolLabel.Enabled = NoAtW ? true : false;
             VolSimView.Enabled = NoAtW ? true : false;
             VolTrackBar.Enabled = NoAtW ? true : false;
-            bufsize.Enabled = NoASIOE ? true : false;
+            bufsize.Enabled = NoASIOXAE ? true : false;
             OldBuff.Enabled = NoAtW ? true : false;
 
             PreviousValue = AudioEngBox.SelectedIndex;
@@ -457,6 +462,9 @@ namespace OmniMIDIConfigurator
 
             switch (AudioEngBox.SelectedIndex)
             {
+                case AudioEngine.AUDTOWAV:
+                    new OutputWAVDir().ShowDialog(this);
+                    break;
                 case AudioEngine.DSOUND_ENGINE:
                     new DefaultAudioOutput(false).ShowDialog(this);
                     break;

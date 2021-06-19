@@ -985,6 +985,7 @@ BEGSWITCH:
 	// Oh no it's back!
 	case XAUDIO_ENGINE:
 	{
+		const char* XAFail;
 		BOOL Fail = FALSE;
 
 		if (InitializeBASSLibrary()) {
@@ -1003,7 +1004,7 @@ BEGSWITCH:
 
 			if (SndDrv == NULL && !Fail) {
 				SndDrv = create_sound_out_xaudio2();
-				const char* XAFail = SndDrv->open(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.BufferLength);
+				XAFail = SndDrv->open(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.XASPFSweepRate);
 				if (XAFail) Fail = TRUE;
 			}
 
@@ -1016,13 +1017,14 @@ BEGSWITCH:
 				}
 				if (COMInit) CoUninitialize();
 				PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 encountered an error!");
+				PrintMessageToDebugLog("InitializeXAFunc", XAFail);
 				MessageBox(NULL, L"XA failed to initialize!\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 				goto BEGSWITCH;
 			}
 
 			// Store the latency for debug
 			ManagedDebugInfo.AudioBufferSize = SamplesPerFrame;
-			ManagedDebugInfo.AudioLatency = ((DOUBLE)ManagedDebugInfo.AudioBufferSize * 1000.0f / (DOUBLE)ManagedSettings.AudioFrequency);
+			ManagedDebugInfo.AudioLatency = ((DOUBLE)SamplesPerFrame * 1000.0f / (DOUBLE)ManagedSettings.AudioFrequency) * ManagedSettings.XASPFSweepRate;
 			PrintMessageToDebugLog("InitializeWASAPIFunc", "Stored latency information.");
 
 			// Prepare audio buffer

@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="label1.Text" xml:space="preserve">
-    <value>Windows XA Gaming does not support selecting a specific output device, so it'll automatically follow Windows' default output.
+    <value>XAudio2 does not support selecting a specific output device, so it'll automatically follow Windows' default output.
 You can change the samples per frame down below.
 
 The lower the value, the tighter the timings become.

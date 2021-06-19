@@ -161,6 +161,7 @@ typedef struct
 	BOOL AudioRampIn = TRUE;				// Enables the audio ramp-in, to gracefully play new notes without audible clicks
 
 	DWORD XASamplesPerFrame = 88;			// Samples per frame (XA engine)
+	DWORD XASPFSweepRate = 15;				// SFP sweep rate (XA engine)
 } Settings;
 #endif
 

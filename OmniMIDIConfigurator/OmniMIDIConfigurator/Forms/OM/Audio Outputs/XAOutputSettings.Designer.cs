@@ -35,7 +35,11 @@ namespace OmniMIDIConfigurator
             this.SPFVal = new System.Windows.Forms.NumericUpDown();
             this.OKBtn = new System.Windows.Forms.Button();
             this.ResetBtn = new System.Windows.Forms.Button();
+            this.SPFSweepRatioVal = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.EstLat = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.SPFVal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SPFSweepRatioVal)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -54,7 +58,7 @@ namespace OmniMIDIConfigurator
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(76, 117);
+            this.label2.Location = new System.Drawing.Point(79, 122);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(97, 13);
             this.label2.TabIndex = 1;
@@ -63,7 +67,7 @@ namespace OmniMIDIConfigurator
             // 
             // SPFVal
             // 
-            this.SPFVal.Location = new System.Drawing.Point(179, 115);
+            this.SPFVal.Location = new System.Drawing.Point(177, 120);
             this.SPFVal.Maximum = new decimal(new int[] {
             262144,
             0,
@@ -82,10 +86,11 @@ namespace OmniMIDIConfigurator
             0,
             0,
             0});
+            this.SPFVal.ValueChanged += new System.EventHandler(this.SPFVal_ValueChanged);
             // 
             // OKBtn
             // 
-            this.OKBtn.Location = new System.Drawing.Point(277, 147);
+            this.OKBtn.Location = new System.Drawing.Point(277, 218);
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.Size = new System.Drawing.Size(75, 23);
             this.OKBtn.TabIndex = 3;
@@ -95,7 +100,7 @@ namespace OmniMIDIConfigurator
             // 
             // ResetBtn
             // 
-            this.ResetBtn.Location = new System.Drawing.Point(196, 147);
+            this.ResetBtn.Location = new System.Drawing.Point(196, 218);
             this.ResetBtn.Name = "ResetBtn";
             this.ResetBtn.Size = new System.Drawing.Size(75, 23);
             this.ResetBtn.TabIndex = 4;
@@ -103,11 +108,58 @@ namespace OmniMIDIConfigurator
             this.ResetBtn.UseVisualStyleBackColor = true;
             this.ResetBtn.Click += new System.EventHandler(this.ResetBtn_Click);
             // 
+            // SPFSweepRatioVal
+            // 
+            this.SPFSweepRatioVal.Location = new System.Drawing.Point(177, 142);
+            this.SPFSweepRatioVal.Maximum = new decimal(new int[] {
+            262144,
+            0,
+            0,
+            0});
+            this.SPFSweepRatioVal.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.SPFSweepRatioVal.Name = "SPFSweepRatioVal";
+            this.SPFSweepRatioVal.Size = new System.Drawing.Size(106, 20);
+            this.SPFSweepRatioVal.TabIndex = 6;
+            this.SPFSweepRatioVal.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.SPFSweepRatioVal.ValueChanged += new System.EventHandler(this.SPFSweepRatioVal_ValueChanged);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(110, 144);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(66, 13);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "Sweep ratio:";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // EstLat
+            // 
+            this.EstLat.Location = new System.Drawing.Point(12, 176);
+            this.EstLat.Name = "EstLat";
+            this.EstLat.Size = new System.Drawing.Size(340, 23);
+            this.EstLat.TabIndex = 7;
+            this.EstLat.Text = "Estimated latency: 0.0ms";
+            this.EstLat.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // XAOutputSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(364, 182);
+            this.ClientSize = new System.Drawing.Size(364, 253);
+            this.Controls.Add(this.EstLat);
+            this.Controls.Add(this.SPFSweepRatioVal);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.ResetBtn);
             this.Controls.Add(this.OKBtn);
             this.Controls.Add(this.SPFVal);
@@ -118,8 +170,9 @@ namespace OmniMIDIConfigurator
             this.MinimizeBox = false;
             this.Name = "XAOutputSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Windows XA Gaming settings";
+            this.Text = "Microsoft XAudio 2.9 settings";
             ((System.ComponentModel.ISupportInitialize)(this.SPFVal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SPFSweepRatioVal)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -132,5 +185,8 @@ namespace OmniMIDIConfigurator
         private System.Windows.Forms.NumericUpDown SPFVal;
         private System.Windows.Forms.Button OKBtn;
         private System.Windows.Forms.Button ResetBtn;
+        private System.Windows.Forms.NumericUpDown SPFSweepRatioVal;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label EstLat;
     }
 }
