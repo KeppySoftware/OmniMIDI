@@ -123,6 +123,6 @@ You can change the samples per frame down below.
 
 The lower the value, the tighter the timings become.
 
-In stereo mode, the value is multiplied by two. (E.g. 88 x 2 = 144 SPF)</value>
+In stereo mode, the value is multiplied by two. (E.g. 88 x 2 = 176 SPF)</value>
   </data>
 </root>
