@@ -454,7 +454,7 @@ namespace OmniMIDIDebugWindow
                 sb.AppendLine(String.Format("Driver version: {0}", Driver.FileVersion));
                 sb.AppendLine(String.Format("{0} {1}", CMALabel.Text, CMA.Text));
                 sb.AppendLine(String.Format("{0} {1}", AVLabel.Text, AV.Text));
-                sb.AppendLine(String.Format("{0} {1}", AvVLabel.Text, AvV.Text));
+                sb.AppendLine(String.Format("{0} {1}", HeadsPosLabel.Text, HeadsPos.Text));
                 sb.AppendLine(String.Format("{0} {1}", RTLabel.Text, RT.Text));
                 sb.AppendLine(String.Format("{0} {1}", Latency.Text, LatencyLabel.Text));
                 sb.AppendLine(String.Format("{0} {1}", RAMUsageVLabel.Text, RAMUsageV.Text));
@@ -525,15 +525,6 @@ namespace OmniMIDIDebugWindow
                 return String.Format("{0}", (CHs[0] + CHs[1] + CHs[2] + CHs[3] + CHs[4] + CHs[5] + CHs[6] + CHs[7] + CHs[8] + CHs[9] + CHs[10] + CHs[11] + CHs[12] + CHs[13] + CHs[14] + CHs[15]));
             }
             catch { return "0"; }
-        }
-
-        private string GetAverageVoices()
-        {
-            try
-            {
-                return String.Format("{0} V/f", ((CHs[0] + CHs[1] + CHs[2] + CHs[3] + CHs[4] + CHs[5] + CHs[6] + CHs[7] + CHs[8] + CHs[9] + CHs[10] + CHs[11] + CHs[12] + CHs[13] + CHs[14] + CHs[15]) / 16.6666666666667f));
-            }
-            catch { return "0 V/f"; }
         }
 
         private string DebugName(string value)
@@ -609,6 +600,9 @@ namespace OmniMIDIDebugWindow
         UInt64 Handles = 0;
         UInt64 RAMUsage = 0;
         UInt64 SFsList = 0;
+        UInt64 BufferSize = 0;
+        UInt64 ReadHead = 0;
+        UInt64 WriteHead = 0;
         Int32 KDMAPIStatus = 0;
         Int32 KDMAPIViaWinMM = 0;
         Double AudioLatency = 0.0f;
@@ -629,9 +623,12 @@ namespace OmniMIDIDebugWindow
                         if (!ReadPipeString(STR, "CurrentApp", ref CurrentApp));
                         if (!ReadPipeString(STR, "BitApp", ref BitApp));
                         if (!ReadPipeSingle(STR, "CurCPU", ref CurCPU));
-                        if (!ReadPipeUInt64(STR, "AudioBufSize", ref AudioBufSize)) ;
+                        if (!ReadPipeUInt64(STR, "AudioBufSize", ref AudioBufSize));
                         if (!ReadPipeUInt64(STR, "Handles", ref Handles));
                         if (!ReadPipeUInt64(STR, "RAMUsage", ref RAMUsage));
+                        if (!ReadPipeUInt64(STR, "EVBufferSize", ref BufferSize));
+                        if (!ReadPipeUInt64(STR, "EVReadHead", ref ReadHead));
+                        if (!ReadPipeUInt64(STR, "EVWriteHead", ref WriteHead));
                         if (!ReadPipeBoolean(STR, "OMDirect", ref KDMAPIStatus));
                         if (!ReadPipeBoolean(STR, "WinMMKDMAPI", ref KDMAPIViaWinMM));
                         if (!ReadPipeDouble(STR, "AudioLatency", ref AudioLatency));
@@ -688,7 +685,10 @@ namespace OmniMIDIDebugWindow
 
                 AV.ForeColor = ValueBlend.GetBlendedColor(AVColor.LimitIntToRange(0, 100));
                 AV.Text = GetActiveVoices();
-                AvV.Text = GetAverageVoices();
+
+                // Magic
+                String MagicSauce = String.Format("D{0}", BufferSize.ToString().Length);
+                HeadsPos.Text = String.Format("{0}/{1} ({2})", ReadHead.ToString(MagicSauce), WriteHead.ToString(MagicSauce), BufferSize);
 
                 if (Convert.ToInt32(Settings.GetValue("CurrentEngine", "3")) == 0)
                 {

@@ -416,6 +416,7 @@ void FreeUpMemory() {
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing EV buffer...");
 	delete[] EVBuffer.Buffer;
 	EVBuffer.Buffer = NULL;
+	EVBuffer.BufSize = 0;
 	EVBuffer.WriteHead = 0;
 	EVBuffer.ReadHead = 0;
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freed.");
@@ -423,8 +424,6 @@ void FreeUpMemory() {
 
 void AllocateMemory(BOOL restart) {
 	try {
-		if (restart) FreeUpMemory();
-
 		PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating memory for EV buffer and audio buffer");
 
 		// Check how much RAM is available
@@ -433,7 +432,7 @@ void AllocateMemory(BOOL restart) {
 		status.dwLength = sizeof(status);
 		GlobalMemoryStatusEx(&status);
 
-		// Check if the user has chose to get the EVBuffer size from the RAM
+		// Check if the user has chosen to get the EVBuffer size from the RAM
 		if (GetEvBuffSizeFromRAM == 1) {
 			// He did, do a calculation to get the size
 			TempEvBufferSize = status.ullTotalPhys;
@@ -463,6 +462,12 @@ void AllocateMemory(BOOL restart) {
 		// Calculate the ratio
 		EvBufferSize = TempEvBufferSize / (unsigned long long)EvBufferMultRatio;
 
+		if (restart) {
+			if (EvBufferSize != EVBuffer.BufSize)
+				FreeUpMemory();
+			else return;				
+		}
+
 		if (EvBufferSize < 1) {
 			MessageBox(NULL, L"The size of the buffer cannot be 0!\nIts size will now default to 16384 bytes.\n\nThe settings have been reset.", L"OmniMIDI - Illegal memory amount defined", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 			ResetEVBufferSettings();
@@ -481,10 +486,12 @@ void AllocateMemory(BOOL restart) {
 		else {
 			PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating EV buffer...");
 			EVBuffer.Buffer = new (std::nothrow) DWORD[EvBufferSize];
+			EVBuffer.BufSize = EvBufferSize;
 			if (EVBuffer.Buffer == nullptr) {
 				MessageBox(NULL, L"An error has occured while allocating the events buffer!\nIt will now default to 4096 bytes.\n\nThe EVBuffer settings have been reset.", L"OmniMIDI - Error allocating memory", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 				ResetEVBufferSettings();
 				EVBuffer.Buffer = new (std::nothrow) DWORD[EvBufferSize];
+				EVBuffer.BufSize = EvBufferSize;
 				if (EVBuffer.Buffer == nullptr) {
 					MessageBox(NULL, L"Fatal error while allocating the events buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 					exit(ERROR_NOT_ENOUGH_MEMORY);
@@ -719,15 +726,17 @@ void LoadCustomInstruments() {
 
 int AudioRenderingType(BOOLEAN IsItStreamCreation, INT RegistryVal) {
 	switch (ManagedSettings.CurrentEngine) {
+	case XAUDIO_ENGINE:
 	case ASIO_ENGINE:
+	case WASAPI_ENGINE:
 		return IsItStreamCreation ? BASS_SAMPLE_FLOAT : BASS_DATA_FLOAT;
 	default:
-		if (RegistryVal == 2 || RegistryVal == 0)
-			return IsItStreamCreation ? 0 : BASS_DATA_FIXED;
-		else if (RegistryVal == 3)
-			return IsItStreamCreation ? BASS_SAMPLE_8BITS : BASS_DATA_FIXED;
-		else
+		if (RegistryVal == 0)
 			return IsItStreamCreation ? BASS_SAMPLE_FLOAT : BASS_DATA_FLOAT;
+		else if (RegistryVal == 1)
+			return 0;
+		else
+			return IsItStreamCreation ? BASS_SAMPLE_8BITS : 0;
 	}
 }
 
@@ -856,6 +865,9 @@ void FillContentDebug() {
 	PipeContent.append(L"|RAMUsage = " + std::to_wstring(static_cast<QWORD>(RU)));
 	PipeContent.append(L"|OMDirect = " + std::to_wstring(KDMAPIEnabled));
 	PipeContent.append(L"|WinMMKDMAPI = " + std::to_wstring(IsKDMAPIViaWinMM));
+	PipeContent.append(L"|EVBufferSize = " + std::to_wstring(EVBuffer.BufSize));
+	PipeContent.append(L"|EVReadHead = " + std::to_wstring(EVBuffer.ReadHead));
+	PipeContent.append(L"|EVWriteHead = " + std::to_wstring(EVBuffer.WriteHead));
 	PipeContent.append(L"|AudioBufSize = " + std::to_wstring(ManagedDebugInfo.AudioBufferSize));
 	PipeContent.append(L"|AudioLatency = " + std::to_wstring(ManagedDebugInfo.AudioLatency));
 	PipeContent.append(L"|SFsList = " + std::to_wstring(ManagedDebugInfo.CurrentSFList));

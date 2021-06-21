@@ -313,7 +313,7 @@ namespace OmniMIDIConfigurator
 
         private void InstallLM_Click(object sender, EventArgs e)
         {
-            if (Convert.ToInt32(Program.SynthSettings.GetValue("AudioBitDepth", 1)) != 1)
+            if (Convert.ToInt32(Program.SynthSettings.GetValue("AudioBitDepth", 0)) != 0)
             {
                 DialogResult RES = Program.ShowError(3, "LoudMax", "LoudMax is useless without 32-bit float audio rendering.\nPlease enable it by going to \"Additional settings > Advanced audio settings > Audio bit depth\".\n\nDo you want to continue anyway?", null);
                 if (RES == DialogResult.Yes) Functions.LoudMaxInstall();

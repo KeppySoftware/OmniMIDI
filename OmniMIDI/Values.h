@@ -44,6 +44,7 @@ BOOL AlreadyStartedOnce = FALSE;
 // EVBuffer
 typedef struct EventsBuffer {
 	DWORD*				Buffer;
+	QWORD				BufSize;
 	volatile ULONGLONG	ReadHead;
 	volatile ULONGLONG	WriteHead;
 };

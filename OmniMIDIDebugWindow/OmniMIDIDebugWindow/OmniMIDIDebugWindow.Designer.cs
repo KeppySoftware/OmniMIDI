@@ -53,8 +53,8 @@
             this.KDMAPILabel = new System.Windows.Forms.Label();
             this.Latency = new System.Windows.Forms.Label();
             this.LatencyLabel = new System.Windows.Forms.Label();
-            this.AvV = new System.Windows.Forms.Label();
-            this.AvVLabel = new System.Windows.Forms.Label();
+            this.HeadsPos = new System.Windows.Forms.Label();
+            this.HeadsPosLabel = new System.Windows.Forms.Label();
             this.HCountV = new System.Windows.Forms.Label();
             this.HCountVLabel = new System.Windows.Forms.Label();
             this.RAMUsageV = new System.Windows.Forms.Label();
@@ -212,8 +212,8 @@
             this.SynthDbg.Controls.Add(this.KDMAPILabel);
             this.SynthDbg.Controls.Add(this.Latency);
             this.SynthDbg.Controls.Add(this.LatencyLabel);
-            this.SynthDbg.Controls.Add(this.AvV);
-            this.SynthDbg.Controls.Add(this.AvVLabel);
+            this.SynthDbg.Controls.Add(this.HeadsPos);
+            this.SynthDbg.Controls.Add(this.HeadsPosLabel);
             this.SynthDbg.Controls.Add(this.HCountV);
             this.SynthDbg.Controls.Add(this.HCountVLabel);
             this.SynthDbg.Controls.Add(this.RAMUsageV);
@@ -279,7 +279,7 @@
             // 
             this.Latency.AutoSize = true;
             this.Latency.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Latency.Location = new System.Drawing.Point(89, 78);
+            this.Latency.Location = new System.Drawing.Point(89, 60);
             this.Latency.Name = "Latency";
             this.Latency.Size = new System.Drawing.Size(113, 13);
             this.Latency.TabIndex = 45;
@@ -290,38 +290,38 @@
             // 
             this.LatencyLabel.AutoSize = true;
             this.LatencyLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LatencyLabel.Location = new System.Drawing.Point(2, 78);
+            this.LatencyLabel.Location = new System.Drawing.Point(2, 60);
             this.LatencyLabel.Name = "LatencyLabel";
             this.LatencyLabel.Size = new System.Drawing.Size(88, 13);
             this.LatencyLabel.TabIndex = 44;
             this.LatencyLabel.Text = "Audio latency:";
             this.LatencyLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // AvV
+            // HeadsPos
             // 
-            this.AvV.AutoSize = true;
-            this.AvV.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AvV.Location = new System.Drawing.Point(157, 42);
-            this.AvV.Name = "AvV";
-            this.AvV.Size = new System.Drawing.Size(13, 13);
-            this.AvV.TabIndex = 41;
-            this.AvV.Text = "0";
-            this.AvV.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.VoiceAverage.SetToolTip(this.AvV, "It shows you how many voices are being pushed out per frame.\r\nRemember though, th" +
-        "is is an approximation, so pick it with a grain of salt.");
+            this.HeadsPos.AutoSize = true;
+            this.HeadsPos.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HeadsPos.Location = new System.Drawing.Point(105, 78);
+            this.HeadsPos.Name = "HeadsPos";
+            this.HeadsPos.Size = new System.Drawing.Size(13, 13);
+            this.HeadsPos.TabIndex = 41;
+            this.HeadsPos.Text = "0";
+            this.HeadsPos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.VoiceAverage.SetToolTip(this.HeadsPos, "It shows you the current position of both the readhead and writehead in the event" +
+        "s buffer.");
             // 
-            // AvVLabel
+            // HeadsPosLabel
             // 
-            this.AvVLabel.AutoSize = true;
-            this.AvVLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AvVLabel.Location = new System.Drawing.Point(2, 42);
-            this.AvVLabel.Name = "AvVLabel";
-            this.AvVLabel.Size = new System.Drawing.Size(156, 13);
-            this.AvVLabel.TabIndex = 40;
-            this.AvVLabel.Text = "Average voices per frame:";
-            this.AvVLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.VoiceAverage.SetToolTip(this.AvVLabel, "It shows you how many voices are being pushed out per frame.\r\nRemember though, th" +
-        "is is an approximation, so pick it with a grain of salt.");
+            this.HeadsPosLabel.AutoSize = true;
+            this.HeadsPosLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HeadsPosLabel.Location = new System.Drawing.Point(2, 78);
+            this.HeadsPosLabel.Name = "HeadsPosLabel";
+            this.HeadsPosLabel.Size = new System.Drawing.Size(104, 13);
+            this.HeadsPosLabel.TabIndex = 40;
+            this.HeadsPosLabel.Text = "RH/WH position:";
+            this.HeadsPosLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.VoiceAverage.SetToolTip(this.HeadsPosLabel, "It shows you the current position of both the readhead and writehead in the event" +
+        "s buffer.");
             // 
             // HCountV
             // 
@@ -371,7 +371,7 @@
             // 
             this.RT.AutoSize = true;
             this.RT.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RT.Location = new System.Drawing.Point(97, 60);
+            this.RT.Location = new System.Drawing.Point(97, 42);
             this.RT.Name = "RT";
             this.RT.Size = new System.Drawing.Size(21, 13);
             this.RT.TabIndex = 13;
@@ -382,7 +382,7 @@
             // 
             this.RTLabel.AutoSize = true;
             this.RTLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RTLabel.Location = new System.Drawing.Point(2, 60);
+            this.RTLabel.Location = new System.Drawing.Point(2, 42);
             this.RTLabel.Name = "RTLabel";
             this.RTLabel.Size = new System.Drawing.Size(96, 13);
             this.RTLabel.TabIndex = 12;
@@ -1138,7 +1138,7 @@
             // VoiceAverage
             // 
             this.VoiceAverage.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.VoiceAverage.ToolTipTitle = "What does the average mean?";
+            this.VoiceAverage.ToolTipTitle = "What does this mean?";
             // 
             // DebugInfo
             // 
@@ -1270,8 +1270,8 @@
         private System.Windows.Forms.Label VersionLabel;
         private System.Windows.Forms.ToolTip WinLogoTT;
         private System.Windows.Forms.ToolTip CPULogoTT;
-        private System.Windows.Forms.Label AvV;
-        private System.Windows.Forms.Label AvVLabel;
+        private System.Windows.Forms.Label HeadsPos;
+        private System.Windows.Forms.Label HeadsPosLabel;
         private System.Windows.Forms.ToolTip VoiceAverage;
         private System.Windows.Forms.Label HCountV;
         private System.Windows.Forms.Label HCountVLabel;

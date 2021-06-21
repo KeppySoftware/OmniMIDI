@@ -133,46 +133,58 @@ void AudioEngine(LPVOID lpParam) {
 				// Check if HyperMode has been disabled
 				if (HyperMode) break;
 
-				// If the EventProcesser is disabled, then process the events from the audio thread instead
-				if (ManagedSettings.NotesCatcherWithAudio || ManagedSettings.CurrentEngine == AUDTOWAV) {
-					SetNoteValuesFromSettings();
-					_PlayBufDataChk();
-				}
-				// Else, open the EventProcesser thread
-				else if (!EPThread.ThreadHandle) InitializeEventsProcesserThreads();
+				// Check if the user wants to parse the notes through a separate thread, and prepare the thread if necessary
+				if (!ManagedSettings.NotesCatcherWithAudio && !EPThread.ThreadHandle)
+					InitializeEventsProcesserThreads();
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
 				case AUDTOWAV:
 				{
-					const int len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
+					// Parse some notes for the WAV mode
+					SetNoteValuesFromSettings();
+					_PlayBufDataChk();
+
+					QWORD len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
 					BASS_ChannelGetData(OMStream, SndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
 					BASS_Encode_Write(OMStream, SndBuf, len);
+					continue;
 				}
 				case XAUDIO_ENGINE:
 				{
 					if (!SndDrv || !COMInit)
 						break;
 
-					int len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
-					if (len < 0)
-						break;
+					if (ManagedSettings.NotesCatcherWithAudio)
+					{
+						SetNoteValuesFromSettings();
+						_PlayBufDataChk();
+					}
 
-					SndDrv->write_frame(SndBuf, len / sizeof(float));
+					DWORD len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
+					if (len != -1)
+						SndDrv->write_frame(SndBuf, len / sizeof(float));
 
 					break;
 				}
 				case OLD_WASAPI:
 				case DXAUDIO_ENGINE:
 				{
+					if (ManagedSettings.NotesCatcherWithAudio)
+					{
+						SetNoteValuesFromSettings();
+						_PlayBufDataChk();
+					}
+
 					BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
 					break;
 				}
 				default:
 					break;
 				}
-				
-				_WAIT;
+
+				if (ManagedSettings.CapFramerate) _CFRWAIT;
+				else _FWAIT;
 			} while (!stop_thread);
 		}
 	}
@@ -192,30 +204,42 @@ void FastAudioEngine(LPVOID lpParam) {
 				// Check if HyperMode has been disabled
 				if (!HyperMode) break;
 
+				// Check if the user wants to parse the notes through a separate thread, and prepare the thread if necessary
+				if (!ManagedSettings.NotesCatcherWithAudio && !EPThread.ThreadHandle) 
+					InitializeEventsProcesserThreads();
+
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
 				case AUDTOWAV:
 				{
-					const int len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
+					// Parse some notes for the WAV mode
+					_PlayBufDataChk();
+
+					QWORD len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
 					BASS_ChannelGetData(OMStream, SndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
 					BASS_Encode_Write(OMStream, SndBuf, len);
+					continue;
 				}
 				case XAUDIO_ENGINE:
 				{
 					if (!SndDrv || !COMInit)
 						break;
 
-					int len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
-					if (len < 0)
-						break;
+					if (ManagedSettings.NotesCatcherWithAudio)
+						_PlayBufDataChk();
 
-					SndDrv->write_frame(SndBuf, len / sizeof(float));
+					DWORD len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
+					if (len != -1)
+						SndDrv->write_frame(SndBuf, len / sizeof(float));
 
 					break;
 				}
 				case OLD_WASAPI:
 				case DXAUDIO_ENGINE:
 				{
+					if (ManagedSettings.NotesCatcherWithAudio)
+						_PlayBufDataChk();
+
 					BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
 					break;
 				}
@@ -223,14 +247,7 @@ void FastAudioEngine(LPVOID lpParam) {
 					break;
 				}
 
-				// If the EventProcesser is disabled, then process the events from the audio thread instead
-				if (ManagedSettings.NotesCatcherWithAudio || ManagedSettings.CurrentEngine == AUDTOWAV) {
-					_PlayBufDataChk();
-				}
-				// Else, open the EventProcesser thread
-				else if (!EPThread.ThreadHandle) InitializeEventsProcesserThreads();
-
-				_WAIT;
+				_FWAIT;
 			} while (!stop_thread);
 		}
 	}

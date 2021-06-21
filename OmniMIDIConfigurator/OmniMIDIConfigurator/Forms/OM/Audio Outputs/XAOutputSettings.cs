@@ -35,7 +35,9 @@ namespace OmniMIDIConfigurator
         {
             Program.SynthSettings.SetValue("XASamplesPerFrame", 88, Microsoft.Win32.RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("XASPFSweepRate", 15, Microsoft.Win32.RegistryValueKind.DWord);
-            SPFVal.Value = 88;
+
+            SPFVal.Value = Convert.ToDecimal(Program.SynthSettings.GetValue("XASamplesPerFrame", 88));
+            SPFSweepRatioVal.Value = Convert.ToDecimal(Program.SynthSettings.GetValue("XASPFSweepRate", 15));
         }
 
         private void SPFVal_ValueChanged(object sender, EventArgs e)
