@@ -532,7 +532,10 @@ void FreeUpStream() {
 		}
 
 		if (SndBuf)
+		{
 			delete[] SndBuf;
+			SndBuf = NULL;
+		}
 	}
 
 	// Send dummy values to the mixer
