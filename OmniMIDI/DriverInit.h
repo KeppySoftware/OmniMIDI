@@ -119,7 +119,7 @@ void FastEventsProcesser(LPVOID lpV) {
 
 void InitializeEventsProcesserThreads() {
 	// If the EventProcesser thread is not valid, then open a new one
-	if (!EPThread.ThreadHandle) {
+	if (!ManagedSettings.NotesCatcherWithAudio && !EPThread.ThreadHandle) {
 		EPThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastEventsProcesser : EventsProcesser), (void*)1, 0, &EPThread.ThreadAddress);
 		SetThreadPriority(EPThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 	}
@@ -132,10 +132,6 @@ void AudioEngine(LPVOID lpParam) {
 			do {
 				// Check if HyperMode has been disabled
 				if (HyperMode) break;
-
-				// Check if the user wants to parse the notes through a separate thread, and prepare the thread if necessary
-				if (!ManagedSettings.NotesCatcherWithAudio && !EPThread.ThreadHandle)
-					InitializeEventsProcesserThreads();
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
@@ -203,10 +199,6 @@ void FastAudioEngine(LPVOID lpParam) {
 			do {
 				// Check if HyperMode has been disabled
 				if (!HyperMode) break;
-
-				// Check if the user wants to parse the notes through a separate thread, and prepare the thread if necessary
-				if (!ManagedSettings.NotesCatcherWithAudio && !EPThread.ThreadHandle) 
-					InitializeEventsProcesserThreads();
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
@@ -276,16 +268,16 @@ DWORD CALLBACK ProcDataSameThread(void* buffer, DWORD length, void* user)
 	return ProcData(buffer, length, user);
 }
 
+DWORD CALLBACK WASAPIProc(void* buffer, DWORD length, void* user) 
+{
+	// Get the processed audio data, and send it to the engine
+	return _ProcData(buffer, length, user);
+}
+
 DWORD CALLBACK ASIOProc(BOOL input, DWORD channel, void* buffer, DWORD length, void* user)
 {
 	// Get the processed audio data, and send it to the engine
-	return ProcData(buffer, length, user);
-}
-
-DWORD CALLBACK ASIOProcSameThread(BOOL input, DWORD channel, void* buffer, DWORD length, void* user)
-{	
-	// Get the processed audio data, and send it to the engine
-	return ProcDataSameThread(buffer, length, user);
+	return _ProcData(buffer, length, user);
 }
 
 // Extremely useful to check if a thread is alive
@@ -368,10 +360,6 @@ void CreateThreads() {
 
 		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
-
-	// Run the events processer thread if necessary
-	if (!ManagedSettings.NotesCatcherWithAudio && ManagedSettings.CurrentEngine != AUDTOWAV)
-		InitializeEventsProcesserThreads();
 
 	// Check if the debug thread is working
 	if (!DThread.ThreadHandle)
@@ -960,12 +948,13 @@ BEGSWITCH:
 
 			// Initialize WASAPI
 			BOOL WInit = BASS_WASAPI_Init(DeviceID, ManagedSettings.AudioFrequency, (ManagedSettings.MonoRendering ? 1 : 2),
+				(ManagedSettings.WASAPIAsyncMode) ? BASS_WASAPI_ASYNC : 0 |
 				(ManagedSettings.WASAPIExclusive) ? BASS_WASAPI_EXCLUSIVE : 0 | 
 				(ManagedSettings.WASAPIRAWMode ? BASS_WASAPI_RAW : 0) |
 				(ManagedSettings.WASAPIDoubleBuf ? BASS_WASAPI_BUFFER : 0) |
 				BASS_WASAPI_EVENT,
 				(float)ManagedSettings.BufferLength / 1000.0f,
-				0, ManagedSettings.NotesCatcherWithAudio ? ProcDataSameThread : ProcData, NULL);
+				0, WASAPIProc, NULL);
 
 			// Check if it's working
 			CheckUp(FALSE, ERRORCODE, "WASAPI initialization", TRUE);
@@ -1120,7 +1109,7 @@ BEGSWITCH:
 				CheckUp(TRUE, ERRORCODE, "ASIO Channel Frequency Set", TRUE);
 
 				// Enable the channels
-				BASS_ASIO_ChannelEnable(FALSE, 0, ManagedSettings.NotesCatcherWithAudio ? ASIOProcSameThread : ASIOProc, NULL);
+				BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, NULL);
 				CheckUp(TRUE, ERRORCODE, "ASIO Channel Enable", TRUE);
 
 				// If mono rendering is enabled, mirror the left channel to the right one as well
@@ -1191,7 +1180,6 @@ BEGSWITCH:
 	_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
 	_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
 	_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
-
 
 #if !defined(_M_ARM64)
 	// Apply LoudMax, if requested

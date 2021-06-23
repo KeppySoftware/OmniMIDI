@@ -42,7 +42,7 @@ namespace OmniMIDIConfigurator
             {
                 if (GetWASAPIDevicesCount() < 1)
                 {
-                    Program.ShowError(4, "Error", "No WASAPI devices installed, I don't even know how this could happen!\n\nClick OK to close this window.", null);
+                    Program.ShowError(4, "Error", "No WASAPI devices detected.\n\nClick OK to close this window.", null);
                     Close();
                 }
 
@@ -51,12 +51,18 @@ namespace OmniMIDIConfigurator
                 BASS_WASAPI_DEVICEINFO info = new BASS_WASAPI_DEVICEINFO();
 
                 // Populate devices list
+                Devices.Add(new WASAPIDevice { Name = "Default Windows output", ID = -1, RealID = "{0.0.0.00000000}.{00000000-0000-0000-0000-000000000000}" });
                 for (int n = 0; BassWasapi.BASS_WASAPI_GetDeviceInfo(n, info); n++)
                 {
                     if (info.flags.HasFlag(BASSWASAPIDeviceInfo.BASS_DEVICE_ENABLED) &&
                         !info.flags.HasFlag(BASSWASAPIDeviceInfo.BASS_DEVICE_LOOPBACK) &&
                         !info.flags.HasFlag(BASSWASAPIDeviceInfo.BASS_DEVICE_INPUT))
+                    {
+                        if (info.flags.HasFlag(BASSWASAPIDeviceInfo.BASS_DEVICE_DEFAULT))
+                            Devices[0].ID = n;
+
                         Devices.Add(new WASAPIDevice { Name = info.name, ID = n, RealID = info.id });
+                    }
                 }
 
                 DevicesList.DataSource = Devices;
@@ -64,9 +70,10 @@ namespace OmniMIDIConfigurator
 
                 DevicesList.SelectedIndex = 0;
 
-                ExclusiveMode.Checked = Convert.ToInt32(Program.SynthSettings.GetValue("WASAPIExclusive", 0)) == 1;
-                WASAPIRawMode.Checked = Convert.ToInt32(Program.SynthSettings.GetValue("WASAPIRawMode", 0)) == 1;
-                NoDoubleBuffering.Checked = Convert.ToInt32(Program.SynthSettings.GetValue("WASAPIDoubleBuf", 1)) == 0;
+                ExclusiveMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("WASAPIExclusive", 0));
+                WASAPIRawMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("WASAPIRawMode", 0));
+                NoDoubleBuffering.Checked = !Convert.ToBoolean(Program.SynthSettings.GetValue("WASAPIDoubleBuf", 1));
+                AsyncMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("WASAPIAsyncMode", 0));
 
                 if (!IsWindows81OrNewer())
                 {
@@ -77,7 +84,7 @@ namespace OmniMIDIConfigurator
                 }
 
                 // Load previous device from registry
-                String PreviousDevice = (String)Program.SynthSettings.GetValue("WASAPIOutput", "None");
+                String PreviousDevice = (String)Program.SynthSettings.GetValue("WASAPIOutput", "{0.0.0.00000000}.{00000000-0000-0000-0000-000000000000}");
                 for (int n = 0; n < DevicesList.Items.Count; n++)
                 {
                     WASAPIDevice TmpDev = (WASAPIDevice)DevicesList.Items[n];
@@ -177,24 +184,13 @@ namespace OmniMIDIConfigurator
             GetWASAPIDeviceInfo();
         }
 
-        private void ExclusiveMode_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.SynthSettings.SetValue("WASAPIExclusive", ExclusiveMode.Checked ? "1" : "0", RegistryValueKind.DWord);
-        }
-
-        private void NoDoubleBuffering_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.SynthSettings.SetValue("WASAPIDoubleBuf", NoDoubleBuffering.Checked ? "0" : "1", RegistryValueKind.DWord);
-        }
-
-        private void WASAPIRawMode_CheckedChanged(object sender, EventArgs e)
-        {
-            Program.SynthSettings.SetValue("WASAPIRAWMode", WASAPIRawMode.Checked ? "1" : "0", RegistryValueKind.DWord);
-
-        }
-
         private void Quit_Click(object sender, EventArgs e)
         {
+            Program.SynthSettings.SetValue("WASAPIExclusive", ExclusiveMode.Checked, RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("WASAPIDoubleBuf", !NoDoubleBuffering.Checked, RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("WASAPIRAWMode", WASAPIRawMode.Checked, RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("WASAPIAsyncMode", AsyncMode.Checked, RegistryValueKind.DWord);
+
             BassWasapi.BASS_WASAPI_Free();
             Functions.SetDefaultDevice(AudioEngine.WASAPI_ENGINE, 0, ((WASAPIDevice)DevicesList.SelectedItem).RealID);
             Close();

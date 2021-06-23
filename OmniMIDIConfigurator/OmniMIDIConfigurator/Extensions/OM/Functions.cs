@@ -113,6 +113,9 @@ namespace OmniMIDIConfigurator
             new SettingStruct ("IgnoreSysReset", 0),
             new SettingStruct ("KDMAPIEnabled", 1),
             new SettingStruct ("WASAPIExclusive", 0),
+            new SettingStruct ("WASAPIDoubleBuf", 1),
+            new SettingStruct ("WASAPIRAWMode", 0),
+            new SettingStruct ("WASAPIAsyncMode", 0),
             new SettingStruct ("KeepAlive", 0),
             new SettingStruct ("LiveChanges", 0),
             new SettingStruct ("MaxRenderingTime", 75),
@@ -134,7 +137,10 @@ namespace OmniMIDIConfigurator
             new SettingStruct ("TransposeValue", 0x7F),
             new SettingStruct ("VID", 0xFFFF),
             new SettingStruct ("VolumeBoost", 0),
-            new SettingStruct ("VolumeMonitor", 0)
+            new SettingStruct ("VolumeMonitor", 0),
+            new SettingStruct ("XASamplesPerFrame", 88),
+            new SettingStruct ("XASPFSweepRate", 15),
+            new SettingStruct ("FastLibs", 0)
         };
 
         public static string GetProcessorArchitecture()

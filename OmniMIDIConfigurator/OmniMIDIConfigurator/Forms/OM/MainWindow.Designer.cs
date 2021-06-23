@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.MWTab = new System.Windows.Forms.TabControl();
             this.ListsEdt = new System.Windows.Forms.TabPage();
+            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.Set = new System.Windows.Forms.TabPage();
             this.ExportPres = new System.Windows.Forms.Button();
             this.ImportPres = new System.Windows.Forms.Button();
@@ -40,6 +41,7 @@
             this.QILabel = new System.Windows.Forms.Label();
             this.RestoreDefault = new System.Windows.Forms.Button();
             this.ApplySettings = new System.Windows.Forms.Button();
+            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWSStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -72,8 +74,8 @@
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.MIDIInOutTest = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
-            this.DeleteUserData = new System.Windows.Forms.MenuItem();
             this.ReinstallDriver = new System.Windows.Forms.MenuItem();
+            this.DeleteUserData = new System.Windows.Forms.MenuItem();
             this.menuItem17 = new System.Windows.Forms.MenuItem();
             this.RestoreSFListEdWidth = new System.Windows.Forms.MenuItem();
             this.RestoreConfSettings = new System.Windows.Forms.MenuItem();
@@ -89,8 +91,6 @@
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.DLDriverSrc = new System.Windows.Forms.MenuItem();
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
-            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
-            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWTab.SuspendLayout();
             this.ListsEdt.SuspendLayout();
             this.Set.SuspendLayout();
@@ -121,6 +121,16 @@
             this.ListsEdt.TabIndex = 0;
             this.ListsEdt.Text = "Lists editor";
             this.ListsEdt.UseVisualStyleBackColor = true;
+            // 
+            // SFLEPanel
+            // 
+            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
+            this.SFLEPanel.Name = "SFLEPanel";
+            this.SFLEPanel.Size = new System.Drawing.Size(698, 434);
+            this.SFLEPanel.TabIndex = 0;
             // 
             // Set
             // 
@@ -217,6 +227,16 @@
             this.ApplySettings.TabIndex = 2;
             this.ApplySettings.Text = "Apply";
             this.ApplySettings.UseVisualStyleBackColor = true;
+            // 
+            // SETPanel
+            // 
+            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SETPanel.Location = new System.Drawing.Point(0, 0);
+            this.SETPanel.Name = "SETPanel";
+            this.SETPanel.Size = new System.Drawing.Size(698, 400);
+            this.SETPanel.TabIndex = 1;
             // 
             // MWSStrip
             // 
@@ -448,17 +468,17 @@
             this.menuItem15.Index = 1;
             this.menuItem15.Text = "-";
             // 
-            // DeleteUserData
-            // 
-            this.DeleteUserData.Index = 3;
-            this.DeleteUserData.Text = "Clear all OmniMIDI\'s user data";
-            this.DeleteUserData.Click += new System.EventHandler(this.DeleteUserData_Click);
-            // 
             // ReinstallDriver
             // 
             this.ReinstallDriver.Index = 2;
             this.ReinstallDriver.Text = "Reinstall OmniMIDI with default settings";
             this.ReinstallDriver.Click += new System.EventHandler(this.ReinstallDriver_Click);
+            // 
+            // DeleteUserData
+            // 
+            this.DeleteUserData.Index = 3;
+            this.DeleteUserData.Text = "Clear all OmniMIDI\'s user data";
+            this.DeleteUserData.Click += new System.EventHandler(this.DeleteUserData_Click);
             // 
             // menuItem17
             // 
@@ -554,26 +574,6 @@
             // CheckUpdates
             // 
             this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
-            // 
-            // SFLEPanel
-            // 
-            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
-            this.SFLEPanel.Name = "SFLEPanel";
-            this.SFLEPanel.Size = new System.Drawing.Size(698, 434);
-            this.SFLEPanel.TabIndex = 0;
-            // 
-            // SETPanel
-            // 
-            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SETPanel.Location = new System.Drawing.Point(0, 0);
-            this.SETPanel.Name = "SETPanel";
-            this.SETPanel.Size = new System.Drawing.Size(698, 400);
-            this.SETPanel.TabIndex = 1;
             // 
             // MainWindow
             // 

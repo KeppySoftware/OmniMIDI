@@ -306,7 +306,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIB32\OmniMIDI_Win32.lib</ImportLibrary>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\lib</AdditionalLibraryDirectories>
@@ -420,7 +420,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>Version.lib;Psapi.lib;winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Version.lib;Psapi.lib;winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Shlwapi.lib;setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)\OmniMIDI.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -431,7 +431,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIB32\OmniMIDI_Win32.lib</ImportLibrary>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\lib</AdditionalLibraryDirectories>
@@ -465,6 +465,8 @@
       <StackCommitSize>
       </StackCommitSize>
       <AllowIsolation>true</AllowIsolation>
+      <GenerateMapFile>true</GenerateMapFile>
+      <MapExports>true</MapExports>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -557,7 +559,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIB64\OmniMIDI_Win64.lib</ImportLibrary>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\lib64</AdditionalLibraryDirectories>
@@ -660,7 +662,7 @@
       <ShowProgress>true</ShowProgress>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Version.lib;Psapi.lib;winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Version.lib;Psapi.lib;winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Shlwapi.lib;setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)\OmniMIDI.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -670,7 +672,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIB64\OmniMIDI_Win64.lib</ImportLibrary>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\lib64</AdditionalLibraryDirectories>
@@ -690,7 +692,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
-      <GenerateMapFile>false</GenerateMapFile>
+      <GenerateMapFile>true</GenerateMapFile>
       <ProfileGuidedDatabase>$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <EnableUAC>true</EnableUAC>
@@ -699,6 +701,7 @@
       </EntryPointSymbol>
       <NoEntryPoint>false</NoEntryPoint>
       <AllowIsolation>true</AllowIsolation>
+      <MapExports>true</MapExports>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -789,7 +792,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIBARM64\OmniMIDI_ARM64.lib</ImportLibrary>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\libarm64</AdditionalLibraryDirectories>
@@ -895,7 +898,7 @@
       <ShowProgress>true</ShowProgress>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>Version.lib;Psapi.lib;winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Version.lib;Psapi.lib;winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Shlwapi.lib;setupapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)\OmniMIDI.dll</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -905,7 +908,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <ImportLibrary>..\DeveloperContent\LIBARM64\OmniMIDI_ARM64.lib</ImportLibrary>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\external_packages\libarm64</AdditionalLibraryDirectories>
@@ -925,9 +928,9 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <UACUIAccess>false</UACUIAccess>
       <TreatLinkerWarningAsErrors>false</TreatLinkerWarningAsErrors>
-      <GenerateMapFile>false</GenerateMapFile>
+      <GenerateMapFile>true</GenerateMapFile>
       <ProfileGuidedDatabase>$(OutDir)$(TargetName).pgd</ProfileGuidedDatabase>
-      <LinkTimeCodeGeneration>UseFastLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <EnableUAC>true</EnableUAC>
       <SetChecksum>true</SetChecksum>
       <EntryPointSymbol>
@@ -937,6 +940,7 @@
       </HeapReserveSize>
       <StackReserveSize>
       </StackReserveSize>
+      <MapExports>true</MapExports>
     </Link>
     <PostBuildEvent>
       <Command>

@@ -6,9 +6,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -24,6 +26,8 @@ namespace OmniMIDIConfigurator
         private FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\OmniMIDI.dll");
         private FileVersionInfo BASS = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\bass.dll");
         private FileVersionInfo BASSMIDI = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\bassmidi.dll");
+        private FileVersionInfo OBASS = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\opt\\bass.dll");
+        private FileVersionInfo OBASSMIDI = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\opt\\bassmidi.dll");
 
         private string ReturnDriverAssemblyVersion(String Component, String Type, Int32[] VI)
         {
@@ -59,6 +63,18 @@ namespace OmniMIDIConfigurator
                 new int[] { BASSMIDI.FileMajorPart, BASSMIDI.FileMinorPart, BASSMIDI.FileBuildPart, BASSMIDI.FilePrivatePart }
                 );
 
+            LibsToolTip.SetToolTip(BASSVer, ReturnDriverAssemblyVersion(
+                null,
+                "U",
+                new int[] { OBASS.FileMajorPart, OBASS.FileMinorPart, OBASS.FileBuildPart, OBASS.FilePrivatePart }
+                ));
+
+            LibsToolTip.SetToolTip(BASSMIDIVer, ReturnDriverAssemblyVersion(
+                null,
+                "U",
+                new int[] { OBASSMIDI.FileMajorPart, OBASSMIDI.FileMinorPart, OBASSMIDI.FileBuildPart, OBASSMIDI.FilePrivatePart }
+                ));
+
             int[] KDMAPIVerRef = { 0, 0, 0, 0 };
             if (KDMAPI.ReturnKDMAPIVer(ref KDMAPIVerRef[0], ref KDMAPIVerRef[1], ref KDMAPIVerRef[2], ref KDMAPIVerRef[3]) != 0)
             {
@@ -84,11 +100,6 @@ namespace OmniMIDIConfigurator
                 OMBigLogo.Image = Properties.Resources.OMLauncherChristmas;
             else
                 OMBigLogo.Image = Properties.Resources.OMLauncher;
-
-            BB.Location = new Point(OMBigLogo.Size.Width - BB.Size.Width - 8, OMBigLogo.Size.Height - BB.Size.Height - 8);
-            BB.Parent = OMBigLogo;
-            BB.Image = Properties.Resources.BB;
-            BB.BackColor = Color.Transparent;
 
             BecomePatron.Cursor = Program.SystemHandCursor;
             BecomePatron.Image = Properties.Resources.PatreonLogo;
@@ -223,16 +234,6 @@ namespace OmniMIDIConfigurator
             DynamicToolTip.ToolTipIcon = ToolTipIcon.Info;
             DynamicToolTip.ToolTipTitle = "License";
             DynamicToolTip.SetToolTip(OMLicense, "Read the license for this piece of software");
-        }
-
-        private void OMBigLogo_MouseEnter(object sender, EventArgs e)
-        {
-            BB.Visible = true;
-        }
-
-        private void OMBigLogo_MouseLeave(object sender, EventArgs e)
-        {
-            BB.Visible = false;
         }
 
         private void OKBtn_Click(object sender, EventArgs e)

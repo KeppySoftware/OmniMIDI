@@ -45,6 +45,7 @@
             this.ExclusiveMode = new System.Windows.Forms.CheckBox();
             this.OldWASAPIMode = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.AsyncMode = new System.Windows.Forms.CheckBox();
             this.NoDoubleBuffering = new System.Windows.Forms.CheckBox();
             this.WASAPIRawMode = new System.Windows.Forms.CheckBox();
             this.InfoGroupBox.SuspendLayout();
@@ -54,7 +55,7 @@
             // Quit
             // 
             this.Quit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Quit.Location = new System.Drawing.Point(434, 251);
+            this.Quit.Location = new System.Drawing.Point(434, 266);
             this.Quit.Name = "Quit";
             this.Quit.Size = new System.Drawing.Size(75, 23);
             this.Quit.TabIndex = 7;
@@ -204,12 +205,11 @@
             this.ExclusiveMode.Text = "Use device in exclusive mode (Reduces latency, but prevents other apps from rende" +
     "ring audio)";
             this.ExclusiveMode.UseVisualStyleBackColor = true;
-            this.ExclusiveMode.CheckedChanged += new System.EventHandler(this.ExclusiveMode_CheckedChanged);
             // 
             // OldWASAPIMode
             // 
             this.OldWASAPIMode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OldWASAPIMode.Location = new System.Drawing.Point(328, 251);
+            this.OldWASAPIMode.Location = new System.Drawing.Point(328, 266);
             this.OldWASAPIMode.Name = "OldWASAPIMode";
             this.OldWASAPIMode.Size = new System.Drawing.Size(102, 23);
             this.OldWASAPIMode.TabIndex = 15;
@@ -221,15 +221,27 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.AsyncMode);
             this.groupBox1.Controls.Add(this.NoDoubleBuffering);
             this.groupBox1.Controls.Add(this.WASAPIRawMode);
             this.groupBox1.Controls.Add(this.ExclusiveMode);
             this.groupBox1.Location = new System.Drawing.Point(9, 159);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(499, 84);
+            this.groupBox1.Size = new System.Drawing.Size(499, 100);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "WASAPI output settings";
+            // 
+            // AsyncMode
+            // 
+            this.AsyncMode.AutoSize = true;
+            this.AsyncMode.Location = new System.Drawing.Point(9, 76);
+            this.AsyncMode.Name = "AsyncMode";
+            this.AsyncMode.Size = new System.Drawing.Size(483, 17);
+            this.AsyncMode.TabIndex = 17;
+            this.AsyncMode.Text = "Send data to the device in asynchronous mode (Can reduce latency but also introdu" +
+    "ce crackling)";
+            this.AsyncMode.UseVisualStyleBackColor = true;
             // 
             // NoDoubleBuffering
             // 
@@ -241,7 +253,6 @@
             this.NoDoubleBuffering.Text = "Disable double buffering (Reduces latency but disables the audio monitoring in th" +
     "e mixer)";
             this.NoDoubleBuffering.UseVisualStyleBackColor = true;
-            this.NoDoubleBuffering.CheckedChanged += new System.EventHandler(this.NoDoubleBuffering_CheckedChanged);
             // 
             // WASAPIRawMode
             // 
@@ -252,13 +263,12 @@
             this.WASAPIRawMode.TabIndex = 15;
             this.WASAPIRawMode.Text = "Enable raw mode (Disables APO filters/effects, only works on Windows 8.1+)";
             this.WASAPIRawMode.UseVisualStyleBackColor = true;
-            this.WASAPIRawMode.CheckedChanged += new System.EventHandler(this.WASAPIRawMode_CheckedChanged);
             // 
             // DefaultWASAPIAudioOutput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(518, 283);
+            this.ClientSize = new System.Drawing.Size(518, 298);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.OldWASAPIMode);
             this.Controls.Add(this.InfoGroupBox);
@@ -303,5 +313,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox NoDoubleBuffering;
         private System.Windows.Forms.CheckBox WASAPIRawMode;
+        private System.Windows.Forms.CheckBox AsyncMode;
     }
 }

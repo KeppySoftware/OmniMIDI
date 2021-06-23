@@ -82,34 +82,6 @@ typedef long NTSTATUS;
 // Shakra backport
 #include "ShakraRegSystem.h"
 
-// NTSTATUS
-#define NT_SUCCESS(StatCode) ((NTSTATUS)(StatCode) == 0)
-#define NTAPI __stdcall
-// these functions have identical prototypes
-typedef NTSTATUS(NTAPI* NDE)(BOOLEAN, INT64*);
-typedef NTSTATUS(NTAPI* NQST)(QWORD*);
-typedef NTSTATUS(NTAPI* DDP)(DWORD, HANDLE, UINT, LONG, LONG);
-
-NDE NtDelayExecution = 0;
-NQST NtQuerySystemTime = 0;
-DDP DefDriverProcImp = 0;
-
-// Critical sections but handled by OmniMIDI functions because f**k Windows
-DWORD DummyPlayBufData() { return 0; }
-VOID DummyPrepareForBASSMIDI(DWORD LastRunningStatus, DWORD_PTR dwParam1) { return; }
-MMRESULT DummyParseData(DWORD_PTR dwParam1) { return MIDIERR_NOTREADY; }
-BOOL WINAPI DummyBMSE(HSTREAM handle, DWORD chan, DWORD event, DWORD param) { return FALSE; }
-
-// Hyper switch
-BOOL HyperMode = 0;
-MMRESULT(*_PrsData)(DWORD_PTR dwParam1) = DummyParseData;
-VOID(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD_PTR dwParam1) = DummyPrepareForBASSMIDI;
-DWORD(*_PlayBufData)(void) = DummyPlayBufData;
-DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
-BOOL(WINAPI*_BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = DummyBMSE;
-// What does it do? It gets rid of the useless functions,
-// and passes the events without checking for anything
-
 // F**k Sleep() tbh
 void NTSleep(__int64 usec) {
 	__int64 neg = (usec * -1);

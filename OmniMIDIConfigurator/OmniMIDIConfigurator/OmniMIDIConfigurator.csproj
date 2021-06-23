@@ -64,6 +64,9 @@
     <Reference Include="Costura, Version=4.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.4.1.0\lib\net40\Costura.dll</HintPath>
     </Reference>
+    <Reference Include="Cyotek.Windows.Forms.ImageBox, Version=1.2.0.0, Culture=neutral, PublicKeyToken=58daa28b0b2de221, processorArchitecture=MSIL">
+      <HintPath>..\packages\CyotekImageBox.1.2.1\lib\net20\Cyotek.Windows.Forms.ImageBox.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.11.16.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.16\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
@@ -291,6 +294,11 @@
     <Compile Include="Forms\OM\Audio Outputs\XAOutputSettings.Designer.cs">
       <DependentUpon>XAOutputSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Donate.resx">
       <DependentUpon>Donate.cs</DependentUpon>
     </EmbeddedResource>
@@ -488,6 +496,7 @@
     <Content Include="Resources\Icons\what.png" />
     <Content Include="Resources\Icons\wi.png" />
     <Content Include="Resources\Icons\wir.png" />
+    <Content Include="Resources\Images\DancingDuck.gif" />
     <Content Include="Resources\Images\DonateBtn.png" />
     <Content Include="Resources\Images\OMLauncher.png" />
     <Content Include="Resources\Icons\PayPalLogo.png" />

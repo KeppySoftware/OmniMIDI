@@ -300,15 +300,19 @@ void Supervisor(LPVOID lpV) {
 			{
 				// It's alive, do registry stuff
 
-				LoadSettings(FALSE, TRUE);	// Load real-time settings
-				LoadCustomInstruments();	// Load custom instrument values from the registry
-				KeyShortcuts();				// Check for keystrokes (ALT+1, INS, etc..)
-				SFDynamicLoaderCheck();		// Check current active voices, rendering time, etc..
-				MixerCheck();				// Send dB values to the mixer
-				RevbNChor();				// Check if custom reverb/chorus values are enabled
+				LoadSettings(FALSE, TRUE);			// Load real-time settings
+				LoadCustomInstruments();			// Load custom instrument values from the registry
+				KeyShortcuts();						// Check for keystrokes (ALT+1, INS, etc..)
+				SFDynamicLoaderCheck();				// Check current active voices, rendering time, etc..
+				MixerCheck();						// Send dB values to the mixer
+				RevbNChor();						// Check if custom reverb/chorus values are enabled
+				InitializeEventsProcesserThreads(); // Check if the user wants to parse the notes through a separate thread
 
 				// Check the current output volume
 				CheckVolume(FALSE);
+
+				// Assign ProcData
+				_ProcData = ManagedSettings.NotesCatcherWithAudio ? ProcDataSameThread : ProcData;
 			}
 
 			// I SLEEP

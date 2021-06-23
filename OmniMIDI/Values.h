@@ -33,7 +33,7 @@ UINT CPUThreadsAvailable = 0;
 #define NTFS_MAX_PATH	32767
 
 // Settings
-FILE* DebugLog = NULL;
+FILE* DebugLog = nullptr;
 BOOL SettingsManagedByClient;
 Settings ManagedSettings = Settings();
 DebugInfo ManagedDebugInfo = DebugInfo();
@@ -281,3 +281,33 @@ std::vector<BASS_MIDI_FONTEX> SoundFontPresets;
 DWORD pitchshiftchan[16];
 
 // -----------------------------------------------------------------------
+
+// NTSTATUS
+#define NT_SUCCESS(StatCode) ((NTSTATUS)(StatCode) == 0)
+#define NTAPI __stdcall
+// these functions have identical prototypes
+typedef NTSTATUS(NTAPI* NDE)(BOOLEAN, INT64*);
+typedef NTSTATUS(NTAPI* NQST)(QWORD*);
+typedef NTSTATUS(NTAPI* DDP)(DWORD, HANDLE, UINT, LONG, LONG);
+
+NDE NtDelayExecution = 0;
+NQST NtQuerySystemTime = 0;
+DDP DefDriverProcImp = 0;
+
+// Critical sections but handled by OmniMIDI functions because f**k Windows
+DWORD DummyPlayBufData() { return 0; }
+VOID DummyPrepareForBASSMIDI(DWORD LastRunningStatus, DWORD_PTR dwParam1) { return; }
+MMRESULT DummyParseData(DWORD_PTR dwParam1) { return MIDIERR_NOTREADY; }
+BOOL WINAPI DummyBMSE(HSTREAM handle, DWORD chan, DWORD event, DWORD param) { return FALSE; }
+DWORD CALLBACK DummyProcData(void* buffer, DWORD length, void* user) { return 0; }
+
+// Hyper switch
+BOOL HyperMode = 0;
+MMRESULT(*_PrsData)(DWORD_PTR dwParam1) = DummyParseData;
+VOID(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD_PTR dwParam1) = DummyPrepareForBASSMIDI;
+DWORD(*_PlayBufData)(void) = DummyPlayBufData;
+DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
+BOOL(WINAPI* _BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = DummyBMSE;
+DWORD(CALLBACK* _ProcData)(void* buffer, DWORD length, void* user) = DummyProcData;
+// What does it do? It gets rid of the useless functions,
+// and passes the events without checking for anything

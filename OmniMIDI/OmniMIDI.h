@@ -162,6 +162,9 @@ typedef struct
 
 	DWORD XASamplesPerFrame = 88;			// Samples per frame (XA engine)
 	DWORD XASPFSweepRate = 15;				// SFP sweep rate (XA engine)
+
+	BOOL FastLibs = 0;						// Load the fast libs for Black MIDI playback
+	BOOL WASAPIAsyncMode = 0;				// WASAPI async event mode
 } Settings;
 #endif
 

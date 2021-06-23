@@ -64,17 +64,19 @@ BOOL CloseThread(Thread* thread) {
 	return FALSE;
 }
 
-void DLLLoadError(LPWSTR dll) {
+void DLLLoadError(LPWSTR DLL, int ErrCode, BOOL Mandatory) {
 	TCHAR Error[NTFS_MAX_PATH] = { 0 };
 
 	// Print to log
-	PrintCurrentTime();
-	if (DebugLog) fprintf(DebugLog, "ERROR | Unable to load the following DLL: %s\n", dll);
+	if (DebugLog != nullptr) {
+		PrintCurrentTime();
+		fprintf(DebugLog, "ERROR | Unable to load the following DLL: %s\n", DLL);
+	}
 
 	// Show error message
-	swprintf_s(Error, L"An error has occurred while loading the following library: %s\n\nClick OK to close the program.", dll);
-	MessageBoxW(NULL, Error, L"OmniMIDI - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL);
-	exit(ERROR_PATH_NOT_FOUND);
+	swprintf_s(Error, L"An error has occurred while loading the following library: %s\n\nClick OK to close the program.", DLL);
+	MessageBoxW(NULL, Error, L"OmniMIDI - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL | MB_OK);
+	if (Mandatory) exit(ErrCode);
 }
 
 long long TimeNow() {
@@ -153,6 +155,7 @@ void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 	PWSTR SysDir = NULL;
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 	wchar_t Msg[1024] = { 0 };
+	WIN32_FIND_DATA FD = { 0 };
 
 	if (Target->Lib == nullptr) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No library has been found in memory. The driver will now load the DLL...");
@@ -172,21 +175,22 @@ void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 		}
 
 		if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
-			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", SysDir, RequestedLib);
+			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s\0", SysDir, RequestedLib);
 
-			if (!(Target->Lib = LoadLibrary(DLLPath))) {
-				PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It's either missing or requires some missing dependencies.");
-				if (Mandatory) {
-					DLLLoadError(DLLPath);
-					exit(ERROR_BAD_FORMAT);
-				}
+			if (FindFirstFile(DLLPath, &FD) == INVALID_HANDLE_VALUE)
+			{
+				PrintLoadedDLLToDebugLog(RequestedLib, "OmniMIDI couldn't find the required library!!!");
+				DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
 			}
-			else PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
+			else {
+				if (!(Target->Lib = LoadLibrary(DLLPath))) {
+					PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It's either missing or requires some missing dependencies.");
+					DLLLoadError(DLLPath, ERROR_BAD_FORMAT, Mandatory);
+				}
+				else PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
+			}
 		}
-		else {
-			DLLLoadError(DLLPath);
-			exit(ERROR_BAD_FORMAT);
-		}
+		else DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
 
 		CoTaskMemFree(SysDir);
 	}
@@ -205,18 +209,12 @@ void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 
 			(*Target) = BASS_PluginLoad((char*)&DLLPath, BASS_UNICODE);
 			if (BASS_ErrorGetCode() != 0) {
-				if (Mandatory) {
-					DLLLoadError(DLLPath);
-					exit(ERROR_BAD_FORMAT);
-				}
+				if (Mandatory) DLLLoadError(DLLPath, ERROR_BAD_FORMAT, Mandatory);
 				else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested plugin. It's either missing, requires some missing dependencies or isn't supported by this version of BASS.");
 			}
 			else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is now in memory.");
 		}
-		else {
-			DLLLoadError(DLLPath);
-			exit(ERROR_BAD_FORMAT);
-		}
+		else DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
 
 		CoTaskMemFree(SysDir);
 	}
@@ -230,9 +228,11 @@ VOID LoadBASSFunctions()
 			PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
 
 			// Load modules
-			LoadDriverModule(&BASS, L"bass.dll", TRUE);
+			RegQueryValueEx(Configuration.Address, L"FastLibs", NULL, &dwType, (LPBYTE)&ManagedSettings.FastLibs, &dwSize);
+
+			LoadDriverModule(&BASS, ManagedSettings.FastLibs ? L"opt\\bass.dll" : L"bass.dll", TRUE);
+			LoadDriverModule(&BASSMIDI, ManagedSettings.FastLibs ? L"opt\\bassmidi.dll" : L"bassmidi.dll", TRUE);
 			LoadDriverModule(&BASSWASAPI, L"basswasapi.dll", TRUE);
-			LoadDriverModule(&BASSMIDI, L"bassmidi.dll", TRUE);
 			LoadDriverModule(&BASSENC, L"bassenc.dll", TRUE);
 			LoadDriverModule(&BASSASIO, L"bassasio.dll", TRUE);
 
@@ -516,6 +516,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		TempSC = ManagedSettings.SincConv,
 		TempOV = ManagedSettings.OutputVolume,
 		TempHP = HyperMode,
+		TempNCWA = ManagedSettings.NotesCatcherWithAudio,
 		TempMV = ManagedSettings.MaxVoices;
 
 	BOOL
@@ -561,8 +562,8 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"ReduceBootUpDelay", NULL, &dwType, (LPBYTE)&ManagedSettings.ReduceBootUpDelay, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"XASamplesPerFrame", NULL, &dwType, (LPBYTE)&ManagedSettings.XASamplesPerFrame, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"XASPFSweepRate", NULL, &dwType, (LPBYTE)&ManagedSettings.XASPFSweepRate, &dwSize);
-			if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(Configuration.Address, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&ManagedSettings.NotesCatcherWithAudio, &dwSize);
-			else ManagedSettings.NotesCatcherWithAudio = FALSE;
+			if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(Configuration.Address, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&TempNCWA, &dwSize);
+			else ManagedSettings.NotesCatcherWithAudio = TRUE;
 		
 			SamplesPerFrame = ManagedSettings.XASamplesPerFrame * (ManagedSettings.MonoRendering ? 1 : 2);
 		}
@@ -648,6 +649,10 @@ void LoadSettings(BOOL Restart, BOOL RT)
 
 			// Restart threads
 			if (RT) stop_thread = FALSE;
+		}
+
+		if (TempNCWA != ManagedSettings.NotesCatcherWithAudio || SettingsManagedByClient) {
+			if (!SettingsManagedByClient) ManagedSettings.NotesCatcherWithAudio = TempNCWA;
 		}
 
 		if (IsBootUp || (TEvBufferSize != EvBufferSize || TEvBufferMultRatio != EvBufferMultRatio)) {

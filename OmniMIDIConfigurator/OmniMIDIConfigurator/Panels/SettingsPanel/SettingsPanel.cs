@@ -176,6 +176,7 @@ namespace OmniMIDIConfigurator
                 SlowDownPlayback.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("DontMissNotes", 0));
                 KSDAPIBox.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("KDMAPIEnabled", 1));
                 HMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("HyperPlayback", 0));
+                BMLibs.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("FastLibs", 0));
                 OldBuff.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("NotesCatcherWithAudio", 0));
 
                 ReverbV.Value = Functions.Between0And127(Convert.ToInt32(Program.SynthSettings.GetValue("Reverb", 64)));
@@ -281,6 +282,7 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("DontMissNotes", Convert.ToInt32(SlowDownPlayback.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("KDMAPIEnabled", Convert.ToInt32(KSDAPIBox.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("HyperPlayback", Convert.ToInt32(HMode.Checked), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("FastLibs", Convert.ToInt32(BMLibs.Checked), RegistryValueKind.DWord);
 
             Program.SynthSettings.SetValue("Reverb", ReverbV.Value, RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("Chorus", ChorusV.Value, RegistryValueKind.DWord);
@@ -593,6 +595,8 @@ namespace OmniMIDIConfigurator
             IgnoreNotesHL.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
             IgnoreNotesHV.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
 
+            SlowDownPlayback.Enabled = !HMode.Checked;
+            CapFram.Enabled = !HMode.Checked;
             SysResetIgnore.Enabled = !HMode.Checked;
             FullVelocityMode.Enabled = !HMode.Checked;
             Limit88.Enabled = !HMode.Checked;

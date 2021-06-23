@@ -113,6 +113,15 @@ void __inline SendToBASSMIDI(DWORD dwParam1) {
 	case MIDI_NOTEOFF:
 		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8));
 		return;
+	case MIDI_POLYAFTER:
+		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_KEYPRES, dwParam1 >> 8);
+		return;
+	case MIDI_PROGCHAN:
+		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_PROGRAM, (BYTE)(dwParam1 >> 8));
+		return;
+	case MIDI_CHANAFTER:
+		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_CHANPRES, (BYTE)(dwParam1 >> 8));
+		return;
 	default:
 		if (!(dwParam1 - 0x80 & 0xC0))
 		{

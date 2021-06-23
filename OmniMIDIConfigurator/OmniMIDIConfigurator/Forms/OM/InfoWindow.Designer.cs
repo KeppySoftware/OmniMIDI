@@ -36,6 +36,7 @@
             this.PayPalDonation = new System.Windows.Forms.PictureBox();
             this.GitHubPage = new System.Windows.Forms.PictureBox();
             this.DIGroup = new System.Windows.Forms.GroupBox();
+            this.KDMAPIVer = new OmniMIDIConfigurator.LinkLabelEx();
             this.CurBranch = new System.Windows.Forms.Label();
             this.BASSMIDIVer = new System.Windows.Forms.Label();
             this.BASSVer = new System.Windows.Forms.Label();
@@ -55,16 +56,14 @@
             this.ChangeBranch = new System.Windows.Forms.Button();
             this.CheckForUpdates = new System.Windows.Forms.Button();
             this.OMLicense = new System.Windows.Forms.PictureBox();
-            this.BB = new System.Windows.Forms.PictureBox();
             this.BecomePatron = new System.Windows.Forms.PictureBox();
-            this.KDMAPIVer = new OmniMIDIConfigurator.LinkLabelEx();
+            this.LibsToolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.OMBigLogo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PayPalDonation)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.GitHubPage)).BeginInit();
             this.DIGroup.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OMLicense)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BecomePatron)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,8 +75,6 @@
             this.OMBigLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.OMBigLogo.TabIndex = 0;
             this.OMBigLogo.TabStop = false;
-            this.OMBigLogo.MouseEnter += new System.EventHandler(this.OMBigLogo_MouseEnter);
-            this.OMBigLogo.MouseLeave += new System.EventHandler(this.OMBigLogo_MouseLeave);
             // 
             // VerLabel
             // 
@@ -147,6 +144,17 @@
             this.DIGroup.TabIndex = 6;
             this.DIGroup.TabStop = false;
             this.DIGroup.Text = "Driver information";
+            // 
+            // KDMAPIVer
+            // 
+            this.KDMAPIVer.AutoSize = true;
+            this.KDMAPIVer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.KDMAPIVer.Location = new System.Drawing.Point(105, 57);
+            this.KDMAPIVer.Name = "KDMAPIVer";
+            this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
+            this.KDMAPIVer.TabIndex = 1;
+            this.KDMAPIVer.TabStop = true;
+            this.KDMAPIVer.Text = "KDMAPI VER";
             // 
             // CurBranch
             // 
@@ -332,16 +340,6 @@
             this.OMLicense.Click += new System.EventHandler(this.OMLicense_Click);
             this.OMLicense.MouseHover += new System.EventHandler(this.OMLicense_MouseHover);
             // 
-            // BB
-            // 
-            this.BB.BackColor = System.Drawing.Color.Transparent;
-            this.BB.Location = new System.Drawing.Point(11, 12);
-            this.BB.Name = "BB";
-            this.BB.Size = new System.Drawing.Size(48, 48);
-            this.BB.TabIndex = 11;
-            this.BB.TabStop = false;
-            this.BB.Visible = false;
-            // 
             // BecomePatron
             // 
             this.BecomePatron.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -353,16 +351,10 @@
             this.BecomePatron.Click += new System.EventHandler(this.BecomePatron_Click);
             this.BecomePatron.MouseHover += new System.EventHandler(this.BecomePatron_MouseHover);
             // 
-            // KDMAPIVer
+            // LibsToolTip
             // 
-            this.KDMAPIVer.AutoSize = true;
-            this.KDMAPIVer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.KDMAPIVer.Location = new System.Drawing.Point(105, 57);
-            this.KDMAPIVer.Name = "KDMAPIVer";
-            this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
-            this.KDMAPIVer.TabIndex = 1;
-            this.KDMAPIVer.TabStop = true;
-            this.KDMAPIVer.Text = "KDMAPI VER";
+            this.LibsToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.LibsToolTip.ToolTipTitle = "Optimized library version";
             // 
             // InfoWindow
             // 
@@ -371,7 +363,6 @@
             this.CancelButton = this.OKBtn;
             this.ClientSize = new System.Drawing.Size(738, 280);
             this.Controls.Add(this.BecomePatron);
-            this.Controls.Add(this.BB);
             this.Controls.Add(this.OMLicense);
             this.Controls.Add(this.CheckForUpdates);
             this.Controls.Add(this.ChangeBranch);
@@ -401,7 +392,6 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.OMLicense)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.BB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BecomePatron)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -437,7 +427,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button CheckForUpdates;
         private System.Windows.Forms.PictureBox OMLicense;
-        private System.Windows.Forms.PictureBox BB;
         private System.Windows.Forms.PictureBox BecomePatron;
+        private System.Windows.Forms.ToolTip LibsToolTip;
     }
 }

@@ -120,27 +120,24 @@
   <metadata name="ButtonsDesc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="MaxCPU.ToolTip" xml:space="preserve">
-    <value>It is not strictly the CPU usage that is measured, but rather how timely the stream is able to render data.
-For example, a limit of 50% would mean that the rendering would need to be at least 2x real-time speed.
-When the limit is exceeded, OmniMIDI will begin killing voices, starting with the most quiet. 
-</value>
-  </data>
-  <data name="RenderingTimeLabel.ToolTip" xml:space="preserve">
-    <value>It is not strictly the CPU usage that is measured, but rather how timely the stream is able to render data.
-For example, a limit of 50% would mean that the rendering would need to be at least 2x real-time speed.
-When the limit is exceeded, OmniMIDI will begin killing voices, starting with the most quiet. </value>
-  </data>
   <metadata name="Requirements.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>137, 17</value>
   </metadata>
+  <metadata name="ButtonsDesc.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <metadata name="Requirements.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>137, 17</value>
+  </metadata>
+  <data name="BMLibs.ToolTip" xml:space="preserve">
+    <value>The Black MIDI optimized libraries are based around old versions of BASS and BASSMIDI.
+Using older versions of the libraries could lead to some audio issues (Some MIDI rendering fixes might not be present)
+and crashes if some features aren't supported.</value>
+  </data>
   <metadata name="VolTrackBarMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>264, 17</value>
   </metadata>
   <data name="label15.Text" xml:space="preserve">
-    <value>These settings are here for people who still want to access them, and they're here because they might get removed in the future to free up space for new features or because they're not meant to be edited by non tech-savvy users. If you encounter issues after editing any of these settings, please reset the synthesizer to the default settings, or reinstall the entire driver itself if needed.</value>
+    <value>These settings are here for people who still want to access them, and they're here because they might get removed in the future to free up space for new features or because they're not meant to be edited by non tech-savvy users. If you encounter issues after editing any of these settings, please reset the synthesizer to the default settings, or reinstall the entire driver itself if necessary.</value>
   </data>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>61</value>
-  </metadata>
 </root>
