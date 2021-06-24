@@ -255,6 +255,39 @@ void CookedPlayerSystem(CookedPlayer* Player)
 	TerminateThread(&CookedThread, TRUE, 0);
 }
 
+BOOL PrepareDriver() {
+	PrintMessageToDebugLog("StartDriver", "Initializing driver...");
+
+	// Load the selected driver priority value from the registry
+	OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
+	RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
+
+
+	// Create an event, to load the default SoundFonts synchronously
+	OMReady = CreateEvent(
+		NULL,               // default security attributes
+		TRUE,               // manual-reset event
+		FALSE,              // initial state is nonsignaled
+		TEXT("OMReady")		// object name
+	);
+
+	// Load the settings, and allocate the memory for the EVBuffer
+	LoadSettings(FALSE, FALSE);
+
+	// Initialize the BASS output device, and set up the streams
+	if (InitializeBASS(FALSE)) {
+		SetUpStream();
+		LoadSoundFontsToStream();
+
+		// Done, now initialize the threads
+		CreateThreads();
+	}
+	else return FALSE;
+
+	SetEvent(OMReady);
+	return TRUE;
+}
+
 // KDMAPI calls
 BOOL StreamHealthCheck() {
 	// If BASS is forbidden from initializing itself, then abort immediately
@@ -291,6 +324,9 @@ BOOL StreamHealthCheck() {
 
 void Supervisor(LPVOID lpV) {
 	try {
+		if (!PrepareDriver())
+			CrashMessage(L"0xDEADDEAD");
+
 		// Check system
 		PrintMessageToDebugLog("StreamWatchdog", "Checking for settings changes or hotkeys...");
 
@@ -330,45 +366,16 @@ void Supervisor(LPVOID lpV) {
 
 BOOL DoStartClient() {
 	if (!DriverInitStatus && !block_bassinit) {
+		// Parse the app name, and start the debug pipe to the debug window
 		PrintMessageToDebugLog("StartDriver", "Checking if app is allowed to use RTSS OSD...");
 		GetAppName();
-
-		PrintMessageToDebugLog("StartDriver", "Initializing driver...");
-
-		// Load the selected driver priority value from the registry
-		OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
-		RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
-
-		// Parse the app name, and start the debug pipe to the debug window
 		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
-
-		// Create an event, to load the default SoundFonts synchronously
-		OMReady = CreateEvent(
-			NULL,               // default security attributes
-			TRUE,               // manual-reset event
-			FALSE,              // initial state is nonsignaled
-			TEXT("OMReady")		// object name
-		);
 
 		// Load the BASS functions
 		LoadBASSFunctions();
 
 		// If BASS is still unavailable, commit suicide
 		if (!BASSLoadedToMemory) CrashMessage(L"NoBASSFound");
-
-		// Load the settings, and allocate the memory for the EVBuffer
-		LoadSettings(FALSE, FALSE);
-
-		// Initialize the BASS output device, and set up the streams
-		if (InitializeBASS(FALSE)) {
-			SetUpStream();
-			LoadSoundFontsToStream();
-
-			// Done, now initialize the threads
-			CreateThreads();
-		}
-
-		SetEvent(OMReady);
 
 		// Create the main thread
 		PrintMessageToDebugLog("StartDriver", "Starting main watchdog thread...");

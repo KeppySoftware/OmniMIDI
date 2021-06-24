@@ -393,7 +393,7 @@ void InitializeBASSVST() {
 	// If the DLL exists, begin the loading process
 	if (PathFileExists(LoudMax)) {
 		// Initialize BASS_VST
-		LoadDriverModule(&BASS_VST, L"bass_vst.dll", FALSE);
+		LoadDriverModule(&BASS_VST, L"bass_vst.dll", FALSE, FALSE);
 
 		// If BASS_VST has been loaded succesfully, load the functions too
 		if (BASS_VST.Lib)
@@ -1005,17 +1005,39 @@ BEGSWITCH:
 				break;
 			}
 
-			if (!COMInit) {
-				if (FAILED(CoInitialize(NULL)))
-					Fail = TRUE;
-				COMInit = TRUE;
+
+			for (int i = 0; i < 5; i++) {
+				if (!COMInit) {
+					if (S_OK != CoInitializeEx(NULL, COINIT_MULTITHREADED))
+					{
+						Fail = TRUE;
+						Sleep(100);
+						continue;
+					}
+
+					Fail = FALSE;
+					COMInit = TRUE;
+					i = 0;
+				}
+
+				if (SndDrv == NULL && !Fail) {
+					SndDrv = create_sound_out_xaudio2();
+					XAFail = SndDrv->open(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.XASPFSweepRate);
+
+					if (XAFail) {
+						delete SndDrv;
+						SndDrv = NULL;
+						Fail = TRUE;
+						Sleep(100);
+						continue;
+					}
+
+					Fail = FALSE;
+				}
+
+				break;
 			}
 
-			if (SndDrv == NULL && !Fail) {
-				SndDrv = create_sound_out_xaudio2();
-				XAFail = SndDrv->open(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.XASPFSweepRate);
-				if (XAFail) Fail = TRUE;
-			}
 
 			if (Fail) {
 				ManagedSettings.CurrentEngine = WASAPI_ENGINE;

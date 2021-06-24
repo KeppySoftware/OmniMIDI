@@ -150,7 +150,7 @@ bool LoadSoundfontStartup() {
 	return FALSE;
 }
 
-void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory) {
+void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory, BOOL Opt) {
 	HMODULE Temp = NULL;
 	PWSTR SysDir = NULL;
 	wchar_t DLLPath[MAX_PATH] = { 0 };
@@ -175,7 +175,7 @@ void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 		}
 
 		if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
-			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s\0", SysDir, RequestedLib);
+			swprintf_s(DLLPath, MAX_PATH, Opt ? L"%s\\OmniMIDI\\opt\\%s\0" : L"%s\\OmniMIDI\\%s\0", SysDir, RequestedLib);
 
 			if (FindFirstFile(DLLPath, &FD) == INVALID_HANDLE_VALUE)
 			{
@@ -230,11 +230,11 @@ VOID LoadBASSFunctions()
 			// Load modules
 			RegQueryValueEx(Configuration.Address, L"FastLibs", NULL, &dwType, (LPBYTE)&ManagedSettings.FastLibs, &dwSize);
 
-			LoadDriverModule(&BASS, ManagedSettings.FastLibs ? L"opt\\bass.dll" : L"bass.dll", TRUE);
-			LoadDriverModule(&BASSMIDI, ManagedSettings.FastLibs ? L"opt\\bassmidi.dll" : L"bassmidi.dll", TRUE);
-			LoadDriverModule(&BASSWASAPI, L"basswasapi.dll", TRUE);
-			LoadDriverModule(&BASSENC, L"bassenc.dll", TRUE);
-			LoadDriverModule(&BASSASIO, L"bassasio.dll", TRUE);
+			LoadDriverModule(&BASS, L"bass.dll", TRUE, ManagedSettings.FastLibs);
+			LoadDriverModule(&BASSMIDI, L"bassmidi.dll", TRUE, ManagedSettings.FastLibs);
+			LoadDriverModule(&BASSWASAPI, L"basswasapi.dll", TRUE, FALSE);
+			LoadDriverModule(&BASSENC, L"bassenc.dll", TRUE, FALSE);
+			LoadDriverModule(&BASSASIO, L"bassasio.dll", TRUE, FALSE);
 
 			PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
 
