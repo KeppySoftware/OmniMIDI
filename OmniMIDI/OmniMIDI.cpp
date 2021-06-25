@@ -680,8 +680,10 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 
 			// Open the driver
 			PrintMessageToDebugLog("MODM_OPEN", "Initializing driver...");
-			DoStartClient();
-			ResetSynth(TRUE);
+			if (!DoStartClient()) {
+				PrintMessageToDebugLog("MODM_OPEN", "The driver failed to initialize.");
+				return MMSYSERR_ERROR;
+			}
 
 			// Tell the app that the driver is ready
 			PrintMessageToDebugLog("MODM_OPEN", "Sending callback data to app. if needed...");

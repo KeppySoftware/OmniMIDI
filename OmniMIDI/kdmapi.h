@@ -262,7 +262,6 @@ BOOL PrepareDriver() {
 	OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
 	RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 
-
 	// Create an event, to load the default SoundFonts synchronously
 	OMReady = CreateEvent(
 		NULL,               // default security attributes
@@ -366,16 +365,20 @@ void Supervisor(LPVOID lpV) {
 
 BOOL DoStartClient() {
 	if (!DriverInitStatus && !block_bassinit) {
+		// Enable the debug log, if the process isn't banned
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
+		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
+		if (ManagedSettings.DebugMode) CreateConsole();
+
 		// Parse the app name, and start the debug pipe to the debug window
 		PrintMessageToDebugLog("StartDriver", "Checking if app is allowed to use RTSS OSD...");
 		GetAppName();
 		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
 
 		// Load the BASS functions
-		LoadBASSFunctions();
-
-		// If BASS is still unavailable, commit suicide
-		if (!BASSLoadedToMemory) CrashMessage(L"NoBASSFound");
+		if (!LoadBASSFunctions())
+			// If BASS is still unavailable, commit suicide
+			CrashMessage(L"NoBASSFound");
 
 		// Create the main thread
 		PrintMessageToDebugLog("StartDriver", "Starting main watchdog thread...");
@@ -475,11 +478,6 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 		AlreadyInitializedViaKDMAPI = TRUE;
 		KDMAPIEnabled = TRUE;
 		EnableBuiltInHandler("KDMAPI_IKS");
-
-		// Enable the debug log, if the process isn't banned
-		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
-		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)& ManagedSettings.DebugMode, &dwSize);
-		if (ManagedSettings.DebugMode) CreateConsole();
 
 		// Start the driver's engine
 		if (!DoStartClient()) {

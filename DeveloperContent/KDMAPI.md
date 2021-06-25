@@ -101,7 +101,7 @@ The driver will work fine with the default WinMM => modMessage system too.<br />
 It'll be slower when playing Black MIDIs, and the latency will also be higher, but it'll work just fine.
 
 ## What functions are available?
-As of May 27th, 2019, these are the functions available in the Keppy's Direct MIDI API.<br />
+As of June 25th, 2021, these are the functions available in the Keppy's Direct MIDI API.<br />
 The **"NoBuf"** calls bypass the built-in buffer in OmniMIDI, and directly send the events to the events processing system.<br />
 All the functions whose name starts with the **"int_"** nomenclature are not supposed to use by developers. They're internal functions used by WinMMWRP.<br />
 ### **InitializeKDMAPIStream**<br />
@@ -266,8 +266,8 @@ KSendCustomEvent = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendCusto
 ```
 <hr />
 
-### **SendDirectData/SendDirectDataNoBuf**
-Allows you to send MIDI events to the driver.<br />
+### **SendDirectData**
+Allows you to send MIDI events to the short events buffer of the driver.<br />
 The available arguments are:
 
 - `DWORD dwMsg`: The MIDI event to send to the driver.
@@ -279,6 +279,22 @@ KShortMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendDirectData")
 	if (res) {
 		printf("Something went wrong, it's supposed to return 0.\nReturned value: %d", res);
 	}
+...
+```
+<hr />
+
+### **SendDirectDataNoBuf**
+Allows you to send MIDI events directly to the driver's MIDI engine, bypassing its buffer.<br />
+Doing so will break the last running status, so you'll have to keep track of the last event yourself.<br />
+It's a MMRESULT function, but it always returns the same value no matter what. *(MMSYSERR_NOERROR)*<br />
+The available arguments are:
+
+- `DWORD dwMsg`: The MIDI event to send to the driver.
+```c
+MMRESULT(WINAPI*KShortMsgNoBuf)(DWORD msg) = 0;
+KShortMsgNoBuf = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendDirectDataNoBuf"); // Or SendDirectDataNoBuf
+...
+	KShortMsgNoBuf(0x0);
 ...
 ```
 <hr />
@@ -336,3 +352,21 @@ KUnprepLongMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "UnprepareLo
 	}
 ...
 ```
+<hr />
+
+### **timeGetTime64**
+A 64-bit version of the timeGetTime function from the Windows Multimedia API.<br />
+It has the same precision, but doesn't rollback after reaching UINT_MAX.<br />
+The available arguments are:
+```c
+DWORD64(WINAPI*TGT64)() = 0;
+TGT64 = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "timeGetTime64");
+...
+	DWORD64 time = TGT64();
+	// Do something with its value... I guess?
+...
+```
+<hr />
+
+### **int_ICF/int_RCF**
+These functions are meant to be used by the Windows Multimedia Wrapper, and serve no purpose for KDMAPI developers.

@@ -221,7 +221,7 @@ void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is already in memory. The HPLUGIN will be a pointer to that address.");
 }
 
-VOID LoadBASSFunctions()
+BOOL LoadBASSFunctions()
 {
 	try {
 		if (!BASSLoadedToMemory) {
@@ -327,6 +327,8 @@ VOID LoadBASSFunctions()
 
 		PrintMessageToDebugLog("ImportBASS", "Setting BASS flag to true.");
 		BASSLoadedToMemory = TRUE;
+
+		return TRUE;
 	}
 	catch (...) {
 		CrashMessage(L"BASSLibLoad");
@@ -497,6 +499,10 @@ void AllocateMemory(BOOL restart) {
 					exit(ERROR_NOT_ENOUGH_MEMORY);
 				}
 			}
+
+			EVBuffer.ReadHead = 0;
+			EVBuffer.WriteHead = 0;
+			memset(EVBuffer.Buffer, 0, sizeof(EVBuffer.Buffer));
 			PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer allocated.");
 		}
 
