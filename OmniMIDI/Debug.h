@@ -947,6 +947,7 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 }
 
 BOOL EnableBuiltInHandler(LPCSTR Stage) {
+#ifndef _DEBUG
 	if (ManagedSettings.DebugMode) {
 		PrintMessageToDebugLog(Stage, "Initializing OmniMIDICrashHandler...");
 		if (NULL == (ExceptionHandler = AddVectoredExceptionHandler(1, OmniMIDICrashHandler))) {
@@ -954,11 +955,13 @@ BOOL EnableBuiltInHandler(LPCSTR Stage) {
 			return FALSE;
 		}
 	}
+#endif
 
 	return TRUE;
 }
 
 BOOL DisableBuiltInHandler(LPCSTR Stage) {
+#ifndef _DEBUG
 	if (ExceptionHandler != nullptr) {
 		PrintMessageToDebugLog(Stage, "Removing OmniMIDICrashHandler...");
 		if (!RemoveVectoredExceptionHandler(ExceptionHandler)) {
@@ -966,6 +969,7 @@ BOOL DisableBuiltInHandler(LPCSTR Stage) {
 			return FALSE;
 		}
 	}
+#endif
 
 	return TRUE;
 }

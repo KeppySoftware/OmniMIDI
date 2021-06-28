@@ -111,7 +111,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 	case DLL_PROCESS_ATTACH:
 	{
 		if (BannedProcesses()) {
-			OutputDebugStringA("Process is banned! Bye!");
+			OutputDebugStringA("Process is banned. OmniMIDI will not load.");
 			return FALSE;
 		}
 
@@ -123,12 +123,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 			NtQuerySystemTime = (NQST)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtQuerySystemTime");
 
 			if (!NtDelayExecution || !NtQuerySystemTime) {
-				OutputDebugStringA("Failed to parse NT functions from NTDLL!\nPress OK to stop the loading process of OmniMIDI.");
+				OutputDebugStringA("Failed to parse NT functions from NTDLL! OmniMIDI will not load.");
 				return FALSE;
 			}
 
 			if (!NT_SUCCESS(NtQuerySystemTime(&TickStart))) {
-				OutputDebugStringA("Failed to parse starting tick through NtQuerySystemTime!\nPress OK to stop the loading process of OmniMIDI.");
+				OutputDebugStringA("Failed to parse starting tick through NtQuerySystemTime! OmniMIDI will not load.");
 				return FALSE;
 			}
 
@@ -180,25 +180,27 @@ LONG WINAPI DriverProc(DWORD dwDriverIdentifier, HANDLE hdrvr, UINT uMsg, LONG l
 		return DRVCNF_OK;
 
 	case DRV_INSTALL:
+		DriverRegistration(NULL, hinst, "RegisterDrv", FALSE);
 		return DRVCNF_OK;
 
 	case DRV_REMOVE:
+		DriverRegistration(NULL, hinst, "UnregisterDrv", FALSE);
 		return DRVCNF_OK;
 	}
 
 	if (!winmm) {
-		winmm = GetModuleHandleA("winmm");
+		winmm = GetModuleHandle(L"winmm");
 		if (!winmm) {
-			winmm = LoadLibraryA("winmm");
+			winmm = LoadLibrary(L"winmm");
 			if (!winmm) {
-				MessageBoxA(NULL, "Failed to load WinMM!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
+				MessageBoxA(NULL, "Failed to load Windows Multimedia API!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
 				return FALSE;
 			}
 		}
 
 		DefDriverProcImp = (DDP)GetProcAddress(winmm, "DefDriverProc");
 		if (!DefDriverProcImp) {
-			MessageBoxA(NULL, "Failed to parse DefDriverProc function from WinMM!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
+			MessageBoxA(NULL, "Failed to parse DefDriverProc function from Windows Multimedia API!\nPress OK to stop the loading process of OmniMIDI.", "OmniMIDI - ERROR", MB_ICONERROR | MB_SYSTEMMODAL);
 			return FALSE;
 		}
 	}
@@ -210,11 +212,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 	// Initialize values
 	static BOOL LoadedOnce = FALSE;
 
-	BOOL DefSynthType = FALSE;
 	DWORD StreamCapable = NULL;
-	WORD Technology = NULL;
-	WORD MID = 0x0000;
-	WORD PID = 0x0000;
 
 	try {
 		PrintMessageToDebugLog("MODM_GETDEVCAPS", "The MIDI app sent a MODM_GETDEVCAPS request to the driver.");
@@ -224,30 +222,10 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"DisableChime", NULL, &dwType, (LPBYTE)&DisableChime, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"PID", NULL, &dwType, (LPBYTE)&PID, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"SynthName", NULL, &SNType, (LPBYTE)&SynthNameW, &SNSize);
-			RegQueryValueEx(Configuration.Address, L"SynthType", NULL, &dwType, (LPBYTE)&SynthType, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"VID", NULL, &dwType, (LPBYTE)&MID, &dwSize);
 
 			// If the debug mode is enabled, and the process isn't banned, create the debug log
 			if (ManagedSettings.DebugMode && BlackListSystem())
 				CreateConsole();
-
-			// If the synth type ID is bigger than the size of the synth types array,
-			// set it automatically to MOD_MIDIPORT
-			DefSynthType = (SynthType < 0 || SynthType >= ((sizeof(SynthNamesTypes) / sizeof(*SynthNamesTypes))));
-			if (SynthType < 0 || SynthType >= ((sizeof(SynthNamesTypes) / sizeof(*SynthNamesTypes))))
-				Technology = MOD_MIDIPORT;
-			// Else, load the requested value
-			else Technology = SynthNamesTypes[SynthType];
-			PrintStreamValueToDebugLog("MODM_GETDEVCAPS", "Technology", Technology);
-
-			// If the synthname length is less than 1, or if it's just a space, use the default name
-			PrintMessageToDebugLog("MODM_GETDEVCAPS", "Checking if SynthNameW is valid...");
-			if (!wcslen(SynthNameW) || (wcslen(SynthNameW) && iswspace(SynthNameW[0]))) {
-				RtlSecureZeroMemory(SynthNameW, sizeof(SynthNameW));
-				wcsncpy(SynthNameW, L"OmniMIDI\0", MAXPNAMELEN);
-			}
 
 			StreamCapable = !(ManagedSettings.DisableCookedPlayer && CPBlacklisted) ? MIDICAPS_STREAM : 0;
 			if (!StreamCapable)
@@ -266,13 +244,13 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 				return MMSYSERR_INVALPARAM;
 
 			MIDIOUTCAPSA MIDICaps;
-
-			wcstombs(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
+			
+			strcpy_s(MIDICaps.szPname, sizeof(MIDICaps.szPname), "OmniMIDI\0");
 			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
 			MIDICaps.wChannelMask = 0xFFFF;
-			MIDICaps.wMid = MID;
-			MIDICaps.wPid = PID;
-			MIDICaps.wTechnology = DefSynthType ? MOD_MIDIPORT : SynthNamesTypes[SynthType];
+			MIDICaps.wMid = 0xFFFF;
+			MIDICaps.wPid = 0x000A;
+			MIDICaps.wTechnology = MOD_MIDIPORT;
 			MIDICaps.wNotes = 0;
 			MIDICaps.wVoices = 0;
 			MIDICaps.vDriverVersion = MAKEWORD(6, 0);
@@ -289,12 +267,12 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 
 			MIDIOUTCAPSW MIDICaps;
 
-			wcsncpy(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
+			wcscpy_s(MIDICaps.szPname, sizeof(MIDICaps.szPname), L"OmniMIDI\0");
 			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
 			MIDICaps.wChannelMask = 0xFFFF;
-			MIDICaps.wMid = MID;
-			MIDICaps.wPid = PID;
-			MIDICaps.wTechnology = DefSynthType ? MOD_MIDIPORT : SynthNamesTypes[SynthType];
+			MIDICaps.wMid = 0xFFFF;
+			MIDICaps.wPid = 0x000A;
+			MIDICaps.wTechnology = MOD_MIDIPORT;
 			MIDICaps.wNotes = 0;
 			MIDICaps.wVoices = 0;
 			MIDICaps.vDriverVersion = MAKEWORD(6, 0);
@@ -311,15 +289,15 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 
 			MIDIOUTCAPS2A MIDICaps;
 
-			wcstombs(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
+			strcpy_s(MIDICaps.szPname, sizeof(MIDICaps.szPname), "OmniMIDI\0");
 			MIDICaps.ManufacturerGuid = OMCLSID;
 			MIDICaps.NameGuid = OMCLSID;
 			MIDICaps.ProductGuid = OMCLSID;
 			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
 			MIDICaps.wChannelMask = 0xFFFF;
-			MIDICaps.wMid = MID;
-			MIDICaps.wPid = PID;
-			MIDICaps.wTechnology = DefSynthType ? MOD_MIDIPORT : SynthNamesTypes[SynthType];
+			MIDICaps.wMid = 0xFFFF;
+			MIDICaps.wPid = 0x000A;
+			MIDICaps.wTechnology = MOD_MIDIPORT;
 			MIDICaps.wNotes = 0;
 			MIDICaps.wVoices = 0;
 			MIDICaps.vDriverVersion = MAKEWORD(6, 0);
@@ -336,15 +314,15 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 
 			MIDIOUTCAPS2W MIDICaps;
 
-			wcsncpy(MIDICaps.szPname, SynthNameW, MAXPNAMELEN);
+			wcscpy_s(MIDICaps.szPname, sizeof(MIDICaps.szPname), L"OmniMIDI\0");
 			MIDICaps.ManufacturerGuid = OMCLSID;
 			MIDICaps.NameGuid = OMCLSID;
 			MIDICaps.ProductGuid = OMCLSID;
 			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
 			MIDICaps.wChannelMask = 0xFFFF;
-			MIDICaps.wMid = MID;
-			MIDICaps.wPid = PID;
-			MIDICaps.wTechnology = DefSynthType ? MOD_MIDIPORT : SynthNamesTypes[SynthType];
+			MIDICaps.wMid = 0xFFFF;
+			MIDICaps.wPid = 0x000A;
+			MIDICaps.wTechnology = MOD_MIDIPORT;
 			MIDICaps.wNotes = 0;
 			MIDICaps.wVoices = 0;
 			MIDICaps.vDriverVersion = MAKEWORD(6, 0);
@@ -353,6 +331,11 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			PrintMessageToDebugLog("MODM_GETDEVCAPS (Unicode, Type 2)", "Done sharing MIDI device caps.");
 
 			break;
+		}
+		default:
+		{
+			PrintMessageToDebugLog("MODM_GETDEVCAPS (Invalid)", "The MIDI app passed a caps pointer, but the pointer didn't match with anything.");
+			return MMSYSERR_INVALPARAM;
 		}
 		}
 

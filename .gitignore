@@ -104,6 +104,7 @@ output/OmniMIDIConfiguratorXP.exe
 Sign WinMM patches.bat
 Sign BASS.bat
 
+output/DBG/
 output/OmniMIDIDebugWindow.exe
 output/OmniMIDIDev.zip
 output/OmniMIDIDriverRegister.exe

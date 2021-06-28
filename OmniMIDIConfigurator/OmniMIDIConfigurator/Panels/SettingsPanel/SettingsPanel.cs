@@ -390,11 +390,6 @@ namespace OmniMIDIConfigurator
             new PitchAndTranspose().ShowDialog();
         }
 
-        private void ChangeSynthMask_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            new MaskSynthAsAnother().ShowDialog();
-        }
-
         private void WinMMSpeedDiag_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new WinMMSpeed().ShowDialog();

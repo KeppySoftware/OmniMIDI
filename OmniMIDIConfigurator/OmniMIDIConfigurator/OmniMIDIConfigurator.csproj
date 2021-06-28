@@ -139,12 +139,6 @@
     <Compile Include="Forms\OM\Secondary\AddToWhichList.designer.cs">
       <DependentUpon>AddToWhichList.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OM\Secondary\MaskSynthAsAnother.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\OM\Secondary\MaskSynthAsAnother.designer.cs">
-      <DependentUpon>MaskSynthAsAnother.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\OM\Secondary\AddProcesses.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -324,9 +318,6 @@
     <EmbeddedResource Include="Forms\OM\Secondary\AddToWhichList.resx">
       <DependentUpon>AddToWhichList.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OM\Secondary\MaskSynthAsAnother.resx">
-      <DependentUpon>MaskSynthAsAnother.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Secondary\AddProcesses.resx">
       <DependentUpon>AddProcesses.cs</DependentUpon>
     </EmbeddedResource>
@@ -338,6 +329,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Secondary\ChangelogWindow.resx">
       <DependentUpon>ChangelogWindow.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
