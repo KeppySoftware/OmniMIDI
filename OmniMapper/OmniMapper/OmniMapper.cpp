@@ -121,7 +121,6 @@ DWORD GiveMapperCaps(MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 
 	switch (capsSize) {
 	case (sizeof(MIDIOUTCAPSA)):
-	case (sizeof(MIDIOUTCAPS2A)):
 	{
 		MIDIOUTCAPSA MIDICapsA;
 		strncpy(MIDICapsA.szPname, SynthNameA, MAXPNAMELEN);
@@ -136,10 +135,39 @@ DWORD GiveMapperCaps(MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 		break;
 	}
 
+	case (sizeof(MIDIOUTCAPS2A)):
+	{
+		MIDIOUTCAPS2A MIDICapsA;
+		strncpy(MIDICapsA.szPname, SynthNameA, MAXPNAMELEN);
+		MIDICapsA.dwSupport = DeviceCapsW[SelectedDevice].dwSupport;
+		MIDICapsA.wChannelMask = DeviceCapsW[SelectedDevice].wChannelMask;
+		MIDICapsA.wMid = DeviceCapsW[SelectedDevice].wMid;
+		MIDICapsA.wPid = DeviceCapsW[SelectedDevice].wPid;
+		MIDICapsA.wTechnology = MOD_MAPPER;
+		MIDICapsA.wVoices = DeviceCapsW[SelectedDevice].wVoices;
+		MIDICapsA.vDriverVersion = DeviceCapsW[SelectedDevice].vDriverVersion;
+		memcpy(capsPtr, &MIDICapsA, min(sizeof(MIDICapsA), capsSize));
+		break;
+	}
+
 	case (sizeof(MIDIOUTCAPSW)):
-	case (sizeof(MIDIOUTCAPS2W)):
 	{
 		MIDIOUTCAPSW MIDICapsW;
+		wcsncpy(MIDICapsW.szPname, SynthNameW, MAXPNAMELEN);
+		MIDICapsW.dwSupport = DeviceCapsW[SelectedDevice].dwSupport;
+		MIDICapsW.wChannelMask = DeviceCapsW[SelectedDevice].wChannelMask;
+		MIDICapsW.wMid = DeviceCapsW[SelectedDevice].wMid;
+		MIDICapsW.wPid = DeviceCapsW[SelectedDevice].wPid;
+		MIDICapsW.wTechnology = MOD_MAPPER;
+		MIDICapsW.wVoices = DeviceCapsW[SelectedDevice].wVoices;
+		MIDICapsW.vDriverVersion = DeviceCapsW[SelectedDevice].vDriverVersion;
+		memcpy(capsPtr, &MIDICapsW, min(sizeof(MIDICapsW), capsSize));
+		break;
+	}
+	
+	case (sizeof(MIDIOUTCAPS2W)):
+	{
+		MIDIOUTCAPS2W MIDICapsW;
 		wcsncpy(MIDICapsW.szPname, SynthNameW, MAXPNAMELEN);
 		MIDICapsW.dwSupport = DeviceCapsW[SelectedDevice].dwSupport;
 		MIDICapsW.wChannelMask = DeviceCapsW[SelectedDevice].wChannelMask;
@@ -158,7 +186,7 @@ DWORD GiveMapperCaps(MIDIOUTCAPS* capsPtr, DWORD capsSize) {
 	return MMSYSERR_NOERROR;
 }
 
-STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
+MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
 	switch (uMsg) {
 	case DRVM_INIT:
 	case DRVM_EXIT:
@@ -169,13 +197,13 @@ STDAPI_(DWORD) modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR
 	case MODM_DATA:
 		return midiOutShortMsg((HMIDIOUT)Target, dwParam1);
 	case MODM_LONGDATA:
-		return midiOutLongMsg((HMIDIOUT)Target, (MIDIHDR*)dwParam1, dwParam2);
+		return midiOutLongMsg((HMIDIOUT)Target, (LPMIDIHDR)dwParam1, dwParam2);
 	case MODM_STRMDATA:
-		return midiStreamOut((HMIDISTRM)Target, (MIDIHDR*)dwParam1, dwParam2);
+		return midiStreamOut((HMIDISTRM)Target, (LPMIDIHDR)dwParam1, dwParam2);
 	case MODM_PREPARE:
-		return midiOutPrepareHeader((HMIDIOUT)Target, (MIDIHDR*)dwParam1, dwParam2);
+		return midiOutPrepareHeader((HMIDIOUT)Target, (LPMIDIHDR)dwParam1, dwParam2);
 	case MODM_UNPREPARE:
-		return midiOutUnprepareHeader((HMIDIOUT)Target, (MIDIHDR*)dwParam1, dwParam2);
+		return midiOutUnprepareHeader((HMIDIOUT)Target, (LPMIDIHDR)dwParam1, dwParam2);
 	case MODM_OPEN:
 		StreamMode = (DWORD)dwParam2 & 0x00000002L;
 		if (StreamMode) return midiStreamOpen((LPHMIDISTRM)&Target, (LPUINT)SelectedDevice, 1, ((MIDIOPENDESC*)dwParam1)->dwCallback, ((MIDIOPENDESC*)dwParam1)->dwInstance, dwParam2);

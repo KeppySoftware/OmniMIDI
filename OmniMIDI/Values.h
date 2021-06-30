@@ -164,7 +164,6 @@ BOOL UnlimitedChannels = 0;			// For KDMAPI
 static sound_out* SndDrv = NULL;
 static float* SndBuf = NULL;
 int SamplesPerFrame = ManagedSettings.XASamplesPerFrame * 2;
-BOOL COMInit = FALSE;
 
 // Settings and debug
 wchar_t ListToLoad[NTFS_MAX_PATH] = { 0 };

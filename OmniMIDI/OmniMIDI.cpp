@@ -384,18 +384,14 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		// Parse the data lol
 		return _PrsData(dwParam1);
 	case MODM_LONGDATA:
-	{
-		LPMIDIHDR MIDIHeader = (LPMIDIHDR)dwParam1;
-
 		// Pass it to a KDMAPI function
-		RetVal = SendDirectLongData(MIDIHeader);
+		RetVal = SendDirectLongData((MIDIHDR*)dwParam1);
 
 		// Tell the app that the buffer has been played
 		DoCallback(MOM_DONE, dwParam1, 0);
 		// if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, dwParam1, 0);
 
 		return RetVal;
-	}
 	case MODM_STRMDATA:
 	{
 		MIDIHDR* MIDIHeader = (MIDIHDR*)dwParam1;
@@ -596,7 +592,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		ResetSynth(FALSE);
 
 		PrintMessageToDebugLog("MODM_RESET", (OMCookedPlayer != nullptr ? "The app requested OmniMIDI to reset CookedPlayer." : "The app sent a reset command."));
-		return (dwUser ? DequeueMIDIHDRs() : MMSYSERR_NOERROR);
+		return (OMCookedMode ? DequeueMIDIHDRs() : MMSYSERR_NOERROR);
 	case MODM_PREPARE:
 	{
 		MIDIHDR* MIDIHeader = (MIDIHDR*)dwParam1;
@@ -651,7 +647,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 				OMMPD->hMidi,
 				OMMPD->dwCallback,
 				OMMPD->dwInstance,
-				dwUser,
+				NULL,
 				(DWORD)dwParam2))
 			{
 				PrintMessageToDebugLog("MODM_OPEN", "InitializeCallbackFeatures failed. Unable to complete MODM_OPEN.");
@@ -683,7 +679,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		return MMSYSERR_NOERROR;
 	}
 	case MODM_CLOSE: {
-		if (PreventInit) DebugResult("MODM_CLOSE", MMSYSERR_ALLOCATED, "The driver has already been initialized. Cannot initialize it twice!");
+		if (PreventInit) DebugResult("MODM_CLOSE", MMSYSERR_ALLOCATED, "The driver is currently being initialized or closed. Wait before closing it again!");
 
 		if (!AlreadyInitializedViaKDMAPI) {
 			// Prevent the app from calling MODM_CLOSE again...
@@ -697,7 +693,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 
 			if (bass_initialized) {
 				PrintMessageToDebugLog("MODM_CLOSE", "Terminating driver...");
-				KillOldCookedPlayer(dwUser);
+				KillOldCookedPlayer();
 				DoStopClient();
 				DisableBuiltInHandler("MODM_CLOSE");
 			}

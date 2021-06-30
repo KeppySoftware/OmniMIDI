@@ -237,7 +237,7 @@ public:
 		device_changed = true;
 	}
 
-	virtual const char* open(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames)
+	virtual unsigned int open(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames)
 	{
 		this->hwnd = hwnd;
 		this->sample_rate = sample_rate;
@@ -261,7 +261,7 @@ public:
 #else
 
 		UINT flags = 0;
-#ifdef _DEBUG
+#ifdef NDEBUG
 		flags = XAUDIO2_DEBUG_ENGINE;
 #endif
 
@@ -274,22 +274,13 @@ public:
 		wfx.wBitsPerSample = floating_point ? 32 : 16;
 		wfx.cbSize = 0;
 #endif
-		HRESULT hr = XAudio2Create(&xaud, 0);
-		if (FAILED(hr)) return "Creating XAudio2 interface";
-		hr = xaud->CreateMasteringVoice(
-			&mVoice,
-			nch,
-			sample_rate,
-			0,
-			NULL,
-			NULL);
-		if (FAILED(hr)) return "Creating XAudio2 mastering voice";
-		hr = xaud->CreateSourceVoice(&sVoice, &wfx, 0, 4.0f, &notify);
-		if (FAILED(hr)) return "Creating XAudio2 source voice";
-		hr = sVoice->Start(0);
-		if (FAILED(hr)) return "Starting XAudio2 voice";
-		hr = sVoice->SetFrequencyRatio((float)1.0f);
-		if (FAILED(hr)) return "Setting XAudio2 voice frequency ratio";
+
+		if (S_OK != CoInitialize(NULL))
+		{
+			CoUninitialize();
+			return 6;
+		}
+
 		device_changed = false;
 		buffered_count = 0;
 		buffer_read_cursor = 0;
@@ -299,9 +290,27 @@ public:
 		samples_in_buffer = new UINT64[num_frames];
 		memset(samples_in_buffer, 0, sizeof(UINT64) * num_frames);
 
+		HRESULT hr = XAudio2Create(&xaud, 0);
+		if (FAILED(hr)) return 1;
+		hr = xaud->CreateMasteringVoice(
+			&mVoice,
+			nch,
+			sample_rate,
+			0,
+			NULL,
+			NULL, 
+			AudioCategory_Media);
+		if (FAILED(hr)) return 2;
+		hr = xaud->CreateSourceVoice(&sVoice, &wfx, 0, 4.0f, &notify);
+		if (FAILED(hr)) return 3;
+		hr = sVoice->Start(0);
+		if (FAILED(hr)) return 4;
+		hr = sVoice->SetFrequencyRatio((float)1.0f);
+		if (FAILED(hr)) return 5;
+
 		this->initialized = true;
 
-		return NULL;
+		return 0;
 	}
 
 	void close()
@@ -328,9 +337,11 @@ public:
 		sample_buffer = NULL;
 		delete[] samples_in_buffer;
 		samples_in_buffer = NULL;
+
+		CoUninitialize();
 	}
 
-	virtual const char* write_frame(void* buffer, unsigned num_samples)
+	virtual unsigned int write_frame(void* buffer, unsigned num_samples)
 	{
 		if (!initialized)
 			return 0;
@@ -350,7 +361,7 @@ public:
 		{
 			if (!--reopen_count)
 			{
-				const char* err = open(hwnd, sample_rate, nch, bytes_per_sample == 4, max_samples_per_frame, num_frames);
+				unsigned int err = open(hwnd, sample_rate, nch, bytes_per_sample == 4, max_samples_per_frame, num_frames);
 				if (err)
 				{
 					reopen_count = 60 * 5;

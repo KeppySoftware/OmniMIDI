@@ -148,7 +148,7 @@ void AudioEngine(LPVOID lpParam) {
 				}
 				case XAUDIO_ENGINE:
 				{
-					if (!SndDrv || !COMInit)
+					if (!SndDrv)
 						break;
 
 					if (ManagedSettings.NotesCatcherWithAudio)
@@ -193,7 +193,7 @@ void AudioEngine(LPVOID lpParam) {
 }
 
 void FastAudioEngine(LPVOID lpParam) {
-	PrintMessageToDebugLog("FastAudioEngine", "Initializing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
+	PrintMessageToDebugLog("AudioEngine", "Initializing fast audio rendering thread...");
 	try {
 		if (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 			do {
@@ -214,7 +214,7 @@ void FastAudioEngine(LPVOID lpParam) {
 				}
 				case XAUDIO_ENGINE:
 				{
-					if (!SndDrv || !COMInit)
+					if (!SndDrv)
 						break;
 
 					if (ManagedSettings.NotesCatcherWithAudio)
@@ -530,10 +530,8 @@ void FreeUpStream() {
 		}
 
 		if (SndDrv) {
-			COMInit = FALSE;
 			delete SndDrv;
 			SndDrv = NULL;
-			CoUninitialize();
 		}
 
 		if (SndBuf)
@@ -994,7 +992,8 @@ BEGSWITCH:
 	// Oh no it's back!
 	case XAUDIO_ENGINE:
 	{
-		const char* XAFail;
+		wchar_t XAMsgStr[512] = { 0 };
+		BOOL ShowErr = TRUE;
 		BOOL Fail = FALSE;
 
 		if (InitializeBASSLibrary()) {
@@ -1005,39 +1004,65 @@ BEGSWITCH:
 				break;
 			}
 
-
 			for (int i = 0; i < 5; i++) {
-				if (!COMInit) {
-					if (S_OK != CoInitializeEx(NULL, COINIT_MULTITHREADED))
-					{
-						Fail = TRUE;
-						Sleep(100);
-						continue;
-					}
+				if (!SndDrv) {
+					PrintMessageToDebugLog("InitializeXAFunc", "Opening XAudio2 stream...");
 
-					Fail = FALSE;
-					COMInit = TRUE;
-					i = 0;
-				}
-
-				if (SndDrv == NULL && !Fail) {
 					SndDrv = create_sound_out_xaudio2();
-					XAFail = SndDrv->open(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.XASPFSweepRate);
+					PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 device has been created.");
 
-					if (XAFail) {
+					DWORD XATmp = SndDrv->open(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.XASPFSweepRate);
+					PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 function has returned. Checking for errors...");
+
+					if (XATmp > 0) {
 						delete SndDrv;
 						SndDrv = NULL;
 						Fail = TRUE;
-						Sleep(100);
+
+						switch (XATmp) {
+						case 1:
+							PrintMessageToDebugLog("InitializeXAFunc", "Creating XAudio2 interface");
+							wsprintf(XAMsgStr, L"An error has occurred while creating the XAudio2 interface.");
+							break;
+						case 2:
+							PrintMessageToDebugLog("InitializeXAFunc", "Creating XAudio2 mastering voice");
+							wsprintf(XAMsgStr, L"An error has occurred while creating the master stream for the XAudio2 interface.");
+							break;
+						case 3:
+							PrintMessageToDebugLog("InitializeXAFunc", "Creating XAudio2 source voice");
+							wsprintf(XAMsgStr, L"An error has occurred while creating the source stream for the XAudio2 interface.");
+							break;
+						case 4:
+							PrintMessageToDebugLog("InitializeXAFunc", "Starting XAudio2 voice");
+							wsprintf(XAMsgStr, L"An error has occurred while starting the XAudio2 stream.");
+							break;
+						case 5:
+							PrintMessageToDebugLog("InitializeXAFunc", "Setting XAudio2 voice frequency ratio");
+							wsprintf(XAMsgStr, L"An error has occurred while setting the frequency ratio of the XAudio2 stream.");
+							break;
+						case 6:
+							PrintMessageToDebugLog("InitializeXAFunc", "COM failed to initialize. Delaying the startup to let COM settle down...");
+							ShowErr = FALSE;
+							Sleep(500);
+							break;
+						default:
+							wsprintf(XAMsgStr, L"Unspecified error.");
+							break;
+						}
+
+						if (ShowErr)
+							MessageBox(NULL, XAMsgStr, L"OmniMIDI - XA ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+
 						continue;
 					}
-
-					Fail = FALSE;
+					else {
+						PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 stream is up and running.");
+						Fail = FALSE;
+					}
 				}
 
 				break;
 			}
-
 
 			if (Fail) {
 				ManagedSettings.CurrentEngine = WASAPI_ENGINE;
@@ -1046,10 +1071,8 @@ BEGSWITCH:
 					delete SndDrv;
 					SndDrv = NULL;
 				}
-				if (COMInit) CoUninitialize();
 				PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 encountered an error!");
-				PrintMessageToDebugLog("InitializeXAFunc", XAFail);
-				MessageBox(NULL, L"XA failed to initialize!\n\nPress OK to fallback to WASAPI.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+				MessageBoxA(NULL, "XAudio2 was unable to initialize.", "OmniMIDI - XA ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 				goto BEGSWITCH;
 			}
 

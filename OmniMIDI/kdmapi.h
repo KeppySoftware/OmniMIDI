@@ -17,6 +17,7 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 // F**k WinMM and Microsoft
 typedef VOID(CALLBACK* WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
 DWORD OMCallbackMode = CALLBACK_NULL | MIDI_IO_PACKED;
+BOOL OMCookedMode = FALSE;
 
 // For callbacks
 void DoCallback(DWORD M, DWORD_PTR P1, DWORD_PTR P2) {
@@ -54,7 +55,7 @@ void DoCallback(DWORD M, DWORD_PTR P1, DWORD_PTR P2) {
 }
 
 // CookedPlayer system
-VOID KillOldCookedPlayer(DWORD_PTR OMU) {
+VOID KillOldCookedPlayer() {
 	if (IsThisThreadActive(CookedThread.ThreadHandle)) {
 		CookedPlayerHasToGo = TRUE;
 		if (WaitForSingleObject(CookedThread.ThreadHandle, INFINITE) == WAIT_OBJECT_0) {
@@ -262,28 +263,21 @@ BOOL PrepareDriver() {
 	OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
 	RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 
-	// Create an event, to load the default SoundFonts synchronously
-	OMReady = CreateEvent(
-		NULL,               // default security attributes
-		TRUE,               // manual-reset event
-		FALSE,              // initial state is nonsignaled
-		TEXT("OMReady")		// object name
-	);
-
 	// Load the settings, and allocate the memory for the EVBuffer
 	LoadSettings(FALSE, FALSE);
 
 	// Initialize the BASS output device, and set up the streams
-	if (InitializeBASS(FALSE)) {
-		SetUpStream();
-		LoadSoundFontsToStream();
+	if (!InitializeBASS(FALSE))
+		return FALSE;
 
-		// Done, now initialize the threads
-		CreateThreads();
-	}
-	else return FALSE;
+	SetUpStream();
+	LoadSoundFontsToStream();
+
+	// Done, now initialize the threads
+	CreateThreads();
 
 	SetEvent(OMReady);
+
 	return TRUE;
 }
 
@@ -365,6 +359,15 @@ void Supervisor(LPVOID lpV) {
 
 BOOL DoStartClient() {
 	if (!DriverInitStatus && !block_bassinit) {
+		// Create an event, to wait for the driver to be ready
+		OMReady = CreateEvent(
+			NULL,               // default security attributes
+			TRUE,               // manual-reset event
+			FALSE,              // initial state is nonsignaled
+			TEXT("OMReady")		// object name
+		);
+
+
 		// Enable the debug log, if the process isn't banned
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
 		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
@@ -573,6 +576,8 @@ BOOL KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI
 
 			PrintMessageToDebugLog("ICF", "Thread is running. The driver is now ready to receive MIDI headers for the CookedPlayer.");
 
+			OMCookedMode = TRUE;
+
 			return TRUE;
 		}
 
@@ -696,7 +701,13 @@ MMRESULT KDMAPI SendDirectLongDataNoBuf(LPSTR MidiHdrData, DWORD MidiHdrDataLen)
 		// Invalid buffer size
 		return DebugResult("SendDirectLongDataNoBuf", MMSYSERR_INVALPARAM, "Invalid value passed for MidiHdrDataLen.");
 
-	BOOL res = SendLongToBASSMIDI(MidiHdrData, MidiHdrDataLen);
+	MIDIHDR mhdr;
+	mhdr.dwFlags |= MHDR_PREPARED;
+	mhdr.lpData = MidiHdrData;
+	mhdr.dwBufferLength = MidiHdrDataLen;
+	mhdr.dwBytesRecorded = MidiHdrDataLen;
+
+	BOOL res = SendLongToBASSMIDI(&mhdr);
 
 	// Tell the app that the buffer has failed to be played
 	if (!res) {
