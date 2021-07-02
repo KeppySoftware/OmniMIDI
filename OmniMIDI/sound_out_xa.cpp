@@ -275,7 +275,7 @@ public:
 		wfx.cbSize = 0;
 #endif
 
-		if (S_OK != CoInitialize(NULL))
+		if (S_OK != CoInitializeEx(NULL, COINIT_MULTITHREADED))
 		{
 			CoUninitialize();
 			return 6;

@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace OmniMIDIConfigurator
@@ -15,16 +8,19 @@ namespace OmniMIDIConfigurator
         public WinMMSpeed()
         {
             InitializeComponent();
+
+            SpeedHackVal.Value = Convert.ToDecimal(Program.SynthSettings.GetValue("WinMMSpeed", "100000000")) / 1000000;
         }
 
-        private void SDTrackBar_Scroll(object sender, EventArgs e)
+        private void DefaultBtn_Click(object sender, EventArgs e)
         {
-            SDVal.Text = String.Format("{0}%", (100.0 / SDTrackBar.Value).ToString("F4"));
+            Program.SynthSettings.SetValue("WinMMSpeed", 100000000, Microsoft.Win32.RegistryValueKind.DWord);
+            SpeedHackVal.Value = Convert.ToDecimal(Program.SynthSettings.GetValue("WinMMSpeed", "100000000")) / 1000000;
         }
 
         private void ReturnOK_Click(object sender, EventArgs e)
         {
-            Program.SynthSettings.SetValue("WinMMSpeed", SDTrackBar.Value, Microsoft.Win32.RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("WinMMSpeed", (int)(SpeedHackVal.Value * (decimal)1000000.0), Microsoft.Win32.RegistryValueKind.DWord);
             Close();
         }
     }

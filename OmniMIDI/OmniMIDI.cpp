@@ -256,7 +256,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			MIDICaps.vDriverVersion = MAKEWORD(6, 0);
 
 			memcpy((LPMIDIOUTCAPSA)capsPtr, &MIDICaps, min(capsSize, sizeof(MIDICaps)));
-			PrintMessageToDebugLog("MODM_GETDEVCAPS (ASCII, Type 1)", "Done sharing MIDI device caps.");
+			PrintMessageToDebugLog("MODM_GETDEVCAPS (ANSI, Type 1)", "Done sharing MIDI device caps.");
 
 			break;
 		}
@@ -303,7 +303,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			MIDICaps.vDriverVersion = MAKEWORD(6, 0);
 
 			memcpy((LPMIDIOUTCAPS2A)capsPtr, &MIDICaps, min(capsSize, sizeof(MIDICaps)));
-			PrintMessageToDebugLog("MODM_GETDEVCAPS (ASCII, Type 2)", "Done sharing MIDI device caps.");
+			PrintMessageToDebugLog("MODM_GETDEVCAPS (ANSI, Type 2)", "Done sharing MIDI device caps.");
 
 			break;
 		}
@@ -407,7 +407,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		{
 			return DebugResult("MODM_STRMDATA", MMSYSERR_INVALPARAM, "The buffer doesn't exist, hasn't been allocated or is not valid.");
 		}
-
+		
 		if (!(MIDIHeader->dwFlags & MHDR_PREPARED))
 			return DebugResult("MODM_STRMDATA", MIDIERR_UNPREPARED, "The buffer is not prepared.");
 
@@ -567,7 +567,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 
 		if (!OMCookedPlayer->Paused) {
 			OMCookedPlayer->Paused = TRUE;
-			ResetSynth(FALSE);
+			ResetSynth(FALSE, FALSE);
 			PrintMessageToDebugLog("MODM_PAUSE", "CookedPlayer is now paused.");
 		}
 
@@ -581,7 +581,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		PrintMessageToDebugLog("MODM_STOP", "The app requested OmniMIDI to stop CookedPlayer.");
 		OMCookedPlayer->Paused = TRUE;
 
-		ResetSynth(FALSE);
+		ResetSynth(FALSE, TRUE);
 		RetVal = DequeueMIDIHDRs();
 
 		if (!RetVal) PrintMessageToDebugLog("MODM_STOP", "CookedPlayer is now stopped.");
@@ -589,7 +589,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 	}
 	case MODM_RESET:
 		// Stop all the current active voices
-		ResetSynth(FALSE);
+		ResetSynth(FALSE, OMCookedMode ? TRUE : FALSE);
 
 		PrintMessageToDebugLog("MODM_RESET", (OMCookedPlayer != nullptr ? "The app requested OmniMIDI to reset CookedPlayer." : "The app sent a reset command."));
 		return (OMCookedMode ? DequeueMIDIHDRs() : MMSYSERR_NOERROR);
@@ -623,7 +623,8 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 	case MODM_SETVOLUME: {
 		// The app isn't allowed to set the volume, everything's fine anyway
 		PrintMessageToDebugLog("MODM_SETVOLUME", "Dummy, the app has no control over the driver's audio output.");
-		return MMSYSERR_NOERROR;
+		// SynthVolume = (int)(10000 + ((*(LONG*)dwParam1) - 65535) * (double)(0 - 10000) / (0 - 65535));
+		return MMSYSERR_NOTSUPPORTED;
 	}
 	case MODM_OPEN:
 	{
@@ -670,13 +671,14 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 
 			PrintMessageToDebugLog("MODM_OPEN", "Everything is fine.");
 			PreventInit = FALSE;
-		}
-		else {
-			PreventInit = FALSE;
-			PrintMessageToDebugLog("MODM_OPEN", "The driver has already been initialized.");
+
+			return MMSYSERR_NOERROR;
 		}
 
-		return MMSYSERR_NOERROR;
+		PreventInit = FALSE;
+		PrintMessageToDebugLog("MODM_OPEN", "The driver has already been initialized.");
+
+		return MMSYSERR_ALLOCATED;
 	}
 	case MODM_CLOSE: {
 		if (PreventInit) DebugResult("MODM_CLOSE", MMSYSERR_ALLOCATED, "The driver is currently being initialized or closed. Wait before closing it again!");
@@ -689,7 +691,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 			block_bassinit = TRUE;
 
 			PrintMessageToDebugLog("MODM_CLOSE", "The app requested the driver to terminate its audio stream.");
-			ResetSynth(TRUE);
+			ResetSynth(TRUE, TRUE);
 
 			if (bass_initialized) {
 				PrintMessageToDebugLog("MODM_CLOSE", "Terminating driver...");

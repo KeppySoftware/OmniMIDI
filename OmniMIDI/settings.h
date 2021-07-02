@@ -3,16 +3,24 @@ OmniMIDI settings loading system
 */
 #pragma once
 
-void ResetSynth(BOOL SwitchingBufferMode) {
+void ResetSynth(BOOL SwitchingBufferMode, BOOL ModeReset) {
 	if (SwitchingBufferMode) {	
 		EVBuffer.ReadHead = 0;
 		EVBuffer.WriteHead = 0;
 		memset(EVBuffer.Buffer, 0, sizeof(EVBuffer.Buffer));
 	}
 
-	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);
-	BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-	BASS_MIDI_StreamEvent(OMStream, 9, MIDI_EVENT_DRUMS, 1);
+	if (ModeReset) {
+		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);
+		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+		BASS_MIDI_StreamEvent(OMStream, 9, MIDI_EVENT_DRUMS, 1);
+	}
+	else {
+		for (int ch = 0; ch < 16; ch++) {
+			BASS_MIDI_StreamEvent(OMStream, ch, MIDI_EVENT_NOTESOFF, NULL);
+			BASS_MIDI_StreamEvent(OMStream, ch, MIDI_EVENT_SOUNDOFF, NULL);
+		}
+	}
 }
 
 void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
@@ -160,8 +168,6 @@ void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory, BOOL
 	if (Target->Lib == nullptr) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No library has been found in memory. The driver will now load the DLL...");
 
-		Target->AppOwnDLL = FALSE;
-
 		// Check if another DLL is already in memory
 		Target->Lib = GetModuleHandle(RequestedLib);
 		PrintLoadedDLLToDebugLog(RequestedLib, "Checking through GetModuleHandle...");
@@ -173,9 +179,11 @@ void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory, BOOL
 			Target->AppOwnDLL = TRUE;
 			return;
 		}
+		else Target->AppOwnDLL = FALSE;
 
 		if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
 			swprintf_s(DLLPath, MAX_PATH, Opt ? L"%s\\OmniMIDI\\opt\\%s\0" : L"%s\\OmniMIDI\\%s\0", SysDir, RequestedLib);
+			CoTaskMemFree(SysDir);
 
 			if (FindFirstFile(DLLPath, &FD) == INVALID_HANDLE_VALUE)
 			{
@@ -190,9 +198,11 @@ void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory, BOOL
 				else PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
 			}
 		}
-		else DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
+		else {
+			CoTaskMemFree(SysDir);
+			DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
+		}
 
-		CoTaskMemFree(SysDir);
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The library is already in memory. The HMODULE will be a pointer to that address.");
 }
@@ -206,6 +216,7 @@ void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 
 		if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
 			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", SysDir, RequestedLib);
+			CoTaskMemFree(SysDir);
 
 			(*Target) = BASS_PluginLoad((char*)&DLLPath, BASS_UNICODE);
 			if (BASS_ErrorGetCode() != 0) {
@@ -214,9 +225,10 @@ void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 			}
 			else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is now in memory.");
 		}
-		else DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
-
-		CoTaskMemFree(SysDir);
+		else {
+			CoTaskMemFree(SysDir);
+			DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
+		}
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is already in memory. The HPLUGIN will be a pointer to that address.");
 }
@@ -346,9 +358,17 @@ VOID UnloadBASSFunctions() {
 			_PlayBufDataChk = DummyPlayBufData;
 			_BMSE = DummyBMSE;
 
-			BASS_PluginFree(bassflac);
-			BASS_PluginFree(basswv);
-			BASS_PluginFree(bassopus);
+			if (!BASS_PluginFree(bassflac))
+				CrashMessage(L"BASS_PluginFree to BASSFLAC");
+			bassflac = NULL;
+
+			if (!BASS_PluginFree(basswv))
+				CrashMessage(L"BASS_PluginFree to BASSWV");
+			basswv = NULL;
+
+			if (!BASS_PluginFree(bassopus))
+				CrashMessage(L"BASS_PluginFree to BASSOPUS");
+			bassopus = NULL;
 
 			if (!BASS.AppOwnDLL)
 			{
@@ -416,11 +436,22 @@ void ResetEVBufferSettings() {
 void FreeUpMemory() {
 	// Free up the memory, since it's not needed or it has to be reinitialized
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing EV buffer...");
-	delete[] EVBuffer.Buffer;
-	EVBuffer.Buffer = NULL;
-	EVBuffer.BufSize = 0;
-	EVBuffer.WriteHead = 0;
-	EVBuffer.ReadHead = 0;
+	if (EVBuffer.Buffer)
+	{
+		delete[] EVBuffer.Buffer;
+		EVBuffer.Buffer = NULL;
+		EVBuffer.BufSize = 0;
+		EVBuffer.WriteHead = 0;
+		EVBuffer.ReadHead = 0;
+	}
+
+	PrintMessageToDebugLog("FreeUpMemoryFunc", "Deleting OMReady handle...");
+	if (OMReady)
+	{
+		CloseHandle(OMReady);
+		OMReady = NULL;
+	}
+
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freed.");
 }
 
@@ -477,7 +508,6 @@ void AllocateMemory(BOOL restart) {
 		}
 
 		// Print the values to the log
-		PrintMessageToDebugLog("AllocateMemoryFunc", "Final EV buffer settings: ");
 		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer size (in amount of DWORDs)", FALSE, TempEvBufferSize);
 		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer division ratio", TRUE, EvBufferMultRatio);
 		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer final size (in bytes, one DWORD is 4 bytes)", FALSE, EvBufferSize * 4);
@@ -537,6 +567,9 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		TEvBufferSize = EvBufferSize,
 		TEvBufferMultRatio = EvBufferMultRatio;
 
+	DWORD
+		TSH = 100000000;
+
 	try {
 		// If the driver is booting up, then return true
 		BOOL IsBootUp = (!RT && !Restart);
@@ -547,6 +580,10 @@ void LoadSettings(BOOL Restart, BOOL RT)
 
 		// These settings should NOT be loaded in real-time
 		if (!RT) {
+			// Load the selected driver priority value from the registry
+			OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
+			RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
+
 			RegQueryValueEx(Configuration.Address, L"AudioBitDepth", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioBitDepth, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"AudioFrequency", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioFrequency, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"AudioOutput", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioOutputReg, &dwSize);
@@ -573,6 +610,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		
 			SamplesPerFrame = ManagedSettings.XASamplesPerFrame * (ManagedSettings.MonoRendering ? 1 : 2);
 		}
+		RegQueryValueEx(Configuration.Address, L"WinMMSpeed", NULL, &dwType, (LPBYTE)&TSH, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"ChannelUpdateLength", NULL, &dwType, (LPBYTE)&ManagedSettings.ChannelUpdateLength, &dwSize);
@@ -611,6 +649,8 @@ void LoadSettings(BOOL Restart, BOOL RT)
 
 		if (!RT) RegSetValueEx(Configuration.Address, L"LiveChanges", 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
 
+		SpeedHack = (double)TSH / 100000000.0;
+
 		// Volume
 		if (TempOV != ManagedSettings.OutputVolume || SettingsManagedByClient) {
 			if (!SettingsManagedByClient) ManagedSettings.OutputVolume = TempOV;
@@ -631,7 +671,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			// It is different, reset the synth
 			// to avoid stuck notes or crashes
 			if (!SettingsManagedByClient) ManagedSettings.DontMissNotes = TempDMN;
-			if (RT) ResetSynth(TRUE);
+			if (RT) ResetSynth(TRUE, FALSE);
 		}
 
 		if (IsBootUp && (HyperMode && !DisableChime)) {
@@ -972,7 +1012,7 @@ void RevbNChor() {
 void ReloadSFList(DWORD whichsflist){
 	try {	
 		if (LoadSoundfont(whichsflist))
-			ResetSynth(FALSE);
+			ResetSynth(FALSE, FALSE);
 	}
 	catch (...) {
 		CrashMessage(L"ReloadListCheck");
@@ -993,7 +1033,7 @@ void KeyShortcuts()
 			ControlPressed = (GetAsyncKeyState(VK_CONTROL) & (1 << 15));
 
 			// Get all keys pressed at the time
-			for (int i = 0; i < 256; i++)
+			for (int i = 0; i < sizeof(Keys); i++)
 				Keys[i] = GetAsyncKeyState(i);
 
 			// Hotkey ALT
@@ -1088,7 +1128,7 @@ void KeyShortcuts()
 			// INSERT
 			if (Keys[VK_INSERT])
 			{
-				ResetSynth(FALSE);
+				ResetSynth(FALSE, Keys[VK_LSHIFT] ? TRUE : FALSE);
 				return;
 			}
 		}

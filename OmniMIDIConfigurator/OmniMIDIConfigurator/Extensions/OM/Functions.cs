@@ -270,6 +270,8 @@ namespace OmniMIDIConfigurator
             foreach (SettingStruct Setting in DefaultSettings.ToArray())
                 Program.SynthSettings.SetValue(Setting.SettingName, Setting.Value, RegistryValueKind.DWord);
 
+            Program.SynthSettings.SetValue("TGTSpeedHack", "1000000000", RegistryValueKind.QWord);
+
             Program.SynthSettings.SetValue("SynthName", "OmniMIDI", RegistryValueKind.String);
             Program.SynthSettings.SetValue("ASIOOutput", "FL Studio ASIO", RegistryValueKind.String);
 

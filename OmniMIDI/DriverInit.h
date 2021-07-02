@@ -499,7 +499,7 @@ void SetUpStream() {
 void FreeUpStream() {
 	if (BASSLoadedToMemory) {
 		// Reset synth
-		ResetSynth(0);
+		ResetSynth(NULL, TRUE);
 
 		// Free up BASSWASAPI before doing anything
 		BASS_WASAPI_Stop(TRUE);

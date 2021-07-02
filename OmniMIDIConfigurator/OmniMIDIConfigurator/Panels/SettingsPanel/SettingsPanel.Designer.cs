@@ -1255,14 +1255,13 @@
             // WinMMSpeedDiag
             // 
             this.WinMMSpeedDiag.AutoSize = true;
-            this.WinMMSpeedDiag.Enabled = false;
             this.WinMMSpeedDiag.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.WinMMSpeedDiag.Location = new System.Drawing.Point(6, 216);
             this.WinMMSpeedDiag.Name = "WinMMSpeedDiag";
-            this.WinMMSpeedDiag.Size = new System.Drawing.Size(338, 13);
+            this.WinMMSpeedDiag.Size = new System.Drawing.Size(250, 13);
             this.WinMMSpeedDiag.TabIndex = 48;
             this.WinMMSpeedDiag.TabStop = true;
-            this.WinMMSpeedDiag.Text = "Change speed of the Windows Multimedia Wrapper (Not yet available)";
+            this.WinMMSpeedDiag.Text = "Change speed of the Windows Multimedia Wrapper";
             this.WinMMSpeedDiag.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WinMMSpeedDiag_LinkClicked);
             // 
             // ShowChangelogUpdate

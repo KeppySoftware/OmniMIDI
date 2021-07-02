@@ -261,7 +261,7 @@ The available arguments are:
 - `DWORD chan`: The target MIDI channel.
 - `DWORD param`: The parameters to send to the driver.
 ```c
-VOID(WINAPI*KSendCustomEvent)(DWORD eventtype, DWORD chan, DWORD param) = 0;
+BOOL(WINAPI*KSendCustomEvent)(DWORD eventtype, DWORD chan, DWORD param) = 0;
 KSendCustomEvent = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendCustomEvent");
 ```
 <hr />

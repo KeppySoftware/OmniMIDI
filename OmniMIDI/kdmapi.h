@@ -259,10 +259,6 @@ void CookedPlayerSystem(CookedPlayer* Player)
 BOOL PrepareDriver() {
 	PrintMessageToDebugLog("StartDriver", "Initializing driver...");
 
-	// Load the selected driver priority value from the registry
-	OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
-	RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
-
 	// Load the settings, and allocate the memory for the EVBuffer
 	LoadSettings(FALSE, FALSE);
 
@@ -360,13 +356,8 @@ void Supervisor(LPVOID lpV) {
 BOOL DoStartClient() {
 	if (!DriverInitStatus && !block_bassinit) {
 		// Create an event, to wait for the driver to be ready
-		OMReady = CreateEvent(
-			NULL,               // default security attributes
-			TRUE,               // manual-reset event
-			FALSE,              // initial state is nonsignaled
-			TEXT("OMReady")		// object name
-		);
-
+		if (!OMReady)
+			OMReady = CreateEvent(NULL, TRUE, FALSE, L"OMReady");
 
 		// Enable the debug log, if the process isn't banned
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
@@ -375,7 +366,6 @@ BOOL DoStartClient() {
 
 		// Parse the app name, and start the debug pipe to the debug window
 		PrintMessageToDebugLog("StartDriver", "Checking if app is allowed to use RTSS OSD...");
-		GetAppName();
 		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
 
 		// Load the BASS functions
@@ -393,7 +383,7 @@ BOOL DoStartClient() {
 		// Wait for the SoundFonts to load, then close the event's handle
 		PrintMessageToDebugLog("StartDriver", "Waiting for the SoundFonts to load...");
 		if (WaitForSingleObject(OMReady, INFINITE) == WAIT_OBJECT_0)
-			CloseHandle(OMReady);
+			ResetEvent(OMReady);
 
 		// Ok, everything's ready, do not open more debug pipes from now on
 		DriverInitStatus = TRUE;
@@ -594,7 +584,8 @@ VOID KDMAPI RunCallbackFunction(DWORD Msg, DWORD_PTR P1, DWORD_PTR P2) {
 
 VOID KDMAPI ResetKDMAPIStream() {
 	// Redundant
-	if (bass_initialized) ResetSynth(FALSE);
+	if (bass_initialized)
+		ResetSynth(FALSE, TRUE);
 }
 
 BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) noexcept {
@@ -614,16 +605,27 @@ MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) noexcept {
 
 MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
-	if (!IIMidiHdr)										// Buffer doesn't exist
+	if (!IIMidiHdr)														// Buffer doesn't exist
 		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
 
-	if (IIMidiHdr->dwBufferLength > LONGMSG_MAXSIZE)	// Buffer is bigger than 64K
+	if (IIMidiHdr->dwBufferLength > LONGMSG_MAXSIZE)					// Buffer is bigger than 64K
 		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "The given stream buffer is greater than 64K.");
 
-	if (IIMidiHdr->dwFlags & MHDR_PREPARED)				// Already prepared, everything is fine
+	if (IIMidiHdr->dwBytesRecorded > IIMidiHdr->dwBufferLength ||	// The recorded buffer is bigger than the actual buffer? How.
+		IIMidiHdr->dwBytesRecorded < 1)								// Buffer is smaller tha one?
+		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "Invalid buffer size passed to dwBytesRecorded.");
+
+	if (IIMidiHdr->dwFlags & MHDR_PREPARED)								// Already prepared, everything is fine
 		return DebugResult("PrepareLongData", MMSYSERR_NOERROR, "The buffer is already prepared.");
 
-	// Mark the buffer as prepared, and say that everything is oki-doki
+	// Lock the buffer
+	if (!VirtualLock(&IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded))	// Unable to lock
+		return DebugResult("PrepareLongData", MMSYSERR_NOMEM, "VirtualLock failed to lock the buffer to the virtual address space. Not enough memory available.");
+	else PrintMessageToDebugLog("PrepareLongData", "Buffer locked to virtual address space.");
+
+	PrintStreamValueToDebugLog("PrepareLongData", "IIMidiHdr Address", (DWORD)IIMidiHdr);
+
+	// Mark the buffer as prepared, and say that everything is hunky-dory
 	PrintMessageToDebugLog("PrepareLongData", "Marking as prepared...");
 	IIMidiHdr->dwFlags |= MHDR_PREPARED;
 
@@ -633,14 +635,33 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 
 MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid
-	if (!IIMidiHdr)								// The buffer doesn't exist, invalid parameter
+	if (!IIMidiHdr)													// Buffer doesn't exist
 		return DebugResult("UnprepareLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
 
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED))	// Already unprepared, everything is fine
-		return DebugResult("UnprepareLongData", MMSYSERR_NOERROR, "The buffer is already unprepared.");
+	if (IIMidiHdr->dwBufferLength > LONGMSG_MAXSIZE)				// Buffer is bigger than 64K
+		return DebugResult("UnprepareLongData", MMSYSERR_INVALPARAM, "The given stream buffer is greater than 64K.");
 
-	if (IIMidiHdr->dwFlags & MHDR_INQUEUE)		// The buffer is currently being played from the driver, cannot unprepare
+	if (IIMidiHdr->dwBytesRecorded > IIMidiHdr->dwBufferLength ||	// The recorded buffer is bigger than the actual buffer? How.
+		IIMidiHdr->dwBytesRecorded < 1)								// Buffer is smaller tha one?
+		return DebugResult("UnprepareLongData", MMSYSERR_INVALPARAM, "Invalid buffer size passed to dwBytesRecorded.");
+
+	if (IIMidiHdr->dwFlags & MHDR_INQUEUE)							// The buffer is currently being played from the driver, cannot unprepare
 		return DebugResult("UnprepareLongData", MIDIERR_STILLPLAYING, "The buffer is still in queue.");
+
+	// Unlock the buffer
+	if (!VirtualUnlock(&IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded))
+	{
+		DWORD e = GetLastError();
+
+		// 0x9E == Buffer already unlocked
+		if (e != 0x9E)
+			// If that's not the error, then something wrong happened
+			CrashMessage(L"VirtualUnlock on long data");
+		else PrintMessageToDebugLog("UnprepareLongData", "The buffer is already unlocked.");
+	}
+	else PrintMessageToDebugLog("UnprepareLongData", "Buffer unlocked from virtual address space.");
+
+	PrintStreamValueToDebugLog("UnprepareLongData", "IIMidiHdr Address", (DWORD)IIMidiHdr);
 
 	// Mark the buffer as unprepared
 	PrintMessageToDebugLog("UnprepareLongData", "Marking as unprepared...");
@@ -650,18 +671,25 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT KDMAPI SendDirectLongData(LPMIDIHDR IIMidiHdr) {
+MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr) {
 	// Check if the MIDIHDR buffer is valid and if the stream is alive
 	while (!bass_initialized)					// The driver isn't ready
-		// return DebugResult("SendDirectLongData", MIDIERR_NOTREADY, "BASS hasn't been initialized yet.");
+		/* return */ DebugResult("SendDirectLongData", MIDIERR_NOTREADY, "BASS hasn't been initialized yet.");
 		// Since some apps don't listen to the MIDIERR_NOTREADY return value,
 		// I'm forced to make OmniMIDI spinlock until BASS is ready. (Thank you VanBasco.)
 		_FWAIT;
 
-	if (!IIMidiHdr)								// The buffer doesn't exist, invalid parameter
+	if (!IIMidiHdr)													// The buffer doesn't exist, invalid parameter
 		return DebugResult("SendDirectLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
 
-	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED))	// The buffer is not prepared
+	if (IIMidiHdr->dwBufferLength > LONGMSG_MAXSIZE)				// Buffer is bigger than 64K
+		return DebugResult("SendDirectLongData", MMSYSERR_INVALPARAM, "The given stream buffer is greater than 64K.");
+
+	if (IIMidiHdr->dwBytesRecorded > IIMidiHdr->dwBufferLength ||	// The recorded buffer is bigger than the actual buffer? How.
+		IIMidiHdr->dwBytesRecorded < 1)								// Buffer is smaller tha one?
+		return DebugResult("SendDirectLongData", MMSYSERR_INVALPARAM, "Invalid buffer size passed to dwBytesRecorded.");
+
+	if (!(IIMidiHdr->dwFlags & MHDR_PREPARED))						// The buffer is not prepared
 		return DebugResult("SendDirectLongData", MIDIERR_UNPREPARED, "The buffer is not prepared");
 
 	// Mark the buffer as in queue
@@ -674,20 +702,6 @@ MMRESULT KDMAPI SendDirectLongData(LPMIDIHDR IIMidiHdr) {
 	// Mark the buffer as done
 	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
 	IIMidiHdr->dwFlags |= MHDR_DONE;
-
-	// Tell the app that the buffer has failed to be played
-	if (!res) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
-
-		sprintf(Msg, "The long buffer (MIDIHDR) sent to OmniMIDI wasn't able to be recognized.\n\nUnrecognized sequence: ");
-
-		for (int i = 0; i < IIMidiHdr->dwBytesRecorded; i++)
-			sprintf(Msg + strlen(Msg), "%02X", (BYTE)(IIMidiHdr->lpData[i]));
-
-		sprintf(Msg + strlen(Msg), "\n");
-
-		return DebugResult("SendDirectLongData", MMSYSERR_INVALPARAM, Msg);
-	}
 
 	return MMSYSERR_NOERROR;
 }
@@ -828,5 +842,5 @@ BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 DWORD64 KDMAPI timeGetTime64() {
 	ULONGLONG CurrentTime;
 	NtQuerySystemTime(&CurrentTime);
-	return (CurrentTime - TickStart) * (1.0 / 10000.0);
+	return ((CurrentTime - TickStart) * (1.0 / 10000.0)) * SpeedHack;
 }

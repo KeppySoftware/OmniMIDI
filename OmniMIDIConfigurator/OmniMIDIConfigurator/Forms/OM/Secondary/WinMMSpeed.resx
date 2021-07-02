@@ -117,4 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Due to popular demand, I decided to integrate a speedhack system inside the Windows Multimedia Wrapper.
+
+Be careful, changing this mid-playback is not recommended.
+It is recommended to either pause/stop before applying the change, or to restart the application altogether.</value>
+  </data>
 </root>

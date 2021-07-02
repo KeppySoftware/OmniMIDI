@@ -93,6 +93,7 @@ static DWORD_PTR OMInstance = NULL;
 
 // Important stuff
 const std::locale UTF8Support(std::locale(), new std::codecvt_utf8<wchar_t>);
+DOUBLE SpeedHack = 1.0;
 BOOL DriverInitStatus = FALSE;
 BOOL AlreadyInitializedViaKDMAPI = FALSE;
 BOOL BASSLoadedToMemory = FALSE;
@@ -294,11 +295,11 @@ NQST NtQuerySystemTime = 0;
 DDP DefDriverProcImp = 0;
 
 // Critical sections but handled by OmniMIDI functions because f**k Windows
-DWORD DummyPlayBufData() { return 0; }
-VOID DummyPrepareForBASSMIDI(DWORD LastRunningStatus, DWORD_PTR dwParam1) { return; }
-MMRESULT DummyParseData(DWORD_PTR dwParam1) { return MIDIERR_NOTREADY; }
-BOOL WINAPI DummyBMSE(HSTREAM handle, DWORD chan, DWORD event, DWORD param) { return FALSE; }
-DWORD CALLBACK DummyProcData(void* buffer, DWORD length, void* user) { return 0; }
+DWORD DummyPlayBufData() noexcept { return 0; };
+VOID DummyPrepareForBASSMIDI(DWORD, DWORD_PTR) noexcept { return; };
+MMRESULT DummyParseData(DWORD_PTR) noexcept { return MMSYSERR_NOERROR; };
+BOOL WINAPI DummyBMSE(HSTREAM, DWORD, DWORD, DWORD) noexcept { return TRUE; };
+DWORD CALLBACK DummyProcData(void*, DWORD, void*) noexcept { return 0; };
 
 // Hyper switch
 BOOL HyperMode = 0;
