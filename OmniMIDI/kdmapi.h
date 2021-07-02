@@ -842,5 +842,5 @@ BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 DWORD64 KDMAPI timeGetTime64() {
 	ULONGLONG CurrentTime;
 	NtQuerySystemTime(&CurrentTime);
-	return ((CurrentTime - TickStart) * (1.0 / 10000.0)) * SpeedHack;
+	return (((CurrentTime) - TickStart) * (SpeedHack / 10000.0));
 }

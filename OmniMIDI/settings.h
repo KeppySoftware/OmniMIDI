@@ -567,8 +567,11 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		TEvBufferSize = EvBufferSize,
 		TEvBufferMultRatio = EvBufferMultRatio;
 
+	DOUBLE
+		TSpeedHack = SpeedHack;
+
 	DWORD
-		TSH = 100000000;
+		RSH = 100000000;
 
 	try {
 		// If the driver is booting up, then return true
@@ -610,7 +613,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		
 			SamplesPerFrame = ManagedSettings.XASamplesPerFrame * (ManagedSettings.MonoRendering ? 1 : 2);
 		}
-		RegQueryValueEx(Configuration.Address, L"WinMMSpeed", NULL, &dwType, (LPBYTE)&TSH, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"WinMMSpeed", NULL, &dwType, (LPBYTE)&RSH, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"ChannelUpdateLength", NULL, &dwType, (LPBYTE)&ManagedSettings.ChannelUpdateLength, &dwSize);
@@ -649,7 +652,14 @@ void LoadSettings(BOOL Restart, BOOL RT)
 
 		if (!RT) RegSetValueEx(Configuration.Address, L"LiveChanges", 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
 
-		SpeedHack = (double)TSH / 100000000.0;
+		TSpeedHack = (double)RSH / 100000000.0;
+
+		if (TSpeedHack != SpeedHack) {
+			if (NT_SUCCESS(NtQuerySystemTime(&TickStart))) {
+				PrintMessageToDebugLog("LoadSettingsFuncs", "SpeedHack updated.");
+			}
+			SpeedHack = TSpeedHack;
+		}
 
 		// Volume
 		if (TempOV != ManagedSettings.OutputVolume || SettingsManagedByClient) {
