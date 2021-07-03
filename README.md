@@ -55,38 +55,11 @@ Here's a list of applications that currently have *native* support for the Keppy
 ### Can you make a WinMM patch for other drivers too?
 There's a patch available for VirtualMIDISynth. You can get it here: https://github.com/KeppySoftware/WinMMWRP/releases/tag/4.2A
 
-## Reviews
-### [Gingeas](https://www.youtube.com/user/gingeas), famous YouTuber who uploads Black MIDI videos:
-_"Extremely high utility driver.<br />
-I believe that you can make good audio with any driver (even TiMidity and BASSMIDI), but the driver changes the effort needed.<br />
-I could spend 30 min - 2 hours making perfect audio in BASSMIDI that can be done with OmniMIDI in maybe 5 - 20 minutes due to its streamlined efficiency as well as its tools.<br />
-Even though OmniMIDI by far has the highest performance out of all drivers I've used, the big selling point to the synth is the utility from its tools, such as the debug window and the SoundFont manager system."_
-
-### [Frozen Snow](https://www.youtube.com/user/WeimTime007), Professional Composer and Arranger for animation, games and video:
-_"A one of a kind workflow enhancing, lightweight and feature packed synthesizer that helps me focus on creativity.<br />
-<br />
-On the surface, this synthesizer is a fantastic performer for beginners and the more demanding users. It allows for fast Black MIDI and Transcription playback with High Quality Soundfonts. However, delving deeper, as a content creator, who works with MIDI data a lot, on a deadline, you'll find that this is more than your average synth. Allow me to explain why.<br />
-<br />
-Having something that can help me focus on creating without having to switch outputs constantly is really important. especially when you work with multiple instances of various DAWs and sometimes a MIDI player all at the same time.
-My workflow usually consists of routing all my MIDI channels to plugin VSTs; for handling MIDI events like mod wheel etc better. Having big sample libraries and VSTs can sometimes take a big chunk out of my time, which slows me down. Having a sound ready to go from that MIDI channel, on a per app basis, with different soundfonts to suit my particular need for that program, may it be Black MIDI, Orchestrations or other, with the efficiency and quality that this synth has, is crucial.<br />
-<br />
-The aforementioned alone, I'd pay gold for. But to top it all off, there's some awesome additional features such as output to WAV, selecting output devices like the ASIO of my audio interface and changing the voice count on the fly directly within its settings, while not requiring an app to close, nor a restart is amazing. The low latency that gets introduced on some VSTs, is nonexistent between not one but all my programs and my devices.<br />
-<br />
-Take all of that, and you get a synthesizer that's a powerhouse for creative freedom allowing me to get my work out to my clients without the hustle of feeling burdened. It's the fastest performing and most feature packed of them all. In fact, I can't get it out of my current workflow at this point anymore, it's a must have for any creator who requires a tool that can aid in compositions, while also packing a bucket load of extra stuff.  Whenever it's simple MIDI playback or full-fledged composing, this synth pulls it off."_
-
-## Info about the driver
-### Features compared to other software synthesizers
-Click here: [Features compared to other software synthesizers](#features-compared-to-other-software-synthesizers)
-
-### Required software for it to work
-You need this software installed before attempting to run the setup:
-- [Microsoft .NET Framework 4.5.2](https://www.microsoft.com/net/download/dotnet-framework-runtime/net452)
-
 ### Minimum system requirements for MIDI playback on x86/x64 systems
 The minimum requirements for this synthesizer to work are the following:
-- A x86 CPU running at 1GHz *(With at least MMX support)*
-- 256MB of RAM
-- Intel AC'97 capable controller or better
+- A x86 CPU running at 1GHz
+- 512MB of RAM
+- DirectX 9 capable sound card or better
 - Windows Vista SP2 or greater *(Server versions are supported too)*
 
 ### Minimum system requirements for MIDI playback on ARM64 systems
@@ -98,43 +71,23 @@ The minimum requirements for this synthesizer to work are the following:
 
 ### Recommended system requirements for studio environments
 For the best experience, it's recommended to run the synthesizer on a PC with the following specifications:
-- An hexa-core CPU running at 2.4GHz *(With AVX support)*
-- 16GB of RAM
+- An octa-core CPU running at 3GHz *(With AVX support)*
+- 32GB of RAM
 - Native Instruments Komplete Audio 6 or another dedicated ASIO-capable hardware interface
-- Windows 10 Pro for Workstations
+- Windows 10 Pro
 - OmniMapper and Windows Multimedia Wrapper for DAWs _(Both included in the driver's configurator, for easy installation)_
 
 ### Requirements for compiling the source code
 To compile (and test) the synthesizer, you need:
 - Microsoft Visual Studio 2019
-- Inno Setup 6.0.3 (It's recommended to install Inno Script Studio and the Inno Setup Pack)
+- Inno Setup 6.x (It's recommended to install Inno Script Studio and the Inno Setup Pack)
 - Inno Downloader Plugin
-- Microsoft Windows SDK 10.0.18362
+- Microsoft Windows SDK 10.0.19041
 
 ## ASIO support details
 You can read the lists here: [OmniMIDIASIOSupportList folder on GitHub](https://github.com/KeppySoftware/OmniMIDI/tree/master/OmniMIDIASIOSupportList)
 <br />
 **WARNING**: Since I can not test all the ASIO devices available on the market (Mainly because they're not cheap), if you have one, please... Test it with OmniMIDI, then send me an e-mail about it to [kaleidonkep99@outlook.com](mailto:kaleidonkep99@outlook.com).
-
-### Features compared to other software synthesizers
-:pencil:|OmniMIDI|VirtualMIDISynth 1.x|VirtualMIDISynth 2.x|BASSMIDI Driver
-------------|-------------|-------------|-------------|-------------
-Easy-to-use configurator|✔️|✔️|✔️|❌
-Smaller memory footprint|✔️|❌|❌|❌
-First driver to support Windows ARM64|✔️|❌|❌|❌
-Support for Windows XP|❌|✔️|✔️|✔️
-Support for MIDI Stream API|✔️|❌|❌|❌
-Suitable for day-to-day<br />music playback|✔️<span>*</span>|✔️|✔️|✔️
-Suitable for professional<br />music production|✔️|❌|❌|❌
-Mixer for easy volume<br />changes per MIDI channel|✔️|✔️|✔️|❌
-Ability to change <br />channel instruments|✔️|❌|❌|❌
-Real-time debug information<br />about the audio stream|✔️|❌|✔️|❌
-Only one MIDI out port<br />with multiple SoundFont lists|✔️|❌|❌|❌
-User has full<br />control over the audio<br />stream|✔️|❌|❌|❌
-Updatable without<br />admin permissions|✔️|❌|❌|❌
-Uses a separate process<br />for audio rendering|❌|❌|✔️|❌
-Able to achieve extremely<br />low latencies|✔️|❌|❌|⚠️
-Wide choice of audio engines,<br />from DirectSound to WASAPI|✔️|❌|❌|⚠️
 
 <p align="center">
   ✔️: Supported<br />
