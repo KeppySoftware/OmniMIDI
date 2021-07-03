@@ -35,11 +35,6 @@ I've seen newbies getting angry at me after changing one settings, complaining t
 If you want something easy to use, I strongly recommend [VirtualMIDISynth 2.x](http://coolsoft.altervista.org/en/virtualmidisynth) by Claudio Nicora.<br />
 His driver is definitely more stable than mine, and it's easier to use too. Go check it out.
 
-### How can I get rid of the annoying SmartScreen block screen and stop Chrome from warning me not to download your driver?
-You can install my self-signed certificate by using the two files here: https://github.com/KeppySoftware/OmniMIDI/tree/master/installcert<br />
-I made the sign myself, no one has the original key except me. So you can trust add it to your trusted certificates by using the small installcert.exe utility.<br />
-Make sure that KeppyCert.cer is in the same folder as InstallCert.exe.
-
 ### Can I use your program's source code for my program?
 Sure, as long as you follow the [LICENSE](LICENSE.txt).
 
