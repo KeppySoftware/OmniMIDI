@@ -43,9 +43,10 @@ You can access the Keppy's Direct MIDI API from here: [Keppy's Direct MIDI API D
 You can also access the source code for the Windows Multimedia Wrapper here: [WinMMWRP on GitHub](https://github.com/KeppySoftware/WinMMWRP)
 
 Here's a list of applications that currently have *native* support for the Keppy's Direct MIDI API:
-- mmidi by Sono, the first third-party project to feature my API at all: [https://sono.9net.org/prog/mmidi/](https://sono.9net.org/prog/mmidi/)
-- Ultralight MIDI Player by Pipiramine, a clone of Piano From Above made in Java: https://pipiraworld.web.fc2.com/ump/en.html
-- Zenith by Arduano, a multipurpose MIDI render with different graphic styles: https://arduano.github.io/Zenith-MIDI/start
+- mmidi by Sono, the first third-party project to feature my API at all: _N/A_
+- Chikara by Kaydax, a PFA clone that uses Vulkan, and aims to be the best performing MIDI player available: https://github.com/Kaydax/Chikara
+- Kiva by Arduano, a multipurpose MIDI player with different graphic styles: https://github.com/arduano/Kiva
+- Zenith by Arduano, a multipurpose MIDI render with different graphic styles: https://arduano.github.io/Zenith-MIDI/
 
 ### Can you make a WinMM patch for other drivers too?
 There's a patch available for VirtualMIDISynth. You can get it here: https://github.com/KeppySoftware/WinMMWRP/releases/tag/4.2A
