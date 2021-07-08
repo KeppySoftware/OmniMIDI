@@ -102,7 +102,6 @@ BOOL DisableChime = FALSE;
 BOOL KDMAPIEnabled = FALSE;
 BOOL IsKDMAPIViaWinMM = FALSE;
 BOOL HostSessionMode = FALSE;
-WCHAR SynthNameW[MAXPNAMELEN];		// Synthesizer name
 
 // Stream
 BASS_INFO info;
@@ -123,7 +122,6 @@ RegKey MainKey, Configuration, Channels, ChanOverride, SFDynamicLoader;
 DWORD Blank = NULL;
 DWORD dwType = REG_DWORD, dwSize = sizeof(DWORD);
 DWORD qwType = REG_QWORD, qwSize = sizeof(QWORD);
-DWORD SNType = REG_SZ, SNSize = sizeof(SynthNameW);
 
 // Threads
 typedef struct Thread

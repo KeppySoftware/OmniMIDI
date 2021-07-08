@@ -313,7 +313,7 @@ public:
 		return 0;
 	}
 
-	void close()
+	virtual void close()
 	{
 		if (sVoice) {
 			if (!paused) {

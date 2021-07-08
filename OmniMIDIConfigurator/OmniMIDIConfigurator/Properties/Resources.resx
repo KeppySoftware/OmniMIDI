@@ -154,6 +154,9 @@
   <data name="infoicon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\icons\infoicon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="LICENSE" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\..\LICENSE.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
+  </data>
   <data name="LoudMax32" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\loudmax\loudmax32.dll;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

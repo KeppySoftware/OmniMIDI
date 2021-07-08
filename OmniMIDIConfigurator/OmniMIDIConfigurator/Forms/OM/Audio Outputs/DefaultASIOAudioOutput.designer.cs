@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DefaultASIOAudioOutput));
             this.Quit = new System.Windows.Forms.Button();
             this.DefOut = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -45,7 +47,8 @@
             this.OutputsLab = new System.Windows.Forms.Label();
             this.InputsLab = new System.Windows.Forms.Label();
             this.DeviceNameLab = new System.Windows.Forms.Label();
-            this.ASIOSeparateThread = new System.Windows.Forms.CheckBox();
+            this.ASIODirectFeed = new System.Windows.Forms.CheckBox();
+            this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
             this.LatencyWarning = new OmniMIDIConfigurator.LinkLabelEx();
             this.ASIODevicesSupport = new OmniMIDIConfigurator.LinkLabelEx();
             this.InfoGroupBox.SuspendLayout();
@@ -224,19 +227,22 @@
             this.DeviceNameLab.TabIndex = 0;
             this.DeviceNameLab.Text = "Device name:";
             // 
-            // ASIOSeparateThread
+            // ASIODirectFeed
             // 
-            this.ASIOSeparateThread.AutoSize = true;
-            this.ASIOSeparateThread.Checked = true;
-            this.ASIOSeparateThread.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ASIOSeparateThread.Enabled = false;
-            this.ASIOSeparateThread.Location = new System.Drawing.Point(95, 38);
-            this.ASIOSeparateThread.Name = "ASIOSeparateThread";
-            this.ASIOSeparateThread.Size = new System.Drawing.Size(200, 17);
-            this.ASIOSeparateThread.TabIndex = 14;
-            this.ASIOSeparateThread.Text = "Run ASIO driver in a separate thread";
-            this.ASIOSeparateThread.UseVisualStyleBackColor = true;
-            this.ASIOSeparateThread.CheckedChanged += new System.EventHandler(this.ASIOSeparateThread_CheckedChanged);
+            this.ASIODirectFeed.AutoSize = true;
+            this.ASIODirectFeed.Location = new System.Drawing.Point(95, 38);
+            this.ASIODirectFeed.Name = "ASIODirectFeed";
+            this.ASIODirectFeed.Size = new System.Drawing.Size(301, 17);
+            this.ASIODirectFeed.TabIndex = 14;
+            this.ASIODirectFeed.Text = "Make ASIO feed itself off of the audio stream automatically";
+            this.ButtonsDesc.SetToolTip(this.ASIODirectFeed, resources.GetString("ASIODirectFeed.ToolTip"));
+            this.ASIODirectFeed.UseVisualStyleBackColor = true;
+            this.ASIODirectFeed.CheckedChanged += new System.EventHandler(this.ASIODirectFeed_CheckedChanged);
+            // 
+            // ButtonsDesc
+            // 
+            this.ButtonsDesc.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ButtonsDesc.ToolTipTitle = "Information";
             // 
             // LatencyWarning
             // 
@@ -273,7 +279,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(518, 251);
             this.Controls.Add(this.LatencyWarning);
-            this.Controls.Add(this.ASIOSeparateThread);
+            this.Controls.Add(this.ASIODirectFeed);
             this.Controls.Add(this.InfoGroupBox);
             this.Controls.Add(this.ASIODevicesSupport);
             this.Controls.Add(this.MaxThreads);
@@ -319,7 +325,8 @@
         private System.Windows.Forms.Label OutputsLab;
         private System.Windows.Forms.Label InputsLab;
         private System.Windows.Forms.Label DeviceNameLab;
-        private System.Windows.Forms.CheckBox ASIOSeparateThread;
+        private System.Windows.Forms.CheckBox ASIODirectFeed;
         private OmniMIDIConfigurator.LinkLabelEx LatencyWarning;
+        private System.Windows.Forms.ToolTip ButtonsDesc;
     }
 }

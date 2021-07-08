@@ -123,11 +123,6 @@
   <metadata name="Requirements.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>137, 17</value>
   </metadata>
-  <data name="BMLibs.ToolTip" xml:space="preserve">
-    <value>The Black MIDI optimized libraries are based around old versions of BASS and BASSMIDI.
-Using older versions of the libraries could lead to some audio issues (Some MIDI rendering fixes might not be present)
-and crashes if some features aren't supported.</value>
-  </data>
   <metadata name="VolTrackBarMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>264, 17</value>
   </metadata>

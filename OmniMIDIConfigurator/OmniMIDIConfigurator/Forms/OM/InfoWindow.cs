@@ -21,13 +21,12 @@ namespace OmniMIDIConfigurator
     public partial class InfoWindow : Form
     {
         private ToolTip DynamicToolTip = new ToolTip();
-        private String LicensePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI\\LICENSE.TXT";
         private RegistryKey WVerKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
         private FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\OmniMIDI.dll");
         private FileVersionInfo BASS = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\bass.dll");
         private FileVersionInfo BASSMIDI = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\bassmidi.dll");
-        private FileVersionInfo OBASS = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\opt\\bass.dll");
-        private FileVersionInfo OBASSMIDI = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\opt\\bassmidi.dll");
+        // private FileVersionInfo OBASS = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\opt\\bass.dll");
+        // private FileVersionInfo OBASSMIDI = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\opt\\bassmidi.dll");
 
         private string ReturnDriverAssemblyVersion(String Component, String Type, Int32[] VI)
         {
@@ -63,17 +62,19 @@ namespace OmniMIDIConfigurator
                 new int[] { BASSMIDI.FileMajorPart, BASSMIDI.FileMinorPart, BASSMIDI.FileBuildPart, BASSMIDI.FilePrivatePart }
                 );
 
-            LibsToolTip.SetToolTip(BASSVer, ReturnDriverAssemblyVersion(
+            /* 
+             LibsToolTip.SetToolTip(BASSVer, ReturnDriverAssemblyVersion(
                 null,
                 "U",
                 new int[] { OBASS.FileMajorPart, OBASS.FileMinorPart, OBASS.FileBuildPart, OBASS.FilePrivatePart }
                 ));
 
-            LibsToolTip.SetToolTip(BASSMIDIVer, ReturnDriverAssemblyVersion(
+             LibsToolTip.SetToolTip(BASSMIDIVer, ReturnDriverAssemblyVersion(
                 null,
                 "U",
                 new int[] { OBASSMIDI.FileMajorPart, OBASSMIDI.FileMinorPart, OBASSMIDI.FileBuildPart, OBASSMIDI.FilePrivatePart }
                 ));
+            */
 
             int[] KDMAPIVerRef = { 0, 0, 0, 0 };
             if (KDMAPI.ReturnKDMAPIVer(ref KDMAPIVerRef[0], ref KDMAPIVerRef[1], ref KDMAPIVerRef[2], ref KDMAPIVerRef[3]) != 0)
@@ -182,8 +183,7 @@ namespace OmniMIDIConfigurator
 
         private void OMLicense_Click(object sender, EventArgs e)
         {
-            String License = File.ReadAllText(LicensePath, Encoding.UTF8);
-            new TextReader("License", License).ShowDialog();
+            new TextReader("License", Properties.Resources.LICENSE).ShowDialog();
         }
 
         private void ChangeBranch_Click(object sender, EventArgs e)

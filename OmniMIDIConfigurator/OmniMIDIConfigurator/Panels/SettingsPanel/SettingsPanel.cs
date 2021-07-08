@@ -151,7 +151,7 @@ namespace OmniMIDIConfigurator
                 catch { PrioBox.SelectedIndex = 0; }
 
 
-                 DisableChime.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("DisableChime", 0));
+                DisableChime.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("DisableChime", 0));
                 LiveChangesTrigger.Checked = Properties.Settings.Default.LiveChanges;
 
                 VolumeBoost.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("VolumeBoost", 0));
@@ -176,7 +176,6 @@ namespace OmniMIDIConfigurator
                 SlowDownPlayback.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("DontMissNotes", 0));
                 KSDAPIBox.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("KDMAPIEnabled", 1));
                 HMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("HyperPlayback", 0));
-                BMLibs.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("FastLibs", 0));
                 OldBuff.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("NotesCatcherWithAudio", 0));
 
                 ReverbV.Value = Functions.Between0And127(Convert.ToInt32(Program.SynthSettings.GetValue("Reverb", 64)));
@@ -282,7 +281,6 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("DontMissNotes", Convert.ToInt32(SlowDownPlayback.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("KDMAPIEnabled", Convert.ToInt32(KSDAPIBox.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("HyperPlayback", Convert.ToInt32(HMode.Checked), RegistryValueKind.DWord);
-            Program.SynthSettings.SetValue("FastLibs", Convert.ToInt32(BMLibs.Checked), RegistryValueKind.DWord);
 
             Program.SynthSettings.SetValue("Reverb", ReverbV.Value, RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("Chorus", ChorusV.Value, RegistryValueKind.DWord);
@@ -412,7 +410,7 @@ namespace OmniMIDIConfigurator
                 0,
                 "Info",
                 "If you uncheck this option, some apps might be forced to fallback to the stock Windows Multimedia API, which increases latency." +
-                "\nKeep in mind that not all KDMAPI-ready apps do check for this value, and they might use it whether you want them to or not." +
+                "\nApps that only make use of the Keppy's Direct MIDI API, with no Windows Multimedia API fallback, will probably ignore this setting." +
                 "\n\n(This value will not affect the Windows Multimedia Wrapper.)",
                 null);
         }

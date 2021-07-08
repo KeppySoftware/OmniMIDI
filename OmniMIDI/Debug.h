@@ -13,7 +13,7 @@ static BOOL IntroAlreadyShown = FALSE;
 static BOOL InfoAlreadyGot = FALSE;
 
 double GetThreadUsage(Thread* Thread) {
-	if (!(WaitForSingleObject(Thread->ThreadHandle, 0) != WAIT_OBJECT_0)) return 0.0;
+	if (WaitForSingleObject(Thread->ThreadHandle, 0) == WAIT_OBJECT_0) return 0.0;
 
 	SYSTEM_INFO sysInfo;
 	FILETIME ftime, fsys, fuser;

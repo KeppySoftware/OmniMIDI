@@ -37,7 +37,6 @@ DWORD WINAPI DebugParser(Thread* DPThread) {
 void TerminateThread(Thread* thread, BOOL T, DWORD excode) {
 	CloseHandle(thread->ThreadHandle);
 	thread->ThreadHandle = nullptr;
-	thread->ThreadAddress = 0;
 	if (T) _endthreadex(excode);
 }
 
@@ -118,34 +117,26 @@ void FastEventsProcesser(LPVOID lpV) {
 }
 
 void InitializeEventsProcesserThreads() {
+	if (ManagedSettings.NotesCatcherWithAudio) return;
+
 	// If the EventProcesser thread is not valid, then open a new one
-	if (!ManagedSettings.NotesCatcherWithAudio && !EPThread.ThreadHandle) {
-		EPThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastEventsProcesser : EventsProcesser), (void*)1, 0, &EPThread.ThreadAddress);
+	if (!EPThread.ThreadHandle) {
+		EPThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastEventsProcesser : EventsProcesser), 0, 0, &EPThread.ThreadAddress);
 		SetThreadPriority(EPThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
+		PrintMessageToDebugLog("InitializeEventsProcesserThreads", "Done!");
 	}
 }
 
 void AudioEngine(LPVOID lpParam) {
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	try {
-		if (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
+		if (ManagedSettings.ASIODirectFeed || ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 			do {
 				// Check if HyperMode has been disabled
 				if (HyperMode) break;
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
-				case AUDTOWAV:
-				{
-					// Parse some notes for the WAV mode
-					SetNoteValuesFromSettings();
-					_PlayBufDataChk();
-
-					QWORD len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
-					BASS_ChannelGetData(OMStream, SndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
-					BASS_Encode_Write(OMStream, SndBuf, len);
-					continue;
-				}
 				case XAUDIO_ENGINE:
 				{
 					if (!SndDrv)
@@ -162,6 +153,27 @@ void AudioEngine(LPVOID lpParam) {
 						SndDrv->write_frame(SndBuf, len / sizeof(float));
 
 					break;
+				}
+				case ASIO_ENGINE:
+				{
+					if (ManagedSettings.NotesCatcherWithAudio)
+					{
+						SetNoteValuesFromSettings();
+						_PlayBufDataChk();
+					}
+
+					break;
+				}
+				case AUDTOWAV:
+				{
+					// Parse some notes for the WAV mode
+					SetNoteValuesFromSettings();
+					_PlayBufDataChk();
+
+					QWORD len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
+					BASS_ChannelGetData(OMStream, SndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
+					BASS_Encode_Write(OMStream, SndBuf, len);
+					continue;
 				}
 				case OLD_WASAPI:
 				case DXAUDIO_ENGINE:
@@ -195,23 +207,13 @@ void AudioEngine(LPVOID lpParam) {
 void FastAudioEngine(LPVOID lpParam) {
 	PrintMessageToDebugLog("AudioEngine", "Initializing fast audio rendering thread...");
 	try {
-		if (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
+		if (ManagedSettings.ASIODirectFeed || ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 			do {
 				// Check if HyperMode has been disabled
 				if (!HyperMode) break;
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
-				case AUDTOWAV:
-				{
-					// Parse some notes for the WAV mode
-					_PlayBufDataChk();
-
-					QWORD len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
-					BASS_ChannelGetData(OMStream, SndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
-					BASS_Encode_Write(OMStream, SndBuf, len);
-					continue;
-				}
 				case XAUDIO_ENGINE:
 				{
 					if (!SndDrv)
@@ -225,6 +227,23 @@ void FastAudioEngine(LPVOID lpParam) {
 						SndDrv->write_frame(SndBuf, len / sizeof(float));
 
 					break;
+				}
+				case ASIO_ENGINE:
+				{
+					if (ManagedSettings.NotesCatcherWithAudio)
+						_PlayBufDataChk();
+
+					break;
+				}
+				case AUDTOWAV:
+				{
+					// Parse some notes for the WAV mode
+					_PlayBufDataChk();
+
+					QWORD len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
+					BASS_ChannelGetData(OMStream, SndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
+					BASS_Encode_Write(OMStream, SndBuf, len);
+					continue;
 				}
 				case OLD_WASAPI:
 				case DXAUDIO_ENGINE:
@@ -306,7 +325,6 @@ void CheckIfThreadClosed(Thread* thread) {
 		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It is! I'm now waiting for it to stop...");
 
 		WaitForSingleObject(thread, INFINITE);
-		thread->ThreadAddress = NULL;
 		thread->ThreadHandle = NULL;
 
 		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It stopped! Starting thread again...");
@@ -347,7 +365,7 @@ void CreateThreads() {
 	PrintMessageToDebugLog("CreateThreadsFunc", "Creating threads...");
 
 	// Check if the current engine is ASIO or WASAPI
-	if (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
+	if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 		// It's not, we need a separate thread to render the audio
 		PrintMessageToDebugLog("CreateThreadsFunc", "Opening audio thread...");
 
@@ -357,8 +375,6 @@ void CreateThreads() {
 		// Recreate it from scratch, and give it a priority
 		ATThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastAudioEngine : AudioEngine), NULL, 0, &ATThread.ThreadAddress);
 		SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
-
-		PrintMessageToDebugLog("CreateThreadsFunc", "Done!");
 	}
 
 	// Check if the debug thread is working
@@ -487,6 +503,15 @@ void FreeUpBASSASIO() {
 #endif
 }
 
+void FreeUpXA() {
+	// Free up XA before doing anything
+	if (SndDrv) {
+		SndDrv->close();
+		delete SndDrv;
+		SndDrv = NULL;
+	}
+}
+
 void SetUpStream() {
 	// Initialize the MIDI channels
 	PrintMessageToDebugLog("SetUpStreamFunc", "Preparing MIDI channels...");
@@ -530,12 +555,12 @@ void FreeUpStream() {
 		}
 
 		if (SndDrv) {
+			SndDrv->close();
 			delete SndDrv;
 			SndDrv = NULL;
 		}
 
-		if (SndBuf)
-		{
+		if (SndBuf) {
 			delete[] SndBuf;
 			SndBuf = NULL;
 		}
@@ -704,6 +729,7 @@ BOOL ApplyStreamSettings() {
 		FreeUpBASSWASAPI();
 		FreeUpBASSASIO();
 		FreeUpBASS();
+		FreeUpXA();
 
 		// The synth failed to open the output
 		OMStream = 0;
@@ -946,7 +972,6 @@ BEGSWITCH:
 
 			// Initialize WASAPI
 			BOOL WInit = BASS_WASAPI_Init(DeviceID, ManagedSettings.AudioFrequency, (ManagedSettings.MonoRendering ? 1 : 2),
-				(ManagedSettings.WASAPIAsyncMode) ? BASS_WASAPI_ASYNC : 0 |
 				(ManagedSettings.WASAPIExclusive) ? BASS_WASAPI_EXCLUSIVE : 0 | 
 				(ManagedSettings.WASAPIRAWMode ? BASS_WASAPI_RAW : 0) |
 				(ManagedSettings.WASAPIDoubleBuf ? BASS_WASAPI_BUFFER : 0) |
@@ -1004,6 +1029,8 @@ BEGSWITCH:
 				break;
 			}
 
+			FreeUpXA();
+
 			for (int i = 0; i < 5; i++) {
 				if (!SndDrv) {
 					PrintMessageToDebugLog("InitializeXAFunc", "Opening XAudio2 stream...");
@@ -1015,8 +1042,7 @@ BEGSWITCH:
 					PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 function has returned. Checking for errors...");
 
 					if (XATmp > 0) {
-						delete SndDrv;
-						SndDrv = NULL;
+						FreeUpXA();
 						Fail = TRUE;
 
 						switch (XATmp) {
@@ -1067,10 +1093,7 @@ BEGSWITCH:
 			if (Fail) {
 				ManagedSettings.CurrentEngine = WASAPI_ENGINE;
 				FreeUpBASS();
-				if (SndDrv != NULL) {
-					delete SndDrv;
-					SndDrv = NULL;
-				}
+				FreeUpXA();
 				PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 encountered an error!");
 				MessageBoxA(NULL, "XAudio2 was unable to initialize.", "OmniMIDI - XA ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 				goto BEGSWITCH;
@@ -1125,6 +1148,15 @@ BEGSWITCH:
 				goto BEGSWITCH;
 			}
 
+			// Initialize the stream
+			if (!InitializeStream(ManagedSettings.AudioFrequency))
+			{
+				PrintMessageToDebugLog("InitializeASIOFunc", "An error has occurred during BASS' initialization! Freeing ASIO...");
+				BASS_ASIO_Stop();
+				BASS_ASIO_Free();
+				break;
+			}
+
 			// If ASIO is successfully initialized, go on with the initialization process
 			PrintMessageToDebugLog("InitializeASIOFunc", "Initializing BASSASIO...");
 			if (BASS_ASIO_Init(DeviceToUse, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
@@ -1154,35 +1186,32 @@ BEGSWITCH:
 				CheckUp(TRUE, ERRORCODE, "ASIO Channel Frequency Set", TRUE);
 
 				// Enable the channels
-				BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, NULL);
-				CheckUp(TRUE, ERRORCODE, "ASIO Channel Enable", TRUE);
+				if (ManagedSettings.ASIODirectFeed) {
+					BASS_ASIO_ChannelEnableBASS(FALSE, 0, OMStream, TRUE);
+					CheckUp(TRUE, ERRORCODE, "ASIO DF Channel Enable", TRUE);
+				}
+				else {
+					BASS_ASIO_ChannelEnable(FALSE, 0, ASIOProc, NULL);
+					CheckUp(TRUE, ERRORCODE, "ASIO Channel Enable", TRUE);
+
+					if (!ManagedSettings.MonoRendering) {
+						BASS_ASIO_ChannelJoin(FALSE, 1, 0);
+						CheckUp(TRUE, ERRORCODE, "ASIO Channel Join", TRUE);
+						// Set the bit depth for the right channel as well
+						BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
+						CheckUp(TRUE, ERRORCODE, "ASIO Channel Bit Depth Set", TRUE);
+					}
+				}
 
 				// If mono rendering is enabled, mirror the left channel to the right one as well
 				if (ManagedSettings.MonoRendering) {
 					BASS_ASIO_ChannelEnableMirror(1, FALSE, 0);
 					CheckUp(TRUE, ERRORCODE, "ASIO Device Mono Mode", TRUE);
 				}
-				// Else, go for stereo
-				else {
-					BASS_ASIO_ChannelJoin(FALSE, 1, 0);
-					CheckUp(TRUE, ERRORCODE, "ASIO Channel Join", TRUE);
-					// Set the bit depth for the right channel as well
-					BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);
-					CheckUp(TRUE, ERRORCODE, "ASIO Channel Bit Depth Set", TRUE);
-				}
 
 				// And start the ASIO output
 				BASS_ASIO_Start(0, std::thread::hardware_concurrency());
 				CheckUp(TRUE, ERRORCODE, "ASIO Start Output", TRUE);
-
-				// Initialize the stream
-				if (!InitializeStream(ManagedSettings.AudioFrequency))
-				{
-					PrintMessageToDebugLog("InitializeASIOFunc", "An error has occurred during BASS' initialization! Freeing ASIO...");
-					BASS_ASIO_Stop();
-					BASS_ASIO_Free();
-					break;
-				}
 
 				// Store the latency for debug
 				ManagedDebugInfo.AudioBufferSize = BASS_ASIO_GetLatency(FALSE);

@@ -62,7 +62,6 @@ BOOL CloseThread(Thread* thread) {
 		PrintMessageToDebugLog("CloseThread", "Cleaning up...");
 		CloseHandle(thread->ThreadHandle);
 		thread->ThreadHandle = NULL;
-		thread->ThreadAddress = NULL;
 
 		PrintMessageToDebugLog("CloseThread", "Thread is down.");
 		return TRUE;
@@ -240,10 +239,10 @@ BOOL LoadBASSFunctions()
 			PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
 
 			// Load modules
-			RegQueryValueEx(Configuration.Address, L"FastLibs", NULL, &dwType, (LPBYTE)&ManagedSettings.FastLibs, &dwSize);
+			// RegQueryValueEx(Configuration.Address, L"FastLibs", NULL, &dwType, (LPBYTE)&ManagedSettings.FastLibs, &dwSize);
 
-			LoadDriverModule(&BASS, L"bass.dll", TRUE, ManagedSettings.FastLibs);
-			LoadDriverModule(&BASSMIDI, L"bassmidi.dll", TRUE, ManagedSettings.FastLibs);
+			LoadDriverModule(&BASS, L"bass.dll", TRUE, FALSE);
+			LoadDriverModule(&BASSMIDI, L"bassmidi.dll", TRUE, FALSE);
 			LoadDriverModule(&BASSWASAPI, L"basswasapi.dll", TRUE, FALSE);
 			LoadDriverModule(&BASSENC, L"bassenc.dll", TRUE, FALSE);
 			LoadDriverModule(&BASSASIO, L"bassasio.dll", TRUE, FALSE);
@@ -253,6 +252,7 @@ BOOL LoadBASSFunctions()
 			// Load all the functions into memory
 			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_CheckRate);
 			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelEnable);
+			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelEnableBASS);
 			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelEnableMirror);
 			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelGetLevel);
 			LOADLIBFUNCTION(BASSASIO.Lib, BASS_ASIO_ChannelJoin);
@@ -445,13 +445,6 @@ void FreeUpMemory() {
 		EVBuffer.ReadHead = 0;
 	}
 
-	PrintMessageToDebugLog("FreeUpMemoryFunc", "Deleting OMReady handle...");
-	if (OMReady)
-	{
-		CloseHandle(OMReady);
-		OMReady = NULL;
-	}
-
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freed.");
 }
 
@@ -613,6 +606,8 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		
 			SamplesPerFrame = ManagedSettings.XASamplesPerFrame * (ManagedSettings.MonoRendering ? 1 : 2);
 		}
+
+		RegQueryValueEx(Configuration.Address, L"ASIODirectFeed", NULL, &dwType, (LPBYTE)&ManagedSettings.ASIODirectFeed, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"WinMMSpeed", NULL, &dwType, (LPBYTE)&RSH, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);
@@ -650,7 +645,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
 		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
 
-		if (!RT) RegSetValueEx(Configuration.Address, L"LiveChanges", 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
+		RegSetValueEx(Configuration.Address, L"LiveChanges", 0, REG_DWORD, (LPBYTE)&Blank, sizeof(Blank));
 
 		TSpeedHack = (double)RSH / 100000000.0;
 

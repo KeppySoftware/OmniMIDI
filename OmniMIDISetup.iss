@@ -20,7 +20,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '14.6.0.0'
+#define Version '14.6.0.17'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -137,8 +137,8 @@ Source: "{#libarm64}\bassmidi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "b
 ; 32-bit libs for AMD64 and ARM64
 Source: "{#lib32}\bass.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\bassmidi.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
-Source: "{#lib32}\opt\bass.dll"; DestDir: "{syswow64}\{#InstallDir}\opt"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
-Source: "{#lib32}\opt\bassmidi.dll"; DestDir: "{syswow64}\{#InstallDir}\opt"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
+; Source: "{#lib32}\opt\bass.dll"; DestDir: "{syswow64}\{#InstallDir}\opt"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
+; Source: "{#lib32}\opt\bassmidi.dll"; DestDir: "{syswow64}\{#InstallDir}\opt"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\bassopus.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\basswv.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\bassasio.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassasio.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
@@ -151,8 +151,8 @@ Source: "output\{#InstallDir}.dbl"; DestDir: "{syswow64}\{#InstallDir}"; Flags: 
 ; 32-bit libs for IA32
 Source: "{#lib32}\bass.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\bassmidi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
-Source: "{#lib32}\opt\bass.dll"; DestDir: "{sys}\{#InstallDir}\opt"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
-Source: "{#lib32}\opt\bassmidi.dll"; DestDir: "{sys}\{#InstallDir}\opt"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
+; Source: "{#lib32}\opt\bass.dll"; DestDir: "{sys}\{#InstallDir}\opt"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
+; Source: "{#lib32}\opt\bassmidi.dll"; DestDir: "{sys}\{#InstallDir}\opt"; DestName: "bassmidi.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\bassopus.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassopus.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\basswv.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "basswv.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\bassasio.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassasio.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64

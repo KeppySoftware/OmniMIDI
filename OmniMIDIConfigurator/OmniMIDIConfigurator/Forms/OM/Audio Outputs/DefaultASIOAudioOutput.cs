@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 // For device info
 using Un4seen.Bass;
@@ -25,15 +26,17 @@ namespace OmniMIDIConfigurator
             InitializeComponent();
         }
 
-        private void DefaultASIOAudioOutput_Load(object sender, EventArgs e)
+        private void AnalyzeDevice(ref BASS_ASIO_DEVICEINFO dInfo, int n)
         {
-
+   
         }
 
         private void DefaultASIOAudioOutput_Shown(object sender, EventArgs e)
         {
             try
             {
+                ASIODirectFeed.Checked = Convert.ToInt32(Program.SynthSettings.GetValue("ASIODirectFeed", 0)) == 1;
+
                 this.Text = "Probing ASIO devices, please wait...";
                 this.Enabled = false;
 
@@ -48,40 +51,61 @@ namespace OmniMIDIConfigurator
                 // Populate devices list
                 for (int n = 0; BassAsio.BASS_ASIO_GetDeviceInfo(n, dInfo); n++)
                 {
-                    try
+                    Task ASIOT = Task.Run(() =>
                     {
-                        BassAsio.BASS_ASIO_Init(n, BASSASIOInit.BASS_ASIO_DEFAULT);
+                        try
+                        {
+                            BassAsio.BASS_ASIO_Init(n, BASSASIOInit.BASS_ASIO_THREAD);
 
-                        BASS_ASIO_INFO fInfo = BassAsio.BASS_ASIO_GetInfo();
+                            BASS_ASIO_INFO fInfo = BassAsio.BASS_ASIO_GetInfo();
+                            ASIODevice NewDev = new ASIODevice();
+
+                            NewDev.Name = dInfo.name;
+                            NewDev.Driver = dInfo.driver;
+                            NewDev.ID = n;
+
+                            if (fInfo != null)
+                            {
+                                NewDev.Status = GetDeviceDescription(NewDev.Name);
+                                NewDev.Inputs = fInfo.inputs;
+                                NewDev.Outputs = fInfo.outputs;
+                                NewDev.BufMin = fInfo.bufmin;
+                                NewDev.BufMax = fInfo.bufmax;
+                                NewDev.BufPref = fInfo.bufmax;
+                                NewDev.BufGran = fInfo.bufgran;
+                            }
+                            else
+                            {
+                                NewDev.Status = new ASIOStatus { Description = BassAsio.BASS_ASIO_ErrorGetCode().ToString(), Flag = DevStatusEnum.DEVICE_UNKNOWN };
+                                NewDev.NoData = true;
+                            }
+
+                            Devices.Add(NewDev);
+
+                            BassAsio.BASS_ASIO_Free();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.ToString());
+                        }
+                    });
+
+                    if (!ASIOT.Wait(3000))
+                    {
+                        // This should not happen.
                         ASIODevice NewDev = new ASIODevice();
-
-                        NewDev.Name = dInfo.name;
-                        NewDev.Driver = dInfo.driver;
+                        NewDev.Name = "UNKNOWN";
+                        NewDev.Driver = "UNKNOWN_DRV";
                         NewDev.ID = n;
-
-                        if (fInfo != null)
-                        {
-                            NewDev.Status = GetDeviceDescription(NewDev.Name);
-                            NewDev.Inputs = fInfo.inputs;
-                            NewDev.Outputs = fInfo.outputs;
-                            NewDev.BufMin = fInfo.bufmin;
-                            NewDev.BufMax = fInfo.bufmax;
-                            NewDev.BufPref = fInfo.bufmax;
-                            NewDev.BufGran = fInfo.bufgran;
-                        }
-                        else 
-                        {
-                            NewDev.Status = new ASIOStatus { Description = BassAsio.BASS_ASIO_ErrorGetCode().ToString(), Flag = DevStatusEnum.DEVICE_UNKNOWN };
-                            NewDev.NoData = true; 
-                        }
-
+                        NewDev.Inputs = 0;
+                        NewDev.Outputs = 0;
+                        NewDev.BufMin = 0;
+                        NewDev.BufMax = 0;
+                        NewDev.BufPref = 0;
+                        NewDev.BufGran = 0;
+                        NewDev.Status = new ASIOStatus { Description = "DRIVER_TIMEOUT", Flag = DevStatusEnum.DEVICE_UNKNOWN };
+                        NewDev.NoData = true;
                         Devices.Add(NewDev);
-
-                        BassAsio.BASS_ASIO_Free();
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
                     }
                 }
 
@@ -109,13 +133,6 @@ namespace OmniMIDIConfigurator
 
                 this.Text = "Change default ASIO output";
                 this.Enabled = true;
-                /* 
-                 * Unavailable at the moment
-                 * 
-                 * if (Convert.ToInt32(OmniMIDIConfiguratorMain.Program.SynthSettings.GetValue("ASIOSeparateThread", 0)) == 1)
-                 * ASIOSeparateThread.Checked = true;
-                 *
-                 */
             }
             catch (Exception ex)
             {
@@ -244,10 +261,10 @@ namespace OmniMIDIConfigurator
             GetASIODeviceInfo();
         }
 
-        private void ASIOSeparateThread_CheckedChanged(object sender, EventArgs e)
+        private void ASIODirectFeed_CheckedChanged(object sender, EventArgs e)
         {
-            // Unavailable at the moment
-            // OmniMIDIConfiguratorMain.Program.SynthSettings.SetValue("ASIOSeparateThread", ASIOSeparateThread.Checked ? "1" : "0", RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("ASIODirectFeed", Convert.ToInt32(ASIODirectFeed.Checked), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("LiveChanges", "1", RegistryValueKind.DWord);
         }
 
         private void Quit_Click(object sender, EventArgs e)
@@ -316,6 +333,11 @@ namespace OmniMIDIConfigurator
                 "That means that the MIDI events might be delayed before the sound is actually played on your speakers.\n\n" +
                 "Always keep the buffer size to the smallest size possible, and the update rate to the highest value your sound card can handle with no dropouts, " +
                 "if you want to avoid this issue.", "OmniMIDI Configurator ~ ASIO warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        private void DefaultASIOAudioOutput_Load(object sender, EventArgs e)
+        {
+
         }
     }
 

@@ -181,6 +181,27 @@ namespace OmniMIDIConfigurator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OmniMIDI, a fork of BASSMIDI Driver
+        ///
+        ///Copyright (c) 2011 Brad Miller, Chris Moeller and Riccardo Loi
+        ///All rights reserved.
+        ///
+        ///Redistribution and use of this code or any derivative works are permitted
+        ///provided that the following conditions are met:
+        /// 
+        ///1) Redistributions may not be sold, nor may they be used in a commercial
+        ///product or activity, without direct written/verbal consent of the authors. 
+        /// 
+        ///2) Redistributions that are modified from the original source *must* include the
+        ///complete source code,  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string LICENSE {
+            get {
+                return ResourceManager.GetString("LICENSE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] LoudMax32 {

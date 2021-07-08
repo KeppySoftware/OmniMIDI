@@ -61,7 +61,6 @@ VOID KillOldCookedPlayer() {
 		if (WaitForSingleObject(CookedThread.ThreadHandle, INFINITE) == WAIT_OBJECT_0) {
 			CloseHandle(CookedThread.ThreadHandle);
 			CookedThread.ThreadHandle = nullptr;
-			CookedThread.ThreadAddress = NULL;
 			delete OMCookedPlayer;
 			CookedPlayerHasToGo = FALSE;
 		}
@@ -304,7 +303,7 @@ BOOL StreamHealthCheck() {
 	}
 	else { 
 		if (stop_thread || 
-			(!ATThread.ThreadHandle && (ManagedSettings.CurrentEngine != ASIO_ENGINE && ManagedSettings.CurrentEngine != WASAPI_ENGINE))) 
+			(!ATThread.ThreadHandle && ManagedSettings.CurrentEngine != WASAPI_ENGINE)) 
 			CreateThreads();
 	}
 
@@ -341,7 +340,7 @@ void Supervisor(LPVOID lpV) {
 			}
 
 			// I SLEEP
-			Sleep(30);
+			Sleep(333);
 		}
 	}
 	catch (...) {
@@ -408,6 +407,13 @@ BOOL DoStopClient() {
 		FreeFonts();
 		FreeUpStream();
 		FreeUpMemory();
+
+		PrintMessageToDebugLog("StopDriver", "Deleting handles...");
+		if (OMReady)
+		{
+			CloseHandle(OMReady);
+			OMReady = NULL;
+		}
 
 		// Close registry keys
 		PrintMessageToDebugLog("StopDriver", "Closing registry keys...");

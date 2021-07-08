@@ -69,7 +69,6 @@
             this.SlowDownPlayback = new System.Windows.Forms.CheckBox();
             this.OldBuff = new System.Windows.Forms.CheckBox();
             this.SynthBox = new System.Windows.Forms.GroupBox();
-            this.BMLibs = new System.Windows.Forms.CheckBox();
             this.AudioRampIn = new System.Windows.Forms.CheckBox();
             this.PitchShifting = new OmniMIDIConfigurator.LinkLabelEx();
             this.AutoLoad = new System.Windows.Forms.CheckBox();
@@ -658,7 +657,7 @@
             // SlowDownPlayback
             // 
             this.SlowDownPlayback.AutoSize = true;
-            this.SlowDownPlayback.Location = new System.Drawing.Point(9, 109);
+            this.SlowDownPlayback.Location = new System.Drawing.Point(9, 90);
             this.SlowDownPlayback.Name = "SlowDownPlayback";
             this.SlowDownPlayback.Size = new System.Drawing.Size(485, 17);
             this.SlowDownPlayback.TabIndex = 20;
@@ -670,7 +669,7 @@
             // OldBuff
             // 
             this.OldBuff.AutoSize = true;
-            this.OldBuff.Location = new System.Drawing.Point(9, 128);
+            this.OldBuff.Location = new System.Drawing.Point(9, 109);
             this.OldBuff.Name = "OldBuff";
             this.OldBuff.Size = new System.Drawing.Size(593, 17);
             this.OldBuff.TabIndex = 21;
@@ -683,7 +682,6 @@
             // 
             this.SynthBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SynthBox.Controls.Add(this.BMLibs);
             this.SynthBox.Controls.Add(this.AudioRampIn);
             this.SynthBox.Controls.Add(this.PitchShifting);
             this.SynthBox.Controls.Add(this.AutoLoad);
@@ -723,27 +721,15 @@
             this.SynthBox.Controls.Add(this.KSDAPIBoxWhat);
             this.SynthBox.Location = new System.Drawing.Point(3, 407);
             this.SynthBox.Name = "SynthBox";
-            this.SynthBox.Size = new System.Drawing.Size(670, 506);
+            this.SynthBox.Size = new System.Drawing.Size(670, 491);
             this.SynthBox.TabIndex = 1;
             this.SynthBox.TabStop = false;
             this.SynthBox.Text = "Synthesizer settings";
             // 
-            // BMLibs
-            // 
-            this.BMLibs.AutoSize = true;
-            this.BMLibs.Location = new System.Drawing.Point(9, 71);
-            this.BMLibs.Name = "BMLibs";
-            this.BMLibs.Size = new System.Drawing.Size(449, 17);
-            this.BMLibs.TabIndex = 61;
-            this.BMLibs.Text = "Load Black MIDI optimized libraries (Requires app restart, could break some new f" +
-    "eatures)";
-            this.ButtonsDesc.SetToolTip(this.BMLibs, resources.GetString("BMLibs.ToolTip"));
-            this.BMLibs.UseVisualStyleBackColor = true;
-            // 
             // AudioRampIn
             // 
             this.AudioRampIn.AutoSize = true;
-            this.AudioRampIn.Location = new System.Drawing.Point(9, 166);
+            this.AudioRampIn.Location = new System.Drawing.Point(9, 147);
             this.AudioRampIn.Name = "AudioRampIn";
             this.AudioRampIn.Size = new System.Drawing.Size(588, 17);
             this.AudioRampIn.TabIndex = 60;
@@ -755,7 +741,7 @@
             // 
             this.PitchShifting.AutoSize = true;
             this.PitchShifting.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.PitchShifting.Location = new System.Drawing.Point(6, 257);
+            this.PitchShifting.Location = new System.Drawing.Point(6, 238);
             this.PitchShifting.Name = "PitchShifting";
             this.PitchShifting.Size = new System.Drawing.Size(338, 13);
             this.PitchShifting.TabIndex = 25;
@@ -766,7 +752,7 @@
             // AutoLoad
             // 
             this.AutoLoad.AutoSize = true;
-            this.AutoLoad.Location = new System.Drawing.Point(9, 185);
+            this.AutoLoad.Location = new System.Drawing.Point(9, 166);
             this.AutoLoad.Name = "AutoLoad";
             this.AutoLoad.Size = new System.Drawing.Size(593, 17);
             this.AutoLoad.TabIndex = 23;
@@ -777,7 +763,7 @@
             // PrioLab
             // 
             this.PrioLab.AutoSize = true;
-            this.PrioLab.Location = new System.Drawing.Point(6, 214);
+            this.PrioLab.Location = new System.Drawing.Point(6, 195);
             this.PrioLab.Name = "PrioLab";
             this.PrioLab.Size = new System.Drawing.Size(454, 13);
             this.PrioLab.TabIndex = 59;
@@ -787,7 +773,7 @@
             // IgnoreNotesLV
             // 
             this.IgnoreNotesLV.Cursor = System.Windows.Forms.Cursors.Default;
-            this.IgnoreNotesLV.Location = new System.Drawing.Point(86, 412);
+            this.IgnoreNotesLV.Location = new System.Drawing.Point(86, 393);
             this.IgnoreNotesLV.Maximum = new decimal(new int[] {
             127,
             0,
@@ -820,7 +806,7 @@
             "Normal",
             "Lower than normal",
             "Low"});
-            this.PrioBox.Location = new System.Drawing.Point(534, 211);
+            this.PrioBox.Location = new System.Drawing.Point(534, 192);
             this.PrioBox.Name = "PrioBox";
             this.PrioBox.Size = new System.Drawing.Size(130, 21);
             this.PrioBox.TabIndex = 24;
@@ -828,7 +814,7 @@
             // IgnoreNotesHV
             // 
             this.IgnoreNotesHV.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IgnoreNotesHV.Location = new System.Drawing.Point(229, 412);
+            this.IgnoreNotesHV.Location = new System.Drawing.Point(229, 393);
             this.IgnoreNotesHV.Maximum = new decimal(new int[] {
             127,
             0,
@@ -851,7 +837,7 @@
             // IgnoreNotesHL
             // 
             this.IgnoreNotesHL.AutoSize = true;
-            this.IgnoreNotesHL.Location = new System.Drawing.Point(147, 414);
+            this.IgnoreNotesHL.Location = new System.Drawing.Point(147, 395);
             this.IgnoreNotesHL.Name = "IgnoreNotesHL";
             this.IgnoreNotesHL.Size = new System.Drawing.Size(82, 13);
             this.IgnoreNotesHL.TabIndex = 58;
@@ -860,7 +846,7 @@
             // IgnoreNotesLL
             // 
             this.IgnoreNotesLL.AutoSize = true;
-            this.IgnoreNotesLL.Location = new System.Drawing.Point(6, 414);
+            this.IgnoreNotesLL.Location = new System.Drawing.Point(6, 395);
             this.IgnoreNotesLL.Name = "IgnoreNotesLL";
             this.IgnoreNotesLL.Size = new System.Drawing.Size(80, 13);
             this.IgnoreNotesLL.TabIndex = 57;
@@ -870,7 +856,7 @@
             // 
             this.SysResetIgnore.AutoSize = true;
             this.SysResetIgnore.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.SysResetIgnore.Location = new System.Drawing.Point(9, 370);
+            this.SysResetIgnore.Location = new System.Drawing.Point(9, 351);
             this.SysResetIgnore.Name = "SysResetIgnore";
             this.SysResetIgnore.Size = new System.Drawing.Size(566, 17);
             this.SysResetIgnore.TabIndex = 31;
@@ -882,7 +868,7 @@
             // 
             this.Preload.AutoSize = true;
             this.Preload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.Preload.Location = new System.Drawing.Point(9, 147);
+            this.Preload.Location = new System.Drawing.Point(9, 128);
             this.Preload.Name = "Preload";
             this.Preload.Size = new System.Drawing.Size(567, 17);
             this.Preload.TabIndex = 22;
@@ -906,7 +892,7 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(6, 240);
+            this.label6.Location = new System.Drawing.Point(6, 221);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(242, 13);
             this.label6.TabIndex = 0;
@@ -916,7 +902,7 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(6, 446);
+            this.label5.Location = new System.Drawing.Point(6, 427);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(153, 13);
             this.label5.TabIndex = 0;
@@ -926,7 +912,7 @@
             // 
             this.NoteOffCheck.AutoSize = true;
             this.NoteOffCheck.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.NoteOffCheck.Location = new System.Drawing.Point(9, 90);
+            this.NoteOffCheck.Location = new System.Drawing.Point(9, 71);
             this.NoteOffCheck.Name = "NoteOffCheck";
             this.NoteOffCheck.Size = new System.Drawing.Size(465, 17);
             this.NoteOffCheck.TabIndex = 19;
@@ -940,7 +926,7 @@
             // DisableCookedPlayer
             // 
             this.DisableCookedPlayer.AutoSize = true;
-            this.DisableCookedPlayer.Location = new System.Drawing.Point(9, 275);
+            this.DisableCookedPlayer.Location = new System.Drawing.Point(9, 256);
             this.DisableCookedPlayer.Name = "DisableCookedPlayer";
             this.DisableCookedPlayer.Size = new System.Drawing.Size(503, 17);
             this.DisableCookedPlayer.TabIndex = 26;
@@ -951,7 +937,7 @@
             // 
             // CBRuler
             // 
-            this.CBRuler.Location = new System.Drawing.Point(637, 439);
+            this.CBRuler.Location = new System.Drawing.Point(637, 420);
             this.CBRuler.Name = "CBRuler";
             this.CBRuler.Size = new System.Drawing.Size(20, 20);
             this.CBRuler.TabIndex = 41;
@@ -960,7 +946,7 @@
             // AllNotesIgnore
             // 
             this.AllNotesIgnore.AutoSize = true;
-            this.AllNotesIgnore.Location = new System.Drawing.Point(9, 294);
+            this.AllNotesIgnore.Location = new System.Drawing.Point(9, 275);
             this.AllNotesIgnore.Name = "AllNotesIgnore";
             this.AllNotesIgnore.Size = new System.Drawing.Size(311, 17);
             this.AllNotesIgnore.TabIndex = 27;
@@ -970,7 +956,7 @@
             // FullVelocityMode
             // 
             this.FullVelocityMode.AutoSize = true;
-            this.FullVelocityMode.Location = new System.Drawing.Point(9, 313);
+            this.FullVelocityMode.Location = new System.Drawing.Point(9, 294);
             this.FullVelocityMode.Name = "FullVelocityMode";
             this.FullVelocityMode.Size = new System.Drawing.Size(350, 17);
             this.FullVelocityMode.TabIndex = 28;
@@ -980,7 +966,7 @@
             // CapFram
             // 
             this.CapFram.AutoSize = true;
-            this.CapFram.Location = new System.Drawing.Point(9, 332);
+            this.CapFram.Location = new System.Drawing.Point(9, 313);
             this.CapFram.Name = "CapFram";
             this.CapFram.Size = new System.Drawing.Size(398, 17);
             this.CapFram.TabIndex = 29;
@@ -990,7 +976,7 @@
             // label3
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.Location = new System.Drawing.Point(657, 483);
+            this.label3.Location = new System.Drawing.Point(657, 464);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(9, 13);
             this.label3.TabIndex = 33;
@@ -999,7 +985,7 @@
             // Limit88
             // 
             this.Limit88.AutoSize = true;
-            this.Limit88.Location = new System.Drawing.Point(9, 351);
+            this.Limit88.Location = new System.Drawing.Point(9, 332);
             this.Limit88.Name = "Limit88";
             this.Limit88.Size = new System.Drawing.Size(276, 17);
             this.Limit88.TabIndex = 30;
@@ -1010,7 +996,7 @@
             // 
             this.NoteOffDelayValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.NoteOffDelayValue.DecimalPlaces = 3;
-            this.NoteOffDelayValue.Location = new System.Drawing.Point(592, 480);
+            this.NoteOffDelayValue.Location = new System.Drawing.Point(592, 461);
             this.NoteOffDelayValue.Name = "NoteOffDelayValue";
             this.NoteOffDelayValue.Size = new System.Drawing.Size(65, 20);
             this.NoteOffDelayValue.TabIndex = 38;
@@ -1019,7 +1005,7 @@
             // IgnoreNotes
             // 
             this.IgnoreNotes.AutoSize = true;
-            this.IgnoreNotes.Location = new System.Drawing.Point(9, 389);
+            this.IgnoreNotes.Location = new System.Drawing.Point(9, 370);
             this.IgnoreNotes.Name = "IgnoreNotes";
             this.IgnoreNotes.Size = new System.Drawing.Size(483, 17);
             this.IgnoreNotes.TabIndex = 32;
@@ -1032,7 +1018,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(550, 482);
+            this.label1.Location = new System.Drawing.Point(550, 463);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(43, 13);
             this.label1.TabIndex = 32;
@@ -1041,7 +1027,7 @@
             // OverrideNoteLengthWA2
             // 
             this.OverrideNoteLengthWA2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.OverrideNoteLengthWA2.Location = new System.Drawing.Point(164, 482);
+            this.OverrideNoteLengthWA2.Location = new System.Drawing.Point(164, 463);
             this.OverrideNoteLengthWA2.Name = "OverrideNoteLengthWA2";
             this.OverrideNoteLengthWA2.Size = new System.Drawing.Size(14, 14);
             this.OverrideNoteLengthWA2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1052,7 +1038,7 @@
             // DelayNoteOff
             // 
             this.DelayNoteOff.AutoSize = true;
-            this.DelayNoteOff.Location = new System.Drawing.Point(9, 481);
+            this.DelayNoteOff.Location = new System.Drawing.Point(9, 462);
             this.DelayNoteOff.Name = "DelayNoteOff";
             this.DelayNoteOff.Size = new System.Drawing.Size(156, 17);
             this.DelayNoteOff.TabIndex = 37;
@@ -1063,7 +1049,7 @@
             // NoteLengthValueMS
             // 
             this.NoteLengthValueMS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.NoteLengthValueMS.Location = new System.Drawing.Point(657, 464);
+            this.NoteLengthValueMS.Location = new System.Drawing.Point(657, 445);
             this.NoteLengthValueMS.Name = "NoteLengthValueMS";
             this.NoteLengthValueMS.Size = new System.Drawing.Size(9, 13);
             this.NoteLengthValueMS.TabIndex = 30;
@@ -1073,7 +1059,7 @@
             // 
             this.NoteLengthValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.NoteLengthValue.DecimalPlaces = 3;
-            this.NoteLengthValue.Location = new System.Drawing.Point(592, 461);
+            this.NoteLengthValue.Location = new System.Drawing.Point(592, 442);
             this.NoteLengthValue.Name = "NoteLengthValue";
             this.NoteLengthValue.Size = new System.Drawing.Size(65, 20);
             this.NoteLengthValue.TabIndex = 36;
@@ -1083,7 +1069,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(550, 463);
+            this.label4.Location = new System.Drawing.Point(550, 444);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(43, 13);
             this.label4.TabIndex = 29;
@@ -1092,7 +1078,7 @@
             // OverrideNoteLengthWA1
             // 
             this.OverrideNoteLengthWA1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.OverrideNoteLengthWA1.Location = new System.Drawing.Point(177, 463);
+            this.OverrideNoteLengthWA1.Location = new System.Drawing.Point(177, 444);
             this.OverrideNoteLengthWA1.Name = "OverrideNoteLengthWA1";
             this.OverrideNoteLengthWA1.Size = new System.Drawing.Size(14, 14);
             this.OverrideNoteLengthWA1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1103,7 +1089,7 @@
             // OverrideNoteLength
             // 
             this.OverrideNoteLength.AutoSize = true;
-            this.OverrideNoteLength.Location = new System.Drawing.Point(9, 462);
+            this.OverrideNoteLength.Location = new System.Drawing.Point(9, 443);
             this.OverrideNoteLength.Name = "OverrideNoteLength";
             this.OverrideNoteLength.Size = new System.Drawing.Size(169, 17);
             this.OverrideNoteLength.TabIndex = 35;
@@ -1245,7 +1231,7 @@
             this.LegacySetDia.Controls.Add(this.LiveChangesTrigger);
             this.LegacySetDia.Controls.Add(this.ChangeEVBuf);
             this.LegacySetDia.Controls.Add(this.DisableChime);
-            this.LegacySetDia.Location = new System.Drawing.Point(3, 919);
+            this.LegacySetDia.Location = new System.Drawing.Point(3, 904);
             this.LegacySetDia.Name = "LegacySetDia";
             this.LegacySetDia.Size = new System.Drawing.Size(670, 257);
             this.LegacySetDia.TabIndex = 2;
@@ -1320,7 +1306,7 @@
             this.Controls.Add(this.SynthBox);
             this.Controls.Add(this.EnginesBox);
             this.Name = "SettingsPanel";
-            this.Size = new System.Drawing.Size(678, 1178);
+            this.Size = new System.Drawing.Size(678, 1166);
             this.Load += new System.EventHandler(this.SettingsPanel_Load);
             this.EnginesBox.ResumeLayout(false);
             this.EnginesBox.PerformLayout();
@@ -1435,6 +1421,5 @@
         public System.Windows.Forms.CheckBox IgnoreCloseCalls;
         private LinkLabelEx PitchShifting;
         public System.Windows.Forms.CheckBox AudioRampIn;
-        public System.Windows.Forms.CheckBox BMLibs;
     }
 }
