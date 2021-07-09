@@ -8,7 +8,7 @@ public:
 
 	virtual unsigned int open( void * hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames ) = 0;
 
-	virtual void close() = 0;
+	virtual void close(bool free) = 0;
 
 	virtual unsigned int write_frame( void * buffer, unsigned num_samples ) = 0;
 

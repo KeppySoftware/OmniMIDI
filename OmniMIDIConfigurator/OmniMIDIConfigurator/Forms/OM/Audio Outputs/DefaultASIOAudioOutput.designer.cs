@@ -51,13 +51,19 @@
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
             this.LatencyWarning = new OmniMIDIConfigurator.LinkLabelEx();
             this.ASIODevicesSupport = new OmniMIDIConfigurator.LinkLabelEx();
+            this.ChanSetBox = new System.Windows.Forms.GroupBox();
+            this.RightCh = new System.Windows.Forms.ComboBox();
+            this.LeftCh = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.InfoGroupBox.SuspendLayout();
+            this.ChanSetBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // Quit
             // 
             this.Quit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Quit.Location = new System.Drawing.Point(432, 217);
+            this.Quit.Location = new System.Drawing.Point(432, 297);
             this.Quit.Name = "Quit";
             this.Quit.Size = new System.Drawing.Size(75, 23);
             this.Quit.TabIndex = 7;
@@ -67,8 +73,9 @@
             // 
             // DefOut
             // 
-            this.DefOut.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DefOut.Location = new System.Drawing.Point(11, 200);
+            this.DefOut.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DefOut.Location = new System.Drawing.Point(11, 280);
             this.DefOut.Name = "DefOut";
             this.DefOut.Size = new System.Drawing.Size(339, 13);
             this.DefOut.TabIndex = 6;
@@ -97,7 +104,7 @@
             // DeviceCP
             // 
             this.DeviceCP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DeviceCP.Location = new System.Drawing.Point(277, 217);
+            this.DeviceCP.Location = new System.Drawing.Point(277, 297);
             this.DeviceCP.Name = "DeviceCP";
             this.DeviceCP.Size = new System.Drawing.Size(149, 23);
             this.DeviceCP.TabIndex = 8;
@@ -109,7 +116,7 @@
             // 
             this.MaxThreads.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MaxThreads.AutoSize = true;
-            this.MaxThreads.Location = new System.Drawing.Point(11, 222);
+            this.MaxThreads.Location = new System.Drawing.Point(11, 302);
             this.MaxThreads.Name = "MaxThreads";
             this.MaxThreads.Size = new System.Drawing.Size(230, 13);
             this.MaxThreads.TabIndex = 9;
@@ -136,7 +143,7 @@
             // 
             // InfoGroupBox
             // 
-            this.InfoGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.InfoGroupBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.InfoGroupBox.Controls.Add(this.BufferInfo);
             this.InfoGroupBox.Controls.Add(this.Outputs);
@@ -250,7 +257,7 @@
             this.LatencyWarning.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
             this.LatencyWarning.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LatencyWarning.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.LatencyWarning.Location = new System.Drawing.Point(371, 196);
+            this.LatencyWarning.Location = new System.Drawing.Point(371, 276);
             this.LatencyWarning.Name = "LatencyWarning";
             this.LatencyWarning.Size = new System.Drawing.Size(136, 19);
             this.LatencyWarning.TabIndex = 15;
@@ -261,7 +268,7 @@
             // 
             // ASIODevicesSupport
             // 
-            this.ASIODevicesSupport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ASIODevicesSupport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ASIODevicesSupport.AutoSize = true;
             this.ASIODevicesSupport.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
             this.ASIODevicesSupport.Location = new System.Drawing.Point(427, 8);
@@ -273,11 +280,65 @@
             this.ASIODevicesSupport.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.ASIODevicesSupport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ASIODevicesSupport_LinkClicked);
             // 
+            // ChanSetBox
+            // 
+            this.ChanSetBox.Controls.Add(this.RightCh);
+            this.ChanSetBox.Controls.Add(this.LeftCh);
+            this.ChanSetBox.Controls.Add(this.label3);
+            this.ChanSetBox.Controls.Add(this.label2);
+            this.ChanSetBox.Location = new System.Drawing.Point(10, 192);
+            this.ChanSetBox.Name = "ChanSetBox";
+            this.ChanSetBox.Size = new System.Drawing.Size(499, 76);
+            this.ChanSetBox.TabIndex = 16;
+            this.ChanSetBox.TabStop = false;
+            this.ChanSetBox.Text = "Channel settings";
+            // 
+            // RightCh
+            // 
+            this.RightCh.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.RightCh.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.RightCh.FormattingEnabled = true;
+            this.RightCh.Location = new System.Drawing.Point(161, 42);
+            this.RightCh.Name = "RightCh";
+            this.RightCh.Size = new System.Drawing.Size(326, 21);
+            this.RightCh.TabIndex = 18;
+            // 
+            // LeftCh
+            // 
+            this.LeftCh.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.LeftCh.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.LeftCh.FormattingEnabled = true;
+            this.LeftCh.Location = new System.Drawing.Point(161, 19);
+            this.LeftCh.Name = "LeftCh";
+            this.LeftCh.Size = new System.Drawing.Size(326, 21);
+            this.LeftCh.TabIndex = 17;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 45);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(118, 13);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Right channel (Input 1):";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 22);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(111, 13);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "Left channel (Input 0):";
+            // 
             // DefaultASIOAudioOutput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(518, 251);
+            this.ClientSize = new System.Drawing.Size(518, 331);
+            this.Controls.Add(this.ChanSetBox);
             this.Controls.Add(this.LatencyWarning);
             this.Controls.Add(this.ASIODirectFeed);
             this.Controls.Add(this.InfoGroupBox);
@@ -296,10 +357,11 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change default ASIO output";
-            this.Load += new System.EventHandler(this.DefaultASIOAudioOutput_Load);
             this.Shown += new System.EventHandler(this.DefaultASIOAudioOutput_Shown);
             this.InfoGroupBox.ResumeLayout(false);
             this.InfoGroupBox.PerformLayout();
+            this.ChanSetBox.ResumeLayout(false);
+            this.ChanSetBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -328,5 +390,10 @@
         private System.Windows.Forms.CheckBox ASIODirectFeed;
         private OmniMIDIConfigurator.LinkLabelEx LatencyWarning;
         private System.Windows.Forms.ToolTip ButtonsDesc;
+        private System.Windows.Forms.GroupBox ChanSetBox;
+        private System.Windows.Forms.ComboBox RightCh;
+        private System.Windows.Forms.ComboBox LeftCh;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
     }
 }

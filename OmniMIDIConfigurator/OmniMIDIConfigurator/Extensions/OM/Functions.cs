@@ -391,18 +391,18 @@ namespace OmniMIDIConfigurator
             }
         }
 
-        public static void SetDefaultDevice(int E, int DEV, string STRDEV)
+        public static void SetDefaultDevice(int Engine, string Device)
         {
-            switch (E)
+            switch (Engine)
             {
                 case AudioEngine.WASAPI_ENGINE:
-                    Program.SynthSettings.SetValue("WASAPIOutput", STRDEV, RegistryValueKind.String);
+                    Program.SynthSettings.SetValue("WASAPIOutput", Device, RegistryValueKind.String);
                     break;
                 case AudioEngine.DSOUND_ENGINE:
-                    Program.SynthSettings.SetValue("AudioOutput", DEV, RegistryValueKind.DWord);
+                    Program.SynthSettings.SetValue("AudioOutput", Device, RegistryValueKind.String);
                     break;
                 case AudioEngine.ASIO_ENGINE:
-                    Program.SynthSettings.SetValue("ASIOOutput", STRDEV, RegistryValueKind.String);
+                    Program.SynthSettings.SetValue("ASIOOutput", Device, RegistryValueKind.String);
                     break;
                 default:
                     break;

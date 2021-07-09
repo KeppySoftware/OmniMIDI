@@ -26,13 +26,26 @@
  *  (C) Bjoern Petersen Software Design and Development
  *  VST PlugIn Interface Technology by Steinberg Media Technologies GmbH
  *
- *  Contact: drsilver@silverjuke.net - http://www.silverjuke.net
- *
- *  Our page on un4seen: http://www.un4seen.com/forum/?topic=5559.0
+ *  https://github.com/r10s/BASS_VST
  *
  *****************************************************************************
  *
  *  Version History:
+ *
+ *  Version 2.4.1.0 (23/8/2019)
+ *
+ *      - BASS_VST_Dispatcher() added
+ *      - BASS_VST_ChannelSetDSP/Ex() returned handles are no longer pointers
+ *      - BASS_StreamFree() can be used in place of BASS_VST_ChannelFree()
+ *
+ *  Version ?.?.?.? (19/11/2013) Victor Chechenin additions
+ *
+ *      - Internal event handling for use with shell plugins
+ *      - BASS_VST_ChannelSetDSPEx / BASS_VST_ChannelCreateEx()
+ *        added for shell plugins support
+ *      - BASS_VST_CheckPreset(), BASS_VST_EditorInfo(), BASS_VST_HasEditor(),
+ *        BASS_VST_ReadPresetInfo(), BASS_VST_RecallPreset(),
+ *        BASS_VST_StoreOldPreset(), BASS_VST_StorePreset() added
  *
  *  Version 2.4.0.6 (19/11/2008)
  *
@@ -194,6 +207,17 @@ extern "C" {
 BASS_VSTSCOPE DWORD BASS_VSTDEF(BASS_VST_ChannelSetDSP)
     (DWORD chHandle, const void* dllFile, DWORD flags, int priority);
 
+/* BASS_VST_ChannelSetDSPEx is version for shell plugin.
+ * For errors, 0 is returned and BASS_ErrorGetCode()
+ * will specify the reason. BASS_UNKNOWN error meant that plugin have sub-plugins.
+ * pluginList contains list of string with format "pluginName\tpluginID"
+ * For sub-plugin initialization set pluginID value from this list
+ */
+
+BASS_VSTSCOPE DWORD BASS_VSTDEF(BASS_VST_ChannelSetDSPEx)
+	(DWORD chHandle, const void* dllFile, DWORD flags, int priority,
+	char *pluginList, int pluginListSize, int pluginID);
+
 #define BASS_VST_KEEP_CHANS 0x00000001 /* flag that may be used for BASS_VST_ChannelSetDSP(), see the comments above */
 
 
@@ -245,11 +269,23 @@ BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_ChannelRemoveDSP)
 BASS_VSTSCOPE DWORD BASS_VSTDEF(BASS_VST_ChannelCreate)
     (DWORD freq, DWORD chans, const void* dllFile, DWORD flags);
 
+/* BASS_VST_ChannelCreateEx is version for shell plugin.
+ * For errors, 0 is returned and BASS_ErrorGetCode()
+ * will specify the reason. BASS_UNKNOWN error meant that plugin have sub-plugins.
+ * pluginList contains list of string with format "pluginName\tpluginID"
+ * For sub-plugin initialization set pluginID value from this list
+ */
+
+BASS_VSTSCOPE DWORD BASS_VSTDEF(BASS_VST_ChannelCreateEx)
+	(DWORD freq, DWORD chans, const void* dllFile, DWORD flags,
+	char *pluginList, int pluginListSize, int pluginID);
+
 
 
 /* BASS_VST_ChannelFree deletes a VST instrument channel created by
  * BASS_VST_ChannelCreate().  Note, that you cannot delete effects assigned to
  * channels this way; for this purpose, please use BASS_VST_ChannelRemoveDSP().
+ * BASS_StreamFree can be used instead of this.
  */
 BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_ChannelFree)
     (DWORD vstHandle);
@@ -549,6 +585,12 @@ BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_EmbedEditor)
 BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SetScope)
     (DWORD vstHandle, DWORD scope);
 
+BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_HasEditor)
+	(DWORD vstHandle);
+
+BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_EditorInfo)
+	(DWORD vstHandle, void* pInfoBuff);
+
 
 
 /* With BASS_VST_SetCallback() you can assign a callback function of the type
@@ -672,22 +714,33 @@ BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_ProcessEventRaw)
     (DWORD vstHandle, const void* event, DWORD length);
 
 
-/* StereoTools enhancement for the RDS functions
- * BASS_VST_SetRdsPs set the Programme Service Name (PS) - typically 8 chars
- * BASS_VST_SetRdsRt set the Radio Text (RT) - typically 64 chars for each line
- * BASS_VST_SetRdsTa sets the Traffic-Programme-Signal (TP) and Traffic Announcement (TA)
+
+/* BASS_VST_QueryPreset() query the existence of preset.
+*
+*/
+BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_CheckPreset)
+	(const void* dllFile, DWORD flag);
+
+BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_StoreOldPreset)
+	(const void* presetPath, DWORD uid, DWORD vstHandle);
+
+BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_StorePreset)
+	(const void* presetPath, DWORD uid, DWORD vstHandle);
+
+BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_RecallPreset)
+	(const void* presetPath, DWORD vstHandle);
+
+BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_ReadPresetInfo)
+	(const void* presetPath, void* presetData);
+
+
+
+/* With BASS_VST_Dispatcher() you can directly call the effect's
+ * dispatcher function.
  */
-BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SupportsRds)
-    (DWORD vstHandle);
+BASS_VSTSCOPE QWORD BASS_VSTDEF(BASS_VST_Dispatcher)
+	(DWORD vstHandle, DWORD opCode, DWORD index, QWORD value, void* ptr, float opt);
 
-BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SetRdsPs)
-    (DWORD vstHandle, char* text, bool now);
-
-BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SetRdsRt)
-    (DWORD vstHandle, bool on, char* text, bool now);
-
-BASS_VSTSCOPE BOOL BASS_VSTDEF(BASS_VST_SetRdsTa)
-    (DWORD vstHandle, bool ta, bool tp);
 
 
 /* If any BASS_VST function fails, you can use BASS_ErrorGetCode() to obtain

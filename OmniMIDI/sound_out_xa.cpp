@@ -181,7 +181,6 @@ class sound_out_i_xaudio2 : public sound_out
 
 	void OnBufferEnd()
 	{
-		InterlockedDecrement(&buffered_count);
 		LONG buffer_read_cursor = this->buffer_read_cursor;
 		samples_played += samples_in_buffer[buffer_read_cursor];
 		this->buffer_read_cursor = (buffer_read_cursor + 1) % num_frames;
@@ -194,7 +193,6 @@ class sound_out_i_xaudio2 : public sound_out
 	unsigned        reopen_count;
 	unsigned        sample_rate, bytes_per_sample, max_samples_per_frame, num_frames;
 	unsigned short  nch;
-	volatile LONG   buffered_count;
 	volatile LONG   buffer_read_cursor;
 	LONG            buffer_write_cursor;
 
@@ -213,7 +211,6 @@ public:
 	{
 		paused = false;
 		reopen_count = 0;
-		buffered_count = 0;
 		device_changed = false;
 
 		xaud = NULL;
@@ -229,7 +226,7 @@ public:
 	{
 		g_notifier.do_unregister(this);
 		this->initialized = false;
-		close();
+		close(true);
 	}
 
 	void OnDeviceChanged()
@@ -282,7 +279,6 @@ public:
 		}
 
 		device_changed = false;
-		buffered_count = 0;
 		buffer_read_cursor = 0;
 		buffer_write_cursor = 0;
 		samples_played = 0;
@@ -313,7 +309,7 @@ public:
 		return 0;
 	}
 
-	virtual void close()
+	virtual void close(bool free)
 	{
 		if (sVoice) {
 			if (!paused) {
@@ -338,7 +334,7 @@ public:
 		delete[] samples_in_buffer;
 		samples_in_buffer = NULL;
 
-		CoUninitialize();
+		if (free) CoUninitialize();
 	}
 
 	virtual unsigned int write_frame(void* buffer, unsigned num_samples)
@@ -348,7 +344,7 @@ public:
 
 		if (device_changed)
 		{
-			close();
+			close(false);
 			reopen_count = 5;
 			device_changed = false;
 			return 0;
@@ -361,7 +357,7 @@ public:
 		{
 			if (!--reopen_count)
 			{
-				unsigned int err = open(hwnd, sample_rate, nch, bytes_per_sample == 4, max_samples_per_frame, num_frames);
+				const unsigned int err = open(hwnd, sample_rate, nch, bytes_per_sample == 4, max_samples_per_frame, num_frames);
 				if (err)
 				{
 					reopen_count = 60 * 5;
@@ -390,13 +386,11 @@ public:
 		buf.pContext = this;
 		buffer_write_cursor = (buffer_write_cursor + 1) % num_frames;
 		memcpy((void*)buf.pAudioData, buffer, num_bytes);
-		if (sVoice->SubmitSourceBuffer(&buf) == S_OK)
-		{
-			InterlockedIncrement(&buffered_count);
-			return 0;
-		}
 
-		close();
+		if (sVoice->SubmitSourceBuffer(&buf) == S_OK)
+			return 0;
+
+		close(false);
 		reopen_count = 60 * 5;
 
 		return 0;
@@ -414,7 +408,7 @@ public:
 					HRESULT hr = sVoice->Stop(0);
 					if (FAILED(hr))
 					{
-						close();
+						close(false);
 						reopen_count = 60 * 5;
 					}
 				}
@@ -430,7 +424,7 @@ public:
 					HRESULT hr = sVoice->Start(0);
 					if (FAILED(hr))
 					{
-						close();
+						close(false);
 						reopen_count = 60 * 5;
 					}
 				}

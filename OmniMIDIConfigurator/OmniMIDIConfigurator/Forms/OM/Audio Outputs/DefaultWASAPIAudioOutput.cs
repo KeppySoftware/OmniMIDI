@@ -192,7 +192,7 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("WASAPIAsyncMode", AsyncMode.Checked, RegistryValueKind.DWord);
 
             BassWasapi.BASS_WASAPI_Free();
-            Functions.SetDefaultDevice(AudioEngine.WASAPI_ENGINE, 0, ((WASAPIDevice)DevicesList.SelectedItem).RealID);
+            Functions.SetDefaultDevice(AudioEngine.WASAPI_ENGINE, ((WASAPIDevice)DevicesList.SelectedItem).RealID);
             Close();
             Dispose();
         }

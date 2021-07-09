@@ -13,19 +13,31 @@ namespace OmniMIDIConfigurator
 {
     public partial class DefaultAudioOutput : Form
     {
-        bool IsIt = false;
+        List<AudioDevice> Devs = new List<AudioDevice>();
 
         public DefaultAudioOutput(bool IsItWasapi)
         {
             InitializeComponent();
-            IsIt = IsItWasapi;
-        }
 
-        private void DefaultOutput_Load(object sender, EventArgs e)
-        {
             try
             {
-                if (IsIt)
+                BASS_DEVICEINFO info = new BASS_DEVICEINFO();
+                string SelectedDevice = null;
+
+                try
+                {
+                    // Parse previous selected device
+                    SelectedDevice = (String)Program.SynthSettings.GetValue("AudioOutput", "default");
+                }
+                catch
+                {
+                    // The old setting isn't a string???
+                    // Overwrite old setting with the correct type of registry value
+                    Program.SynthSettings.SetValue("AudioOutput", "default", Microsoft.Win32.RegistryValueKind.String);
+                    SelectedDevice = "default";
+                }
+
+                if (IsItWasapi)
                 {
                     Text = String.Format(Text, "WASAPI");
                     UseNewWASAPI.Visible = true;
@@ -33,26 +45,57 @@ namespace OmniMIDIConfigurator
                 }
                 else Text = String.Format(Text, "DirectSound");
 
-                int selecteddeviceprev = (int)Program.SynthSettings.GetValue("AudioOutput", 0);
                 SwitchDefaultAudio.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("FollowDefaultAudioDevice", 0));
                 ReduceBootUpDelay.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("ReduceBootUpDelay", 0));
 
-                BASS_DEVICEINFO info = new BASS_DEVICEINFO();
-                DevicesList.Items.Add("Default Windows audio output");
-                Bass.BASS_GetDeviceInfo(selecteddeviceprev - 1, info);
-                Bass.BASS_GetDeviceInfo(-1, info);
+                Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_DEV_DEFAULT, 0);
 
+                // Add default output
+                Devs.Add(new AudioDevice() { Name = "Default Windows audio output", ID = "default" });
+
+                // Scan for output devices
                 for (int n = 0; Bass.BASS_GetDeviceInfo(n, info); n++)
-                    DevicesList.Items.Add(info.ToString());
+                {
+                    AudioDevice TmpDev = new AudioDevice();
 
-                try { DevicesList.SelectedIndex = selecteddeviceprev; }
-                catch { DevicesList.SelectedIndex = 0; }
+                    // Store device name and internal ID
+                    TmpDev.Name = info.name;
+
+                    // if n is 0, that means the device is "nosound"
+                    TmpDev.ID = (n != 0) ? info.driver : "nosound";
+
+                    // Store it in the devices list
+                    Devs.Add(TmpDev);
+                }
+
+                // Set the combobox to display items from the devices list,
+                // and make it only display their names
+                DevicesList.DataSource = Devs;
+                DevicesList.DisplayMember = "Name";
+
+                Bass.BASS_SetConfig(BASSConfig.BASS_CONFIG_DEV_DEFAULT, 1);
+
+                // Load previous device from registry
+                String PreviousDevice = (String)Program.SynthSettings.GetValue("AudioOutput", "default");
+                for (int n = 0; n < DevicesList.Items.Count; n++)
+                {
+                    AudioDevice TmpDev = (AudioDevice)DevicesList.Items[n];
+                    if (TmpDev.ID.Equals(PreviousDevice))
+                    {
+                        DevicesList.SelectedIndex = n;
+                        break;
+                    }
+
+                    // No device found, set to 0
+                    if (n == (DevicesList.Items.Count - 1))
+                        DevicesList.SelectedIndex = 0;
+                }
 
                 DevicesList.SelectedIndexChanged += new System.EventHandler(this.DevicesList_SelectedIndexChanged);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to load the dialog.\nBASS is probably unable to start, or it's missing.\n\nError:\n" + ex.Message.ToString(), "Oh no! OmniMIDI encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Unable to load the dialog.\nBASS is probably unable to start, or it's missing.\n\nError:\n" + ex.ToString(), "Oh no! OmniMIDI encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
                 Dispose();
             }
@@ -60,7 +103,7 @@ namespace OmniMIDIConfigurator
 
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Functions.SetDefaultDevice(AudioEngine.DSOUND_OR_WASAPI, DevicesList.SelectedIndex, null);
+            Functions.SetDefaultDevice(AudioEngine.DSOUND_OR_WASAPI, ((AudioDevice)DevicesList.Items[DevicesList.SelectedIndex]).ID);
         }
 
         private void SwitchDefaultAudio_CheckedChanged(object sender, EventArgs e)
@@ -90,5 +133,11 @@ namespace OmniMIDIConfigurator
                 Close();
             }
         }
+    }
+
+    class AudioDevice
+    {
+        public string Name { get; set; }
+        public string ID { get; set; }
     }
 }

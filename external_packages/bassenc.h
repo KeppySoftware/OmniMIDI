@@ -1,6 +1,6 @@
 /*
 	BASSenc 2.4 C/C++ header file
-	Copyright (c) 2003-2014 Un4seen Developments Ltd.
+	Copyright (c) 2003-2020 Un4seen Developments Ltd.
 
 	See the BASSENC.CHM file for more detailed documentation
 */
@@ -8,7 +8,7 @@
 #ifndef BASSENC_H
 #define BASSENC_H
 
-#include <bass.h>
+#include "bass.h"
 
 #if BASSVERSION!=0x204
 #error conflicting BASS and BASSenc versions
@@ -29,6 +29,7 @@ typedef DWORD HENCODE;		// encoder handle
 // Additional error codes returned by BASS_ErrorGetCode
 #define BASS_ERROR_ACM_CANCEL	2000	// ACM codec selection cancelled
 #define BASS_ERROR_CAST_DENIED	2100	// access denied (invalid password)
+#define BASS_ERROR_SERVER_CERT	2101	// missing/invalid certificate
 
 // Additional BASS_SetConfig options
 #define BASS_CONFIG_ENCODE_PRIORITY		0x10300
@@ -38,6 +39,9 @@ typedef DWORD HENCODE;		// encoder handle
 // Additional BASS_SetConfigPtr options
 #define BASS_CONFIG_ENCODE_ACM_LOAD		0x10302
 #define BASS_CONFIG_ENCODE_CAST_PROXY	0x10311
+#define BASS_CONFIG_ENCODE_CAST_BIND	0x10312
+#define BASS_CONFIG_ENCODE_SERVER_CERT	0x10320
+#define BASS_CONFIG_ENCODE_SERVER_KEY	0x10321
 
 // BASS_Encode_Start flags
 #define BASS_ENCODE_NOHEAD		1		// don't send a WAV header to the encoder
@@ -45,6 +49,7 @@ typedef DWORD HENCODE;		// encoder handle
 #define BASS_ENCODE_FP_16BIT	4		// convert floating-point sample data to 16-bit integer
 #define BASS_ENCODE_FP_24BIT	6		// convert floating-point sample data to 24-bit integer
 #define BASS_ENCODE_FP_32BIT	8		// convert floating-point sample data to 32-bit integer
+#define BASS_ENCODE_FP_AUTO		14		// convert floating-point sample data back to channel's format
 #define BASS_ENCODE_BIGEND		16		// big-endian sample data
 #define BASS_ENCODE_PAUSE		32		// start encording paused
 #define BASS_ENCODE_PCM			64		// write PCM sample data (no encoder)
@@ -55,6 +60,7 @@ typedef DWORD HENCODE;		// encoder handle
 #define BASS_ENCODE_CAST_NOLIMIT 0x1000	// don't limit casting data rate
 #define BASS_ENCODE_LIMIT		0x2000	// limit data rate to real-time
 #define BASS_ENCODE_AIFF		0x4000	// send an AIFF header rather than WAV
+#define BASS_ENCODE_DITHER		0x8000	// apply dither when converting floating-point sample data to integer
 #define BASS_ENCODE_AUTOFREE	0x40000 // free the encoder when the channel is freed
 
 // BASS_Encode_GetACMFormat flags
@@ -70,10 +76,11 @@ typedef DWORD HENCODE;		// encoder handle
 #define BASS_ENCODE_COUNT_QUEUE			3	// queued
 #define BASS_ENCODE_COUNT_QUEUE_LIMIT	4	// queue limit
 #define BASS_ENCODE_COUNT_QUEUE_FAIL	5	// failed to queue
+#define BASS_ENCODE_COUNT_IN_FP			6	// sent to encoder before floating-point conversion
 
 // BASS_Encode_CastInit content MIME types
 #define BASS_ENCODE_TYPE_MP3	"audio/mpeg"
-#define BASS_ENCODE_TYPE_OGG	"application/ogg"
+#define BASS_ENCODE_TYPE_OGG	"audio/ogg"
 #define BASS_ENCODE_TYPE_AAC	"audio/aacp"
 
 // BASS_Encode_CastGetStats types
@@ -87,7 +94,7 @@ handle : The encoder
 channel: The channel handle
 buffer : Buffer containing the encoded data
 length : Number of bytes
-user   : The 'user' parameter value given when calling BASS_Encode_Start */
+user   : The 'user' parameter value given when starting the encoder */
 
 typedef void (CALLBACK ENCODEPROCEX)(HENCODE handle, DWORD channel, const void *buffer, DWORD length, QWORD offset, void *user);
 /* Encoding callback function with offset info.
@@ -96,7 +103,7 @@ channel: The channel handle
 buffer : Buffer containing the encoded data
 length : Number of bytes
 offset : File offset of the data
-user   : The 'user' parameter value given when calling BASS_Encode_StartCA */
+user   : The 'user' parameter value given when starting the encoder */
 
 typedef DWORD (CALLBACK ENCODERPROC)(HENCODE handle, DWORD channel, void *buffer, DWORD length, DWORD maxout, void *user);
 /* Encoder callback function.
@@ -126,14 +133,17 @@ user   : The 'user' parameter value given when calling BASS_Encode_SetNotify */
 // Encoder notifications
 #define BASS_ENCODE_NOTIFY_ENCODER		1	// encoder died
 #define BASS_ENCODE_NOTIFY_CAST			2	// cast server connection died
+#define BASS_ENCODE_NOTIFY_SERVER		3	// server died
 #define BASS_ENCODE_NOTIFY_CAST_TIMEOUT	0x10000 // cast timeout
 #define BASS_ENCODE_NOTIFY_QUEUE_FULL	0x10001	// queue is out of space
 #define BASS_ENCODE_NOTIFY_FREE			0x10002	// encoder has been freed
 
 // BASS_Encode_ServerInit flags
 #define BASS_ENCODE_SERVER_NOHTTP		1	// no HTTP headers
+#define BASS_ENCODE_SERVER_META			2	// Shoutcast metadata
+#define BASS_ENCODE_SERVER_SSL			4
 
-DWORD BASSENCDEF(BASS_Encode_GetVersion)();
+DWORD BASSENCDEF(BASS_Encode_GetVersion)(void);
 
 HENCODE BASSENCDEF(BASS_Encode_Start)(DWORD handle, const char *cmdline, DWORD flags, ENCODEPROC *proc, void *user);
 HENCODE BASSENCDEF(BASS_Encode_StartLimit)(DWORD handle, const char *cmdline, DWORD flags, ENCODEPROC *proc, void *user, DWORD limit);
@@ -148,6 +158,7 @@ BOOL BASSENCDEF(BASS_Encode_SetNotify)(DWORD handle, ENCODENOTIFYPROC *proc, voi
 QWORD BASSENCDEF(BASS_Encode_GetCount)(DWORD handle, DWORD count);
 BOOL BASSENCDEF(BASS_Encode_SetChannel)(DWORD handle, DWORD channel);
 DWORD BASSENCDEF(BASS_Encode_GetChannel)(HENCODE handle);
+BOOL BASSENCDEF(BASS_Encode_UserOutput)(DWORD handle, QWORD offset, const void *buffer, DWORD length);
 
 #ifdef _WIN32
 DWORD BASSENCDEF(BASS_Encode_GetACMFormat)(DWORD handle, void *form, DWORD formlen, const char *title, DWORD flags);
@@ -158,6 +169,7 @@ HENCODE BASSENCDEF(BASS_Encode_StartACMFile)(DWORD handle, const void *form, DWO
 #ifdef __APPLE__
 HENCODE BASSENCDEF(BASS_Encode_StartCA)(DWORD handle, DWORD ftype, DWORD atype, DWORD flags, DWORD bitrate, ENCODEPROCEX *proc, void *user);
 HENCODE BASSENCDEF(BASS_Encode_StartCAFile)(DWORD handle, DWORD ftype, DWORD atype, DWORD flags, DWORD bitrate, const char *filename);
+void *BASSENCDEF(BASS_Encode_GetCARef)(DWORD handle);
 #endif
 
 #ifndef _WIN32_WCE

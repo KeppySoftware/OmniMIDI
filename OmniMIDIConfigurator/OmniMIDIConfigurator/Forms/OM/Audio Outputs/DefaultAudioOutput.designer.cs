@@ -118,7 +118,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change default {0} output";
-            this.Load += new System.EventHandler(this.DefaultOutput_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -132,7 +132,7 @@ typedef struct
 
 	DWORD AudioBitDepth = 0;				// Floating point audio
 	DWORD AudioFrequency = 44100;			// Audio frequency
-	DWORD AudioOutputReg = 0;				// Audio output (All devices except AudToWAV and ASIO)
+	DWORD AudioOutputReg = 0;				// Audio output (DEPRECATED)
 	DWORD BufferLength = 30;				// Default
 	DWORD ChannelUpdateLength = 0;			// Length of buffer in BASS_ChannelUpdate
 	DWORD CurrentEngine = WASAPI_ENGINE;	// Current engine

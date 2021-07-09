@@ -153,7 +153,6 @@ TCHAR AppNameW[MAX_PATH] = { 0 };		// debug info
 HANDLE hPipe = INVALID_HANDLE_VALUE;		// debug info
 
 // Main values
-INT AudioOutput = -1;				// Audio output (All devices except AudToWAV and ASIO)
 BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume
 HFX ChVolume;						// Volume
 DWORD RestartValue = 0;				// For AudToWAV

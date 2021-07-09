@@ -37,7 +37,6 @@ LPCWSTR ReturnBASSError(INT ErrorCode) {
 	Case(BASS_ERROR_NOPLAY)
 	Case(BASS_ERROR_NOTAVAIL)
 	Case(BASS_ERROR_NOTFILE)
-	Case(BASS_ERROR_PLAYING)
 	Case(BASS_ERROR_POSITION)
 	Case(BASS_ERROR_SPEAKER)
 	Case(BASS_ERROR_SSL)
@@ -83,7 +82,6 @@ LPCWSTR ReturnBASSErrorDesc(INT ErrorCode) {
 	case 32: return L"No Internet connection could be made.";
 	case 33: return L"Couldn't create the file.";
 	case 34: return L"Effects are not available with the selected device.";
-	case 35: return L"The stream is already playing.";
 	case 37: return L"The requested data is not available yet.";
 	case 38: return L"The stream is a \"decoding stream\"";
 	case 39: return L"DirectSoundCreate8 failed.";

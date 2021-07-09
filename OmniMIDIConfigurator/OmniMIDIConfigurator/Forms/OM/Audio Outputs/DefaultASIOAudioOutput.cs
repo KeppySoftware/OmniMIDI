@@ -58,6 +58,7 @@ namespace OmniMIDIConfigurator
                             BassAsio.BASS_ASIO_Init(n, BASSASIOInit.BASS_ASIO_THREAD);
 
                             BASS_ASIO_INFO fInfo = BassAsio.BASS_ASIO_GetInfo();
+
                             ASIODevice NewDev = new ASIODevice();
 
                             NewDev.Name = dInfo.name;
@@ -66,6 +67,8 @@ namespace OmniMIDIConfigurator
 
                             if (fInfo != null)
                             {
+                                NewDev.ChannelsL = new List<BASS_ASIO_CHANNELINFO>();
+
                                 NewDev.Status = GetDeviceDescription(NewDev.Name);
                                 NewDev.Inputs = fInfo.inputs;
                                 NewDev.Outputs = fInfo.outputs;
@@ -73,6 +76,18 @@ namespace OmniMIDIConfigurator
                                 NewDev.BufMax = fInfo.bufmax;
                                 NewDev.BufPref = fInfo.bufmax;
                                 NewDev.BufGran = fInfo.bufgran;
+
+                                for (int n2 = 0; n2 < fInfo.outputs; n2++)
+                                {
+                                    BASS_ASIO_CHANNELINFO cInfo = null;
+                                    
+                                    cInfo = BassAsio.BASS_ASIO_ChannelGetInfo(false, n2);
+
+                                    if (cInfo != null)
+                                        NewDev.ChannelsL.Add(cInfo);
+                                }
+
+                                NewDev.ChannelsR = new List<BASS_ASIO_CHANNELINFO>(NewDev.ChannelsL);
                             }
                             else
                             {
@@ -221,6 +236,11 @@ namespace OmniMIDIConfigurator
                 Status.ForeColor = Color.DarkGray;
                 Status.Font = new Font(Status.Font, FontStyle.Bold);
                 Status.Text = String.Format("BASSASIO failed to probe the driver, and returned {0}.", TmpDev.Status.Description);
+
+                LeftCh.DataSource = null;
+                RightCh.DataSource = null;
+                LeftCh.Enabled = false;
+                RightCh.Enabled = false;
             }
             else
             {
@@ -252,7 +272,15 @@ namespace OmniMIDIConfigurator
 
                 Status.Font = new Font(Status.Font, (TmpDev.Status.Flag == DevStatusEnum.DEVICE_SUPPORTED) ? FontStyle.Regular : FontStyle.Bold);
                 Status.Text = TmpDev.Status.Description;
+
+                LeftCh.DataSource = TmpDev.ChannelsL;
+                RightCh.DataSource = TmpDev.ChannelsR;
+                LeftCh.Enabled = /* true */ false;
+                RightCh.Enabled = /* true */ false;
             }
+
+            Invalidate();
+            Refresh();
         }
 
         private void DevicesList_SelectedIndexChanged(object sender, EventArgs e)
@@ -264,14 +292,11 @@ namespace OmniMIDIConfigurator
         private void ASIODirectFeed_CheckedChanged(object sender, EventArgs e)
         {
             Program.SynthSettings.SetValue("ASIODirectFeed", Convert.ToInt32(ASIODirectFeed.Checked), RegistryValueKind.DWord);
-            Program.SynthSettings.SetValue("LiveChanges", "1", RegistryValueKind.DWord);
         }
 
         private void Quit_Click(object sender, EventArgs e)
         {
-            Functions.SetDefaultDevice(AudioEngine.ASIO_ENGINE, 0, ((ASIODevice)DevicesList.SelectedItem).Name);
-            Close();
-            Dispose();
+            Functions.SetDefaultDevice(AudioEngine.ASIO_ENGINE, ((ASIODevice)DevicesList.SelectedItem).Name);
         }
 
         private void DeviceCP_Click(object sender, EventArgs e)
@@ -334,11 +359,6 @@ namespace OmniMIDIConfigurator
                 "Always keep the buffer size to the smallest size possible, and the update rate to the highest value your sound card can handle with no dropouts, " +
                 "if you want to avoid this issue.", "OmniMIDI Configurator ~ ASIO warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
-
-        private void DefaultASIOAudioOutput_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 
     class TestedASIODevices
@@ -375,6 +395,7 @@ namespace OmniMIDIConfigurator
         public int BufGran { get; set; }
         public bool NoData { get; set; }
         public int ID { get; set; }
+        public List<BASS_ASIO_CHANNELINFO> ChannelsR { get; set; }
+        public List<BASS_ASIO_CHANNELINFO> ChannelsL { get; set; }
     }
-
 }

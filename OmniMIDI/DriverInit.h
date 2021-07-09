@@ -506,7 +506,7 @@ void FreeUpBASSASIO() {
 void FreeUpXA() {
 	// Free up XA before doing anything
 	if (SndDrv) {
-		SndDrv->close();
+		SndDrv->close(true);
 		delete SndDrv;
 		SndDrv = NULL;
 	}
@@ -555,7 +555,7 @@ void FreeUpStream() {
 		}
 
 		if (SndDrv) {
-			SndDrv->close();
+			SndDrv->close(true);
 			delete SndDrv;
 			SndDrv = NULL;
 		}
@@ -570,8 +570,20 @@ void FreeUpStream() {
 	CheckVolume(TRUE);
 }
 
+DWORD BASSDevicesCount() {
+	// Initialize BASS device info
+	DWORD count = 0;
+	BASS_DEVICEINFO info;
+
+	// Count the devices
+	for (/* NULL */; BASS_GetDeviceInfo(count, &info); count++);
+
+	// Return the count
+	return count;
+}
+
 DWORD WASAPIDevicesCount() {
-	// Initialize BASSASIO device info
+	// Initialize BASSWASAPI device info
 	DWORD count = 0;
 	BASS_WASAPI_DEVICEINFO info;
 
@@ -580,6 +592,68 @@ DWORD WASAPIDevicesCount() {
 
 	// Return the count
 	return count;
+}
+
+DWORD ASIODevicesCount() {
+	// Initialize BASSASIO device info
+	DWORD count = 0;
+	BASS_ASIO_DEVICEINFO info;
+
+	// Count the devices
+	for (/* NULL */; BASS_ASIO_GetDeviceInfo(count, &info); count++);
+
+	// Return the count
+	return count;
+}
+
+LONG BASSDetectID() {
+	try {
+		// Initialize BASS info
+		BASS_DEVICEINFO info;
+		char OutputName[MAX_PATH] = "default";
+
+		// Initialize registry values
+		DWORD ASType = REG_SZ;
+		DWORD ASSize = sizeof(OutputName);
+
+		// Open the registry, and get the name of the selected ASIO device
+		PrintMessageToDebugLog("BASSDetectIDFunc", "Importing default BASS device from registry...");
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
+		RegQueryValueExA(Configuration.Address, "AudioOutput", NULL, &ASType, (LPBYTE)&OutputName, &ASSize);
+
+		PrintMessageToDebugLog("BASSDetectIDFunc", "Searching for output device...");
+
+		// Iterate through the available audio devices
+		if (strcmp(OutputName, "default") == 0)
+		{
+			PrintMessageToDebugLog("BASSDetectIDFunc", "The user wants OmniMIDI to follow the default audio device.");
+			return -1;
+		}
+		else if (strcmp(OutputName, "nosound") == 0)
+		{
+			PrintMessageToDebugLog("BASSDetectIDFunc", "The user wants OmniMIDI to make no sound.");
+			return 0;
+		}
+		else 
+		{
+			for (int CurrentDevice = 1; BASS_GetDeviceInfo(CurrentDevice, &info); CurrentDevice++)
+			{
+				// Return the correct ID when found
+				if (strcmp(OutputName, info.driver) == 0)
+				{
+					PrintMessageToDebugLog("BASSDetectIDFunc", "It's a match! Initializing matched BASS device...");
+					return CurrentDevice;
+				}
+			}
+		}
+
+		// Otherwise, return the default BASS device
+		PrintMessageToDebugLog("BASSDetectIDFunc", "No matches found, initializing first BASS device available...");
+		return -1;
+	}
+	catch (...) {
+		CrashMessage(L"BASSDetectID");
+	}
 }
 
 LONG WASAPIDetectID() {
@@ -622,18 +696,6 @@ LONG WASAPIDetectID() {
 	}
 }
 
-DWORD ASIODevicesCount() {
-	// Initialize BASSASIO device info
-	DWORD count = 0;
-	BASS_ASIO_DEVICEINFO info;
-
-	// Count the devices
-	for (/* NULL */; BASS_ASIO_GetDeviceInfo(count, &info); count++);
-
-	// Return the count
-	return count;
-}
-
 LONG ASIODetectID() {
 	try {
 		// Initialize BASSASIO info
@@ -674,26 +736,26 @@ BOOL InitializeBASSLibrary()
 	if (HostSessionMode) return TRUE;
 
 	// If DS or WASAPI are selected, then the final stream will not be a decoding channel
-	BOOL isds = (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == OLD_WASAPI);
+	BOOL NotDecodeMode = (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == OLD_WASAPI);
 	
 	// Stream flags
 	BOOL flags = BASS_DEVICE_STEREO | ((ManagedSettings.CurrentEngine == DXAUDIO_ENGINE) ? BASS_DEVICE_DSOUND : 0);
 	
-	// DWORDs on the registry are unsigned, so parse the value and subtract 1 to get the selected audio device
-	AudioOutput = ManagedSettings.AudioOutputReg - 1;
+	// Output device
+	int AudioOutput = BASSDetectID();
 
 	PrintMessageToDebugLog("InitializeBASSLibraryFunc", "Initializing BASS...");
 
-	if (isds && ManagedSettings.FollowDefaultAudioDevice) {
+	if (NotDecodeMode && ManagedSettings.FollowDefaultAudioDevice) {
 		// If the audio output is set to -1 (Default device),
 		// force BASS to follow Windows' default device whenever it's changed
-		if (AudioOutput == -1) BASS_SetConfig(BASS_CONFIG_DEV_DEFAULT, 1);
+		BASS_SetConfig(BASS_CONFIG_DEV_DEFAULT, (AudioOutput <= 0) ? 1 : 0);
 	}
 	
 	BOOL init = BASS_Init(
-		isds ? AudioOutput : 0, 
+		NotDecodeMode ? AudioOutput : 0,
 		ManagedSettings.AudioFrequency, 
-		(isds ? ((ManagedSettings.ReduceBootUpDelay ? 0 : BASS_DEVICE_LATENCY) | BASS_DEVICE_CPSPEAKERS) : NULL) | flags,
+		(NotDecodeMode ? ((ManagedSettings.ReduceBootUpDelay ? 0 : BASS_DEVICE_LATENCY) | BASS_DEVICE_CPSPEAKERS) : NULL) | flags,
 		GetActiveWindow(), 
 		NULL);
 	DWORD BERR = BASS_ErrorGetCode();
@@ -920,29 +982,25 @@ BEGSWITCH:
 				break;
 			}
 
-			if (AudioOutput != NULL)
-			{
-				// If using WASAPI, disable playback buffering
-				if (ManagedSettings.CurrentEngine == OLD_WASAPI) {
-					PrintMessageToDebugLog("InitializeBASSOutput", "Disabling buffering, this should only be visible when using WASAPI...");
+			if (ManagedSettings.CurrentEngine == OLD_WASAPI) {
+				PrintMessageToDebugLog("InitializeBASSOutput", "Disabling buffering, this should only be visible when using WASAPI...");
 
-					BOOL NoBufferCheck = BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_BUFFER, 0);
-					CheckUp(FALSE, ERRORCODE, "No Buffer Mode 1", TRUE);
+				BOOL NoBufferCheck = BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_BUFFER, 0);
+				CheckUp(FALSE, ERRORCODE, "No Buffer Mode 1", TRUE);
 
-					if (NoBufferCheck)
-					{
-						BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
-						CheckUp(FALSE, ERRORCODE, "No Buffer Mode 2", TRUE);
-					}
+				if (NoBufferCheck)
+				{
+					BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
+					CheckUp(FALSE, ERRORCODE, "No Buffer Mode 2", TRUE);
 				}
-
-				// And finally, open the stream
-				PrintMessageToDebugLog("InitializeBASSOutput", "Starting stream...");
-				BASS_ChannelPlay(OMStream, FALSE);
-				CheckUp(FALSE, ERRORCODE, "Channel Play", TRUE);
-
-				InitializationCompleted = TRUE;
 			}
+
+			// And finally, open the stream
+			PrintMessageToDebugLog("InitializeBASSOutput", "Starting stream...");
+			BASS_ChannelPlay(OMStream, FALSE);
+			CheckUp(FALSE, ERRORCODE, "Channel Play", TRUE);
+
+			InitializationCompleted = TRUE;
 		}
 
 		break;

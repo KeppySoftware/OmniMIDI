@@ -26,7 +26,7 @@ namespace OmniMIDIConfigurator
         {
             Program.SynthSettings.SetValue("XASamplesPerFrame", SPFVal.Value, Microsoft.Win32.RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("XASPFSweepRate", SPFSweepRatioVal.Value, Microsoft.Win32.RegistryValueKind.DWord);
-            Functions.SetDefaultDevice(AudioEngine.XA_ENGINE, 0, null);
+            Functions.SetDefaultDevice(AudioEngine.XA_ENGINE, null);
             Close();
             Dispose();
         }

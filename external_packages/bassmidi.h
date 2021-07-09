@@ -1,6 +1,6 @@
 /*
 	BASSMIDI 2.4 C/C++ header file
-	Copyright (c) 2006-2018 Un4seen Developments Ltd.
+	Copyright (c) 2006-2021 Un4seen Developments Ltd.
 
 	See the BASSMIDI.CHM file for more detailed documentation
 */
@@ -12,6 +12,11 @@
 
 #if BASSVERSION!=0x204
 #error conflicting BASS and BASSMIDI versions
+#endif
+
+#ifdef __OBJC__
+typedef int BOOL32;
+#define BOOL BOOL32 // override objc's BOOL
 #endif
 
 #ifdef __cplusplus
@@ -34,9 +39,14 @@ typedef DWORD HSOUNDFONT;	// soundfont handle
 #define BASS_CONFIG_MIDI_VOICES		0x10401
 #define BASS_CONFIG_MIDI_AUTOFONT	0x10402
 #define BASS_CONFIG_MIDI_IN_PORTS	0x10404
+#define BASS_CONFIG_MIDI_SAMPLETHREADS 0x10406
+#define BASS_CONFIG_MIDI_SAMPLEMEM	0x10407
+#define BASS_CONFIG_MIDI_SAMPLEREAD	0x10408
+#define BASS_CONFIG_MIDI_SAMPLELOADING	0x1040a
 
 // Additional BASS_SetConfigPtr options
 #define BASS_CONFIG_MIDI_DEFFONT	0x10403
+#define BASS_CONFIG_MIDI_SFZHEAD	0x10409
 
 // Additional sync types
 #define BASS_SYNC_MIDI_MARK		0x10000
@@ -192,6 +202,9 @@ typedef struct {
 #define MIDI_EVENT_MOD_PITCH		77
 #define MIDI_EVENT_MOD_FILTER		78
 #define MIDI_EVENT_MOD_VOLUME		79
+#define MIDI_EVENT_VIBRATO_RATE		80
+#define MIDI_EVENT_VIBRATO_DEPTH	81
+#define MIDI_EVENT_VIBRATO_DELAY	82
 #define MIDI_EVENT_MIXLEVEL			0x10000
 #define MIDI_EVENT_TRANSPOSE		0x10001
 #define MIDI_EVENT_SYSTEMEX			0x10002
@@ -243,6 +256,9 @@ typedef struct {
 #define BASS_ATTRIB_MIDI_STATE		0x12005
 #define BASS_ATTRIB_MIDI_SRC		0x12006
 #define BASS_ATTRIB_MIDI_KILL		0x12007
+#define BASS_ATTRIB_MIDI_SPEED		0x12008
+#define BASS_ATTRIB_MIDI_REVERB		0x12009
+#define BASS_ATTRIB_MIDI_VOL		0x1200a
 #define BASS_ATTRIB_MIDI_TRACK_VOL	0x12100 // + track #
 
 // Additional tag type
@@ -260,9 +276,17 @@ seeking: TRUE = the event is being processed while seeking, FALSE = it is being 
 user   : The 'user' parameter value given when calling BASS_MIDI_StreamSetFilter
 RETURN : TRUE = process the event, FALSE = drop the event */
 
+// BASS_MIDI_FontLoadEx flags
+#define BASS_MIDI_FONTLOAD_NOWAIT	1	// don't want for the samples to load
+#define BASS_MIDI_FONTLOAD_COMPACT	2	// compact samples
+#define BASS_MIDI_FONTLOAD_NOLOAD	4	// don't load (only compact)
+#define BASS_MIDI_FONTLOAD_TIME		8	// length is in milliseconds
+#define BASS_MIDI_FONTLOAD_KEEPDEC	16	// keep decoders
+
 // BASS_MIDI_FontPack flags
 #define BASS_MIDI_PACK_NOHEAD		1	// don't send a WAV header to the encoder
 #define BASS_MIDI_PACK_16BIT		2	// discard low 8 bits of 24-bit sample data
+#define BASS_MIDI_PACK_48KHZ		4	// set encoding rate to 48000 Hz (else 44100 Hz)
 
 typedef struct {
 	const char *name;	// description
@@ -277,6 +301,8 @@ time   : Timestamp
 buffer : Buffer containing MIDI data
 length : Number of bytes of data
 user   : The 'user' parameter value given when calling BASS_MIDI_InInit */
+
+DWORD BASSMIDIDEF(BASS_MIDI_GetVersion)(void);
 
 HSTREAM BASSMIDIDEF(BASS_MIDI_StreamCreate)(DWORD channels, DWORD flags, DWORD freq);
 HSTREAM BASSMIDIDEF(BASS_MIDI_StreamCreateFile)(BOOL mem, const void *file, QWORD offset, QWORD length, DWORD flags, DWORD freq);
@@ -304,10 +330,12 @@ BOOL BASSMIDIDEF(BASS_MIDI_FontGetInfo)(HSOUNDFONT handle, BASS_MIDI_FONTINFO *i
 BOOL BASSMIDIDEF(BASS_MIDI_FontGetPresets)(HSOUNDFONT handle, DWORD *presets);
 const char *BASSMIDIDEF(BASS_MIDI_FontGetPreset)(HSOUNDFONT handle, int preset, int bank);
 BOOL BASSMIDIDEF(BASS_MIDI_FontLoad)(HSOUNDFONT handle, int preset, int bank);
+BOOL BASSMIDIDEF(BASS_MIDI_FontLoadEx)(HSOUNDFONT handle, int preset, int bank, DWORD length, DWORD flags);
 BOOL BASSMIDIDEF(BASS_MIDI_FontUnload)(HSOUNDFONT handle, int preset, int bank);
 BOOL BASSMIDIDEF(BASS_MIDI_FontCompact)(HSOUNDFONT handle);
 BOOL BASSMIDIDEF(BASS_MIDI_FontPack)(HSOUNDFONT handle, const void *outfile, const void *encoder, DWORD flags);
 BOOL BASSMIDIDEF(BASS_MIDI_FontUnpack)(HSOUNDFONT handle, const void *outfile, DWORD flags);
+DWORD BASSMIDIDEF(BASS_MIDI_FontFlags)(HSOUNDFONT handle, DWORD flags, DWORD mask);
 BOOL BASSMIDIDEF(BASS_MIDI_FontSetVolume)(HSOUNDFONT handle, float volume);
 float BASSMIDIDEF(BASS_MIDI_FontGetVolume)(HSOUNDFONT handle);
 
@@ -323,6 +351,7 @@ BOOL BASSMIDIDEF(BASS_MIDI_InStop)(DWORD device);
 }
 
 #ifndef NOBASSMIDIOVERLOADS
+
 static inline BOOL BASS_MIDI_StreamSetFonts(HSTREAM handle, const BASS_MIDI_FONTEX *fonts, DWORD count)
 {
 	return BASS_MIDI_StreamSetFonts(handle, (const void*)fonts, count|BASS_MIDI_FONT_EX);
@@ -360,6 +389,10 @@ static inline BOOL BASS_MIDI_FontUnpack(HSOUNDFONT handle, const WCHAR *outfile,
 }
 #endif
 #endif
+#endif
+
+#ifdef __OBJC__
+#undef BOOL
 #endif
 
 #endif
