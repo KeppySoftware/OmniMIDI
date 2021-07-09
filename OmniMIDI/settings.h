@@ -584,7 +584,6 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"AudioFrequency", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioFrequency, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"AudioOutput", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioOutputReg, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"CurrentEngine", NULL, &dwType, (LPBYTE)&ManagedSettings.CurrentEngine, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"DisableChime", NULL, &dwType, (LPBYTE)&DisableChime, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"EvBufferMultRatio", NULL, &dwType, (LPBYTE)&TEvBufferMultRatio, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"EvBufferSize", NULL, &qwType, (LPBYTE)&TEvBufferSize, &qwSize);
@@ -677,12 +676,6 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			// to avoid stuck notes or crashes
 			if (!SettingsManagedByClient) ManagedSettings.DontMissNotes = TempDMN;
 			if (RT) ResetSynth(TRUE, FALSE);
-		}
-
-		if (IsBootUp && (HyperMode && !DisableChime)) {
-			// It's enabled, do some beeps to notify the user (If the chime is enabled)
-			Beep(440, 100);
-			Beep(687, 100);
 		}
 
 		// Check if the value is different from the temporary one

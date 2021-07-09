@@ -98,7 +98,6 @@ BOOL DriverInitStatus = FALSE;
 BOOL AlreadyInitializedViaKDMAPI = FALSE;
 BOOL BASSLoadedToMemory = FALSE;
 BOOL ASIOReady = FALSE;
-BOOL DisableChime = FALSE;
 BOOL KDMAPIEnabled = FALSE;
 BOOL IsKDMAPIViaWinMM = FALSE;
 BOOL HostSessionMode = FALSE;

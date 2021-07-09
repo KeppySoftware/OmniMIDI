@@ -103,7 +103,6 @@
             this.OverrideNoteLength = new System.Windows.Forms.CheckBox();
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
-            this.DisableChime = new System.Windows.Forms.CheckBox();
             this.DebugMode = new System.Windows.Forms.CheckBox();
             this.IgnoreCloseCalls = new System.Windows.Forms.CheckBox();
             this.UseTGT = new System.Windows.Forms.CheckBox();
@@ -1112,18 +1111,6 @@
             this.Requirements.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.Requirements.ToolTipTitle = "Requirement";
             // 
-            // DisableChime
-            // 
-            this.DisableChime.AutoSize = true;
-            this.DisableChime.Location = new System.Drawing.Point(9, 82);
-            this.DisableChime.Name = "DisableChime";
-            this.DisableChime.Size = new System.Drawing.Size(467, 17);
-            this.DisableChime.TabIndex = 41;
-            this.DisableChime.Text = "Disable \"Minimum Playback\"/\"Debug Mode\" chime (Might also speed up the driver\'s b" +
-    "oot-up)";
-            this.Requirements.SetToolTip(this.DisableChime, "This will require a restart of the audio stream.");
-            this.DisableChime.UseVisualStyleBackColor = true;
-            // 
             // DebugMode
             // 
             this.DebugMode.AutoSize = true;
@@ -1139,7 +1126,7 @@
             // IgnoreCloseCalls
             // 
             this.IgnoreCloseCalls.AutoSize = true;
-            this.IgnoreCloseCalls.Location = new System.Drawing.Point(9, 158);
+            this.IgnoreCloseCalls.Location = new System.Drawing.Point(9, 139);
             this.IgnoreCloseCalls.Name = "IgnoreCloseCalls";
             this.IgnoreCloseCalls.Size = new System.Drawing.Size(632, 17);
             this.IgnoreCloseCalls.TabIndex = 45;
@@ -1151,7 +1138,7 @@
             // UseTGT
             // 
             this.UseTGT.AutoSize = true;
-            this.UseTGT.Location = new System.Drawing.Point(9, 139);
+            this.UseTGT.Location = new System.Drawing.Point(9, 120);
             this.UseTGT.Name = "UseTGT";
             this.UseTGT.Size = new System.Drawing.Size(605, 17);
             this.UseTGT.TabIndex = 44;
@@ -1187,7 +1174,7 @@
             // LiveChangesTrigger
             // 
             this.LiveChangesTrigger.AutoSize = true;
-            this.LiveChangesTrigger.Location = new System.Drawing.Point(9, 101);
+            this.LiveChangesTrigger.Location = new System.Drawing.Point(9, 82);
             this.LiveChangesTrigger.Name = "LiveChangesTrigger";
             this.LiveChangesTrigger.Size = new System.Drawing.Size(464, 17);
             this.LiveChangesTrigger.TabIndex = 42;
@@ -1207,7 +1194,7 @@
             // FastHotKeys
             // 
             this.FastHotKeys.AutoSize = true;
-            this.FastHotKeys.Location = new System.Drawing.Point(9, 120);
+            this.FastHotKeys.Location = new System.Drawing.Point(9, 101);
             this.FastHotKeys.Name = "FastHotKeys";
             this.FastHotKeys.Size = new System.Drawing.Size(485, 17);
             this.FastHotKeys.TabIndex = 43;
@@ -1230,10 +1217,9 @@
             this.LegacySetDia.Controls.Add(this.label15);
             this.LegacySetDia.Controls.Add(this.LiveChangesTrigger);
             this.LegacySetDia.Controls.Add(this.ChangeEVBuf);
-            this.LegacySetDia.Controls.Add(this.DisableChime);
             this.LegacySetDia.Location = new System.Drawing.Point(3, 904);
             this.LegacySetDia.Name = "LegacySetDia";
-            this.LegacySetDia.Size = new System.Drawing.Size(670, 257);
+            this.LegacySetDia.Size = new System.Drawing.Size(670, 238);
             this.LegacySetDia.TabIndex = 2;
             this.LegacySetDia.TabStop = false;
             this.LegacySetDia.Text = "Debug and legacy settings";
@@ -1242,7 +1228,7 @@
             // 
             this.WinMMSpeedDiag.AutoSize = true;
             this.WinMMSpeedDiag.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.WinMMSpeedDiag.Location = new System.Drawing.Point(6, 216);
+            this.WinMMSpeedDiag.Location = new System.Drawing.Point(6, 197);
             this.WinMMSpeedDiag.Name = "WinMMSpeedDiag";
             this.WinMMSpeedDiag.Size = new System.Drawing.Size(250, 13);
             this.WinMMSpeedDiag.TabIndex = 48;
@@ -1253,7 +1239,7 @@
             // ShowChangelogUpdate
             // 
             this.ShowChangelogUpdate.AutoSize = true;
-            this.ShowChangelogUpdate.Location = new System.Drawing.Point(9, 177);
+            this.ShowChangelogUpdate.Location = new System.Drawing.Point(9, 158);
             this.ShowChangelogUpdate.Name = "ShowChangelogUpdate";
             this.ShowChangelogUpdate.Size = new System.Drawing.Size(313, 17);
             this.ShowChangelogUpdate.TabIndex = 46;
@@ -1278,7 +1264,7 @@
             // 
             this.SpatialSound.AutoSize = true;
             this.SpatialSound.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.SpatialSound.Location = new System.Drawing.Point(6, 234);
+            this.SpatialSound.Location = new System.Drawing.Point(6, 215);
             this.SpatialSound.Name = "SpatialSound";
             this.SpatialSound.Size = new System.Drawing.Size(148, 13);
             this.SpatialSound.TabIndex = 50;
@@ -1290,7 +1276,7 @@
             // 
             this.ChangeEVBuf.AutoSize = true;
             this.ChangeEVBuf.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ChangeEVBuf.Location = new System.Drawing.Point(6, 198);
+            this.ChangeEVBuf.Location = new System.Drawing.Point(6, 179);
             this.ChangeEVBuf.Name = "ChangeEVBuf";
             this.ChangeEVBuf.Size = new System.Drawing.Size(211, 13);
             this.ChangeEVBuf.TabIndex = 47;
@@ -1306,7 +1292,7 @@
             this.Controls.Add(this.SynthBox);
             this.Controls.Add(this.EnginesBox);
             this.Name = "SettingsPanel";
-            this.Size = new System.Drawing.Size(678, 1166);
+            this.Size = new System.Drawing.Size(678, 1148);
             this.Load += new System.EventHandler(this.SettingsPanel_Load);
             this.EnginesBox.ResumeLayout(false);
             this.EnginesBox.PerformLayout();
@@ -1406,7 +1392,6 @@
         private System.Windows.Forms.Label IgnoreNotesLL;
         private System.Windows.Forms.Label PrioLab;
         private System.Windows.Forms.ComboBox PrioBox;
-        public System.Windows.Forms.CheckBox DisableChime;
         private LinkLabelEx ChangeEVBuf;
         public System.Windows.Forms.CheckBox LiveChangesTrigger;
         private System.Windows.Forms.Label label15;

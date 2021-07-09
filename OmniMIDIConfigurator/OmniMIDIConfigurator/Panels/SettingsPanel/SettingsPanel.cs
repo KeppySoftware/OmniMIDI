@@ -150,8 +150,6 @@ namespace OmniMIDIConfigurator
                 try { PrioBox.SelectedIndex = Convert.ToInt32(Program.SynthSettings.GetValue("DriverPriority", 0)); }
                 catch { PrioBox.SelectedIndex = 0; }
 
-
-                DisableChime.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("DisableChime", 0));
                 LiveChangesTrigger.Checked = Properties.Settings.Default.LiveChanges;
 
                 VolumeBoost.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("VolumeBoost", 0));
@@ -261,7 +259,6 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("DriverPriority", PrioBox.SelectedIndex, RegistryValueKind.DWord);
             Program.SynthSettings.GetValue("AudioBitDepth", AudioBitDepth.SelectedIndex);
 
-            Program.SynthSettings.SetValue("DisableChime", Convert.ToInt32(DisableChime.Checked), RegistryValueKind.DWord);
             Properties.Settings.Default.LiveChanges = LiveChangesTrigger.Checked;
 
             Program.SynthSettings.SetValue("VolumeBoost", Convert.ToInt32(VolumeBoost.Checked), RegistryValueKind.DWord);
@@ -530,7 +527,6 @@ namespace OmniMIDIConfigurator
             // App restart
             Requirements.SetToolTip(KSDAPIBox, Desc2);
             Requirements.SetToolTip(DisableCookedPlayer, Desc2);
-            Requirements.SetToolTip(DisableChime, Desc2);
             Requirements.SetToolTip(DebugMode, Desc2);
             Requirements.SetToolTip(UseTGT, Desc2);
         }

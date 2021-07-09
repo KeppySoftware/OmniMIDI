@@ -261,7 +261,7 @@
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <CreateHotpatchableImage>
       </CreateHotpatchableImage>
       <FloatingPointExceptions>false</FloatingPointExceptions>
@@ -276,8 +276,8 @@
       <SDLCheck>false</SDLCheck>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
-      <ControlFlowGuard>false</ControlFlowGuard>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
       <BasicRuntimeChecks>
       </BasicRuntimeChecks>
       <CallingConvention>StdCall</CallingConvention>
@@ -390,7 +390,7 @@
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <CreateHotpatchableImage>
       </CreateHotpatchableImage>
       <FloatingPointExceptions>false</FloatingPointExceptions>
@@ -405,8 +405,8 @@
       <SDLCheck>false</SDLCheck>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
-      <ControlFlowGuard>false</ControlFlowGuard>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
       <BasicRuntimeChecks>
       </BasicRuntimeChecks>
       <CallingConvention>StdCall</CallingConvention>
@@ -531,11 +531,11 @@
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <CallingConvention>Cdecl</CallingConvention>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <SDLCheck>false</SDLCheck>
-      <ControlFlowGuard>false</ControlFlowGuard>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
       <BasicRuntimeChecks>
       </BasicRuntimeChecks>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -650,11 +650,11 @@
       <FloatingPointExceptions>false</FloatingPointExceptions>
       <CallingConvention>Cdecl</CallingConvention>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <SDLCheck>false</SDLCheck>
-      <ControlFlowGuard>false</ControlFlowGuard>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
       <BasicRuntimeChecks>
       </BasicRuntimeChecks>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -767,9 +767,9 @@
       </CompileAsWinRT>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <CallingConvention>StdCall</CallingConvention>
+      <CallingConvention>Cdecl</CallingConvention>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <SDLCheck>false</SDLCheck>
@@ -889,9 +889,9 @@
       </CompileAsWinRT>
       <StructMemberAlignment>Default</StructMemberAlignment>
       <FloatingPointExceptions>false</FloatingPointExceptions>
-      <CallingConvention>StdCall</CallingConvention>
+      <CallingConvention>Cdecl</CallingConvention>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <SDLCheck>false</SDLCheck>

@@ -200,12 +200,6 @@ void CreateConsole() {
 		TCHAR* MainLibrary = (TCHAR*)malloc(sizeof(TCHAR) * NTFS_MAX_PATH);
 		TCHAR* DebugDir = (TCHAR*)malloc(sizeof(TCHAR) * NTFS_MAX_PATH);
 
-		if (!DisableChime)
-		{
-			Beep(440, 100);
-			Beep(440, 100);
-		}
-
 		// Get the debug info first
 		GetAppName();
 

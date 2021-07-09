@@ -220,7 +220,6 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 		if (!LoadedOnce) {
 			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
 			RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"DisableChime", NULL, &dwType, (LPBYTE)&DisableChime, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
 
 			// If the debug mode is enabled, and the process isn't banned, create the debug log

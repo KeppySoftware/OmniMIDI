@@ -53,8 +53,8 @@ There's a patch available for VirtualMIDISynth. You can get it here: https://git
 
 ### Minimum system requirements for MIDI playback on x86/x64 systems
 The minimum requirements for this synthesizer to work are the following:
-- A x86 CPU running at 1GHz
-- 512MB of RAM
+- A SSE2-capable x86 CPU running at 1.5GHz
+- 1024MB of RAM
 - DirectX 9 capable sound card or better
 - Windows Vista SP2 or greater *(Server versions are supported too)*
 
@@ -67,9 +67,9 @@ The minimum requirements for this synthesizer to work are the following:
 
 ### Recommended system requirements for studio environments
 For the best experience, it's recommended to run the synthesizer on a PC with the following specifications:
-- An octa-core CPU running at 3GHz *(With AVX support)*
+- An octa-core CPU running at 3GHz
 - 32GB of RAM
-- Native Instruments Komplete Audio 6 or another dedicated ASIO-capable hardware interface
+- Realtek ALC1220 with ASIO4ALL or Native Instruments Komplete Audio 6 (or another dedicated ASIO-capable hardware interface)
 - Windows 10 Pro
 - OmniMapper and Windows Multimedia Wrapper for DAWs _(Both included in the driver's configurator, for easy installation)_
 
@@ -78,7 +78,7 @@ To compile (and test) the synthesizer, you need:
 - Microsoft Visual Studio 2019
 - Inno Setup 6.x (It's recommended to install Inno Script Studio and the Inno Setup Pack)
 - Inno Downloader Plugin
-- Microsoft Windows SDK 10.0.19041
+- Microsoft Windows SDK 10.0.19042
 
 ## ASIO support details
 You can read the lists here: [OmniMIDIASIOSupportList folder on GitHub](https://github.com/KeppySoftware/OmniMIDI/tree/master/OmniMIDIASIOSupportList)

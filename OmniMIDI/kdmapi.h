@@ -312,6 +312,20 @@ BOOL StreamHealthCheck() {
 
 void Supervisor(LPVOID lpV) {
 	try {
+		// Parse the app name, and start the debug pipe to the debug window
+		PrintMessageToDebugLog("StartDriver", "Checking if app is allowed to use RTSS OSD...");
+		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
+
+		// Load the BASS functions
+		if (!LoadBASSFunctions())
+			// If BASS is still unavailable, commit suicide
+			CrashMessage(L"NoBASSFound");
+
+		// Ok, everything's ready, do not open more debug pipes from now on
+		DriverInitStatus = TRUE;
+		AlreadyStartedOnce = TRUE;
+		bass_initialized = TRUE;
+
 		if (!PrepareDriver())
 			CrashMessage(L"0xDEADDEAD");
 
@@ -347,6 +361,28 @@ void Supervisor(LPVOID lpV) {
 		CrashMessage(L"SettingsAndHealthThread");
 	}
 
+	FreeFonts();
+	FreeUpStream();
+	FreeUpMemory();
+
+	// Close registry keys
+	PrintMessageToDebugLog("StopDriver", "Closing registry keys...");
+	CloseRegistryKey(MainKey);
+	PrintMessageToDebugLog("StopDriver", "Closed MainKey...");
+	CloseRegistryKey(Configuration);
+	PrintMessageToDebugLog("StopDriver", "Closed Configuration...");
+	CloseRegistryKey(Channels);
+	PrintMessageToDebugLog("StopDriver", "Closed Channels...");
+	CloseRegistryKey(ChanOverride);
+	PrintMessageToDebugLog("StopDriver", "Closed ChanOverride...");
+	CloseRegistryKey(SFDynamicLoader);
+	PrintMessageToDebugLog("StopDriver", "Closed SFDynamicLoader...");
+
+	// Unload BASS functions
+	UnloadBASSFunctions();
+
+	SetEvent(OMReady);
+
 	// Close the thread
 	PrintMessageToDebugLog("StreamWatchdog", "Closing health thread...");
 	TerminateThread(&HealthThread, TRUE, 0);
@@ -358,20 +394,6 @@ BOOL DoStartClient() {
 		if (!OMReady)
 			OMReady = CreateEvent(NULL, TRUE, FALSE, L"OMReady");
 
-		// Enable the debug log, if the process isn't banned
-		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
-		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
-		if (ManagedSettings.DebugMode) CreateConsole();
-
-		// Parse the app name, and start the debug pipe to the debug window
-		PrintMessageToDebugLog("StartDriver", "Checking if app is allowed to use RTSS OSD...");
-		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
-
-		// Load the BASS functions
-		if (!LoadBASSFunctions())
-			// If BASS is still unavailable, commit suicide
-			CrashMessage(L"NoBASSFound");
-
 		// Create the main thread
 		PrintMessageToDebugLog("StartDriver", "Starting main watchdog thread...");
 		CheckIfThreadClosed(&HealthThread);
@@ -380,14 +402,9 @@ BOOL DoStartClient() {
 		PrintMessageToDebugLog("StartDriver", "Done!");
 
 		// Wait for the SoundFonts to load, then close the event's handle
-		PrintMessageToDebugLog("StartDriver", "Waiting for the SoundFonts to load...");
+		PrintMessageToDebugLog("StartDriver", "Waiting for the driver to signal if it's ready...");
 		if (WaitForSingleObject(OMReady, INFINITE) == WAIT_OBJECT_0)
 			ResetEvent(OMReady);
-
-		// Ok, everything's ready, do not open more debug pipes from now on
-		DriverInitStatus = TRUE;
-		AlreadyStartedOnce = TRUE;
-		bass_initialized = TRUE;
 
 		PrintMessageToDebugLog("StartDriver", "Driver initialized.");
 		return TRUE;
@@ -397,16 +414,19 @@ BOOL DoStartClient() {
 }
 
 BOOL DoStopClient() {
-	if (DriverInitStatus) {
+	if (DriverInitStatus) 
+	{
 		PrintMessageToDebugLog("StopDriver", "Terminating driver...");
 
 		// Close the threads and free up the allocated memory
 		PrintMessageToDebugLog("StopDriver", "Freeing memory...");
-		bass_initialized = FALSE;
 		CloseThreads(TRUE);
-		FreeFonts();
-		FreeUpStream();
-		FreeUpMemory();
+
+		bass_initialized = FALSE;
+
+		PrintMessageToDebugLog("StartDriver", "Waiting for the threads to go offline..");
+		if (WaitForSingleObject(OMReady, INFINITE) == WAIT_OBJECT_0)
+			ResetEvent(OMReady);
 
 		PrintMessageToDebugLog("StopDriver", "Deleting handles...");
 		if (OMReady)
@@ -414,22 +434,6 @@ BOOL DoStopClient() {
 			CloseHandle(OMReady);
 			OMReady = NULL;
 		}
-
-		// Close registry keys
-		PrintMessageToDebugLog("StopDriver", "Closing registry keys...");
-		CloseRegistryKey(MainKey);
-		PrintMessageToDebugLog("StopDriver", "Closed MainKey...");
-		CloseRegistryKey(Configuration);
-		PrintMessageToDebugLog("StopDriver", "Closed Configuration...");
-		CloseRegistryKey(Channels);
-		PrintMessageToDebugLog("StopDriver", "Closed Channels...");
-		CloseRegistryKey(ChanOverride);
-		PrintMessageToDebugLog("StopDriver", "Closed ChanOverride...");
-		CloseRegistryKey(SFDynamicLoader);
-		PrintMessageToDebugLog("StopDriver", "Closed SFDynamicLoader...");
-
-		// Unload BASS functions
-		UnloadBASSFunctions();
 
 		// Boopers
 		DriverInitStatus = FALSE;
@@ -477,6 +481,11 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 		AlreadyInitializedViaKDMAPI = TRUE;
 		KDMAPIEnabled = TRUE;
 		EnableBuiltInHandler("KDMAPI_IKS");
+
+		// Enable the debug log, if the process isn't banned
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
+		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
+		if (ManagedSettings.DebugMode) CreateConsole();
 
 		// Start the driver's engine
 		if (!DoStartClient()) {
@@ -617,8 +626,8 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr) {
 	if (IIMidiHdr->dwBufferLength > LONGMSG_MAXSIZE)					// Buffer is bigger than 64K
 		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "The given stream buffer is greater than 64K.");
 
-	if (IIMidiHdr->dwBytesRecorded > IIMidiHdr->dwBufferLength ||	// The recorded buffer is bigger than the actual buffer? How.
-		IIMidiHdr->dwBytesRecorded < 1)								// Buffer is smaller tha one?
+	if (IIMidiHdr->dwBytesRecorded > IIMidiHdr->dwBufferLength ||		// The recorded buffer is bigger than the actual buffer? How.
+		IIMidiHdr->dwBytesRecorded < 1)									// Buffer is smaller tha one?
 		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "Invalid buffer size passed to dwBytesRecorded.");
 
 	if (IIMidiHdr->dwFlags & MHDR_PREPARED)								// Already prepared, everything is fine
