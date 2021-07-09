@@ -22,34 +22,22 @@ class sound_out_i_xaudio2;
 
 void xaudio2_device_changed(sound_out_i_xaudio2*);
 
-typedef struct LS {
-	long volatile ReaderCount;
-	long volatile WriterCount;
-} LS;
-
 class XAudio2_Device_Notifier : public IMMNotificationClient
 {
-
 	volatile LONG registered;
 	IMMDeviceEnumerator* pEnumerator;
 
 	CRITICAL_SECTION lock;
-	LS Lock;
 	std::vector<sound_out_i_xaudio2*> instances;
 
 public:
-	XAudio2_Device_Notifier() : registered(0) { }
-	~XAudio2_Device_Notifier() { }
-
-	void LFW(LS* LockStatus) {
-		while (InterlockedExchange((long*)&LockStatus->WriterCount, 1) == 1);
-
-		while (LockStatus->ReaderCount != 0);
-	}
-
-	void UFW(LS* LockStatus)
+	XAudio2_Device_Notifier() : registered(0)
 	{
-		LockStatus->WriterCount = 0;
+		InitializeCriticalSection(&lock);
+	}
+	~XAudio2_Device_Notifier()
+	{
+		DeleteCriticalSection(&lock);
 	}
 
 	ULONG STDMETHODCALLTYPE AddRef()
@@ -84,12 +72,12 @@ public:
 	{
 		if (flow == eRender)
 		{
-			LFW(&Lock);
+			EnterCriticalSection(&lock);
 			for (std::vector<sound_out_i_xaudio2*>::iterator it = instances.begin(); it < instances.end(); ++it)
 			{
 				xaudio2_device_changed(*it);
 			}
-			UFW(&Lock);
+			LeaveCriticalSection(&lock);
 		}
 
 		return S_OK;
@@ -104,6 +92,8 @@ public:
 	{
 		if (InterlockedIncrement(&registered) == 1)
 		{
+			CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
 			pEnumerator = NULL;
 			HRESULT hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_INPROC_SERVER, __uuidof(IMMDeviceEnumerator), (void**)&pEnumerator);
 			if (SUCCEEDED(hr))
@@ -113,9 +103,9 @@ public:
 			}
 		}
 
-		LFW(&Lock);
+		EnterCriticalSection(&lock);
 		instances.push_back(p_instance);
-		UFW(&Lock);
+		LeaveCriticalSection(&lock);
 	}
 
 	void do_unregister(sound_out_i_xaudio2* p_instance)
@@ -129,9 +119,11 @@ public:
 				pEnumerator = NULL;
 			}
 			registered = false;
+
+			CoUninitialize();
 		}
 
-		LFW(&Lock);
+		EnterCriticalSection(&lock);
 		for (std::vector<sound_out_i_xaudio2*>::iterator it = instances.begin(); it < instances.end(); ++it)
 		{
 			if (*it == p_instance)
@@ -140,7 +132,7 @@ public:
 				break;
 			}
 		}
-		UFW(&Lock);
+		LeaveCriticalSection(&lock);
 	}
 } g_notifier;
 
@@ -187,8 +179,8 @@ class sound_out_i_xaudio2 : public sound_out
 	}
 
 	void* hwnd;
-	bool			initialized;
 	bool            paused;
+	bool			initialized;
 	volatile bool   device_changed;
 	unsigned        reopen_count;
 	unsigned        sample_rate, bytes_per_sample, max_samples_per_frame, num_frames;
@@ -206,6 +198,10 @@ class sound_out_i_xaudio2 : public sound_out
 	IXAudio2SourceVoice* sVoice; // sound source
 	XAUDIO2_VOICE_STATE     vState;
 	XAudio2_BufferNotify    notify; // buffer end notification
+
+	typedef NTSTATUS(NTAPI* NDE)(BOOLEAN, INT64*);
+	NDE NtDelayExecution = 0;
+
 public:
 	sound_out_i_xaudio2()
 	{
@@ -226,7 +222,7 @@ public:
 	{
 		g_notifier.do_unregister(this);
 		this->initialized = false;
-		close(true);
+		close();
 	}
 
 	void OnDeviceChanged()
@@ -234,7 +230,12 @@ public:
 		device_changed = true;
 	}
 
-	virtual unsigned int open(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames)
+	void NTSleep(__int64 usec) {
+		__int64 neg = (usec * -1);
+		NtDelayExecution(FALSE, &neg);
+	}
+
+	virtual const char* open(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames)
 	{
 		this->hwnd = hwnd;
 		this->sample_rate = sample_rate;
@@ -242,6 +243,10 @@ public:
 		this->max_samples_per_frame = max_samples_per_frame;
 		this->num_frames = num_frames;
 		bytes_per_sample = floating_point ? 4 : 2;
+
+		NtDelayExecution = (NDE)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtDelayExecution");
+		if (!NtDelayExecution)
+			return "NtDelayExecution";
 
 #ifdef HAVE_KS_HEADERS
 		WAVEFORMATEXTENSIBLE wfx;
@@ -256,12 +261,6 @@ public:
 		wfx.SubFormat = floating_point ? KSDATAFORMAT_SUBTYPE_IEEE_FLOAT : KSDATAFORMAT_SUBTYPE_PCM;
 		wfx.dwChannelMask = nch == 2 ? KSAUDIO_SPEAKER_STEREO : KSAUDIO_SPEAKER_MONO;
 #else
-
-		UINT flags = 0;
-#ifdef NDEBUG
-		flags = XAUDIO2_DEBUG_ENGINE;
-#endif
-
 		WAVEFORMATEX wfx;
 		wfx.wFormatTag = floating_point ? WAVE_FORMAT_IEEE_FLOAT : WAVE_FORMAT_PCM;
 		wfx.nChannels = nch; //1;
@@ -271,13 +270,22 @@ public:
 		wfx.wBitsPerSample = floating_point ? 32 : 16;
 		wfx.cbSize = 0;
 #endif
-
-		if (S_OK != CoInitializeEx(NULL, COINIT_MULTITHREADED))
-		{
-			CoUninitialize();
-			return 6;
-		}
-
+		HRESULT hr = XAudio2Create(&xaud, 0);
+		if (FAILED(hr)) return "Creating XAudio2 interface";
+		hr = xaud->CreateMasteringVoice(
+			&mVoice,
+			nch,
+			sample_rate,
+			0,
+			NULL,
+			NULL);
+		if (FAILED(hr)) return "Creating XAudio2 mastering voice";
+		hr = xaud->CreateSourceVoice(&sVoice, &wfx, 0, 4.0f, &notify);
+		if (FAILED(hr)) return "Creating XAudio2 source voice";
+		hr = sVoice->Start(0);
+		if (FAILED(hr)) return "Starting XAudio2 voice";
+		hr = sVoice->SetFrequencyRatio((float)1.0f);
+		if (FAILED(hr)) return "Setting XAudio2 voice frequency ratio";
 		device_changed = false;
 		buffer_read_cursor = 0;
 		buffer_write_cursor = 0;
@@ -286,30 +294,12 @@ public:
 		samples_in_buffer = new UINT64[num_frames];
 		memset(samples_in_buffer, 0, sizeof(UINT64) * num_frames);
 
-		HRESULT hr = XAudio2Create(&xaud, 0);
-		if (FAILED(hr)) return 1;
-		hr = xaud->CreateMasteringVoice(
-			&mVoice,
-			nch,
-			sample_rate,
-			0,
-			NULL,
-			NULL, 
-			AudioCategory_Media);
-		if (FAILED(hr)) return 2;
-		hr = xaud->CreateSourceVoice(&sVoice, &wfx, 0, 4.0f, &notify);
-		if (FAILED(hr)) return 3;
-		hr = sVoice->Start(0);
-		if (FAILED(hr)) return 4;
-		hr = sVoice->SetFrequencyRatio((float)1.0f);
-		if (FAILED(hr)) return 5;
-
 		this->initialized = true;
 
-		return 0;
+		return NULL;
 	}
 
-	virtual void close(bool free)
+	void close()
 	{
 		if (sVoice) {
 			if (!paused) {
@@ -333,18 +323,16 @@ public:
 		sample_buffer = NULL;
 		delete[] samples_in_buffer;
 		samples_in_buffer = NULL;
-
-		if (free) CoUninitialize();
 	}
 
-	virtual unsigned int write_frame(void* buffer, unsigned num_samples)
+	virtual const char* write_frame(void* buffer, unsigned num_samples, bool wait)
 	{
-		if (!initialized)
+		if (!this->initialized)
 			return 0;
 
 		if (device_changed)
 		{
-			close(false);
+			close();
 			reopen_count = 5;
 			device_changed = false;
 			return 0;
@@ -357,7 +345,7 @@ public:
 		{
 			if (!--reopen_count)
 			{
-				const unsigned int err = open(hwnd, sample_rate, nch, bytes_per_sample == 4, max_samples_per_frame, num_frames);
+				const char* err = open(hwnd, sample_rate, nch, bytes_per_sample == 4, max_samples_per_frame, num_frames);
 				if (err)
 				{
 					reopen_count = 60 * 5;
@@ -390,7 +378,7 @@ public:
 		if (sVoice->SubmitSourceBuffer(&buf) == S_OK)
 			return 0;
 
-		close(false);
+		close();
 		reopen_count = 60 * 5;
 
 		return 0;
@@ -408,7 +396,7 @@ public:
 					HRESULT hr = sVoice->Stop(0);
 					if (FAILED(hr))
 					{
-						close(false);
+						close();
 						reopen_count = 60 * 5;
 					}
 				}
@@ -424,7 +412,7 @@ public:
 					HRESULT hr = sVoice->Start(0);
 					if (FAILED(hr))
 					{
-						close(false);
+						close();
 						reopen_count = 60 * 5;
 					}
 				}

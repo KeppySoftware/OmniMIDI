@@ -361,8 +361,12 @@ void Supervisor(LPVOID lpV) {
 		CrashMessage(L"SettingsAndHealthThread");
 	}
 
-	FreeFonts();
+	// Unload BASS functions
 	FreeUpStream();
+	FreeFonts();
+	UnloadBASSFunctions();
+
+	// Free memory
 	FreeUpMemory();
 
 	// Close registry keys
@@ -377,9 +381,6 @@ void Supervisor(LPVOID lpV) {
 	PrintMessageToDebugLog("StopDriver", "Closed ChanOverride...");
 	CloseRegistryKey(SFDynamicLoader);
 	PrintMessageToDebugLog("StopDriver", "Closed SFDynamicLoader...");
-
-	// Unload BASS functions
-	UnloadBASSFunctions();
 
 	SetEvent(OMReady);
 

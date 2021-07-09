@@ -331,15 +331,15 @@
       <EntryPointSymbol>
       </EntryPointSymbol>
       <NoEntryPoint>false</NoEntryPoint>
-      <HeapReserveSize>
-      </HeapReserveSize>
-      <HeapCommitSize>
-      </HeapCommitSize>
+      <HeapReserveSize>0x800000</HeapReserveSize>
+      <HeapCommitSize>0x10000</HeapCommitSize>
       <StackReserveSize>
       </StackReserveSize>
       <StackCommitSize>
       </StackCommitSize>
       <AllowIsolation>true</AllowIsolation>
+      <SwapRunFromCD>true</SwapRunFromCD>
+      <SwapRunFromNET>true</SwapRunFromNET>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -459,10 +459,8 @@
       <EntryPointSymbol>
       </EntryPointSymbol>
       <NoEntryPoint>false</NoEntryPoint>
-      <HeapReserveSize>
-      </HeapReserveSize>
-      <HeapCommitSize>
-      </HeapCommitSize>
+      <HeapReserveSize>0x800000</HeapReserveSize>
+      <HeapCommitSize>0x10000</HeapCommitSize>
       <StackReserveSize>
       </StackReserveSize>
       <StackCommitSize>
@@ -470,6 +468,8 @@
       <AllowIsolation>true</AllowIsolation>
       <GenerateMapFile>false</GenerateMapFile>
       <MapExports>false</MapExports>
+      <SwapRunFromCD>true</SwapRunFromCD>
+      <SwapRunFromNET>true</SwapRunFromNET>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -591,6 +591,10 @@
       </EntryPointSymbol>
       <NoEntryPoint>false</NoEntryPoint>
       <AllowIsolation>true</AllowIsolation>
+      <HeapReserveSize>0x800000</HeapReserveSize>
+      <HeapCommitSize>0x10000</HeapCommitSize>
+      <SwapRunFromCD>true</SwapRunFromCD>
+      <SwapRunFromNET>true</SwapRunFromNET>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -710,6 +714,10 @@
       <NoEntryPoint>false</NoEntryPoint>
       <AllowIsolation>true</AllowIsolation>
       <MapExports>false</MapExports>
+      <HeapReserveSize>0x800000</HeapReserveSize>
+      <HeapCommitSize>0x10000</HeapCommitSize>
+      <SwapRunFromCD>true</SwapRunFromCD>
+      <SwapRunFromNET>true</SwapRunFromNET>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -828,10 +836,12 @@
       <EntryPointSymbol>
       </EntryPointSymbol>
       <AllowIsolation>true</AllowIsolation>
-      <HeapReserveSize>
-      </HeapReserveSize>
+      <HeapReserveSize>0x800000</HeapReserveSize>
       <StackReserveSize>
       </StackReserveSize>
+      <HeapCommitSize>0x10000</HeapCommitSize>
+      <SwapRunFromCD>true</SwapRunFromCD>
+      <SwapRunFromNET>true</SwapRunFromNET>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -949,11 +959,13 @@
       <EntryPointSymbol>
       </EntryPointSymbol>
       <AllowIsolation>true</AllowIsolation>
-      <HeapReserveSize>
-      </HeapReserveSize>
+      <HeapReserveSize>0x800000</HeapReserveSize>
       <StackReserveSize>
       </StackReserveSize>
       <MapExports>false</MapExports>
+      <HeapCommitSize>0x10000</HeapCommitSize>
+      <SwapRunFromCD>true</SwapRunFromCD>
+      <SwapRunFromNET>true</SwapRunFromNET>
     </Link>
     <PostBuildEvent>
       <Command>

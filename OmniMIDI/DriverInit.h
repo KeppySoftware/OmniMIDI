@@ -506,7 +506,6 @@ void FreeUpBASSASIO() {
 void FreeUpXA() {
 	// Free up XA before doing anything
 	if (SndDrv) {
-		SndDrv->close(true);
 		delete SndDrv;
 		SndDrv = NULL;
 	}
@@ -555,7 +554,6 @@ void FreeUpStream() {
 		}
 
 		if (SndDrv) {
-			SndDrv->close(true);
 			delete SndDrv;
 			SndDrv = NULL;
 		}
@@ -1075,9 +1073,8 @@ BEGSWITCH:
 	// Oh no it's back!
 	case XAUDIO_ENGINE:
 	{
-		wchar_t XAMsgStr[512] = { 0 };
-		BOOL ShowErr = TRUE;
-		BOOL Fail = FALSE;
+		char XAMsgStr[512] = { 0 };
+		FreeUpXA();
 
 		if (InitializeBASSLibrary()) {
 			// Initialize BASS stream
@@ -1087,75 +1084,22 @@ BEGSWITCH:
 				break;
 			}
 
-			FreeUpXA();
+			PrintMessageToDebugLog("InitializeXAFunc", "Allocationg XAudio2 struct...");
+			SndDrv = create_sound_out_xaudio2();
 
-			for (int i = 0; i < 5; i++) {
-				if (!SndDrv) {
-					PrintMessageToDebugLog("InitializeXAFunc", "Opening XAudio2 stream...");
+			PrintMessageToDebugLog("InitializeXAFunc", "Opening XAudio2 device...");
+			const char* XATmp = SndDrv->open(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.XASPFSweepRate);
 
-					SndDrv = create_sound_out_xaudio2();
-					PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 device has been created.");
-
-					DWORD XATmp = SndDrv->open(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.XASPFSweepRate);
-					PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 function has returned. Checking for errors...");
-
-					if (XATmp > 0) {
-						FreeUpXA();
-						Fail = TRUE;
-
-						switch (XATmp) {
-						case 1:
-							PrintMessageToDebugLog("InitializeXAFunc", "Creating XAudio2 interface");
-							wsprintf(XAMsgStr, L"An error has occurred while creating the XAudio2 interface.");
-							break;
-						case 2:
-							PrintMessageToDebugLog("InitializeXAFunc", "Creating XAudio2 mastering voice");
-							wsprintf(XAMsgStr, L"An error has occurred while creating the master stream for the XAudio2 interface.");
-							break;
-						case 3:
-							PrintMessageToDebugLog("InitializeXAFunc", "Creating XAudio2 source voice");
-							wsprintf(XAMsgStr, L"An error has occurred while creating the source stream for the XAudio2 interface.");
-							break;
-						case 4:
-							PrintMessageToDebugLog("InitializeXAFunc", "Starting XAudio2 voice");
-							wsprintf(XAMsgStr, L"An error has occurred while starting the XAudio2 stream.");
-							break;
-						case 5:
-							PrintMessageToDebugLog("InitializeXAFunc", "Setting XAudio2 voice frequency ratio");
-							wsprintf(XAMsgStr, L"An error has occurred while setting the frequency ratio of the XAudio2 stream.");
-							break;
-						case 6:
-							PrintMessageToDebugLog("InitializeXAFunc", "COM failed to initialize. Delaying the startup to let COM settle down...");
-							ShowErr = FALSE;
-							Sleep(500);
-							break;
-						default:
-							wsprintf(XAMsgStr, L"Unspecified error.");
-							break;
-						}
-
-						if (ShowErr)
-							MessageBox(NULL, XAMsgStr, L"OmniMIDI - XA ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
-
-						continue;
-					}
-					else {
-						PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 stream is up and running.");
-						Fail = FALSE;
-					}
-				}
-
-				break;
-			}
-
-			if (Fail) {
+			if (XATmp != NULL) {
 				ManagedSettings.CurrentEngine = WASAPI_ENGINE;
 				FreeUpBASS();
 				FreeUpXA();
-				PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 encountered an error!");
-				MessageBoxA(NULL, "XAudio2 was unable to initialize.", "OmniMIDI - XA ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+				wsprintfA(XAMsgStr, "XAudio2 was unable to initialize.\nError: %s\n\nPress OK to fallback to WASAPI.", XATmp);
+				PrintMessageToDebugLog("InitializeXAFunc", XATmp);
+				MessageBoxA(NULL, XAMsgStr, "OmniMIDI - XA ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 				goto BEGSWITCH;
 			}
+			else PrintMessageToDebugLog("InitializeXAFunc", "XAudio2 stream is up and running.");
 
 			// Store the latency for debug
 			ManagedDebugInfo.AudioBufferSize = SamplesPerFrame;
