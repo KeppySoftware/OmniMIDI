@@ -303,7 +303,9 @@ BOOL StreamHealthCheck() {
 	}
 	else { 
 		if (stop_thread || 
-			(!ATThread.ThreadHandle && ManagedSettings.CurrentEngine != WASAPI_ENGINE)) 
+			(!ATThread.ThreadHandle && 
+				(ManagedSettings.CurrentEngine != WASAPI_ENGINE || 
+				(ManagedSettings.CurrentEngine == ASIO_ENGINE && ManagedSettings.ASIODirectFeed))))
 			CreateThreads();
 	}
 

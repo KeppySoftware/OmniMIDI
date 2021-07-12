@@ -6,7 +6,16 @@
 
 #include <stdint.h>
 #include <windows.h>
+#include <shlobj.h>
+#ifdef _M_ARM64
+// XAudio2 ARM64 is only available on Windows 10+
+// So let's compile straight for the Windows 10 SDK
 #include <XAudio2.h>
+#else
+// Use redist version for x86/x64
+#include "inc\XAudio2.h"
+#endif
+
 #include <assert.h>
 #include <mmdeviceapi.h>
 #include <vector>
@@ -199,8 +208,9 @@ class sound_out_i_xaudio2 : public sound_out
 	XAUDIO2_VOICE_STATE     vState;
 	XAudio2_BufferNotify    notify; // buffer end notification
 
-	typedef NTSTATUS(NTAPI* NDE)(BOOLEAN, INT64*);
-	NDE NtDelayExecution = 0;
+	HMODULE XALib = nullptr;
+	typedef NTSTATUS(NTAPI* XA2C)(_Outptr_ IXAudio2** ppXAudio2, UINT32 Flags, XAUDIO2_PROCESSOR XAudio2Processor);
+	XA2C XA2Create = 0;
 
 public:
 	sound_out_i_xaudio2()
@@ -222,7 +232,6 @@ public:
 	{
 		g_notifier.do_unregister(this);
 		this->initialized = false;
-		close();
 	}
 
 	void OnDeviceChanged()
@@ -230,13 +239,42 @@ public:
 		device_changed = true;
 	}
 
-	void NTSleep(__int64 usec) {
-		__int64 neg = (usec * -1);
-		NtDelayExecution(FALSE, &neg);
-	}
-
 	virtual const char* open(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames)
 	{
+#ifndef _M_ARM64
+		PWSTR SysDir = NULL;
+		wchar_t DLLPath[MAX_PATH] = { 0 };
+		WIN32_FIND_DATA FD = { 0 };
+
+		if (XALib == nullptr) {
+			if (!(XALib = LoadLibrary(L"XAudio2_9")))
+			{
+				if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
+					swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s\0", SysDir, L"XAudio2_9_win7.dll");
+					CoTaskMemFree(SysDir);
+
+					if (FindFirstFile(DLLPath, &FD) != INVALID_HANDLE_VALUE)
+					{
+						if (!(XALib = LoadLibrary(DLLPath)))
+							return "Lib missing";
+					}
+				}
+				else {
+					CoTaskMemFree(SysDir);
+					return "SHGetKnownFolderPath failed";
+				}
+			}
+		}
+
+		if (!XA2Create) {
+			XA2Create = (XA2C)GetProcAddress(XALib, "XAudio2Create");
+
+			if (NULL == XA2Create)
+				return "XA2Create missing";
+		}
+
+#endif
+
 		this->hwnd = hwnd;
 		this->sample_rate = sample_rate;
 		this->nch = nch;
@@ -244,9 +282,6 @@ public:
 		this->num_frames = num_frames;
 		bytes_per_sample = floating_point ? 4 : 2;
 
-		NtDelayExecution = (NDE)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtDelayExecution");
-		if (!NtDelayExecution)
-			return "NtDelayExecution";
 
 #ifdef HAVE_KS_HEADERS
 		WAVEFORMATEXTENSIBLE wfx;
@@ -270,7 +305,12 @@ public:
 		wfx.wBitsPerSample = floating_point ? 32 : 16;
 		wfx.cbSize = 0;
 #endif
+
+#ifndef _M_ARM64
+		HRESULT hr = XA2Create(&xaud, 0, 0);
+#else
 		HRESULT hr = XAudio2Create(&xaud, 0);
+#endif
 		if (FAILED(hr)) return "Creating XAudio2 interface";
 		hr = xaud->CreateMasteringVoice(
 			&mVoice,
@@ -295,6 +335,22 @@ public:
 		memset(samples_in_buffer, 0, sizeof(UINT64) * num_frames);
 
 		this->initialized = true;
+
+		return NULL;
+	}
+
+	virtual const char* free() {
+		close();
+
+#ifndef _M_ARM64
+		if (XALib)
+		{
+			FreeLibrary(XALib);
+			XALib = nullptr;
+		}
+#endif
+
+		this->initialized = false;
 
 		return NULL;
 	}

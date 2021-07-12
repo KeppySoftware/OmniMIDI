@@ -136,10 +136,12 @@ void AudioEngine(LPVOID lpParam) {
 
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	try {
+		// Skip if ASIO isn't using the direct feed mode
+		if (ManagedSettings.CurrentEngine == ASIO_ENGINE && !ManagedSettings.ASIODirectFeed);
 		if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 			do {
 				// Check if HyperMode has been disabled
-				if (HyperMode || !ManagedSettings.ASIODirectFeed) break;
+				if (HyperMode) break;
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
@@ -216,10 +218,12 @@ void FastAudioEngine(LPVOID lpParam) {
 
 	PrintMessageToDebugLog("AudioEngine", "Initializing fast audio rendering thread...");
 	try {
+		// Skip if ASIO isn't using the direct feed mode
+		if (ManagedSettings.CurrentEngine == ASIO_ENGINE && !ManagedSettings.ASIODirectFeed);
 		if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 			do {
 				// Check if HyperMode has been disabled
-				if (!HyperMode || !ManagedSettings.ASIODirectFeed) break;
+				if (!HyperMode) break;
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
@@ -386,7 +390,8 @@ void CreateThreads() {
 		ATThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastAudioEngine : AudioEngine), NULL, 0, &ATThread.ThreadAddress);
 		SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 	}
-
+	else SetEvent(ATThreadDone);
+	
 	// Check if the debug thread is working
 	if (!DThread.ThreadHandle)
 	{
@@ -521,6 +526,7 @@ void FreeUpBASSASIO() {
 void FreeUpXA() {
 	// Free up XA before doing anything
 	if (SndDrv) {
+		SndDrv->free();
 		delete SndDrv;
 		SndDrv = NULL;
 	}

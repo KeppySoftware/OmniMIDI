@@ -50,6 +50,7 @@
     <ClInclude Include="Settings.h" />
     <ClInclude Include="ShakraRegSystem.h" />
     <ClInclude Include="SoundFontLoader.h" />
+    <ClInclude Include="sound_out.h" />
     <ClInclude Include="Values.h" />
   </ItemGroup>
   <ItemGroup>

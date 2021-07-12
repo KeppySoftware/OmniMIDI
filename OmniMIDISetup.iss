@@ -122,6 +122,7 @@ Source: "{#lib64}\bassflac.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass
 Source: "{#lib64}\bassenc.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
 Source: "{#lib64}\bass_vst.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
 Source: "{#lib64}\basswasapi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
+Source: "{#lib64}\xaudio2_9redist.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "xaudio2_9_win7.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
 
 ; ARM64 libs
 ; Alternative MIDI Mapper isn't available for ARM64
@@ -146,6 +147,7 @@ Source: "{#lib32}\bassflac.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: 
 Source: "{#lib32}\bassenc.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\bass_vst.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\basswasapi.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
+Source: "{#lib32}\xaudio2_9redist.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "xaudio2_9_win7.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
 Source: "output\{#InstallDir}.dbl"; DestDir: "{syswow64}\{#InstallDir}"; Flags: replacesameversion ignoreversion; Check: Windows64
 
 ; 32-bit libs for IA32
@@ -160,6 +162,7 @@ Source: "{#lib32}\bassflac.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass
 Source: "{#lib32}\bassenc.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bassenc.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\bass_vst.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\basswasapi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
+Source: "{#lib32}\xaudio2_9redist.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "xaudio2_9_win7.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "output\{#InstallDir}.dbl"; DestDir: "{sys}\{#InstallDir}"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 
 [Dirs]
