@@ -302,11 +302,14 @@ BOOL StreamHealthCheck() {
 		return FALSE;
 	}
 	else { 
-		if (stop_thread || 
-			(!ATThread.ThreadHandle && 
-				(ManagedSettings.CurrentEngine != WASAPI_ENGINE || 
-				(ManagedSettings.CurrentEngine == ASIO_ENGINE && ManagedSettings.ASIODirectFeed))))
-			CreateThreads();
+		if (stop_thread || (!ATThread.ThreadHandle && ManagedSettings.CurrentEngine != WASAPI_ENGINE))
+		{
+			if (stop_thread) PrintMessageToDebugLog("StreamWatchdog", "Restarting threads...");
+			else PrintMessageToDebugLog("StreamWatchdog", "The audio thread is down! Recovering...");
+
+			if (ManagedSettings.CurrentEngine == ASIO_ENGINE && !ManagedSettings.ASIODirectFeed);
+			else CreateThreads();
+		}
 	}
 
 	return TRUE;

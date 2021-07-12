@@ -339,13 +339,15 @@ MMRESULT __inline ParseData(DWORD_PTR dwParam1) {
 			NextWriteHead = EVBuffer.ReadHead; //guaranteed to be always in bounds
 
 		if(EvBufferSize >= SMALLBUFFER)
-			while (NextWriteHead == EVBuffer.ReadHead) /*do sleep or something*/;
+			while (NextWriteHead == EVBuffer.ReadHead) _FWAIT;
 		else
 		{
 			volatile DWORD* dwVolatileEvent = EVBuffer.Buffer; // + NextWriteHead;
-			/* EvBuffer resize resets both heads to 0, so checking
-				anything but the first event in the buffer will softlock completely*/
-			while (~*dwVolatileEvent) /*do sleep or something*/;
+			/*
+				EvBuffer resize resets both heads to 0, so checking
+				anything but the first event in the buffer will softlock completely
+			*/
+			while (~*dwVolatileEvent) _FWAIT;
 		}
 
 		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
