@@ -241,6 +241,9 @@ public:
 
 	virtual const char* open(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames)
 	{
+		if (this->initialized)
+			return NULL;
+
 #ifndef _M_ARM64
 		PWSTR SysDir = NULL;
 		wchar_t DLLPath[MAX_PATH] = { 0 };
@@ -342,6 +345,8 @@ public:
 	virtual const char* free() {
 		close();
 
+		this->initialized = false;
+
 #ifndef _M_ARM64
 		if (XALib)
 		{
@@ -349,8 +354,6 @@ public:
 			XALib = nullptr;
 		}
 #endif
-
-		this->initialized = false;
 
 		return NULL;
 	}

@@ -518,6 +518,10 @@ void FreeUpBASSASIO() {
 		PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO stopped.");
 		BASS_ASIO_Free();
 		PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO freed.");
+
+		// Wait for the ASIO thread to exit, to avoid issues with BASSASIO not freeing itself later
+		// <https://www.un4seen.com/forum/?topic=19461.msg136033#msg136033>
+		Sleep(200);
 	}
 
 #endif

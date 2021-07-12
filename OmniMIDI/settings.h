@@ -342,13 +342,14 @@ BOOL LoadBASSFunctions()
 VOID UnloadBASSFunctions() {
 	try {
 		if (BASSLoadedToMemory) {
-			PrintMessageToDebugLog("UnloadBASS", "Freeing BASS libraries...");
-
+			// Set the functions back to dummies, to avoid issues
 			_PrsData = DummyParseData;
 			_PforBASSMIDI = DummyPrepareForBASSMIDI;
 			_PlayBufData = DummyPlayBufData;
 			_PlayBufDataChk = DummyPlayBufData;
 			_BMSE = DummyBMSE;
+
+			PrintMessageToDebugLog("UnloadBASS", "Freeing BASS libraries...");
 
 			if (!BASS_PluginFree(bassflac))
 				CrashMessage(L"BASS_PluginFree to BASSFLAC");
@@ -484,8 +485,10 @@ void AllocateMemory(BOOL restart) {
 			if (EvBufferSize != EVBuffer.BufSize) {
 				// Set them to dummy temporarily to avoid problems
 				_PrsData = DummyParseData;
+				_PforBASSMIDI = DummyPrepareForBASSMIDI;
 				_PlayBufData = DummyPlayBufData;
 				_PlayBufDataChk = DummyPlayBufData;
+				_BMSE = DummyBMSE;
 
 				FreeUpMemory();
 			}
@@ -533,8 +536,10 @@ void AllocateMemory(BOOL restart) {
 
 		if (restart) {
 			_PrsData = HyperMode ? ParseDataHyper : ParseData;
+			_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
 			_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
 			_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
+			_BMSE = BASS_MIDI_StreamEvent;
 		}
 	}
 	catch (...) {
