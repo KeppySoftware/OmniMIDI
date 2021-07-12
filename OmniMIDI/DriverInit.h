@@ -79,7 +79,8 @@ void DebugPipe(LPVOID lpV) {
 
 void EventsProcesser(LPVOID lpV) {
 	DWORD TI = (DWORD)lpV;
-	
+
+	ResetEvent(EPThreadDone);
 	PrintMessageToDebugLog("EventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
@@ -95,12 +96,14 @@ void EventsProcesser(LPVOID lpV) {
 	}
 
 	PrintMessageToDebugLog("EventsProcesser", "Closing notes catcher thread...");
+	SetEvent(EPThreadDone);
 	TerminateThread(&EPThread, TRUE, 0);
 }
 
 void FastEventsProcesser(LPVOID lpV) {
 	DWORD TI = (DWORD)lpV;
 
+	ResetEvent(EPThreadDone);
 	PrintMessageToDebugLog("FastEventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
@@ -113,6 +116,7 @@ void FastEventsProcesser(LPVOID lpV) {
 	}
 
 	PrintMessageToDebugLog("FastEventsProcesser", "Closing notes catcher thread...");
+	SetEvent(EPThreadDone);
 	TerminateThread(&EPThread, TRUE, 0);
 }
 
@@ -128,6 +132,8 @@ void InitializeEventsProcesserThreads() {
 }
 
 void AudioEngine(LPVOID lpParam) {
+	ResetEvent(ATThreadDone);
+
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	try {
 		if (ManagedSettings.ASIODirectFeed || ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
@@ -201,10 +207,13 @@ void AudioEngine(LPVOID lpParam) {
 	}
 
 	PrintMessageToDebugLog("AudioEngine", "Closing audio rendering thread...");
+	SetEvent(ATThreadDone);
 	TerminateThread(&ATThread, TRUE, 0);
 }
 
 void FastAudioEngine(LPVOID lpParam) {
+	ResetEvent(ATThreadDone);
+
 	PrintMessageToDebugLog("AudioEngine", "Initializing fast audio rendering thread...");
 	try {
 		if (ManagedSettings.ASIODirectFeed || ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
@@ -267,6 +276,7 @@ void FastAudioEngine(LPVOID lpParam) {
 	}
 
 	PrintMessageToDebugLog("FastAudioEngine", "Closing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
+	SetEvent(ATThreadDone);
 	TerminateThread(&ATThread, TRUE, 0);
 }
 
@@ -480,6 +490,9 @@ void FreeUpBASS() {
 
 void FreeUpBASSWASAPI() {
 	if (BASSLoadedToMemory) {
+		// If it isn't started, then go away
+		if (!BASS_WASAPI_IsStarted()) return;
+
 		// Free up WASAPI before doing anything
 		BASS_WASAPI_Stop(TRUE);
 		PrintMessageToDebugLog("FreeUpBASSWASAPIFunc", "BASSWASAPI stopped.");
@@ -492,12 +505,14 @@ void FreeUpBASSASIO() {
 #if !defined(_M_ARM64) // Only do this if on x86 and x64
 
 	if (BASSLoadedToMemory) {
+		// If it isn't started, then go away
+		if (!BASS_ASIO_IsStarted()) return;
+
 		// Free up ASIO before doing anything
 		BASS_ASIO_Stop();
 		PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO stopped.");
 		BASS_ASIO_Free();
 		PrintMessageToDebugLog("FreeUpBASSASIOFunc", "BASSASIO freed.");
-		ASIOReady = FALSE;
 	}
 
 #endif
@@ -525,33 +540,11 @@ void FreeUpStream() {
 		// Reset synth
 		ResetSynth(NULL, TRUE);
 
-		// Free up BASSWASAPI before doing anything
-		BASS_WASAPI_Stop(TRUE);
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSWASAPI stopped.");
-		BASS_WASAPI_Free();
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSWASAPI freed.");
-
-#if !defined(_M_ARM64)
-		// Free up ASIO as well
-		BASS_ASIO_Stop();
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO stopped.");
-		BASS_ASIO_Free();
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASSASIO freed.");
-#endif
-
 		// Stop the stream and free it as well
-		BASS_ChannelStop(OMStream);
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream stopped.");
-		BASS_StreamFree(OMStream);
-		PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stream freed.");
-
-		// Deinitialize the BASS output and free it, since we need to restart it
-		if (!HostSessionMode) {
-			BASS_Stop();
-			PrintMessageToDebugLog("FreeUpStreamFunc", "BASS stopped.");
-			BASS_Free();
-			PrintMessageToDebugLog("FreeUpStreamFunc", "BASS freed.");
-		}
+		FreeUpBASSWASAPI();
+		FreeUpBASSASIO();
+		FreeUpBASS();
+		FreeUpXA();
 
 		if (SndDrv) {
 			delete SndDrv;
@@ -848,6 +841,8 @@ BOOL InitializeBASS(BOOL restart) {
 		PrintMessageToDebugLog("InitializeBASSFunc", "The driver had to restart the stream.");
 		if (ManagedSettings.CurrentEngine == AUDTOWAV) RestartValue++;
 
+		// Unload BASS functions
+		FreeFonts();
 		FreeUpStream();
 	}
 
@@ -1065,6 +1060,7 @@ BEGSWITCH:
 			}
 
 			InitializationCompleted = TRUE;
+			ASIOInit = TRUE;
 		}
 
 		break;
@@ -1154,8 +1150,7 @@ BEGSWITCH:
 			if (!InitializeStream(ManagedSettings.AudioFrequency))
 			{
 				PrintMessageToDebugLog("InitializeASIOFunc", "An error has occurred during BASS' initialization! Freeing ASIO...");
-				BASS_ASIO_Stop();
-				BASS_ASIO_Free();
+				FreeUpBASSASIO();
 				break;
 			}
 
@@ -1225,7 +1220,6 @@ BEGSWITCH:
 			// Else, something is wrong
 			else CheckUp(TRUE, ERRORCODE, "ASIO Initialization", TRUE);
 
-			ASIOReady = TRUE;
 			InitializationCompleted = TRUE;
 		}
 

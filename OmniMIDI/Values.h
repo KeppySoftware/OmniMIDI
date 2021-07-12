@@ -85,7 +85,7 @@ CookedPlayer* OMCookedPlayer;
 const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };
 static ULONGLONG TickStart = 0;			// For TGT64
 static HSTREAM OMStream = NULL;
-static HANDLE OMReady = NULL;
+static HANDLE OMReady = NULL, ATThreadDone = NULL, EPThreadDone = NULL;
 static HMIDI OMHMIDI = NULL;
 static HDRVR OMHDRVR = NULL;
 static DWORD_PTR OMCallback = NULL;
@@ -97,10 +97,12 @@ DOUBLE SpeedHack = 1.0;
 BOOL DriverInitStatus = FALSE;
 BOOL AlreadyInitializedViaKDMAPI = FALSE;
 BOOL BASSLoadedToMemory = FALSE;
-BOOL ASIOReady = FALSE;
 BOOL KDMAPIEnabled = FALSE;
 BOOL IsKDMAPIViaWinMM = FALSE;
 BOOL HostSessionMode = FALSE;
+
+// Check if init
+BOOL ASIOInit = FALSE;
 
 // Stream
 BASS_INFO info;
@@ -135,6 +137,7 @@ typedef struct Thread
 BOOL bass_initialized = FALSE;
 BOOL block_bassinit = FALSE;
 BOOL stop_thread = FALSE;
+BOOL stop_svthread = FALSE;
 
 Thread HealthThread, ATThread, EPThread, DThread, CookedThread;
 LockSystem EPThreadsL;

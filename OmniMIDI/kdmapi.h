@@ -313,7 +313,7 @@ BOOL StreamHealthCheck() {
 void Supervisor(LPVOID lpV) {
 	try {
 		// Parse the app name, and start the debug pipe to the debug window
-		PrintMessageToDebugLog("StartDriver", "Checking if app is allowed to use RTSS OSD...");
+		PrintMessageToDebugLog("StreamWatchdog", "Checking if app is allowed to use RTSS OSD...");
 		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
 
 		// Load the BASS functions
@@ -361,26 +361,41 @@ void Supervisor(LPVOID lpV) {
 		CrashMessage(L"SettingsAndHealthThread");
 	}
 
+	// Wait for the other threads to finish
+	PrintMessageToDebugLog("StreamWatchdog", "Waiting for events processer thread...");
+	if (!ManagedSettings.NotesCatcherWithAudio)
+	{
+		if (WaitForSingleObject(EPThreadDone, INFINITE) == WAIT_OBJECT_0)
+			ResetEvent(EPThreadDone);
+	}
+
+	if (ManagedSettings.CurrentEngine != WASAPI_ENGINE &&
+		ManagedSettings.CurrentEngine != ASIO_ENGINE) {
+		PrintMessageToDebugLog("StreamWatchdog", "Waiting for audio renderer thread...");
+		if (WaitForSingleObject(ATThreadDone, INFINITE) == WAIT_OBJECT_0)
+			ResetEvent(ATThreadDone);
+	}
+
 	// Unload BASS functions
-	FreeUpStream();
 	FreeFonts();
+	FreeUpStream();
 	UnloadBASSFunctions();
 
 	// Free memory
 	FreeUpMemory();
 
 	// Close registry keys
-	PrintMessageToDebugLog("StopDriver", "Closing registry keys...");
+	PrintMessageToDebugLog("StreamWatchdog", "Closing registry keys...");
 	CloseRegistryKey(MainKey);
-	PrintMessageToDebugLog("StopDriver", "Closed MainKey...");
+	PrintMessageToDebugLog("StreamWatchdog", "Closed MainKey...");
 	CloseRegistryKey(Configuration);
-	PrintMessageToDebugLog("StopDriver", "Closed Configuration...");
+	PrintMessageToDebugLog("StreamWatchdog", "Closed Configuration...");
 	CloseRegistryKey(Channels);
-	PrintMessageToDebugLog("StopDriver", "Closed Channels...");
+	PrintMessageToDebugLog("StreamWatchdog", "Closed Channels...");
 	CloseRegistryKey(ChanOverride);
-	PrintMessageToDebugLog("StopDriver", "Closed ChanOverride...");
+	PrintMessageToDebugLog("StreamWatchdog", "Closed ChanOverride...");
 	CloseRegistryKey(SFDynamicLoader);
-	PrintMessageToDebugLog("StopDriver", "Closed SFDynamicLoader...");
+	PrintMessageToDebugLog("StreamWatchdog", "Closed SFDynamicLoader...");
 
 	SetEvent(OMReady);
 
@@ -394,6 +409,12 @@ BOOL DoStartClient() {
 		// Create an event, to wait for the driver to be ready
 		if (!OMReady)
 			OMReady = CreateEvent(NULL, TRUE, FALSE, L"OMReady");
+
+		if (!ATThreadDone)
+			ATThreadDone = CreateEvent(NULL, TRUE, FALSE, L"ATThreadDone");
+
+		if (!EPThreadDone)
+			EPThreadDone = CreateEvent(NULL, TRUE, FALSE, L"EPThreadDone");
 
 		// Create the main thread
 		PrintMessageToDebugLog("StartDriver", "Starting main watchdog thread...");
@@ -434,6 +455,16 @@ BOOL DoStopClient() {
 		{
 			CloseHandle(OMReady);
 			OMReady = NULL;
+		}		
+		if (ATThreadDone)
+		{
+			CloseHandle(ATThreadDone);
+			ATThreadDone = NULL;
+		}
+		if (EPThreadDone)
+		{
+			CloseHandle(EPThreadDone);
+			EPThreadDone = NULL;
 		}
 
 		// Boopers
