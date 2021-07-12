@@ -244,7 +244,6 @@
             this.ASIODirectFeed.Text = "Make ASIO feed itself off of the audio stream automatically";
             this.ButtonsDesc.SetToolTip(this.ASIODirectFeed, resources.GetString("ASIODirectFeed.ToolTip"));
             this.ASIODirectFeed.UseVisualStyleBackColor = true;
-            this.ASIODirectFeed.CheckedChanged += new System.EventHandler(this.ASIODirectFeed_CheckedChanged);
             // 
             // ButtonsDesc
             // 

@@ -481,9 +481,16 @@ void AllocateMemory(BOOL restart) {
 		EvBufferSize = TempEvBufferSize / (unsigned long long)EvBufferMultRatio;
 
 		if (restart) {
-			if (EvBufferSize != EVBuffer.BufSize)
+			if (EvBufferSize != EVBuffer.BufSize) {
+				// Set them to dummy temporarily to avoid problems
+				_PrsData = DummyParseData;
+				_PlayBufData = DummyPlayBufData;
+				_PlayBufDataChk = DummyPlayBufData;
+
 				FreeUpMemory();
-			else return;				
+			}
+
+			else return;
 		}
 
 		if (EvBufferSize < 1) {
@@ -515,8 +522,6 @@ void AllocateMemory(BOOL restart) {
 				}
 			}
 
-			EVBuffer.ReadHead = 0;
-			EVBuffer.WriteHead = 0;
 			memset(EVBuffer.Buffer, 0, sizeof(EVBuffer.Buffer));
 			PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer allocated.");
 		}
@@ -524,6 +529,13 @@ void AllocateMemory(BOOL restart) {
 		// Set heads to 0
 		EVBuffer.WriteHead = 0;
 		EVBuffer.ReadHead = 0;
+		PrintMessageToDebugLog("AllocateMemoryFunc", "Set heads to 0.");
+
+		if (restart) {
+			_PrsData = HyperMode ? ParseDataHyper : ParseData;
+			_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
+			_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
+		}
 	}
 	catch (...) {
 		CrashMessage(L"EVBufAlloc");
@@ -572,6 +584,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			OpenRegistryKey(MainKey, L"Software\\OmniMIDI", TRUE);
 			RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 
+			RegQueryValueEx(Configuration.Address, L"ASIODirectFeed", NULL, &dwType, (LPBYTE)&ManagedSettings.ASIODirectFeed, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"AudioBitDepth", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioBitDepth, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"AudioFrequency", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioFrequency, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"AudioOutput", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioOutputReg, &dwSize);
@@ -592,13 +605,13 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"ReduceBootUpDelay", NULL, &dwType, (LPBYTE)&ManagedSettings.ReduceBootUpDelay, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"XASamplesPerFrame", NULL, &dwType, (LPBYTE)&ManagedSettings.XASamplesPerFrame, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"XASPFSweepRate", NULL, &dwType, (LPBYTE)&ManagedSettings.XASPFSweepRate, &dwSize);
+
 			if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(Configuration.Address, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&TempNCWA, &dwSize);
 			else ManagedSettings.NotesCatcherWithAudio = TRUE;
 		
 			SamplesPerFrame = ManagedSettings.XASamplesPerFrame * (ManagedSettings.MonoRendering ? 1 : 2);
 		}
 
-		RegQueryValueEx(Configuration.Address, L"ASIODirectFeed", NULL, &dwType, (LPBYTE)&ManagedSettings.ASIODirectFeed, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"WinMMSpeed", NULL, &dwType, (LPBYTE)&RSH, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"BufferLength", NULL, &dwType, (LPBYTE)&ManagedSettings.BufferLength, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"CapFramerate", NULL, &dwType, (LPBYTE)&ManagedSettings.CapFramerate, &dwSize);

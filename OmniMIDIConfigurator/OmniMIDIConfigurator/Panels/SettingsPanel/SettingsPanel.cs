@@ -477,7 +477,7 @@ namespace OmniMIDIConfigurator
 
                     break;
                 case AudioEngine.ASIO_ENGINE:
-                    new DefaultASIOAudioOutput().ShowDialog();
+                    new DefaultASIOAudioOutput(Control.ModifierKeys == Keys.Shift).ShowDialog();
                     break;
                 case AudioEngine.XA_ENGINE:
                     new XAOutputSettings().ShowDialog();

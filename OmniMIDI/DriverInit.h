@@ -136,10 +136,10 @@ void AudioEngine(LPVOID lpParam) {
 
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	try {
-		if (ManagedSettings.ASIODirectFeed || ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
+		if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 			do {
 				// Check if HyperMode has been disabled
-				if (HyperMode) break;
+				if (HyperMode || !ManagedSettings.ASIODirectFeed) break;
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
@@ -216,10 +216,10 @@ void FastAudioEngine(LPVOID lpParam) {
 
 	PrintMessageToDebugLog("AudioEngine", "Initializing fast audio rendering thread...");
 	try {
-		if (ManagedSettings.ASIODirectFeed || ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
+		if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 			do {
 				// Check if HyperMode has been disabled
-				if (!HyperMode) break;
+				if (!HyperMode || !ManagedSettings.ASIODirectFeed) break;
 
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {

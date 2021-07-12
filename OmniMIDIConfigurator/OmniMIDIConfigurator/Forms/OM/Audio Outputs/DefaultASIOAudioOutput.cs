@@ -19,16 +19,13 @@ namespace OmniMIDIConfigurator
 {
     public partial class DefaultASIOAudioOutput : Form
     {
+        bool SkipCheck = false;
         List<ASIODevice> Devices = new List<ASIODevice>();
 
-        public DefaultASIOAudioOutput()
+        public DefaultASIOAudioOutput(bool SkipCheck)
         {
             InitializeComponent();
-        }
-
-        private void AnalyzeDevice(ref BASS_ASIO_DEVICEINFO dInfo, int n)
-        {
-   
+            this.SkipCheck = SkipCheck;
         }
 
         private void DefaultASIOAudioOutput_Shown(object sender, EventArgs e)
@@ -55,43 +52,51 @@ namespace OmniMIDIConfigurator
                     {
                         try
                         {
-                            BassAsio.BASS_ASIO_Init(n, BASSASIOInit.BASS_ASIO_THREAD);
-
-                            BASS_ASIO_INFO fInfo = BassAsio.BASS_ASIO_GetInfo();
-
                             ASIODevice NewDev = new ASIODevice();
 
                             NewDev.Name = dInfo.name;
                             NewDev.Driver = dInfo.driver;
                             NewDev.ID = n;
 
-                            if (fInfo != null)
+                            if (!SkipCheck)
                             {
-                                NewDev.ChannelsL = new List<BASS_ASIO_CHANNELINFO>();
+                                BassAsio.BASS_ASIO_Init(n, BASSASIOInit.BASS_ASIO_THREAD);
 
-                                NewDev.Status = GetDeviceDescription(NewDev.Name);
-                                NewDev.Inputs = fInfo.inputs;
-                                NewDev.Outputs = fInfo.outputs;
-                                NewDev.BufMin = fInfo.bufmin;
-                                NewDev.BufMax = fInfo.bufmax;
-                                NewDev.BufPref = fInfo.bufmax;
-                                NewDev.BufGran = fInfo.bufgran;
+                                BASS_ASIO_INFO fInfo = BassAsio.BASS_ASIO_GetInfo();
 
-                                for (int n2 = 0; n2 < fInfo.outputs; n2++)
+                                if (fInfo != null)
                                 {
-                                    BASS_ASIO_CHANNELINFO cInfo = null;
-                                    
-                                    cInfo = BassAsio.BASS_ASIO_ChannelGetInfo(false, n2);
+                                    NewDev.ChannelsL = new List<BASS_ASIO_CHANNELINFO>();
 
-                                    if (cInfo != null)
-                                        NewDev.ChannelsL.Add(cInfo);
+                                    NewDev.Status = GetDeviceDescription(NewDev.Name);
+                                    NewDev.Inputs = fInfo.inputs;
+                                    NewDev.Outputs = fInfo.outputs;
+                                    NewDev.BufMin = fInfo.bufmin;
+                                    NewDev.BufMax = fInfo.bufmax;
+                                    NewDev.BufPref = fInfo.bufmax;
+                                    NewDev.BufGran = fInfo.bufgran;
+
+                                    for (int n2 = 0; n2 < fInfo.outputs; n2++)
+                                    {
+                                        BASS_ASIO_CHANNELINFO cInfo = null;
+
+                                        cInfo = BassAsio.BASS_ASIO_ChannelGetInfo(false, n2);
+
+                                        if (cInfo != null)
+                                            NewDev.ChannelsL.Add(cInfo);
+                                    }
+
+                                    NewDev.ChannelsR = new List<BASS_ASIO_CHANNELINFO>(NewDev.ChannelsL);
                                 }
-
-                                NewDev.ChannelsR = new List<BASS_ASIO_CHANNELINFO>(NewDev.ChannelsL);
+                                else
+                                {
+                                    NewDev.Status = new ASIOStatus { Description = BassAsio.BASS_ASIO_ErrorGetCode().ToString(), Flag = DevStatusEnum.DEVICE_UNKNOWN };
+                                    NewDev.NoData = true;
+                                }
                             }
                             else
                             {
-                                NewDev.Status = new ASIOStatus { Description = BassAsio.BASS_ASIO_ErrorGetCode().ToString(), Flag = DevStatusEnum.DEVICE_UNKNOWN };
+                                NewDev.Status = new ASIOStatus { Description = "CHECK_SKIPPED", Flag = DevStatusEnum.DEVICE_UNKNOWN };
                                 NewDev.NoData = true;
                             }
 
@@ -143,6 +148,7 @@ namespace OmniMIDIConfigurator
                 MaxThreads.Text = String.Format("ASIO is allowed to use a maximum of {0} threads.", Environment.ProcessorCount);
 
                 DevicesList.SelectedIndexChanged += new EventHandler(DevicesList_SelectedIndexChanged);
+                ASIODirectFeed.CheckedChanged += new EventHandler(ASIODirectFeed_CheckedChanged);
 
                 GetASIODeviceInfo();
 
@@ -292,6 +298,7 @@ namespace OmniMIDIConfigurator
         private void ASIODirectFeed_CheckedChanged(object sender, EventArgs e)
         {
             Program.SynthSettings.SetValue("ASIODirectFeed", Convert.ToInt32(ASIODirectFeed.Checked), RegistryValueKind.DWord);
+            if (Properties.Settings.Default.LiveChanges) Program.SynthSettings.SetValue("LiveChanges", "1", RegistryValueKind.DWord);
         }
 
         private void Quit_Click(object sender, EventArgs e)
