@@ -145,7 +145,7 @@ void AudioEngine(LPVOID lpParam) {
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
 				case XAUDIO_ENGINE:
-				{
+				{					
 					if (!SndDrv)
 						break;
 

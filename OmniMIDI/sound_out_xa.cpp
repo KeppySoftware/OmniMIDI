@@ -343,9 +343,9 @@ public:
 	}
 
 	virtual const char* free() {
-		close();
-
 		this->initialized = false;
+
+		close();
 
 #ifndef _M_ARM64
 		if (XALib)

@@ -112,15 +112,6 @@ namespace OmniMIDIConfigurator
                 Directory.CreateDirectory(Path.GetDirectoryName(Program.ListsPath[0]));
             }
 
-            if (Properties.Settings.Default.UpdateBranch == "choose")
-            {
-                SelectBranch frm = new SelectBranch();
-                frm.ShowInTaskbar = true;
-                frm.StartPosition = FormStartPosition.CenterScreen;
-                frm.ShowDialog();
-                frm.Dispose();
-            }
-
             foreach (String Arg in Args)
             {
                 switch (Arg.ToLowerInvariant())
@@ -145,6 +136,7 @@ namespace OmniMIDIConfigurator
                             .ToList()
                             .ForEach(t => t.Kill());
 
+                        Properties.Settings.Default.Reset();
                         UpdateSystem.CheckForTLS12ThenUpdate(Driver.FileVersion, UpdateSystem.WIPE_SETTINGS);
                         return;
                     case "/showchangelog":
@@ -166,6 +158,15 @@ namespace OmniMIDIConfigurator
                         SoundFontsToAdd.Add(Arg);
                         break;
                 }
+            }
+
+            if (Properties.Settings.Default.UpdateBranch == "choose")
+            {
+                SelectBranch frm = new SelectBranch();
+                frm.ShowInTaskbar = true;
+                frm.StartPosition = FormStartPosition.CenterScreen;
+                frm.ShowDialog();
+                frm.Dispose();
             }
 
             OpenRequiredKey(ref Mixer, MIPath, false);

@@ -178,6 +178,10 @@ typedef struct SoundFontList
 	int DestinationBank;
 	int DestinationBankLSB;
 	int XGBankMode;
+	int NoLimits;
+	int LinearDecayVol;
+	int LinearAttackVol;
+	int NoRampIn;
 };
 
 // Priority values
