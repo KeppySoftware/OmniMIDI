@@ -185,6 +185,8 @@ namespace OmniMIDIConfigurator
                 AllNotesIgnore.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreAllNotes", 0));
                 IgnoreNotes.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
                 AudioRampIn.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("AudioRampIn", 1));
+                LinAttMod.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("LinAttMod", 0));
+                LinDecVol.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("LinDecVol", 0));
 
                 Int32 LV = Convert.ToInt32(Program.SynthSettings.GetValue("MinVelIgnore", 1));
                 Int32 HV = Convert.ToInt32(Program.SynthSettings.GetValue("MaxVelIgnore", 2));
@@ -287,6 +289,8 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("IgnoreAllNotes", Convert.ToInt32(AllNotesIgnore.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("IgnoreNotesBetweenVel", Convert.ToInt32(IgnoreNotes.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("AudioRampIn", Convert.ToInt32(AudioRampIn.Checked), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("LinAttMod", Convert.ToInt32(LinAttMod.Checked), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("LinDecVol", Convert.ToInt32(LinDecVol.Checked), RegistryValueKind.DWord);
 
             if (IgnoreNotesLV.Value > IgnoreNotesHV.Value) IgnoreNotesLV.Value = IgnoreNotesHV.Value;
             Program.SynthSettings.SetValue("MinVelIgnore", IgnoreNotesLV.Value, RegistryValueKind.DWord);
