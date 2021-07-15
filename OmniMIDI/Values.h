@@ -161,8 +161,8 @@ DWORD RestartValue = 0;				// For AudToWAV
 BOOL UnlimitedChannels = 0;			// For KDMAPI
 
 // XA Engine
-static sound_out* SndDrv = NULL;
-static float* SndBuf = NULL;
+static sound_out* SndDrv = 0;
+static float* SndBuf = 0;
 int SamplesPerFrame = ManagedSettings.XASamplesPerFrame * 2;
 
 // Settings and debug

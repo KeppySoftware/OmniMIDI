@@ -146,9 +146,6 @@ void AudioEngine(LPVOID lpParam) {
 				switch (ManagedSettings.CurrentEngine) {
 				case XAUDIO_ENGINE:
 				{					
-					if (!SndDrv)
-						break;
-
 					if (ManagedSettings.NotesCatcherWithAudio)
 					{
 						SetNoteValuesFromSettings();
@@ -157,7 +154,7 @@ void AudioEngine(LPVOID lpParam) {
 
 					DWORD len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
 					if (len != -1)
-						SndDrv->write_frame(SndBuf, len / sizeof(float));
+						SndDrv->WriteFrame(SndBuf, len / sizeof(float));
 
 					break;
 				}
@@ -227,15 +224,12 @@ void FastAudioEngine(LPVOID lpParam) {
 				switch (ManagedSettings.CurrentEngine) {
 				case XAUDIO_ENGINE:
 				{
-					if (!SndDrv)
-						break;
-
 					if (ManagedSettings.NotesCatcherWithAudio)
 						_PlayBufDataChk();
 
 					DWORD len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
 					if (len != -1)
-						SndDrv->write_frame(SndBuf, len / sizeof(float));
+						SndDrv->WriteFrame(SndBuf, len / sizeof(float));
 
 					break;
 				}
@@ -529,9 +523,8 @@ void FreeUpBASSASIO() {
 void FreeUpXA() {
 	// Free up XA before doing anything
 	if (SndDrv) {
-		SndDrv->free();
 		delete SndDrv;
-		SndDrv = NULL;
+		SndDrv = 0;
 	}
 }
 
@@ -557,12 +550,12 @@ void FreeUpStream() {
 
 		if (SndDrv) {
 			delete SndDrv;
-			SndDrv = NULL;
+			SndDrv = 0;
 		}
 
 		if (SndBuf) {
 			delete[] SndBuf;
-			SndBuf = NULL;
+			SndBuf = 0;
 		}
 	}
 
@@ -1090,10 +1083,10 @@ BEGSWITCH:
 			}
 
 			PrintMessageToDebugLog("InitializeXAFunc", "Allocationg XAudio2 struct...");
-			SndDrv = create_sound_out_xaudio2();
+			SndDrv = CreateXAudio2Stream();
 
 			PrintMessageToDebugLog("InitializeXAFunc", "Opening XAudio2 device...");
-			const char* XATmp = SndDrv->open(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.XASPFSweepRate);
+			const char* XATmp = SndDrv->OpenStream(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.XASPFSweepRate);
 
 			if (XATmp != NULL) {
 				ManagedSettings.CurrentEngine = WASAPI_ENGINE;

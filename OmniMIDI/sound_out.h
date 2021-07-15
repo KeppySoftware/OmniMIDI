@@ -6,19 +6,11 @@ class sound_out
 public:
 	virtual ~sound_out() {}
 
-	virtual const char* open(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames) = 0;
+	virtual const char* OpenStream(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames) = 0;
 	
-	virtual const char* free() = 0;
-
-	virtual const char* write_frame(void* buffer, unsigned num_samples, bool wait = true) = 0;
-
-	virtual const char* set_ratio(double ratio) = 0;
-
-	virtual const char* pause(bool pausing) = 0;
-
-	virtual double buffered() = 0;
+	virtual const char* WriteFrame(void* buffer, unsigned num_samples) = 0;
 };
 
-sound_out* create_sound_out_xaudio2();
+sound_out* CreateXAudio2Stream();
 
 #endif

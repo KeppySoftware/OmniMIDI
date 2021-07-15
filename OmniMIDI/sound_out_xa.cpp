@@ -15,7 +15,6 @@
 // Use redist version for x86/x64
 #include "inc\XAudio2.h"
 #endif
-
 #include <assert.h>
 #include <mmdeviceapi.h>
 #include <vector>
@@ -24,128 +23,13 @@
 #include <ksmedia.h>
 #endif
 
-
 #pragma comment ( lib, "winmm.lib" )
 
-class sound_out_i_xaudio2;
+class XAudio2Output;
 
-void xaudio2_device_changed(sound_out_i_xaudio2*);
+void XAudio2DeviceChanged(XAudio2Output*);
 
-class XAudio2_Device_Notifier : public IMMNotificationClient
-{
-	volatile LONG registered;
-	IMMDeviceEnumerator* pEnumerator;
-
-	CRITICAL_SECTION lock;
-	std::vector<sound_out_i_xaudio2*> instances;
-
-public:
-	XAudio2_Device_Notifier() : registered(0)
-	{
-		InitializeCriticalSection(&lock);
-	}
-	~XAudio2_Device_Notifier()
-	{
-		DeleteCriticalSection(&lock);
-	}
-
-	ULONG STDMETHODCALLTYPE AddRef()
-	{
-		return 1;
-	}
-
-	ULONG STDMETHODCALLTYPE Release()
-	{
-		return 1;
-	}
-
-	HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, VOID** ppvInterface)
-	{
-		if (IID_IUnknown == riid)
-		{
-			*ppvInterface = (IUnknown*)this;
-		}
-		else if (__uuidof(IMMNotificationClient) == riid)
-		{
-			*ppvInterface = (IMMNotificationClient*)this;
-		}
-		else
-		{
-			*ppvInterface = NULL;
-			return E_NOINTERFACE;
-		}
-		return S_OK;
-	}
-
-	HRESULT STDMETHODCALLTYPE OnDefaultDeviceChanged(EDataFlow flow, ERole role, LPCWSTR pwstrDeviceId)
-	{
-		if (flow == eRender)
-		{
-			EnterCriticalSection(&lock);
-			for (std::vector<sound_out_i_xaudio2*>::iterator it = instances.begin(); it < instances.end(); ++it)
-			{
-				xaudio2_device_changed(*it);
-			}
-			LeaveCriticalSection(&lock);
-		}
-
-		return S_OK;
-	}
-
-	HRESULT STDMETHODCALLTYPE OnDeviceAdded(LPCWSTR pwstrDeviceId) { return S_OK; }
-	HRESULT STDMETHODCALLTYPE OnDeviceRemoved(LPCWSTR pwstrDeviceId) { return S_OK; }
-	HRESULT STDMETHODCALLTYPE OnDeviceStateChanged(LPCWSTR pwstrDeviceId, DWORD dwNewState) { return S_OK; }
-	HRESULT STDMETHODCALLTYPE OnPropertyValueChanged(LPCWSTR pwstrDeviceId, const PROPERTYKEY key) { return S_OK; }
-
-	void do_register(sound_out_i_xaudio2* p_instance)
-	{
-		if (InterlockedIncrement(&registered) == 1)
-		{
-			CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
-			pEnumerator = NULL;
-			HRESULT hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_INPROC_SERVER, __uuidof(IMMDeviceEnumerator), (void**)&pEnumerator);
-			if (SUCCEEDED(hr))
-			{
-				pEnumerator->RegisterEndpointNotificationCallback(this);
-				registered = true;
-			}
-		}
-
-		EnterCriticalSection(&lock);
-		instances.push_back(p_instance);
-		LeaveCriticalSection(&lock);
-	}
-
-	void do_unregister(sound_out_i_xaudio2* p_instance)
-	{
-		if (InterlockedDecrement(&registered) == 0)
-		{
-			if (pEnumerator)
-			{
-				pEnumerator->UnregisterEndpointNotificationCallback(this);
-				pEnumerator->Release();
-				pEnumerator = NULL;
-			}
-			registered = false;
-
-			CoUninitialize();
-		}
-
-		EnterCriticalSection(&lock);
-		for (std::vector<sound_out_i_xaudio2*>::iterator it = instances.begin(); it < instances.end(); ++it)
-		{
-			if (*it == p_instance)
-			{
-				instances.erase(it);
-				break;
-			}
-		}
-		LeaveCriticalSection(&lock);
-	}
-} g_notifier;
-
-class sound_out_i_xaudio2 : public sound_out
+class XAudio2Output : public sound_out
 {
 	class XAudio2_BufferNotify : public IXAudio2VoiceCallback
 	{
@@ -166,7 +50,7 @@ class sound_out_i_xaudio2 : public sound_out
 		STDMETHOD_(void, OnBufferEnd) (void* pBufferContext) {
 			assert(hBufferEndEvent != NULL);
 			SetEvent(hBufferEndEvent);
-			sound_out_i_xaudio2* psnd = (sound_out_i_xaudio2*)pBufferContext;
+			XAudio2Output* psnd = (XAudio2Output*)pBufferContext;
 			if (psnd) psnd->OnBufferEnd();
 		}
 
@@ -188,8 +72,7 @@ class sound_out_i_xaudio2 : public sound_out
 	}
 
 	void* hwnd;
-	bool            paused;
-	bool			initialized;
+	bool			loaded;
 	volatile bool   device_changed;
 	unsigned        reopen_count;
 	unsigned        sample_rate, bytes_per_sample, max_samples_per_frame, num_frames;
@@ -213,58 +96,36 @@ class sound_out_i_xaudio2 : public sound_out
 	XA2C XA2Create = 0;
 
 public:
-	sound_out_i_xaudio2()
+	XAudio2Output()
 	{
-		paused = false;
-		reopen_count = 0;
-		device_changed = false;
-
-		xaud = NULL;
-		mVoice = NULL;
-		sVoice = NULL;
-		sample_buffer = NULL;
-		ZeroMemory(&vState, sizeof(vState));
-
-		g_notifier.do_register(this);
-	}
-
-	virtual ~sound_out_i_xaudio2()
-	{
-		g_notifier.do_unregister(this);
-		this->initialized = false;
-	}
-
-	void OnDeviceChanged()
-	{
-		device_changed = true;
-	}
-
-	virtual const char* open(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames)
-	{
-		if (this->initialized)
-			return NULL;
-
 #ifndef _M_ARM64
+		// If on x86/x64, load the library and its function using LoadLibrary/GetProcAddress
+		
 		PWSTR SysDir = NULL;
 		wchar_t DLLPath[MAX_PATH] = { 0 };
 		WIN32_FIND_DATA FD = { 0 };
 
 		if (XALib == nullptr) {
+			// XAudio2_9 can not be found, this is Windows 8.1 or older
 			if (!(XALib = LoadLibrary(L"XAudio2_9")))
 			{
+				// Try to get XAudio2_9_win7 from OmniMIDI's folder
 				if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
 					swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s\0", SysDir, L"XAudio2_9_win7.dll");
 					CoTaskMemFree(SysDir);
 
+					// Found it?
 					if (FindFirstFile(DLLPath, &FD) != INVALID_HANDLE_VALUE)
 					{
+						// Yes, load it
 						if (!(XALib = LoadLibrary(DLLPath)))
-							return "Lib missing";
+							return;
 					}
 				}
 				else {
+					// Something went wrong, SHGetKnownFolderPath failed
 					CoTaskMemFree(SysDir);
-					return "SHGetKnownFolderPath failed";
+					return;
 				}
 			}
 		}
@@ -273,10 +134,44 @@ public:
 			XA2Create = (XA2C)GetProcAddress(XALib, "XAudio2Create");
 
 			if (NULL == XA2Create)
-				return "XA2Create missing";
+				return;
 		}
-
 #endif
+
+		this->loaded = true;
+
+		reopen_count = 0;
+		device_changed = false;
+
+		xaud = NULL;
+		mVoice = NULL;
+		sVoice = NULL;
+		sample_buffer = NULL;
+		ZeroMemory(&vState, sizeof(vState));
+	}
+
+	virtual ~XAudio2Output()
+	{
+		close();
+
+#ifndef _M_ARM64
+		if (XALib)
+		{
+			FreeLibrary(XALib);
+			XALib = nullptr;
+		}
+#endif
+	}
+
+	void OnDeviceChanged()
+	{
+		device_changed = true;
+	}
+
+	virtual const char* OpenStream(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames)
+	{
+		if (!this->loaded)
+			return "XAudio2 failed to load";
 
 		this->hwnd = hwnd;
 		this->sample_rate = sample_rate;
@@ -284,7 +179,6 @@ public:
 		this->max_samples_per_frame = max_samples_per_frame;
 		this->num_frames = num_frames;
 		bytes_per_sample = floating_point ? 4 : 2;
-
 
 #ifdef HAVE_KS_HEADERS
 		WAVEFORMATEXTENSIBLE wfx;
@@ -308,7 +202,6 @@ public:
 		wfx.wBitsPerSample = floating_point ? 32 : 16;
 		wfx.cbSize = 0;
 #endif
-
 #ifndef _M_ARM64
 		HRESULT hr = XA2Create(&xaud, 0, 0);
 #else
@@ -336,34 +229,13 @@ public:
 		sample_buffer = new uint8_t[max_samples_per_frame * num_frames * bytes_per_sample];
 		samples_in_buffer = new UINT64[num_frames];
 		memset(samples_in_buffer, 0, sizeof(UINT64) * num_frames);
-
-		this->initialized = true;
-
-		return NULL;
-	}
-
-	virtual const char* free() {
-		this->initialized = false;
-
-		close();
-
-#ifndef _M_ARM64
-		if (XALib)
-		{
-			FreeLibrary(XALib);
-			XALib = nullptr;
-		}
-#endif
-
 		return NULL;
 	}
 
 	void close()
 	{
 		if (sVoice) {
-			if (!paused) {
-				sVoice->Stop(0);
-			}
+			sVoice->Stop(0);
 			sVoice->DestroyVoice();
 			sVoice = NULL;
 		}
@@ -384,11 +256,8 @@ public:
 		samples_in_buffer = NULL;
 	}
 
-	virtual const char* write_frame(void* buffer, unsigned num_samples, bool wait)
+	virtual const char* WriteFrame(void* buffer, unsigned num_samples)
 	{
-		if (!this->initialized)
-			return 0;
-
 		if (device_changed)
 		{
 			close();
@@ -397,14 +266,11 @@ public:
 			return 0;
 		}
 
-		if (paused)
-			return 0;
-
 		if (reopen_count)
 		{
 			if (!--reopen_count)
 			{
-				const char* err = open(hwnd, sample_rate, nch, bytes_per_sample == 4, max_samples_per_frame, num_frames);
+				const char* err = OpenStream(hwnd, sample_rate, nch, bytes_per_sample == 4, max_samples_per_frame, num_frames);
 				if (err)
 				{
 					reopen_count = 60 * 5;
@@ -424,6 +290,18 @@ public:
 				// there is at least one free buffer
 				break;
 			}
+			else {
+				// wait for one buffer to finish playing
+				const DWORD timeout_ms = (max_samples_per_frame / nch) * num_frames * 1000 / sample_rate;
+				if (WaitForSingleObject(notify.hBufferEndEvent, timeout_ms) == WAIT_TIMEOUT)
+				{
+					// buffer has stalled, likely by the whole XAudio2 system failing, so we should tear it down and attempt to reopen it
+					close();
+					reopen_count = 5;
+
+					return 0;
+				}
+			}
 		}
 		samples_in_buffer[buffer_write_cursor] = num_samples / nch;
 		XAUDIO2_BUFFER buf = { 0 };
@@ -433,7 +311,6 @@ public:
 		buf.pContext = this;
 		buffer_write_cursor = (buffer_write_cursor + 1) % num_frames;
 		memcpy((void*)buf.pAudioData, buffer, num_bytes);
-
 		if (sVoice->SubmitSourceBuffer(&buf) == S_OK)
 			return 0;
 
@@ -442,68 +319,14 @@ public:
 
 		return 0;
 	}
-
-	virtual const char* pause(bool pausing)
-	{
-		if (pausing)
-		{
-			if (!paused)
-			{
-				paused = true;
-				if (!reopen_count)
-				{
-					HRESULT hr = sVoice->Stop(0);
-					if (FAILED(hr))
-					{
-						close();
-						reopen_count = 60 * 5;
-					}
-				}
-			}
-		}
-		else
-		{
-			if (paused)
-			{
-				paused = false;
-				if (!reopen_count)
-				{
-					HRESULT hr = sVoice->Start(0);
-					if (FAILED(hr))
-					{
-						close();
-						reopen_count = 60 * 5;
-					}
-				}
-			}
-		}
-
-		return 0;
-	}
-
-	virtual const char* set_ratio(double ratio)
-	{
-		if (!reopen_count && FAILED(sVoice->SetFrequencyRatio(static_cast<float>(ratio)))) return "setting ratio";
-		return 0;
-	}
-
-	virtual double buffered()
-	{
-		if (reopen_count) return 0.0;
-		sVoice->GetState(&vState);
-		double buffered_count = vState.BuffersQueued;
-		INT64 samples_played = vState.SamplesPlayed - this->samples_played;
-		buffered_count -= double(samples_played) / double(max_samples_per_frame / nch);
-		return buffered_count;
-	}
 };
 
-void xaudio2_device_changed(sound_out_i_xaudio2* p_instance)
+void XAudio2DeviceChanged(XAudio2Output* p_instance)
 {
 	p_instance->OnDeviceChanged();
 }
 
-sound_out* create_sound_out_xaudio2()
+sound_out* CreateXAudio2Stream()
 {
-	return new sound_out_i_xaudio2;
+	return new XAudio2Output;
 }
