@@ -258,6 +258,9 @@ public:
 
 	virtual const char* WriteFrame(void* buffer, unsigned num_samples)
 	{
+		if (!this->loaded)
+			return "XAudio2 not loaded";
+
 		if (device_changed)
 		{
 			close();

@@ -651,7 +651,8 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		RegQueryValueEx(Configuration.Address, L"AudioRampIn", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioRampIn, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"LinAttMod", NULL, &dwType, (LPBYTE)&ManagedSettings.LinAttMod, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"LinDecVol", NULL, &dwType, (LPBYTE)&ManagedSettings.LinDecVol, &dwSize);
-
+		RegQueryValueEx(Configuration.Address, L"NoSFGenLimits", NULL, &dwType, (LPBYTE)&ManagedSettings.NoSFGenLimits, &dwSize);
+		
 		// Stuff that works so don't bother
 		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
 		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }

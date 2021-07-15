@@ -16,11 +16,11 @@
 #define Email 'kaleidonkep99@outlook.com'
 #define Icon "Branding\OMSetupICO.ico"
 #define InstallDir "OmniMIDI"
-#define Link 'https://github.com/KaleidonKep99/Keppy-s-Synthesizer'
+#define Link 'https://github.com/KeppySoftware/OmniMIDI'
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '14.6.0.67'
+#define Version '14.6.0.70'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'

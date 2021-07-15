@@ -31,6 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsPanel));
             this.EnginesBox = new System.Windows.Forms.GroupBox();
+            this.LinDecVol = new System.Windows.Forms.CheckBox();
+            this.LinAttMod = new System.Windows.Forms.CheckBox();
+            this.AudioRampIn = new System.Windows.Forms.CheckBox();
             this.ChorusV = new System.Windows.Forms.NumericUpDown();
             this.ReverbV = new System.Windows.Forms.NumericUpDown();
             this.ChorusL = new System.Windows.Forms.Label();
@@ -69,7 +72,6 @@
             this.SlowDownPlayback = new System.Windows.Forms.CheckBox();
             this.OldBuff = new System.Windows.Forms.CheckBox();
             this.SynthBox = new System.Windows.Forms.GroupBox();
-            this.AudioRampIn = new System.Windows.Forms.CheckBox();
             this.PitchShifting = new OmniMIDIConfigurator.LinkLabelEx();
             this.AutoLoad = new System.Windows.Forms.CheckBox();
             this.PrioLab = new System.Windows.Forms.Label();
@@ -119,8 +121,7 @@
             this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
             this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeEVBuf = new OmniMIDIConfigurator.LinkLabelEx();
-            this.LinAttMod = new System.Windows.Forms.CheckBox();
-            this.LinDecVol = new System.Windows.Forms.CheckBox();
+            this.NoSFGenLimits = new System.Windows.Forms.CheckBox();
             this.EnginesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChorusV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReverbV)).BeginInit();
@@ -142,6 +143,7 @@
             // 
             this.EnginesBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.EnginesBox.Controls.Add(this.NoSFGenLimits);
             this.EnginesBox.Controls.Add(this.LinDecVol);
             this.EnginesBox.Controls.Add(this.LinAttMod);
             this.EnginesBox.Controls.Add(this.AudioRampIn);
@@ -179,15 +181,48 @@
             this.EnginesBox.Controls.Add(this.label2);
             this.EnginesBox.Location = new System.Drawing.Point(3, 3);
             this.EnginesBox.Name = "EnginesBox";
-            this.EnginesBox.Size = new System.Drawing.Size(670, 455);
+            this.EnginesBox.Size = new System.Drawing.Size(670, 474);
             this.EnginesBox.TabIndex = 0;
             this.EnginesBox.TabStop = false;
-            this.EnginesBox.Text = " ";
+            this.EnginesBox.Text = "Audio engine settings";
+            // 
+            // LinDecVol
+            // 
+            this.LinDecVol.AutoSize = true;
+            this.LinDecVol.Location = new System.Drawing.Point(9, 358);
+            this.LinDecVol.Name = "LinDecVol";
+            this.LinDecVol.Size = new System.Drawing.Size(466, 17);
+            this.LinDecVol.TabIndex = 62;
+            this.LinDecVol.Text = "Use linear decay and release phases in volume envelopes (The attack phase is alwa" +
+    "ys linear)";
+            this.LinDecVol.UseVisualStyleBackColor = true;
+            // 
+            // LinAttMod
+            // 
+            this.LinAttMod.AutoSize = true;
+            this.LinAttMod.Location = new System.Drawing.Point(9, 339);
+            this.LinAttMod.Name = "LinAttMod";
+            this.LinAttMod.Size = new System.Drawing.Size(562, 17);
+            this.LinAttMod.TabIndex = 61;
+            this.LinAttMod.Text = "Use linear attack phase in SoundFont modulation envelopes (The attack phase is al" +
+    "ways linear in SFZ envelopes)";
+            this.LinAttMod.UseVisualStyleBackColor = true;
+            // 
+            // AudioRampIn
+            // 
+            this.AudioRampIn.AutoSize = true;
+            this.AudioRampIn.Location = new System.Drawing.Point(9, 320);
+            this.AudioRampIn.Name = "AudioRampIn";
+            this.AudioRampIn.Size = new System.Drawing.Size(449, 17);
+            this.AudioRampIn.TabIndex = 60;
+            this.AudioRampIn.Text = "Always ramp-in the start of a sample in a SoundFont (Disabling it could cause aud" +
+    "io clicks)";
+            this.AudioRampIn.UseVisualStyleBackColor = true;
             // 
             // ChorusV
             // 
             this.ChorusV.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ChorusV.Location = new System.Drawing.Point(229, 427);
+            this.ChorusV.Location = new System.Drawing.Point(229, 446);
             this.ChorusV.Maximum = new decimal(new int[] {
             127,
             0,
@@ -205,7 +240,7 @@
             // ReverbV
             // 
             this.ReverbV.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ReverbV.Location = new System.Drawing.Point(86, 427);
+            this.ReverbV.Location = new System.Drawing.Point(86, 446);
             this.ReverbV.Maximum = new decimal(new int[] {
             127,
             0,
@@ -224,7 +259,7 @@
             // 
             this.ChorusL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ChorusL.AutoSize = true;
-            this.ChorusL.Location = new System.Drawing.Point(151, 429);
+            this.ChorusL.Location = new System.Drawing.Point(151, 448);
             this.ChorusL.Name = "ChorusL";
             this.ChorusL.Size = new System.Drawing.Size(79, 13);
             this.ChorusL.TabIndex = 48;
@@ -234,7 +269,7 @@
             // 
             this.ReverbL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ReverbL.AutoSize = true;
-            this.ReverbL.Location = new System.Drawing.Point(6, 429);
+            this.ReverbL.Location = new System.Drawing.Point(6, 448);
             this.ReverbL.Name = "ReverbL";
             this.ReverbL.Size = new System.Drawing.Size(81, 13);
             this.ReverbL.TabIndex = 47;
@@ -244,7 +279,7 @@
             // 
             this.EnableRCOverride.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.EnableRCOverride.AutoSize = true;
-            this.EnableRCOverride.Location = new System.Drawing.Point(9, 407);
+            this.EnableRCOverride.Location = new System.Drawing.Point(9, 426);
             this.EnableRCOverride.Name = "EnableRCOverride";
             this.EnableRCOverride.Size = new System.Drawing.Size(277, 17);
             this.EnableRCOverride.TabIndex = 13;
@@ -257,7 +292,7 @@
             this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(6, 391);
+            this.label14.Location = new System.Drawing.Point(6, 410);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(237, 13);
             this.label14.TabIndex = 0;
@@ -330,7 +365,7 @@
             // 
             this.VolSimView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.VolSimView.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolSimView.Location = new System.Drawing.Point(514, 429);
+            this.VolSimView.Location = new System.Drawing.Point(514, 448);
             this.VolSimView.Name = "VolSimView";
             this.VolSimView.Size = new System.Drawing.Size(69, 24);
             this.VolSimView.TabIndex = 36;
@@ -381,7 +416,7 @@
             this.VolLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.VolLabel.AutoSize = true;
             this.VolLabel.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.VolLabel.Location = new System.Drawing.Point(511, 411);
+            this.VolLabel.Location = new System.Drawing.Point(511, 430);
             this.VolLabel.Name = "VolLabel";
             this.VolLabel.Size = new System.Drawing.Size(72, 18);
             this.VolLabel.TabIndex = 35;
@@ -441,7 +476,7 @@
             this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
             this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
             this.VolTrackBar.LargeChange = 1000;
-            this.VolTrackBar.Location = new System.Drawing.Point(586, 369);
+            this.VolTrackBar.Location = new System.Drawing.Point(586, 388);
             this.VolTrackBar.Maximum = 10000;
             this.VolTrackBar.Minimum = 0;
             this.VolTrackBar.Name = "VolTrackBar";
@@ -729,23 +764,12 @@
             this.SynthBox.Controls.Add(this.SlowDownPlayback);
             this.SynthBox.Controls.Add(this.KSDAPIBox);
             this.SynthBox.Controls.Add(this.KSDAPIBoxWhat);
-            this.SynthBox.Location = new System.Drawing.Point(3, 464);
+            this.SynthBox.Location = new System.Drawing.Point(3, 483);
             this.SynthBox.Name = "SynthBox";
             this.SynthBox.Size = new System.Drawing.Size(670, 465);
             this.SynthBox.TabIndex = 1;
             this.SynthBox.TabStop = false;
             this.SynthBox.Text = "Synthesizer settings";
-            // 
-            // AudioRampIn
-            // 
-            this.AudioRampIn.AutoSize = true;
-            this.AudioRampIn.Location = new System.Drawing.Point(9, 320);
-            this.AudioRampIn.Name = "AudioRampIn";
-            this.AudioRampIn.Size = new System.Drawing.Size(449, 17);
-            this.AudioRampIn.TabIndex = 60;
-            this.AudioRampIn.Text = "Always ramp-in the start of a sample in a SoundFont (Disabling it could cause aud" +
-    "io clicks)";
-            this.AudioRampIn.UseVisualStyleBackColor = true;
             // 
             // PitchShifting
             // 
@@ -1228,7 +1252,7 @@
             this.LegacySetDia.Controls.Add(this.label15);
             this.LegacySetDia.Controls.Add(this.LiveChangesTrigger);
             this.LegacySetDia.Controls.Add(this.ChangeEVBuf);
-            this.LegacySetDia.Location = new System.Drawing.Point(3, 935);
+            this.LegacySetDia.Location = new System.Drawing.Point(3, 954);
             this.LegacySetDia.Name = "LegacySetDia";
             this.LegacySetDia.Size = new System.Drawing.Size(670, 238);
             this.LegacySetDia.TabIndex = 2;
@@ -1295,27 +1319,15 @@
             this.ChangeEVBuf.Text = "Change size of the events buffer (EVBuffer)";
             this.ChangeEVBuf.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeEVBuf_LinkClicked);
             // 
-            // LinAttMod
+            // NoSFGenLimits
             // 
-            this.LinAttMod.AutoSize = true;
-            this.LinAttMod.Location = new System.Drawing.Point(9, 339);
-            this.LinAttMod.Name = "LinAttMod";
-            this.LinAttMod.Size = new System.Drawing.Size(562, 17);
-            this.LinAttMod.TabIndex = 61;
-            this.LinAttMod.Text = "Use linear attack phase in SoundFont modulation envelopes (The attack phase is al" +
-    "ways linear in SFZ envelopes)";
-            this.LinAttMod.UseVisualStyleBackColor = true;
-            // 
-            // LinDecVol
-            // 
-            this.LinDecVol.AutoSize = true;
-            this.LinDecVol.Location = new System.Drawing.Point(9, 358);
-            this.LinDecVol.Name = "LinDecVol";
-            this.LinDecVol.Size = new System.Drawing.Size(466, 17);
-            this.LinDecVol.TabIndex = 62;
-            this.LinDecVol.Text = "Use linear decay and release phases in volume envelopes (The attack phase is alwa" +
-    "ys linear)";
-            this.LinDecVol.UseVisualStyleBackColor = true;
+            this.NoSFGenLimits.AutoSize = true;
+            this.NoSFGenLimits.Location = new System.Drawing.Point(9, 377);
+            this.NoSFGenLimits.Name = "NoSFGenLimits";
+            this.NoSFGenLimits.Size = new System.Drawing.Size(391, 17);
+            this.NoSFGenLimits.TabIndex = 63;
+            this.NoSFGenLimits.Text = "Do not limit SF2 generator values to emulate Creative/SoundBlaster hardware";
+            this.NoSFGenLimits.UseVisualStyleBackColor = true;
             // 
             // SettingsPanel
             // 
@@ -1325,7 +1337,7 @@
             this.Controls.Add(this.SynthBox);
             this.Controls.Add(this.EnginesBox);
             this.Name = "SettingsPanel";
-            this.Size = new System.Drawing.Size(678, 1177);
+            this.Size = new System.Drawing.Size(678, 1215);
             this.Load += new System.EventHandler(this.SettingsPanel_Load);
             this.EnginesBox.ResumeLayout(false);
             this.EnginesBox.PerformLayout();
@@ -1441,5 +1453,6 @@
         public System.Windows.Forms.CheckBox AudioRampIn;
         public System.Windows.Forms.CheckBox LinDecVol;
         public System.Windows.Forms.CheckBox LinAttMod;
+        public System.Windows.Forms.CheckBox NoSFGenLimits;
     }
 }

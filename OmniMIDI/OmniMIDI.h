@@ -166,7 +166,8 @@ typedef struct
 	BOOL ASIODirectFeed = 0;				// Make ASIO inject itself into the BASS stream
 
 	BOOL LinAttMod = FALSE;					// Use a linear attack phase in SF2 modulation (pitch/filter) envelopes
-	BOOL LinDecVol = FALSE;					// Use linear decay and release phases in volume envelopes
+	BOOL LinDecVol = TRUE;					// Use linear decay and release phases in volume envelopes
+	BOOL NoSFGenLimits = FALSE;				// Do not limit SF2 generator values to emulate Creative/SoundBlaster hardware
 } Settings;
 #endif
 

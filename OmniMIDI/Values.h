@@ -234,13 +234,20 @@ const LPCWSTR BuiltInBlacklist[] =
 	_T("mstsc.exe"),
 	_T("nvcontainer.exe"),
 	_T("nvsphelper64.exe"),
+	_T("RtkAudUService32.exe"),
+	_T("RtkAudUService64.exe"),
 	_T("smss.exe"),
 	_T("spoolsv.exe"),
+	_T("VBoxSDS.exe"),
+	_T("VBoxSVC.exe"),
 	_T("vcpkgsrv.exe"),
+	_T("VirtualBox.exe"),
+	_T("VirtualBoxVM.exe"),
 	_T("vmware-hostd.exe"),
 	_T("vmware-vmx.exe"),
 	_T("wininit.exe"),
 	_T("winlogon.exe"),
+	_T("wlanext.exe"),
 };
 
 // Per channel values
