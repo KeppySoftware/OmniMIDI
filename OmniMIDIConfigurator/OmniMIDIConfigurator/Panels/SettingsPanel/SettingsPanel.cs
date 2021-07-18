@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO;
+using System.Security.Principal;
 
 namespace OmniMIDIConfigurator
 {
@@ -27,7 +28,7 @@ namespace OmniMIDIConfigurator
             OverrideNoteLengthWA1.Image = Properties.Resources.wi;
             OverrideNoteLengthWA2.Image = Properties.Resources.wi;
 
-            VolTrackBar.ContextMenu = VolTrackBarMenu;
+            VolKnob.ContextMenu = VolTrackBarMenu;
 
             if (!(Environment.OSVersion.Version.Major == 10 && Environment.OSVersion.Version.Build >= 15063))
             {
@@ -128,7 +129,7 @@ namespace OmniMIDIConfigurator
             RenderingTimeLabel.Enabled = NoAtW ? true : false;
             VolLabel.Enabled = NoAtW ? true : false;
             VolSimView.Enabled = NoAtW ? true : false;
-            VolTrackBar.Enabled = NoAtW ? true : false;
+            VolKnob.Enabled = NoAtW ? true : false;
             bufsize.Enabled = NoASIOXAE ? true : false;
             OldBuff.Enabled = NoAtW ? true : false;
 
@@ -153,8 +154,8 @@ namespace OmniMIDIConfigurator
                 LiveChangesTrigger.Checked = Properties.Settings.Default.LiveChanges;
 
                 VolumeBoost.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("VolumeBoost", 0));
-                VolTrackBar.Maximum = VolumeBoost.Checked ? 50000 : 10000;
-                VolTrackBar.Value = Convert.ToInt32(Program.SynthSettings.GetValue("OutputVolume", 10000));
+                VolKnob.Maximum = VolumeBoost.Checked ? 50000 : 10000;
+                VolKnob.Value = Convert.ToInt32(Program.SynthSettings.GetValue("OutputVolume", 10000));
 
                 AutoLoad.Checked = Properties.Settings.Default.AutoLoadList;
 
@@ -353,22 +354,22 @@ namespace OmniMIDIConfigurator
         {
             if (VolumeBoost.Checked)
             {
-                if (VolTrackBar.Value > 10000)
+                if (VolKnob.Value > 10000)
                 {
-                    VolTrackBar.Value = 10000;
+                    VolKnob.Value = 10000;
                     Program.SynthSettings.SetValue("OutputVolume", 10000, RegistryValueKind.DWord);
                 }
                 Program.SynthSettings.SetValue("VolumeBoost", 0, RegistryValueKind.DWord);
-                VolTrackBar.Maximum = 10000;
+                VolKnob.Maximum = 10000;
                 VolumeBoost.Checked = false;
-                VolTrackBar.Refresh();
+                VolKnob.Refresh();
             }
             else
             {
                 Program.SynthSettings.SetValue("VolumeBoost", 1, RegistryValueKind.DWord);
-                VolTrackBar.Maximum = 50000;
+                VolKnob.Maximum = 50000;
                 VolumeBoost.Checked = true;
-                VolTrackBar.Refresh();
+                VolKnob.Refresh();
             }
         }
 
@@ -399,13 +400,13 @@ namespace OmniMIDIConfigurator
 
         private void VolTrackBar_Scroll(object sender)
         {
-            if (VolTrackBar.Value <= 49) VolSimView.ForeColor = Color.Red;
+            if (VolKnob.Value <= 49) VolSimView.ForeColor = Color.Red;
             else VolSimView.ForeColor = Color.FromArgb(255, 53, 0, 119);
 
-            decimal VolVal = (decimal)VolTrackBar.Value / 100;
-            VolSimView.Text = String.Format("{0}", Math.Round(VolVal, MidpointRounding.AwayFromZero).ToString());
+            decimal VolVal = (decimal)VolKnob.Value / 100;
+            VolSimView.Text = String.Format("{0}", VolVal.ToString("000.00"));
 
-            Program.SynthSettings.SetValue("OutputVolume", VolTrackBar.Value.ToString(), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("OutputVolume", VolKnob.Value.ToString(), RegistryValueKind.DWord);
         }
 
         private void KSDAPIBoxWhat_Click(object sender, EventArgs e)
@@ -524,10 +525,10 @@ namespace OmniMIDIConfigurator
 
         private void FineTuneKnobIt_Click(object sender, EventArgs e)
         {
-            PreciseControlVol PCV = new PreciseControlVol(VolTrackBar.Value, VolTrackBar.Maximum);
+            PreciseControlVol PCV = new PreciseControlVol(VolKnob.Value, VolKnob.Maximum);
 
             if (PCV.ShowDialog() == DialogResult.OK)
-                VolTrackBar.Value = PCV.NewVolume;
+                VolKnob.Value = PCV.NewVolume;
 
             PCV.Dispose();
         }
@@ -611,6 +612,99 @@ namespace OmniMIDIConfigurator
             Limit88.Enabled = !HMode.Checked;
             AllNotesIgnore.Enabled = !HMode.Checked;
             MIDIFeedbackTool.Enabled = !HMode.Checked;
+        }
+
+        private void Troubleshooter_Click(object sender, EventArgs e)
+        {
+            IntPtr Dummy = new IntPtr();
+            bool IsProcessElevated = false;
+
+            using (WindowsIdentity Identity = WindowsIdentity.GetCurrent())
+            {
+                WindowsPrincipal Principal = new WindowsPrincipal(Identity);
+                IsProcessElevated = Principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+
+            if (!IsProcessElevated)
+            {
+                if (!Functions.RestartAsAdmin())
+                    return;
+            }
+
+            MessageBox.Show("This tool will help you troubleshoot some various issues caused by Windows' default recovery system, which might make OmniMIDI " +
+                "unavailable for use by other applications.\n\nClose any MIDI-related application you might have open, then press OK to start the troubleshooting.",
+                "OmniMIDI - Troubleshooter", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            DialogResult Q1 = MessageBox.Show("The configurator will now reset the Fault Tolerant Heap system, which sometimes might prevent some " +
+                "libraries from loading properly.\n\nPress Yes to continue, or No to stop.", "OmniMIDI - Troubleshooter", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+            if (Q1 == DialogResult.No)
+                return;
+
+            if (Environment.Is64BitOperatingSystem)
+                Functions.Wow64DisableWow64FsRedirection(ref Dummy);
+
+            // Step 1: FTH reset
+            using (Process proc = new Process())
+            {
+                proc.StartInfo.FileName = "rundll32.exe";
+                proc.StartInfo.Arguments = "fthsvc.dll,FthSysprepSpecialize";
+                proc.StartInfo.UseShellExecute = false;
+                proc.StartInfo.RedirectStandardOutput = true;
+                proc.StartInfo.CreateNoWindow = true;
+                proc.Start();
+                proc.WaitForExit();
+            }
+
+            if (Environment.Is64BitOperatingSystem)
+                Functions.Wow64RevertWow64FsRedirection(Dummy);
+
+            DialogResult M1 = MessageBox.Show("OmniMIDI has reset the Fault Tolerant Heap system.\n\n" +
+                "Open the MIDI application that had issues working and/or detecting OmniMIDI, and check if this fixed the issue.", 
+                "OmniMIDI - Troubleshooter", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+            if (M1 == DialogResult.Yes)
+                return;
+
+            DialogResult Q2 = MessageBox.Show("The configurator will now reset all the AppCompatFlags in the system, " +
+                "which sometimes might prevent OmniMIDI and its libraries from loading properly.\n\n" +
+                "Press Yes to continue, or No to stop.", "OmniMIDI - Troubleshooter", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+            if (Q2 == DialogResult.No)
+                return;
+
+            // Step 2: AppCompatFlags reset
+
+            RegistryKey CU = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", true);
+            CU.DeleteSubKeyTree("AppCompatFlags", false);
+            CU.Dispose();
+
+            RegistryKey LM = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", true);
+            LM.DeleteSubKeyTree("AppCompatFlags", false);
+            LM.Dispose();
+
+            DialogResult M2 = MessageBox.Show("OmniMIDI has reset all the AppCompatFlags in the system.\n\n" +
+                "Open the MIDI application that had issues working and/or detecting OmniMIDI, and check if this fixed the issue.",
+                "OmniMIDI - Troubleshooter", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+            if (M2 == DialogResult.Yes)
+                return;
+
+            DialogResult Q3 = MessageBox.Show("The configurator will now reset all the settings and reinstall the driver from scratch.\n" +
+                "This could help when dealing with a corrupted install of OmniMIDI.\nYou'll lose all your settings.\n\n" +
+                "Press Yes to continue, or No to stop.", "OmniMIDI - Troubleshooter", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+
+            if (Q3 == DialogResult.No)
+                return;
+
+            var current = Process.GetCurrentProcess();
+            Process.GetProcessesByName(current.ProcessName)
+                .Where(t => t.Id != current.Id)
+                .ToList()
+                .ForEach(t => t.Kill());
+
+            Properties.Settings.Default.Reset();
+            UpdateSystem.CheckForTLS12ThenUpdate(FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion).FileVersion, UpdateSystem.WIPE_SETTINGS);
         }
 
         public void ButtonToSaveSettings(object sender, EventArgs e)

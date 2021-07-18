@@ -83,17 +83,12 @@ namespace OmniMIDIConfigurator
         private void DAWPatch_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             MessageBox.Show("This patch should be used when you want good performance without losing access to other MIDI out devices.\n\n" +
-                "You should use this patch if you want to use KSDAPI together with other MIDI out devices, such as on FL Studio or Cubase.", "OmniMIDI - Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                "You should use this patch if you want to use KDMAPI together with other MIDI out devices, such as on FL Studio or Cubase.", "OmniMIDI - Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void OKClose_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        private void WinMMPatches_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

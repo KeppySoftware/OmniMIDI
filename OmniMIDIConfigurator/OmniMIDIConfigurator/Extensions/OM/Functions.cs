@@ -88,11 +88,10 @@ namespace OmniMIDIConfigurator
 
         public static readonly List<SettingStruct> DefaultSettings = new List<SettingStruct>
         {
-            new SettingStruct ("AudioBitDepth", 1),
+            new SettingStruct ("AudioBitDepth", 0),
             new SettingStruct ("AudioFrequency", 48000),
             new SettingStruct ("BufferLength", 0),
             new SettingStruct ("CPitchValue", 0x2000),
-            new SettingStruct ("CapFramerate", 0),
             new SettingStruct ("Chorus", 0),
             new SettingStruct ("CurrentEngine", 3),
             new SettingStruct ("DebugMode", 0),
@@ -283,8 +282,6 @@ namespace OmniMIDIConfigurator
             for (int i = 1; i <= 8; i++)
                 Program.Watchdog.SetValue(String.Format("rel{0}", i), 0, RegistryValueKind.DWord);
 
-            Program.Watchdog.SetValue("runwd", 0, RegistryValueKind.DWord);
-            Program.Watchdog.SetValue("watchdog", 1, RegistryValueKind.DWord);
             Program.Watchdog.SetValue("currentsflist", 1, RegistryValueKind.DWord);
         }
 
@@ -439,10 +436,10 @@ namespace OmniMIDIConfigurator
             return isElevated;
         }
 
-        public static void RestartAsAdmin()
+        public static bool RestartAsAdmin()
         {
             Boolean isElevated = IsProcessElevated();
-            String MessageString = String.Format("You don't have the rights to edit the target folder!{0}", isElevated ? "" : "\n\nDo you want to restart the configurator with admin permissions?");
+            String MessageString = String.Format("Your current user permissions don't allow you to do that!{0}", isElevated ? "" : "\n\nDo you want to restart the configurator with admin permissions?");
             
             DialogResult Message = Program.ShowError(isElevated ? 4 : 3, "Permissions required", MessageString, null);
             if (Message == DialogResult.Yes)
@@ -457,6 +454,8 @@ namespace OmniMIDIConfigurator
                 }
                 catch { }
             }
+
+            return false;
         }
 
         public static void DriverRegistry(Boolean Uninstall)
