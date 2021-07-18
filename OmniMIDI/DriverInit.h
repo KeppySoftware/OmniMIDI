@@ -42,7 +42,13 @@ BOOL EnableMIDIFeedbackMode() {
 		// If minimal playback is enabled, abort the feedback initialization process,
 		// since the required functions aren't called in this mode.
 		if (!FeedbackEnabled || FeedbackBlacklisted || HyperMode)
-			return TRUE;
+			return FeedbackEnabled;
+
+		if (!MIDIFeedbackWhitelist())
+		{
+			PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Feedback mode is enabled, but the app isn't allowed to use it.");
+			return FALSE;
+		}
 
 		PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Feedback mode enabled. Searching for feedback target device...");
 
@@ -54,6 +60,7 @@ BOOL EnableMIDIFeedbackMode() {
 
 			if (SystemGetVersion() == 0x0502U)
 			{
+				PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Unsupported version of the Windows Multimedia Wrapper detected.");
 				MessageBox(NULL, L"This version of the Windows Multimedia Wrapper is not supported.\nPlease upgrade it by repatching the application.\n\nThe MIDI feedback mode will not be enabled.\n\nPress OK to continue", L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 				return FALSE;
 			}
@@ -141,16 +148,18 @@ BOOL DisableMIDIFeedbackMode() {
 
 			switch (MMmidiOutClose((HMIDIOUT)OMFeedback)) {
 			case MMSYSERR_NOMEM:
+				PrintMessageToDebugLog("midiOutClose", "FATAL ERROR!");
 				throw;
 			case MMSYSERR_INVALHANDLE:
+				PrintMessageToDebugLog("midiOutClose", "Invalid handle passed to midiOutClose, marking as closed anyway.");
 				break;
 			case MMSYSERR_NOERROR:
 			default:						
 				PrintMessageToDebugLog("midiOutClose", "Device closed.");
-				OMFeedback = NULL;
 				break;
 			}
 
+			OMFeedback = NULL;
 			PrintMessageToDebugLog("DisableMIDIFeedbackMode", "Disabled.");
 		}
 

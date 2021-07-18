@@ -48,6 +48,7 @@ namespace OmniMIDIConfigurator
             try
             {
                 RegistryKey SynthPaths = Registry.CurrentUser.OpenSubKey("SOFTWARE\\OmniMIDI\\Paths", true);
+
                 if (SynthPaths.GetValue("lastpathblacklist", null) != null)
                 {
                     LastBrowserPath = SynthPaths.GetValue("lastpathblacklist").ToString();

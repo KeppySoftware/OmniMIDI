@@ -117,4 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="label1.Text" xml:space="preserve">
+    <value>You can make OmniMIDI forward the events to another MIDI out device, like a virtual cable (e.g. LoopMIDI) or another MIDI synthesizer (e.g. VirtualMIDISynth or Microsoft Wavetable Synth).
+You need to add the app to the whitelist for this to work.</value>
+  </data>
+  <metadata name="WhitelistPicker.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

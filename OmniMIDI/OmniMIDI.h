@@ -172,7 +172,7 @@ typedef struct
 #endif
 
 #ifndef KDMAPI_ONLYSTRUCTS
-// Return the KDMAPI version from OmniMIDI as the following output: Major.Minor.Build.Revision (eg. 1.30.0 Rev. 51).
+// Return the KDMAPI version from OmniMIDI as the following output: Major.Minor.Build Rev. Revision (eg. 1.30.0 Rev. 51).
 BOOL KDMAPI(ReturnKDMAPIVer)(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision);
 
 // Checks if KDMAPI is available. You can ignore the output if you want, but you should give the user the choice between WinMM and KDMAPI.

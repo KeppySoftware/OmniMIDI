@@ -83,3 +83,38 @@ DWORD BlackListSystem(){
 		CrashMessage(L"BlacklistCheckUp");
 	}
 }
+
+BOOL MIDIFeedbackWhitelist() {
+	// Blacklist system init
+	std::wstring UBLDir;
+
+	wchar_t UserProfile[MAX_PATH] = { 0 };
+	wchar_t TempString[NTFS_MAX_PATH] = { 0 };
+
+	// Start the system
+	SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, UserProfile);
+
+	UBLDir.append(UserProfile);
+	UBLDir.append(_T("\\OmniMIDI\\MIDIFeedback.whitelist"));
+
+	try {
+		if (PathFileExistsW(UBLDir.c_str())) {
+			std::wifstream file(UBLDir.c_str());
+
+			if (file) {
+				file.imbue(UTF8Support);
+				while (file.getline(TempString, sizeof(TempString) / sizeof(*TempString)))
+				{
+					if (_wcsicmp(AppNameW, TempString) == 0 ||
+						_wcsicmp(AppPathW, TempString) == 0)
+						return TRUE;
+				}
+			}
+		}
+
+		return FALSE;
+	}
+	catch (...) {
+		CrashMessage(L"MIDIFeedbackWhitelistCheckup");
+	}
+}
