@@ -27,6 +27,19 @@ namespace OmniMIDIConfigurator
         public MIDIInPlay()
         {
             InitializeComponent();
+
+            // Do this or KDMAPI will get stuck in a loop sending itself data
+            KDMAPI.DisableFeedbackMode();
+
+            // Initialize KDMAPI
+            if (!Convert.ToBoolean(KDMAPI.InitializeKDMAPIStream()))
+            {
+                MessageBox.Show("Unable to initialize KDMAPI.", "OmniMIDI - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+                return;
+            }
+
+            KDMAPI.ResetKDMAPIStream();
         }
 
         private void MIDIInPlay_Load(object sender, EventArgs e)
@@ -151,19 +164,6 @@ namespace OmniMIDIConfigurator
                 MessageBox.Show("No MIDI input devices available.", "OmniMIDI - Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
                 return;
-            }
-
-            // Initialize KDMAPI
-            if (sender == null)
-            {
-                if (!Convert.ToBoolean(KDMAPI.InitializeKDMAPIStream()))
-                {
-                    MessageBox.Show("Unable to initialize KDMAPI.", "OmniMIDI - Fatal error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Close();
-                    return;
-                }
-
-                KDMAPI.ResetKDMAPIStream();
             }
 
             // Initialize MIDI inputs list

@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsPanel));
             this.EnginesBox = new System.Windows.Forms.GroupBox();
+            this.NoSFGenLimits = new System.Windows.Forms.CheckBox();
             this.LinDecVol = new System.Windows.Forms.CheckBox();
             this.LinAttMod = new System.Windows.Forms.CheckBox();
             this.AudioRampIn = new System.Windows.Forms.CheckBox();
@@ -52,7 +53,6 @@
             this.VolLabel = new System.Windows.Forms.Label();
             this.DrvHzLabel = new System.Windows.Forms.Label();
             this.Frequency = new System.Windows.Forms.ComboBox();
-            this.VolTrackBar = new KnobControl.KnobControl();
             this.BufferText = new System.Windows.Forms.Label();
             this.bufsize = new System.Windows.Forms.NumericUpDown();
             this.SincConv = new System.Windows.Forms.ComboBox();
@@ -72,7 +72,6 @@
             this.SlowDownPlayback = new System.Windows.Forms.CheckBox();
             this.OldBuff = new System.Windows.Forms.CheckBox();
             this.SynthBox = new System.Windows.Forms.GroupBox();
-            this.PitchShifting = new OmniMIDIConfigurator.LinkLabelEx();
             this.AutoLoad = new System.Windows.Forms.CheckBox();
             this.PrioLab = new System.Windows.Forms.Label();
             this.IgnoreNotesLV = new System.Windows.Forms.NumericUpDown();
@@ -84,13 +83,10 @@
             this.Preload = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
             this.NoteOffCheck = new System.Windows.Forms.CheckBox();
-            this.DisableCookedPlayer = new System.Windows.Forms.CheckBox();
             this.CBRuler = new System.Windows.Forms.Panel();
             this.AllNotesIgnore = new System.Windows.Forms.CheckBox();
             this.FullVelocityMode = new System.Windows.Forms.CheckBox();
-            this.CapFram = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.Limit88 = new System.Windows.Forms.CheckBox();
             this.NoteOffDelayValue = new System.Windows.Forms.NumericUpDown();
@@ -116,12 +112,15 @@
             this.label15 = new System.Windows.Forms.Label();
             this.FastHotKeys = new System.Windows.Forms.CheckBox();
             this.LegacySetDia = new System.Windows.Forms.GroupBox();
-            this.WinMMSpeedDiag = new OmniMIDIConfigurator.LinkLabelEx();
             this.ShowChangelogUpdate = new System.Windows.Forms.CheckBox();
+            this.MinidumpsFolder = new OmniMIDIConfigurator.LinkLabelEx();
+            this.MIDIFeedbackTool = new OmniMIDIConfigurator.LinkLabelEx();
+            this.WinMMSpeedDiag = new OmniMIDIConfigurator.LinkLabelEx();
             this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
             this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeEVBuf = new OmniMIDIConfigurator.LinkLabelEx();
-            this.NoSFGenLimits = new System.Windows.Forms.CheckBox();
+            this.PitchShifting = new OmniMIDIConfigurator.LinkLabelEx();
+            this.VolTrackBar = new KnobControl.KnobControl();
             this.EnginesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChorusV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReverbV)).BeginInit();
@@ -185,6 +184,16 @@
             this.EnginesBox.TabIndex = 0;
             this.EnginesBox.TabStop = false;
             this.EnginesBox.Text = "Audio engine settings";
+            // 
+            // NoSFGenLimits
+            // 
+            this.NoSFGenLimits.AutoSize = true;
+            this.NoSFGenLimits.Location = new System.Drawing.Point(9, 377);
+            this.NoSFGenLimits.Name = "NoSFGenLimits";
+            this.NoSFGenLimits.Size = new System.Drawing.Size(391, 17);
+            this.NoSFGenLimits.TabIndex = 63;
+            this.NoSFGenLimits.Text = "Do not limit SF2 generator values to emulate Creative/SoundBlaster hardware";
+            this.NoSFGenLimits.UseVisualStyleBackColor = true;
             // 
             // LinDecVol
             // 
@@ -281,9 +290,10 @@
             this.EnableRCOverride.AutoSize = true;
             this.EnableRCOverride.Location = new System.Drawing.Point(9, 426);
             this.EnableRCOverride.Name = "EnableRCOverride";
-            this.EnableRCOverride.Size = new System.Drawing.Size(277, 17);
+            this.EnableRCOverride.Size = new System.Drawing.Size(478, 17);
             this.EnableRCOverride.TabIndex = 13;
-            this.EnableRCOverride.Text = "Override MIDI application\'s reverb and chorus events";
+            this.EnableRCOverride.Text = "Override reverb and chorus (Could affect the audio quality of the MIDI that is be" +
+    "ing played back)";
             this.EnableRCOverride.UseVisualStyleBackColor = true;
             this.EnableRCOverride.CheckedChanged += new System.EventHandler(this.EnableRCOverride_CheckedChanged);
             // 
@@ -466,33 +476,6 @@
             this.Frequency.TabIndex = 6;
             this.Requirements.SetToolTip(this.Frequency, "This will require a restart of the audio stream.");
             // 
-            // VolTrackBar
-            // 
-            this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolTrackBar.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.VolTrackBar.EndAngle = 405F;
-            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
-            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
-            this.VolTrackBar.LargeChange = 1000;
-            this.VolTrackBar.Location = new System.Drawing.Point(586, 388);
-            this.VolTrackBar.Maximum = 10000;
-            this.VolTrackBar.Minimum = 0;
-            this.VolTrackBar.Name = "VolTrackBar";
-            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
-            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
-            this.VolTrackBar.ScaleDivisions = 10;
-            this.VolTrackBar.ScaleSubDivisions = 10;
-            this.VolTrackBar.ShowLargeScale = false;
-            this.VolTrackBar.ShowSmallScale = false;
-            this.VolTrackBar.Size = new System.Drawing.Size(80, 80);
-            this.VolTrackBar.SmallChange = 500;
-            this.VolTrackBar.StartAngle = 135F;
-            this.VolTrackBar.TabIndex = 16;
-            this.VolTrackBar.Value = 10000;
-            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
-            // 
             // BufferText
             // 
             this.BufferText.AutoSize = true;
@@ -572,10 +555,9 @@
             this.EnableSFX.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.EnableSFX.Location = new System.Drawing.Point(9, 263);
             this.EnableSFX.Name = "EnableSFX";
-            this.EnableSFX.Size = new System.Drawing.Size(430, 17);
+            this.EnableSFX.Size = new System.Drawing.Size(345, 17);
             this.EnableSFX.TabIndex = 10;
-            this.EnableSFX.Text = "Enable sound effects (i.e. reverb and chorus; disabling this can reduce rendering" +
-    " time)";
+            this.EnableSFX.Text = "Enable reverb and chorus (Disabling this can reduce rendering time)";
             this.EnableSFX.UseVisualStyleBackColor = true;
             // 
             // ChangeDefaultOutput
@@ -594,9 +576,9 @@
             this.MonophonicFunc.AutoSize = true;
             this.MonophonicFunc.Location = new System.Drawing.Point(9, 282);
             this.MonophonicFunc.Name = "MonophonicFunc";
-            this.MonophonicFunc.Size = new System.Drawing.Size(389, 17);
+            this.MonophonicFunc.Size = new System.Drawing.Size(408, 17);
             this.MonophonicFunc.TabIndex = 11;
-            this.MonophonicFunc.Text = "Use monophonic rendering (Will downsample any stereo SoundFont to mono)";
+            this.MonophonicFunc.Text = "Disable stereophonic rendering (Will downsample any stereo SoundFont to mono)";
             this.Requirements.SetToolTip(this.MonophonicFunc, "This will require a restart of the audio stream.");
             this.MonophonicFunc.UseVisualStyleBackColor = true;
             // 
@@ -668,10 +650,10 @@
             this.HMode.AutoSize = true;
             this.HMode.Location = new System.Drawing.Point(9, 52);
             this.HMode.Name = "HMode";
-            this.HMode.Size = new System.Drawing.Size(480, 17);
+            this.HMode.Size = new System.Drawing.Size(445, 17);
             this.HMode.TabIndex = 18;
-            this.HMode.Text = "Enable minimum playback mode (Will cause some checks to be completely ignored by " +
-    "the driver)";
+            this.HMode.Text = "Enable fast playback mode (Will cause some functions and checks to break in the d" +
+    "river)";
             this.ButtonsDesc.SetToolTip(this.HMode, "Enabling the minimum playback mode will disable some internal checks,\r\nwhich coul" +
         "d cause some settings to break or crashes in the worst cases.");
             this.HMode.UseVisualStyleBackColor = true;
@@ -680,7 +662,7 @@
             // KSDAPIBoxWhat
             // 
             this.KSDAPIBoxWhat.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.KSDAPIBoxWhat.Location = new System.Drawing.Point(253, 34);
+            this.KSDAPIBoxWhat.Location = new System.Drawing.Point(273, 34);
             this.KSDAPIBoxWhat.Name = "KSDAPIBoxWhat";
             this.KSDAPIBoxWhat.Size = new System.Drawing.Size(14, 14);
             this.KSDAPIBoxWhat.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -693,9 +675,9 @@
             this.KSDAPIBox.AutoSize = true;
             this.KSDAPIBox.Location = new System.Drawing.Point(9, 33);
             this.KSDAPIBox.Name = "KSDAPIBox";
-            this.KSDAPIBox.Size = new System.Drawing.Size(244, 17);
+            this.KSDAPIBox.Size = new System.Drawing.Size(264, 17);
             this.KSDAPIBox.TabIndex = 17;
-            this.KSDAPIBox.Text = "Allow apps to use the Keppy\'s Direct MIDI API";
+            this.KSDAPIBox.Text = "Allow KDMAPI-aware apps to make use of the API";
             this.ButtonsDesc.SetToolTip(this.KSDAPIBox, "Unchecking this will force OmniMIDI to not report the KDMAPI status as present.\r\n" +
         "Some apps might be programmed to ignore for this check.");
             this.KSDAPIBox.UseVisualStyleBackColor = true;
@@ -705,10 +687,10 @@
             this.SlowDownPlayback.AutoSize = true;
             this.SlowDownPlayback.Location = new System.Drawing.Point(9, 90);
             this.SlowDownPlayback.Name = "SlowDownPlayback";
-            this.SlowDownPlayback.Size = new System.Drawing.Size(485, 17);
+            this.SlowDownPlayback.Size = new System.Drawing.Size(562, 17);
             this.SlowDownPlayback.TabIndex = 20;
-            this.SlowDownPlayback.Text = "Slow down events processing instead of skipping (Might cause stalls on MIDIs with" +
-    " lots of events)";
+            this.SlowDownPlayback.Text = "Slow down the events processer instead of skipping events (Might cause lag or sta" +
+    "lls on MIDIs with lots of events)";
             this.ButtonsDesc.SetToolTip(this.SlowDownPlayback, "The driver will try and play all the notes, instead of skipping them.");
             this.SlowDownPlayback.UseVisualStyleBackColor = true;
             // 
@@ -717,10 +699,10 @@
             this.OldBuff.AutoSize = true;
             this.OldBuff.Location = new System.Drawing.Point(9, 109);
             this.OldBuff.Name = "OldBuff";
-            this.OldBuff.Size = new System.Drawing.Size(593, 17);
+            this.OldBuff.Size = new System.Drawing.Size(565, 17);
             this.OldBuff.TabIndex = 21;
-            this.OldBuff.Text = "Run events processer and audio engine on the same thread/core (Could cause audio " +
-    "crackle and dropouts in the audio)";
+            this.OldBuff.Text = "Run events processer and audio engine on the same thread (Could cause crackling, " +
+    "but could also improve timing)";
             this.Requirements.SetToolTip(this.OldBuff, "This will require a restart of the audio stream.");
             this.OldBuff.UseVisualStyleBackColor = true;
             // 
@@ -740,13 +722,8 @@
             this.SynthBox.Controls.Add(this.Preload);
             this.SynthBox.Controls.Add(this.label7);
             this.SynthBox.Controls.Add(this.label6);
-            this.SynthBox.Controls.Add(this.label5);
             this.SynthBox.Controls.Add(this.NoteOffCheck);
-            this.SynthBox.Controls.Add(this.DisableCookedPlayer);
             this.SynthBox.Controls.Add(this.CBRuler);
-            this.SynthBox.Controls.Add(this.AllNotesIgnore);
-            this.SynthBox.Controls.Add(this.FullVelocityMode);
-            this.SynthBox.Controls.Add(this.CapFram);
             this.SynthBox.Controls.Add(this.label3);
             this.SynthBox.Controls.Add(this.Limit88);
             this.SynthBox.Controls.Add(this.NoteOffDelayValue);
@@ -766,22 +743,10 @@
             this.SynthBox.Controls.Add(this.KSDAPIBoxWhat);
             this.SynthBox.Location = new System.Drawing.Point(3, 483);
             this.SynthBox.Name = "SynthBox";
-            this.SynthBox.Size = new System.Drawing.Size(670, 465);
+            this.SynthBox.Size = new System.Drawing.Size(670, 368);
             this.SynthBox.TabIndex = 1;
             this.SynthBox.TabStop = false;
             this.SynthBox.Text = "Synthesizer settings";
-            // 
-            // PitchShifting
-            // 
-            this.PitchShifting.AutoSize = true;
-            this.PitchShifting.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.PitchShifting.Location = new System.Drawing.Point(6, 217);
-            this.PitchShifting.Name = "PitchShifting";
-            this.PitchShifting.Size = new System.Drawing.Size(338, 13);
-            this.PitchShifting.TabIndex = 25;
-            this.PitchShifting.TabStop = true;
-            this.PitchShifting.Text = ">>> Change transposing and concert pitch settings (Separate window)";
-            this.PitchShifting.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PitchShifting_LinkClicked);
             // 
             // AutoLoad
             // 
@@ -807,7 +772,7 @@
             // IgnoreNotesLV
             // 
             this.IgnoreNotesLV.Cursor = System.Windows.Forms.Cursors.Default;
-            this.IgnoreNotesLV.Location = new System.Drawing.Point(86, 372);
+            this.IgnoreNotesLV.Location = new System.Drawing.Point(86, 293);
             this.IgnoreNotesLV.Maximum = new decimal(new int[] {
             127,
             0,
@@ -848,7 +813,7 @@
             // IgnoreNotesHV
             // 
             this.IgnoreNotesHV.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.IgnoreNotesHV.Location = new System.Drawing.Point(229, 372);
+            this.IgnoreNotesHV.Location = new System.Drawing.Point(229, 293);
             this.IgnoreNotesHV.Maximum = new decimal(new int[] {
             127,
             0,
@@ -871,7 +836,7 @@
             // IgnoreNotesHL
             // 
             this.IgnoreNotesHL.AutoSize = true;
-            this.IgnoreNotesHL.Location = new System.Drawing.Point(147, 374);
+            this.IgnoreNotesHL.Location = new System.Drawing.Point(147, 295);
             this.IgnoreNotesHL.Name = "IgnoreNotesHL";
             this.IgnoreNotesHL.Size = new System.Drawing.Size(82, 13);
             this.IgnoreNotesHL.TabIndex = 58;
@@ -880,7 +845,7 @@
             // IgnoreNotesLL
             // 
             this.IgnoreNotesLL.AutoSize = true;
-            this.IgnoreNotesLL.Location = new System.Drawing.Point(6, 374);
+            this.IgnoreNotesLL.Location = new System.Drawing.Point(6, 295);
             this.IgnoreNotesLL.Name = "IgnoreNotesLL";
             this.IgnoreNotesLL.Size = new System.Drawing.Size(80, 13);
             this.IgnoreNotesLL.TabIndex = 57;
@@ -890,7 +855,7 @@
             // 
             this.SysResetIgnore.AutoSize = true;
             this.SysResetIgnore.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.SysResetIgnore.Location = new System.Drawing.Point(9, 330);
+            this.SysResetIgnore.Location = new System.Drawing.Point(9, 254);
             this.SysResetIgnore.Name = "SysResetIgnore";
             this.SysResetIgnore.Size = new System.Drawing.Size(566, 17);
             this.SysResetIgnore.TabIndex = 31;
@@ -904,10 +869,10 @@
             this.Preload.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.Preload.Location = new System.Drawing.Point(9, 128);
             this.Preload.Name = "Preload";
-            this.Preload.Size = new System.Drawing.Size(567, 17);
+            this.Preload.Size = new System.Drawing.Size(544, 17);
             this.Preload.TabIndex = 22;
-            this.Preload.Text = "Preload SoundFont in memory (Will increase the boot-up time of the driver, depend" +
-    "ing on the computer/SoundFont)";
+            this.Preload.Text = "Preload SoundFonts to RAM (Will increase the startup time of the driver, dependin" +
+    "g on speed of the computer)";
             this.ButtonsDesc.SetToolTip(this.Preload, "You can also choose not to preload specific SoundFonts, to reduce the memory usag" +
         "e.");
             this.Preload.UseVisualStyleBackColor = true;
@@ -932,16 +897,6 @@
             this.label6.TabIndex = 0;
             this.label6.Text = "Change how the events should be parsed";
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(6, 406);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(153, 13);
-            this.label5.TabIndex = 0;
-            this.label5.Text = "Customize length of notes";
-            // 
             // NoteOffCheck
             // 
             this.NoteOffCheck.AutoSize = true;
@@ -957,21 +912,9 @@
         "s are released.");
             this.NoteOffCheck.UseVisualStyleBackColor = true;
             // 
-            // DisableCookedPlayer
-            // 
-            this.DisableCookedPlayer.AutoSize = true;
-            this.DisableCookedPlayer.Location = new System.Drawing.Point(9, 235);
-            this.DisableCookedPlayer.Name = "DisableCookedPlayer";
-            this.DisableCookedPlayer.Size = new System.Drawing.Size(503, 17);
-            this.DisableCookedPlayer.TabIndex = 26;
-            this.DisableCookedPlayer.Text = "Disable CookedPlayer (MIDI_IO_COOKED support, might solve playback issues with ol" +
-    "d applications)";
-            this.Requirements.SetToolTip(this.DisableCookedPlayer, "This will require a restart of the audio stream.");
-            this.DisableCookedPlayer.UseVisualStyleBackColor = true;
-            // 
             // CBRuler
             // 
-            this.CBRuler.Location = new System.Drawing.Point(637, 399);
+            this.CBRuler.Location = new System.Drawing.Point(637, 300);
             this.CBRuler.Name = "CBRuler";
             this.CBRuler.Size = new System.Drawing.Size(20, 20);
             this.CBRuler.TabIndex = 41;
@@ -980,7 +923,7 @@
             // AllNotesIgnore
             // 
             this.AllNotesIgnore.AutoSize = true;
-            this.AllNotesIgnore.Location = new System.Drawing.Point(9, 254);
+            this.AllNotesIgnore.Location = new System.Drawing.Point(9, 177);
             this.AllNotesIgnore.Name = "AllNotesIgnore";
             this.AllNotesIgnore.Size = new System.Drawing.Size(311, 17);
             this.AllNotesIgnore.TabIndex = 27;
@@ -990,27 +933,18 @@
             // FullVelocityMode
             // 
             this.FullVelocityMode.AutoSize = true;
-            this.FullVelocityMode.Location = new System.Drawing.Point(9, 273);
+            this.FullVelocityMode.Location = new System.Drawing.Point(9, 196);
             this.FullVelocityMode.Name = "FullVelocityMode";
-            this.FullVelocityMode.Size = new System.Drawing.Size(350, 17);
+            this.FullVelocityMode.Size = new System.Drawing.Size(398, 17);
             this.FullVelocityMode.TabIndex = 28;
-            this.FullVelocityMode.Text = "Set all the notes to full velocity (For MIDI application developers only)";
+            this.FullVelocityMode.Text = "Set all the NoteON events to full velocity (For MIDI application developers only)" +
+    "";
             this.FullVelocityMode.UseVisualStyleBackColor = true;
-            // 
-            // CapFram
-            // 
-            this.CapFram.AutoSize = true;
-            this.CapFram.Location = new System.Drawing.Point(9, 292);
-            this.CapFram.Name = "CapFram";
-            this.CapFram.Size = new System.Drawing.Size(398, 17);
-            this.CapFram.TabIndex = 29;
-            this.CapFram.Text = "Cap input framerate to 60FPS (Could led to missing notes or weird audio output)";
-            this.CapFram.UseVisualStyleBackColor = true;
             // 
             // label3
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.Location = new System.Drawing.Point(657, 443);
+            this.label3.Location = new System.Drawing.Point(657, 343);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(9, 13);
             this.label3.TabIndex = 33;
@@ -1019,7 +953,7 @@
             // Limit88
             // 
             this.Limit88.AutoSize = true;
-            this.Limit88.Location = new System.Drawing.Point(9, 311);
+            this.Limit88.Location = new System.Drawing.Point(9, 235);
             this.Limit88.Name = "Limit88";
             this.Limit88.Size = new System.Drawing.Size(276, 17);
             this.Limit88.TabIndex = 30;
@@ -1030,7 +964,7 @@
             // 
             this.NoteOffDelayValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.NoteOffDelayValue.DecimalPlaces = 3;
-            this.NoteOffDelayValue.Location = new System.Drawing.Point(592, 440);
+            this.NoteOffDelayValue.Location = new System.Drawing.Point(592, 341);
             this.NoteOffDelayValue.Name = "NoteOffDelayValue";
             this.NoteOffDelayValue.Size = new System.Drawing.Size(65, 20);
             this.NoteOffDelayValue.TabIndex = 38;
@@ -1039,12 +973,12 @@
             // IgnoreNotes
             // 
             this.IgnoreNotes.AutoSize = true;
-            this.IgnoreNotes.Location = new System.Drawing.Point(9, 349);
+            this.IgnoreNotes.Location = new System.Drawing.Point(9, 273);
             this.IgnoreNotes.Name = "IgnoreNotes";
-            this.IgnoreNotes.Size = new System.Drawing.Size(483, 17);
+            this.IgnoreNotes.Size = new System.Drawing.Size(514, 17);
             this.IgnoreNotes.TabIndex = 32;
-            this.IgnoreNotes.Text = "Ignore notes in between two velocity values (Could improve performance on some ol" +
-    "d computers)";
+            this.IgnoreNotes.Text = "Ignore notes in between two velocity values (Could help with some SoundFonts with" +
+    " bad velocity layers)";
             this.IgnoreNotes.UseVisualStyleBackColor = true;
             this.IgnoreNotes.CheckedChanged += new System.EventHandler(this.IgnoreNotes_CheckedChanged);
             // 
@@ -1052,7 +986,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(550, 442);
+            this.label1.Location = new System.Drawing.Point(550, 343);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(43, 13);
             this.label1.TabIndex = 32;
@@ -1061,7 +995,7 @@
             // OverrideNoteLengthWA2
             // 
             this.OverrideNoteLengthWA2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.OverrideNoteLengthWA2.Location = new System.Drawing.Point(164, 442);
+            this.OverrideNoteLengthWA2.Location = new System.Drawing.Point(164, 343);
             this.OverrideNoteLengthWA2.Name = "OverrideNoteLengthWA2";
             this.OverrideNoteLengthWA2.Size = new System.Drawing.Size(14, 14);
             this.OverrideNoteLengthWA2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1072,7 +1006,7 @@
             // DelayNoteOff
             // 
             this.DelayNoteOff.AutoSize = true;
-            this.DelayNoteOff.Location = new System.Drawing.Point(9, 441);
+            this.DelayNoteOff.Location = new System.Drawing.Point(9, 342);
             this.DelayNoteOff.Name = "DelayNoteOff";
             this.DelayNoteOff.Size = new System.Drawing.Size(156, 17);
             this.DelayNoteOff.TabIndex = 37;
@@ -1083,7 +1017,7 @@
             // NoteLengthValueMS
             // 
             this.NoteLengthValueMS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.NoteLengthValueMS.Location = new System.Drawing.Point(657, 424);
+            this.NoteLengthValueMS.Location = new System.Drawing.Point(657, 324);
             this.NoteLengthValueMS.Name = "NoteLengthValueMS";
             this.NoteLengthValueMS.Size = new System.Drawing.Size(9, 13);
             this.NoteLengthValueMS.TabIndex = 30;
@@ -1093,7 +1027,7 @@
             // 
             this.NoteLengthValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.NoteLengthValue.DecimalPlaces = 3;
-            this.NoteLengthValue.Location = new System.Drawing.Point(592, 421);
+            this.NoteLengthValue.Location = new System.Drawing.Point(592, 322);
             this.NoteLengthValue.Name = "NoteLengthValue";
             this.NoteLengthValue.Size = new System.Drawing.Size(65, 20);
             this.NoteLengthValue.TabIndex = 36;
@@ -1103,7 +1037,7 @@
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(550, 423);
+            this.label4.Location = new System.Drawing.Point(550, 324);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(43, 13);
             this.label4.TabIndex = 29;
@@ -1112,7 +1046,7 @@
             // OverrideNoteLengthWA1
             // 
             this.OverrideNoteLengthWA1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.OverrideNoteLengthWA1.Location = new System.Drawing.Point(177, 423);
+            this.OverrideNoteLengthWA1.Location = new System.Drawing.Point(177, 324);
             this.OverrideNoteLengthWA1.Name = "OverrideNoteLengthWA1";
             this.OverrideNoteLengthWA1.Size = new System.Drawing.Size(14, 14);
             this.OverrideNoteLengthWA1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1123,7 +1057,7 @@
             // OverrideNoteLength
             // 
             this.OverrideNoteLength.AutoSize = true;
-            this.OverrideNoteLength.Location = new System.Drawing.Point(9, 422);
+            this.OverrideNoteLength.Location = new System.Drawing.Point(9, 323);
             this.OverrideNoteLength.Name = "OverrideNoteLength";
             this.OverrideNoteLength.Size = new System.Drawing.Size(169, 17);
             this.OverrideNoteLength.TabIndex = 35;
@@ -1151,9 +1085,10 @@
             this.DebugMode.AutoSize = true;
             this.DebugMode.Location = new System.Drawing.Point(9, 63);
             this.DebugMode.Name = "DebugMode";
-            this.DebugMode.Size = new System.Drawing.Size(407, 17);
+            this.DebugMode.Size = new System.Drawing.Size(441, 17);
             this.DebugMode.TabIndex = 39;
-            this.DebugMode.Text = "Enable debug log (Will slow down the MIDI application, use it only when needed)";
+            this.DebugMode.Text = "Enable troubleshooting mode (Will slow down the MIDI application, use it for debu" +
+    "g only)";
             this.Requirements.SetToolTip(this.DebugMode, "This will require a restart of the audio stream.");
             this.DebugMode.UseVisualStyleBackColor = true;
             this.DebugMode.CheckedChanged += new System.EventHandler(this.DebugMode_CheckedChanged);
@@ -1241,6 +1176,8 @@
             // 
             this.LegacySetDia.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.LegacySetDia.Controls.Add(this.MinidumpsFolder);
+            this.LegacySetDia.Controls.Add(this.MIDIFeedbackTool);
             this.LegacySetDia.Controls.Add(this.IgnoreCloseCalls);
             this.LegacySetDia.Controls.Add(this.WinMMSpeedDiag);
             this.LegacySetDia.Controls.Add(this.UseTGT);
@@ -1252,24 +1189,14 @@
             this.LegacySetDia.Controls.Add(this.label15);
             this.LegacySetDia.Controls.Add(this.LiveChangesTrigger);
             this.LegacySetDia.Controls.Add(this.ChangeEVBuf);
-            this.LegacySetDia.Location = new System.Drawing.Point(3, 954);
+            this.LegacySetDia.Controls.Add(this.AllNotesIgnore);
+            this.LegacySetDia.Controls.Add(this.FullVelocityMode);
+            this.LegacySetDia.Location = new System.Drawing.Point(3, 857);
             this.LegacySetDia.Name = "LegacySetDia";
-            this.LegacySetDia.Size = new System.Drawing.Size(670, 238);
+            this.LegacySetDia.Size = new System.Drawing.Size(670, 294);
             this.LegacySetDia.TabIndex = 2;
             this.LegacySetDia.TabStop = false;
             this.LegacySetDia.Text = "Debug and legacy settings";
-            // 
-            // WinMMSpeedDiag
-            // 
-            this.WinMMSpeedDiag.AutoSize = true;
-            this.WinMMSpeedDiag.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.WinMMSpeedDiag.Location = new System.Drawing.Point(6, 197);
-            this.WinMMSpeedDiag.Name = "WinMMSpeedDiag";
-            this.WinMMSpeedDiag.Size = new System.Drawing.Size(250, 13);
-            this.WinMMSpeedDiag.TabIndex = 48;
-            this.WinMMSpeedDiag.TabStop = true;
-            this.WinMMSpeedDiag.Text = "Change speed of the Windows Multimedia Wrapper";
-            this.WinMMSpeedDiag.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WinMMSpeedDiag_LinkClicked);
             // 
             // ShowChangelogUpdate
             // 
@@ -1281,17 +1208,55 @@
             this.ShowChangelogUpdate.Text = "Always show changelog on start-up, after applying an update";
             this.ShowChangelogUpdate.UseVisualStyleBackColor = true;
             // 
+            // MinidumpsFolder
+            // 
+            this.MinidumpsFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.MinidumpsFolder.AutoSize = true;
+            this.MinidumpsFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.MinidumpsFolder.Location = new System.Drawing.Point(485, 64);
+            this.MinidumpsFolder.Name = "MinidumpsFolder";
+            this.MinidumpsFolder.Size = new System.Drawing.Size(86, 13);
+            this.MinidumpsFolder.TabIndex = 52;
+            this.MinidumpsFolder.TabStop = true;
+            this.MinidumpsFolder.Text = "Minidumps folder";
+            this.MinidumpsFolder.Visible = false;
+            this.MinidumpsFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.MinidumpsFolder_LinkClicked);
+            // 
+            // MIDIFeedbackTool
+            // 
+            this.MIDIFeedbackTool.AutoSize = true;
+            this.MIDIFeedbackTool.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.MIDIFeedbackTool.Location = new System.Drawing.Point(6, 236);
+            this.MIDIFeedbackTool.Name = "MIDIFeedbackTool";
+            this.MIDIFeedbackTool.Size = new System.Drawing.Size(282, 13);
+            this.MIDIFeedbackTool.TabIndex = 51;
+            this.MIDIFeedbackTool.TabStop = true;
+            this.MIDIFeedbackTool.Text = "Enable/disable MIDI feedback to another MIDI out device";
+            this.MIDIFeedbackTool.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.MIDIFeedbackTool_LinkClicked);
+            // 
+            // WinMMSpeedDiag
+            // 
+            this.WinMMSpeedDiag.AutoSize = true;
+            this.WinMMSpeedDiag.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.WinMMSpeedDiag.Location = new System.Drawing.Point(6, 254);
+            this.WinMMSpeedDiag.Name = "WinMMSpeedDiag";
+            this.WinMMSpeedDiag.Size = new System.Drawing.Size(250, 13);
+            this.WinMMSpeedDiag.TabIndex = 48;
+            this.WinMMSpeedDiag.TabStop = true;
+            this.WinMMSpeedDiag.Text = "Change speed of the Windows Multimedia Wrapper";
+            this.WinMMSpeedDiag.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WinMMSpeedDiag_LinkClicked);
+            // 
             // DebugModeFolder
             // 
             this.DebugModeFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.DebugModeFolder.AutoSize = true;
             this.DebugModeFolder.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.DebugModeFolder.Location = new System.Drawing.Point(554, 64);
+            this.DebugModeFolder.Location = new System.Drawing.Point(573, 64);
             this.DebugModeFolder.Name = "DebugModeFolder";
-            this.DebugModeFolder.Size = new System.Drawing.Size(112, 13);
+            this.DebugModeFolder.Size = new System.Drawing.Size(90, 13);
             this.DebugModeFolder.TabIndex = 40;
             this.DebugModeFolder.TabStop = true;
-            this.DebugModeFolder.Text = "Open debug log folder";
+            this.DebugModeFolder.Text = "Debug logs folder";
             this.DebugModeFolder.Visible = false;
             this.DebugModeFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DebugModeFolder_LinkClicked);
             // 
@@ -1299,7 +1264,7 @@
             // 
             this.SpatialSound.AutoSize = true;
             this.SpatialSound.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.SpatialSound.Location = new System.Drawing.Point(6, 215);
+            this.SpatialSound.Location = new System.Drawing.Point(6, 272);
             this.SpatialSound.Name = "SpatialSound";
             this.SpatialSound.Size = new System.Drawing.Size(148, 13);
             this.SpatialSound.TabIndex = 50;
@@ -1311,7 +1276,7 @@
             // 
             this.ChangeEVBuf.AutoSize = true;
             this.ChangeEVBuf.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ChangeEVBuf.Location = new System.Drawing.Point(6, 179);
+            this.ChangeEVBuf.Location = new System.Drawing.Point(6, 218);
             this.ChangeEVBuf.Name = "ChangeEVBuf";
             this.ChangeEVBuf.Size = new System.Drawing.Size(211, 13);
             this.ChangeEVBuf.TabIndex = 47;
@@ -1319,15 +1284,44 @@
             this.ChangeEVBuf.Text = "Change size of the events buffer (EVBuffer)";
             this.ChangeEVBuf.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeEVBuf_LinkClicked);
             // 
-            // NoSFGenLimits
+            // PitchShifting
             // 
-            this.NoSFGenLimits.AutoSize = true;
-            this.NoSFGenLimits.Location = new System.Drawing.Point(9, 377);
-            this.NoSFGenLimits.Name = "NoSFGenLimits";
-            this.NoSFGenLimits.Size = new System.Drawing.Size(391, 17);
-            this.NoSFGenLimits.TabIndex = 63;
-            this.NoSFGenLimits.Text = "Do not limit SF2 generator values to emulate Creative/SoundBlaster hardware";
-            this.NoSFGenLimits.UseVisualStyleBackColor = true;
+            this.PitchShifting.AutoSize = true;
+            this.PitchShifting.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.PitchShifting.Location = new System.Drawing.Point(6, 217);
+            this.PitchShifting.Name = "PitchShifting";
+            this.PitchShifting.Size = new System.Drawing.Size(338, 13);
+            this.PitchShifting.TabIndex = 25;
+            this.PitchShifting.TabStop = true;
+            this.PitchShifting.Text = ">>> Change transposing and concert pitch settings (Separate window)";
+            this.PitchShifting.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PitchShifting_LinkClicked);
+            // 
+            // VolTrackBar
+            // 
+            this.VolTrackBar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.VolTrackBar.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.VolTrackBar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.VolTrackBar.EndAngle = 405F;
+            this.VolTrackBar.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.VolTrackBar.knobBackColor = System.Drawing.Color.White;
+            this.VolTrackBar.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
+            this.VolTrackBar.LargeChange = 1000;
+            this.VolTrackBar.Location = new System.Drawing.Point(586, 388);
+            this.VolTrackBar.Maximum = 10000;
+            this.VolTrackBar.Minimum = 0;
+            this.VolTrackBar.Name = "VolTrackBar";
+            this.VolTrackBar.PointerColor = System.Drawing.Color.White;
+            this.VolTrackBar.ScaleColor = System.Drawing.Color.Black;
+            this.VolTrackBar.ScaleDivisions = 10;
+            this.VolTrackBar.ScaleSubDivisions = 10;
+            this.VolTrackBar.ShowLargeScale = false;
+            this.VolTrackBar.ShowSmallScale = false;
+            this.VolTrackBar.Size = new System.Drawing.Size(80, 80);
+            this.VolTrackBar.SmallChange = 500;
+            this.VolTrackBar.StartAngle = 135F;
+            this.VolTrackBar.TabIndex = 16;
+            this.VolTrackBar.Value = 10000;
+            this.VolTrackBar.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
             // 
             // SettingsPanel
             // 
@@ -1337,7 +1331,7 @@
             this.Controls.Add(this.SynthBox);
             this.Controls.Add(this.EnginesBox);
             this.Name = "SettingsPanel";
-            this.Size = new System.Drawing.Size(678, 1215);
+            this.Size = new System.Drawing.Size(678, 1156);
             this.Load += new System.EventHandler(this.SettingsPanel_Load);
             this.EnginesBox.ResumeLayout(false);
             this.EnginesBox.PerformLayout();
@@ -1395,7 +1389,6 @@
         public System.Windows.Forms.CheckBox MonophonicFunc;
         public System.Windows.Forms.CheckBox FadeoutDisable;
         public System.Windows.Forms.ComboBox AudioBitDepth;
-        public System.Windows.Forms.CheckBox DisableCookedPlayer;
         public System.Windows.Forms.NumericUpDown NoteOffDelayValue;
         public System.Windows.Forms.CheckBox DelayNoteOff;
         public System.Windows.Forms.NumericUpDown NoteLengthValue;
@@ -1403,7 +1396,6 @@
         public System.Windows.Forms.CheckBox IgnoreNotes;
         public System.Windows.Forms.CheckBox FullVelocityMode;
         public System.Windows.Forms.CheckBox AllNotesIgnore;
-        public System.Windows.Forms.CheckBox CapFram;
         public System.Windows.Forms.CheckBox Limit88;
         public System.Windows.Forms.NumericUpDown MaxCPU;
         internal System.Windows.Forms.Label RenderingTimeLabel;
@@ -1413,7 +1405,6 @@
         private System.Windows.Forms.Panel CBRuler;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label11;
@@ -1454,5 +1445,7 @@
         public System.Windows.Forms.CheckBox LinDecVol;
         public System.Windows.Forms.CheckBox LinAttMod;
         public System.Windows.Forms.CheckBox NoSFGenLimits;
+        private LinkLabelEx MIDIFeedbackTool;
+        private LinkLabelEx MinidumpsFolder;
     }
 }

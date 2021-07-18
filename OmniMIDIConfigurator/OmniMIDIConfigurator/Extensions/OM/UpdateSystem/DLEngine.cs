@@ -55,7 +55,7 @@ namespace OmniMIDIConfigurator.Forms
                         CancelBtn.Visible = false;
                         progressBar1.Size = new Size(271, 23);
                     }
-                    URL = new Uri(String.Format(DriverReinstall ? UpdateSystem.SetupFile : UpdateSystem.UpdateFile, VersionToDownload));
+                    URL = new Uri(String.Format(UpdateSystem.SetupFile, VersionToDownload));
                 }
                 else URL = new Uri(FullURL);
 
@@ -95,7 +95,10 @@ namespace OmniMIDIConfigurator.Forms
         }
 
         private void Completed(object sender, DownloadDataCompletedEventArgs e)
-        {
+        {               
+            // Remove the timeout check
+            DLSystemTimeout.Elapsed -= TimeOutCheck;
+
             if (e.Cancelled)
             {
                 DLSystem.Dispose();
@@ -135,18 +138,22 @@ namespace OmniMIDIConfigurator.Forms
 
                         DLSystem.Dispose();
 
-                        MessageBox.Show("Be sure to save all your data in the apps using OmniMIDI, before updating.\n\nClick OK when you're ready.", "OmniMIDI - Update warning", MessageBoxButtons.OK, MessageBoxIcon.Warning, DriverReinstall ? MessageBoxDefaultButton.Button1 : 0, DriverReinstall ? MessageBoxOptions.DefaultDesktopOnly : 0);
-                        Process.Start(String.Format("{0}{1}", Path.GetTempPath() , DriverReinstall ? "OmniMIDISetup.exe" : "OmniMIDIUpdate.exe"), "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /NOCANCEL /NORESTART /SP-");
-
-                        if (DriverReinstall && InstallMode == UpdateSystem.WIPE_SETTINGS)
+                        DialogResult Msg = MessageBox.Show("Be sure to save all your data in the apps using OmniMIDI, before updating.\n\nClick Yes when you're ready, or No to abort the install process.", "OmniMIDI - Update warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, DriverReinstall ? MessageBoxDefaultButton.Button1 : 0, DriverReinstall ? MessageBoxOptions.DefaultDesktopOnly : 0);
+                        
+                        if (Msg == DialogResult.Yes)
                         {
-                            RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
-                            sourceKey.DeleteSubKeyTree("OmniMIDI", true);
-                            sourceKey.Close();
-                        }
+                            Process.Start(String.Format("{0}{1}", Path.GetTempPath(), DriverReinstall ? "OmniMIDISetup.exe" : "OmniMIDIUpdate.exe"), "/SILENT /CLOSEAPPLICATIONS /RESTARTAPPLICATIONS /NOCANCEL /NORESTART /SP-");
 
-                        DialogResult = DialogResult.OK;
-                        Application.ExitThread();
+                            if (DriverReinstall && InstallMode == UpdateSystem.WIPE_SETTINGS)
+                            {
+                                RegistryKey sourceKey = Registry.CurrentUser.OpenSubKey("SOFTWARE", true);
+                                sourceKey.DeleteSubKeyTree("OmniMIDI", true);
+                                sourceKey.Close();
+                            }
+
+                            DialogResult = DialogResult.OK;
+                            Application.ExitThread();
+                        }
                     }
                     catch (Exception ex)
                     {

@@ -20,4 +20,5 @@ EXPORTS
 	LoadCustomSoundFontsList
 	int_ICF = InitializeCallbackFeatures
 	int_RCF = RunCallbackFunction
+	int_NFM = NoFeedbackMode
 	timeGetTime64

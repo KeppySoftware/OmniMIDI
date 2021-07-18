@@ -29,6 +29,8 @@ UINT CPUThreadsAvailable = 0;
 #define MIDI_IO_PACKED	0x00000000L			// Legacy mode, used by most MIDI apps
 #define MIDI_IO_COOKED	0x00000002L			// Stream mode, used by some old MIDI apps (Such as GZDoom)
 
+#define MMI(f)			{&MM##f, #f}		// OWINMM
+
 // path
 #define NTFS_MAX_PATH	32767
 
@@ -86,7 +88,7 @@ const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5
 static ULONGLONG TickStart = 0;			// For TGT64
 static HSTREAM OMStream = NULL;
 static HANDLE OMReady = NULL, ATThreadDone = NULL, EPThreadDone = NULL;
-static HMIDI OMHMIDI = NULL;
+static HMIDI OMHMIDI = NULL, OMFeedback = NULL;
 static HDRVR OMHDRVR = NULL;
 static DWORD_PTR OMCallback = NULL;
 static DWORD_PTR OMInstance = NULL;
@@ -321,3 +323,26 @@ BOOL(WINAPI* _BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = Dumm
 DWORD(CALLBACK* _ProcData)(void* buffer, DWORD length, void* user) = DummyProcData;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything
+
+// ----------------------------------------------------------------------
+
+// OWINMM
+typedef HMODULE(WINAPI* GO)();
+typedef UINT(WINAPI* SGV)();
+typedef MMRESULT(WINAPI* MOC)(HMIDIOUT);
+typedef MMRESULT(WINAPI* MOO)(LPHMIDIOUT, UINT, DWORD_PTR, DWORD_PTR, DWORD);
+typedef MMRESULT(WINAPI* MOSM)(HMIDIOUT, DWORD);
+typedef MMRESULT(WINAPI* MOLM)(HMIDIOUT, LPMIDIHDR, UINT);
+typedef DWORD(WINAPI* MOGND)();
+typedef MMRESULT(WINAPI* MOGDCW)(UINT_PTR, LPMIDIOUTCAPSW, UINT);
+
+BOOL FeedbackBlacklisted = FALSE;
+HMODULE owinmm = NULL;					// ?
+GO GetOWINMM = 0;
+SGV SystemGetVersion = 0;
+MOC MMmidiOutClose = 0;
+MOO MMmidiOutOpen = 0;
+MOSM MMmidiOutShortMsg = 0;
+MOLM MMmidiOutLongMsg = 0;
+MOGND MMmidiOutGetNumDevs = 0;
+MOGDCW MMmidiOutGetDevCapsW = 0;

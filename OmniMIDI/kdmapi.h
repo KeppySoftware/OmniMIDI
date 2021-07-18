@@ -285,6 +285,10 @@ BOOL StreamHealthCheck() {
 	if ((BASS_ChannelIsActive(OMStream) == BASS_ACTIVE_STOPPED || ManagedSettings.LiveChanges)) {
 		PrintMessageToDebugLog("StreamWatchdog", "Stream is down! Restarting audio stream...");
 
+		// Restart feedback mode just in case
+		DisableMIDIFeedbackMode();
+		EnableMIDIFeedbackMode();
+
 		// It did, reload the settings and reallocate the memory for the buffer
 		CloseThreads(FALSE);
 		LoadSettings(TRUE, FALSE);
@@ -330,6 +334,8 @@ void Supervisor(LPVOID lpV) {
 		DriverInitStatus = TRUE;
 		AlreadyStartedOnce = TRUE;
 		bass_initialized = TRUE;
+
+		EnableMIDIFeedbackMode();
 
 		if (!PrepareDriver())
 			CrashMessage(L"0xDEADDEAD");
@@ -401,6 +407,8 @@ void Supervisor(LPVOID lpV) {
 	PrintMessageToDebugLog("StreamWatchdog", "Closed ChanOverride...");
 	CloseRegistryKey(SFDynamicLoader);
 	PrintMessageToDebugLog("StreamWatchdog", "Closed SFDynamicLoader...");
+
+	DisableMIDIFeedbackMode();
 
 	SetEvent(OMReady);
 
@@ -634,6 +642,10 @@ VOID KDMAPI RunCallbackFunction(DWORD Msg, DWORD_PTR P1, DWORD_PTR P2) {
 	DoCallback(Msg, P1, P2);
 }
 
+VOID KDMAPI NoFeedbackMode() {
+	FeedbackBlacklisted = TRUE;
+}
+
 VOID KDMAPI ResetKDMAPIStream() {
 	// Redundant
 	if (bass_initialized)
@@ -820,7 +832,7 @@ BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue
 		return TRUE;
 	}
 
-	DriverSettingsCase(OM_CAPFRAMERATE, Mode, BOOL, ManagedSettings.CapFramerate, Value, cbValue);
+	// DriverSettingsCase(OM_CAPFRAMERATE, Mode, BOOL, ManagedSettings.CapFramerate, Value, cbValue);
 	DriverSettingsCase(OM_DEBUGMMODE, Mode, DWORD, ManagedSettings.DebugMode, Value, cbValue);
 	DriverSettingsCase(OM_DISABLEFADEOUT, Mode, BOOL, ManagedSettings.DisableNotesFadeOut, Value, cbValue);
 	DriverSettingsCase(OM_DONTMISSNOTES, Mode, BOOL, ManagedSettings.DontMissNotes, Value, cbValue);

@@ -102,7 +102,7 @@ static VOID MakeMiniDump(LPEXCEPTION_POINTERS exc) {
 		GetCurrentProcess(),
 		GetCurrentProcessId(),
 		hFile,
-		MINIDUMP_TYPE(MiniDumpWithIndirectlyReferencedMemory | MiniDumpScanMemory),
+		MINIDUMP_TYPE(MiniDumpWithFullMemory | MiniDumpIgnoreInaccessibleMemory),
 		exc ? &exceptionInfo : nullptr,
 		NULL,
 		NULL);
@@ -740,15 +740,15 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 
 	HANDLE CurrentProcess = GetCurrentProcess();
 	MEMORY_BASIC_INFORMATION MBI;
-	BYTE* StackTrace[1024];
-	DWORD ret = CaptureStackBackTrace(0, 1024, (PVOID*)StackTrace, 0);
+	BYTE* StackTrace[USHRT_MAX];
+	DWORD ret = CaptureStackBackTrace(0, USHRT_MAX, (PVOID*)StackTrace, 0);
 
 	char MessageBuf[NTFS_MAX_PATH];
 	char NameBuf[NTFS_MAX_PATH];
 
-	sprintf(MessageBuf, "The program performed an illegal operation!\n\nIf you're the developer, check the stacktrace to see where the crash occured, or else report this issue to the OmniMIDI issues page on GitHub.\n\n");
+	sprintf(MessageBuf, "OmniMIDI or the host app has encountered a problem, and needs to be closed.\nHere are some information about the crash.\n\n");
 	if (ret) {
-		sprintf(MessageBuf + strlen(MessageBuf), "== Stacktrace ==");
+		sprintf(MessageBuf + strlen(MessageBuf), "Stacktrace:");
 		while (ret--) {
 			sprintf(MessageBuf + strlen(MessageBuf), "\n");
 			WritePointer(MessageBuf, (size_t)StackTrace[ret]);
@@ -770,9 +770,9 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 		}
 		sprintf(MessageBuf + strlen(MessageBuf), "\n ");
 	}
-	else sprintf(MessageBuf + strlen(MessageBuf), " * No stack trace available\n\n");
+	else sprintf(MessageBuf + strlen(MessageBuf), " * The stacktrace is either empty or contains garbage data.\n\n");
 
-	sprintf(MessageBuf + strlen(MessageBuf), "\n== Exception ==");
+	sprintf(MessageBuf + strlen(MessageBuf), "\nException:");
 
 	switch (exc->ExceptionRecord->ExceptionCode)
 	{
@@ -797,7 +797,7 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 		arre(EXCEPTION_SINGLE_STEP);
 		arre(EXCEPTION_STACK_OVERFLOW);
 	default:
-		sprintf(MessageBuf + strlen(MessageBuf), "\nCode: unk");
+		sprintf(MessageBuf + strlen(MessageBuf), "\nUnknown exception code");
 		ToHex32(MessageBuf, exc->ExceptionRecord->ExceptionCode);
 		break;
 	}
@@ -812,7 +812,7 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 	}
 	sprintf(MessageBuf + strlen(MessageBuf), "\n\n");
 
-	sprintf(MessageBuf + strlen(MessageBuf), "== RegDump ==");
+	sprintf(MessageBuf + strlen(MessageBuf), "Registers dump:");
 #ifdef _M_AMD64
 	sprintf(MessageBuf + strlen(MessageBuf), "\nPC : "); WritePointer(MessageBuf, exc->ContextRecord->Rip);
 	do
@@ -928,13 +928,13 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 	sprintf(MessageBuf + strlen(MessageBuf), " EAX: "); WritePointer(MessageBuf, exc->ContextRecord->Eax);
 	sprintf(MessageBuf + strlen(MessageBuf), "\nEBP: "); WritePointer(MessageBuf, exc->ContextRecord->Ebp);
 #else
-	sprintf(MessageBuf + strlen(MessageBuf), " * Regdumps are not supported on this platform");
+	sprintf(MessageBuf + strlen(MessageBuf), " * Registry dumps are not supported on this platform");
 #endif
 #endif
 #endif
 
 	PrintMessageToDebugLog("OmniMIDICrashHandler", MessageBuf);
-	MessageBoxA(NULL, MessageBuf, "OmniMIDI - Unhandled Exception", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+	MessageBoxA(NULL, MessageBuf, "OmniMIDI - An error has occurred", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 	MakeMiniDump(exc);
 
 	return EXCEPTION_EXECUTE_HANDLER;

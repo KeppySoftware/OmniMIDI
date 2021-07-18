@@ -181,7 +181,6 @@ namespace OmniMIDIConfigurator
                 EnableRCOverride.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("RCOverride", 0));
                 EnableRCOverride_CheckedChanged(null, null);
 
-                DisableCookedPlayer.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("DisableCookedPlayer", 0));
                 AllNotesIgnore.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreAllNotes", 0));
                 IgnoreNotes.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
                 AudioRampIn.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("AudioRampIn", 1));
@@ -197,7 +196,6 @@ namespace OmniMIDIConfigurator
                 IgnoreNotesLV.Value = LV;
                 IgnoreNotesHV.Value = HV;
 
-                CapFram.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("CapFramerate", 1));
                 Limit88.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("LimitTo88Keys", 0));
                 FullVelocityMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("FullVelocityMode", 0));
                 OverrideNoteLength.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("OverrideNoteLength", 0));
@@ -286,7 +284,6 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("Chorus", ChorusV.Value, RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("RCOverride", Convert.ToInt32(EnableRCOverride.Checked), RegistryValueKind.DWord);
 
-            Program.SynthSettings.SetValue("DisableCookedPlayer", Convert.ToInt32(DisableCookedPlayer.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("IgnoreAllNotes", Convert.ToInt32(AllNotesIgnore.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("IgnoreNotesBetweenVel", Convert.ToInt32(IgnoreNotes.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("AudioRampIn", Convert.ToInt32(AudioRampIn.Checked), RegistryValueKind.DWord);
@@ -298,7 +295,6 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("MinVelIgnore", IgnoreNotesLV.Value, RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("MaxVelIgnore", IgnoreNotesHV.Value, RegistryValueKind.DWord);
 
-            Program.SynthSettings.SetValue("CapFramerate", Convert.ToInt32(CapFram.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("LimitTo88Keys", Convert.ToInt32(Limit88.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("FullVelocityMode", Convert.ToInt32(FullVelocityMode.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("OverrideNoteLength", Convert.ToInt32(OverrideNoteLength.Checked), RegistryValueKind.DWord);
@@ -394,6 +390,11 @@ namespace OmniMIDIConfigurator
         private void WinMMSpeedDiag_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new WinMMSpeed().ShowDialog();
+        }
+
+        private void MIDIFeedbackTool_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            new MIDIFeedback().ShowDialog();
         }
 
         private void VolTrackBar_Scroll(object sender)
@@ -493,6 +494,20 @@ namespace OmniMIDIConfigurator
             }
         }
 
+        private void MinidumpsFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            String DirectoryDebug = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI\\dumpfiles\\";
+            try
+            {
+                Process.Start(DirectoryDebug);
+            }
+            catch
+            {
+                Directory.CreateDirectory(DirectoryDebug);
+                Process.Start(DirectoryDebug);
+            }
+        }
+
         private void DebugModeFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             String DirectoryDebug = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI\\debug\\";
@@ -532,7 +547,6 @@ namespace OmniMIDIConfigurator
 
             // App restart
             Requirements.SetToolTip(KSDAPIBox, Desc2);
-            Requirements.SetToolTip(DisableCookedPlayer, Desc2);
             Requirements.SetToolTip(DebugMode, Desc2);
             Requirements.SetToolTip(UseTGT, Desc2);
         }
@@ -572,6 +586,7 @@ namespace OmniMIDIConfigurator
         private void DebugMode_CheckedChanged(object sender, EventArgs e)
         {
             DebugModeFolder.Visible = DebugMode.Checked;
+            MinidumpsFolder.Visible = DebugMode.Checked;
         }
 
         private void HMode_CheckedChanged(object sender, EventArgs e)
@@ -591,11 +606,11 @@ namespace OmniMIDIConfigurator
             IgnoreNotesHV.Enabled = (HMode.Checked) ? false : IgnoreNotes.Checked;
 
             SlowDownPlayback.Enabled = !HMode.Checked;
-            CapFram.Enabled = !HMode.Checked;
             SysResetIgnore.Enabled = !HMode.Checked;
             FullVelocityMode.Enabled = !HMode.Checked;
             Limit88.Enabled = !HMode.Checked;
             AllNotesIgnore.Enabled = !HMode.Checked;
+            MIDIFeedbackTool.Enabled = !HMode.Checked;
         }
 
         public void ButtonToSaveSettings(object sender, EventArgs e)

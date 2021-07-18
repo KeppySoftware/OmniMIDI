@@ -19,6 +19,152 @@ void SetNoteValuesFromSettings() {
 	}
 }
 
+BOOL EnableMIDIFeedbackMode() {
+	try {
+		// Initialize feedback device info
+		DWORD NumDevs = 0;
+		MIDIOUTCAPSW CapsW;
+		BOOL FeedbackEnabled = FALSE;
+		wchar_t FeedbackDevice[MAX_PATH] = L"Microsoft GS Wavetable Synth\0";
+
+		// Initialize registry values
+		DWORD dwType = REG_DWORD;
+		DWORD dwSize = sizeof(DWORD);
+		DWORD ASType = REG_SZ;
+		DWORD ASSize = sizeof(FeedbackDevice);
+
+		// Open the registry, and get the name of the selected feedback device
+		PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Importing default MIDI feedback device from registry...");
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
+		RegQueryValueEx(Configuration.Address, L"FeedbackEnabled", NULL, &dwType, (LPBYTE)&FeedbackEnabled, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"FeedbackDevice", NULL, &ASType, (LPBYTE)&FeedbackDevice, &ASSize);
+
+		// If minimal playback is enabled, abort the feedback initialization process,
+		// since the required functions aren't called in this mode.
+		if (!FeedbackEnabled || FeedbackBlacklisted || HyperMode)
+			return TRUE;
+
+		PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Feedback mode enabled. Searching for feedback target device...");
+
+		if (!owinmm) {
+			// First check if the user patched the app using WinMMWRP 4.5+
+			PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Checking if Windows Multimedia Wrapper is loaded...");
+			GetOWINMM = (GO)GetProcAddress(GetModuleHandle(L"winmm"), "GetOWINMM");
+			SystemGetVersion = (SGV)GetProcAddress(GetModuleHandle(L"winmm"), "mmsystemGetVersion");
+
+			if (SystemGetVersion() == 0x0502U)
+			{
+				MessageBox(NULL, L"This version of the Windows Multimedia Wrapper is not supported.\nPlease upgrade it by repatching the application.\n\nThe MIDI feedback mode will not be enabled.\n\nPress OK to continue", L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+				return FALSE;
+			}
+
+			// If they didn't, load WINMM from the system directory
+			// (CAUTION: THIS IS NOT RECOMMENDED WHEN USING WINMMWRP 4.0 OR EARLIER!)
+			if (!GetOWINMM) {
+				PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Loading Windows Multimedia API (OWINMM) from System32... (This is to avoid issues with WinMMWRP)");
+
+				wchar_t SystemDirectory[MAX_PATH];
+				GetSystemDirectoryW(SystemDirectory, MAX_PATH);
+				wcscat(SystemDirectory, L"\\winmm.dll");
+
+				owinmm = LoadLibraryW(SystemDirectory);
+			}
+			// If they did, then, use the new GetOWINMM function
+			// to get the original WINMM from the wrapper itself
+			else owinmm = GetOWINMM();
+
+			// If there's no OWINMM, abort the feedback initialization process
+			// and mark the feedback mode as not loaded
+			if (!owinmm)
+			{
+				PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Something went wrong while loading OWINMM! Feedback mode disabled.");
+				return FALSE;
+			}
+
+			// Import the required functions from the OWINMM lib
+			MMmidiOutOpen = (MOO)GetProcAddress(owinmm, "midiOutOpen");
+			MMmidiOutClose = (MOC)GetProcAddress(owinmm, "midiOutClose");
+			MMmidiOutGetNumDevs = (MOGND)GetProcAddress(owinmm, "midiOutGetNumDevs");
+			MMmidiOutShortMsg = (MOSM)GetProcAddress(owinmm, "midiOutShortMsg");
+			MMmidiOutLongMsg = (MOLM)GetProcAddress(owinmm, "midiOutLongMsg");
+			MMmidiOutGetDevCapsW = (MOGDCW)GetProcAddress(owinmm, "midiOutGetDevCapsW");
+
+			// If one of the functions fails to load,
+			// abort the feedback initialization process and mark the feedback mode as not loaded
+			if (!MMmidiOutOpen || !MMmidiOutClose || !MMmidiOutGetNumDevs || !MMmidiOutShortMsg || !MMmidiOutLongMsg || !MMmidiOutGetDevCapsW) {
+				PrintMessageToDebugLog("EnableMIDIFeedbackMode", "One of the functions from OWINMM failed to be parsed! Feedback mode disabled.");
+				return FALSE;
+			}
+		}
+
+		// Get the total number of devices from OWINMM
+		NumDevs = MMmidiOutGetNumDevs();
+
+		// Iterate through the available devices
+		for (DWORD CurrentDevice = 0; CurrentDevice < NumDevs; CurrentDevice++)
+		{
+			// Get device caps
+			if (MMmidiOutGetDevCapsW(CurrentDevice, &CapsW, sizeof(CapsW)) == MMSYSERR_NOERROR) {
+				// If the device name is equals to the registry name, and the name isn't "OmniMIDI",
+				// then proceed to the initialization process
+				if (wcscmp(FeedbackDevice, CapsW.szPname) == 0 && wcscmp(FeedbackDevice, L"OmniMIDI\0") != 0)
+				{
+					PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Match found, opening device...");
+					// Open the MIDI output device
+					if (MMmidiOutOpen((LPHMIDIOUT)&OMFeedback, CurrentDevice, 0, 0, CALLBACK_NULL) != MMSYSERR_NOERROR) {
+						// It failed, mark the feedback mode as not loaded
+						PrintMessageToDebugLog("midiOutOpen", "Failed to open feedback device.");
+						OMFeedback = NULL;
+						return FALSE;
+					}
+					else {
+						// Everything went hunky-dory, return TRUE
+						PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Device is ready to receive events.");
+						return TRUE;
+					}
+				}
+			}
+		}
+
+		// Otherwise, nothing
+		PrintMessageToDebugLog("EnableMIDIFeedbackMode", "No device found, or the selected device was \"OmniMIDI\" itself, which is illegal.");
+	}
+	catch (...) {
+		CrashMessage(L"EnableMIDIFeedbackMode");
+	}
+}
+
+BOOL DisableMIDIFeedbackMode() {
+	try {
+		if (OMFeedback) {
+			PrintMessageToDebugLog("DisableMIDIFeedbackMode", "Disabling feedback mode...");
+
+			switch (MMmidiOutClose((HMIDIOUT)OMFeedback)) {
+			case MMSYSERR_NOMEM:
+				throw;
+			case MMSYSERR_INVALHANDLE:
+				break;
+			case MMSYSERR_NOERROR:
+			default:						
+				PrintMessageToDebugLog("midiOutClose", "Device closed.");
+				OMFeedback = NULL;
+				break;
+			}
+
+			PrintMessageToDebugLog("DisableMIDIFeedbackMode", "Disabled.");
+		}
+
+		if (owinmm && !GetOWINMM)
+			if (!FreeLibrary(owinmm))
+				throw;
+
+		return TRUE;
+	}
+	catch (...) {
+		CrashMessage(L"DisableMIDIFeedbackMode");
+	}
+}
+
 /*
 DWORD WINAPI DebugParser(Thread* DPThread) {
 	PrintMessageToDebugLog("DebugParser", "Initializing debug pipe helper thread...");
@@ -88,7 +234,6 @@ void EventsProcesser(LPVOID lpV) {
 
 			// Parse the notes until the audio thread is done
 			if (_PlayBufData()) _FWAIT;
-			if (ManagedSettings.CapFramerate) _CFRWAIT;
 		}
 	}
 	catch (...) {
@@ -195,8 +340,7 @@ void AudioEngine(LPVOID lpParam) {
 					break;
 				}
 
-				if (ManagedSettings.CapFramerate) _CFRWAIT;
-				else _FWAIT;
+				_FWAIT;
 			} while (!stop_thread);
 		}
 	}

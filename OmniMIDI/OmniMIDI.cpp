@@ -212,23 +212,16 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 	// Initialize values
 	static BOOL LoadedOnce = FALSE;
 
-	DWORD StreamCapable = NULL;
-
 	try {
 		PrintMessageToDebugLog("MODM_GETDEVCAPS", "The MIDI app sent a MODM_GETDEVCAPS request to the driver.");
 
 		if (!LoadedOnce) {
 			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
 			RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"DisableCookedPlayer", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableCookedPlayer, &dwSize);
 
 			// If the debug mode is enabled, and the process isn't banned, create the debug log
 			if (ManagedSettings.DebugMode && BlackListSystem())
 				CreateConsole();
-
-			StreamCapable = !(ManagedSettings.DisableCookedPlayer && CPBlacklisted) ? MIDICAPS_STREAM : 0;
-			if (!StreamCapable)
-				PrintMessageToDebugLog("MODM_GETDEVCAPS", "Either the app is blacklisted, or the user requested to disable CookedPlayer globally.");
 
 			LoadedOnce = TRUE;
 		}
@@ -245,7 +238,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			MIDIOUTCAPSA MIDICaps;
 			
 			strcpy_s(MIDICaps.szPname, sizeof(MIDICaps.szPname), "OmniMIDI\0");
-			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
+			MIDICaps.dwSupport = MIDICAPS_CACHE;
 			MIDICaps.wChannelMask = 0xFFFF;
 			MIDICaps.wMid = 0xFFFF;
 			MIDICaps.wPid = 0x000A;
@@ -267,7 +260,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			MIDIOUTCAPSW MIDICaps;
 
 			wcscpy_s(MIDICaps.szPname, sizeof(MIDICaps.szPname), L"OmniMIDI\0");
-			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
+			MIDICaps.dwSupport = MIDICAPS_CACHE;
 			MIDICaps.wChannelMask = 0xFFFF;
 			MIDICaps.wMid = 0xFFFF;
 			MIDICaps.wPid = 0x000A;
@@ -292,7 +285,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			MIDICaps.ManufacturerGuid = OMCLSID;
 			MIDICaps.NameGuid = OMCLSID;
 			MIDICaps.ProductGuid = OMCLSID;
-			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
+			MIDICaps.dwSupport = MIDICAPS_CACHE;
 			MIDICaps.wChannelMask = 0xFFFF;
 			MIDICaps.wMid = 0xFFFF;
 			MIDICaps.wPid = 0x000A;
@@ -317,7 +310,7 @@ DWORD GiveOmniMIDICaps(PVOID capsPtr, DWORD capsSize) {
 			MIDICaps.ManufacturerGuid = OMCLSID;
 			MIDICaps.NameGuid = OMCLSID;
 			MIDICaps.ProductGuid = OMCLSID;
-			MIDICaps.dwSupport = StreamCapable | MIDICAPS_VOLUME;
+			MIDICaps.dwSupport = MIDICAPS_CACHE;
 			MIDICaps.wChannelMask = 0xFFFF;
 			MIDICaps.wMid = 0xFFFF;
 			MIDICaps.wPid = 0x000A;
@@ -389,6 +382,8 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		// Tell the app that the buffer has been played
 		DoCallback(MOM_DONE, dwParam1, 0);
 		// if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, dwParam1, 0);
+
+		SendLongMIDIFeedback((MIDIHDR*)dwParam1, dwParam2);
 
 		return RetVal;
 	case MODM_STRMDATA:

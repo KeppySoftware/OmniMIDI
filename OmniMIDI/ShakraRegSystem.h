@@ -106,36 +106,36 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 	DWORD shakraSize = sizeof(ShakraKey);
 	bool OnlyDrivers32 = true;
 
-	// If user is not an admin, abort.
-	if (!IsUserAnAdmin())
-	{
-		DERROR(L"You can not manage the driver without administration rights.");
-		return;
-	}
-
-	// If it's running under WoW64 emulation, tell the user to use the x64 DLL under RunDLL32 instead
-	if (isWow64Process())
-	{
-		DERROR(L"You can not register the driver using the 32-bit library under 64-bit Windows.\n\nPlease use the 64-bit library.");
-		return;
-	}
-
-	// Open Drivers32 key
-	if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &Drivers32Key, &dummy) != ERROR_SUCCESS) {
-		DERROR(L"RegCreateKeyEx failed to open the Drivers32 key, unable to (un)register the driver.");
-		return;
-	}
-
-#ifdef _WIN64
-	// Open Drivers32 for WOW64 key
-	if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS | KEY_WOW64_32KEY, NULL, &DriversWOW64Key, &dummy) != ERROR_SUCCESS) {
-		DERROR(L"RegCreateKeyEx failed to open the Drivers32 key from the WOW64 hive, unable to (un)register the driver.");
-		return;
-	}
-#endif
-
 	// We need to register, woohoo
 	if (_stricmp(CommandLine, "RegisterDrv") == 0 || _stricmp(CommandLine, "UnregisterDrv") == 0) {
+		// If user is not an admin, abort.
+		if (!IsUserAnAdmin())
+		{
+			DERROR(L"You can not manage the driver without administration rights.");
+			return;
+		}
+
+		// If it's running under WoW64 emulation, tell the user to use the x64 DLL under RunDLL32 instead
+		if (isWow64Process())
+		{
+			DERROR(L"You can not register the driver using the 32-bit library under 64-bit Windows.\n\nPlease use the 64-bit library.");
+			return;
+		}
+
+		// Open Drivers32 key
+		if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &Drivers32Key, &dummy) != ERROR_SUCCESS) {
+			DERROR(L"RegCreateKeyEx failed to open the Drivers32 key, unable to (un)register the driver.");
+			return;
+		}
+
+#ifdef _WIN64
+		// Open Drivers32 for WOW64 key
+		if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS | KEY_WOW64_32KEY, NULL, &DriversWOW64Key, &dummy) != ERROR_SUCCESS) {
+			DERROR(L"RegCreateKeyEx failed to open the Drivers32 key from the WOW64 hive, unable to (un)register the driver.");
+			return;
+		}
+#endif
+
 		DeviceInfo = SetupDiGetClassDevs(&DevGUID, NULL, NULL, 0);
 
 		if (DeviceInfo == INVALID_HANDLE_VALUE)

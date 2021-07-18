@@ -101,6 +101,22 @@ DWORD __inline ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
+BOOL __inline SendShortMIDIFeedback(DWORD dwParam1) {
+	if (OMFeedback) {
+		return (MMmidiOutShortMsg((HMIDIOUT)OMFeedback, dwParam1) == MMSYSERR_NOERROR);
+	}
+
+	return FALSE;
+}
+
+BOOL __inline SendLongMIDIFeedback(LPMIDIHDR MIDIHDR, UINT Size) {
+	if (OMFeedback) {
+		return (MMmidiOutLongMsg((HMIDIOUT)OMFeedback, MIDIHDR, Size) == MMSYSERR_NOERROR);
+	}
+
+	return FALSE;
+}
+
 void __inline SendToBASSMIDI(DWORD dwParam1) {
 	DWORD len = 3;
 
@@ -154,6 +170,8 @@ void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD_PTR dwParam1) {
 
 	if (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F)
 		dwParam1 = ReturnEditedEvent(dwParam1);
+
+	SendShortMIDIFeedback(dwParam1);
 
 	if (ManagedSettings.OverrideNoteLength || ManagedSettings.DelayNoteOff) {
 		if (((dwParam1& 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF))) {
