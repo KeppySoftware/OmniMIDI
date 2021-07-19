@@ -119,7 +119,7 @@ typedef struct
 	BOOL IgnoreNotesBetweenVel = FALSE;		// Ignore notes in between two velocity values
 	BOOL IgnoreSysReset = FALSE;			// Ignore SysEx Reset events
 	BOOL LimitTo88Keys = FALSE;				// Limit to 88 keys
-	BOOL LiveChanges = FALSE;				// Live changes
+	BOOL LiveChanges = FALSE;				// Live changes (DEPRECATED)
 	BOOL MT32Mode = FALSE;					// Roland MT-32 mode (DEPRECATED)
 	BOOL MonoRendering = FALSE;				// Mono rendering (Instead of stereo by default)
 	BOOL NoteOff1 = FALSE;					// Note cut INT

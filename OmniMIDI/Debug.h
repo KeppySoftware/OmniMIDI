@@ -148,7 +148,7 @@ void CrashMessage(LPCWSTR part) {
 	MessageBoxW(NULL, ErrorMessage, L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
 
 	block_bassinit = TRUE;
-	stop_thread = TRUE;
+	stop_svthread = TRUE;
 
 	MakeMiniDump(nullptr);
 

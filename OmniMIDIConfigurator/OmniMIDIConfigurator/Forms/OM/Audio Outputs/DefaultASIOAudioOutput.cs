@@ -298,7 +298,7 @@ namespace OmniMIDIConfigurator
         private void ASIODirectFeed_CheckedChanged(object sender, EventArgs e)
         {
             Program.SynthSettings.SetValue("ASIODirectFeed", Convert.ToInt32(ASIODirectFeed.Checked), RegistryValueKind.DWord);
-            if (Properties.Settings.Default.LiveChanges) Program.SynthSettings.SetValue("LiveChanges", "1", RegistryValueKind.DWord);
+            Functions.SignalLiveChanges();
         }
 
         private void Quit_Click(object sender, EventArgs e)

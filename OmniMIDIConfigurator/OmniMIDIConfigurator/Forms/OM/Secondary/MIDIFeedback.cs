@@ -175,7 +175,7 @@ namespace OmniMIDIConfigurator
 
             SaveWhitelist();
 
-            if (Properties.Settings.Default.LiveChanges) Program.SynthSettings.SetValue("LiveChanges", "1", RegistryValueKind.DWord);
+            Functions.SignalLiveChanges();
 
             Close();
         }

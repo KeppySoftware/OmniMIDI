@@ -235,7 +235,6 @@ void DebugPipe(LPVOID lpV) {
 void EventsProcesser(LPVOID lpV) {
 	DWORD TI = (DWORD)lpV;
 
-	ResetEvent(EPThreadDone);
 	PrintMessageToDebugLog("EventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
@@ -257,7 +256,6 @@ void EventsProcesser(LPVOID lpV) {
 void FastEventsProcesser(LPVOID lpV) {
 	DWORD TI = (DWORD)lpV;
 
-	ResetEvent(EPThreadDone);
 	PrintMessageToDebugLog("FastEventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
@@ -286,8 +284,6 @@ void InitializeEventsProcesserThreads() {
 }
 
 void AudioEngine(LPVOID lpParam) {
-	ResetEvent(ATThreadDone);
-
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	try {
 		// Skip if ASIO isn't using the direct feed mode
@@ -363,8 +359,6 @@ void AudioEngine(LPVOID lpParam) {
 }
 
 void FastAudioEngine(LPVOID lpParam) {
-	ResetEvent(ATThreadDone);
-
 	PrintMessageToDebugLog("AudioEngine", "Initializing fast audio rendering thread...");
 	try {
 		// Skip if ASIO isn't using the direct feed mode
@@ -497,20 +491,34 @@ void CloseThreads(BOOL MainClose) {
 	stop_thread = TRUE;
 
 	// Wait for each thread to close, and free their handles
-	PrintMessageToDebugLog("CloseThreadsFunc", "Closing audio thread...");
-	if (!CloseThread(&ATThread))
-		PrintMessageToDebugLog("CloseThreadsFunc", "Audio thread is already closed.");
+	if (ManagedSettings.CurrentEngine != WASAPI_ENGINE &&
+		ManagedSettings.CurrentEngine != ASIO_ENGINE && 
+		ATThread.ThreadAddress) {
+		PrintMessageToDebugLog("CloseThreadsFunc", "Closing audio thread...");
+		if (CloseThread(&ATThread))
+			ResetEvent(ATThreadDone);
+		else
+			PrintMessageToDebugLog("CloseThreadsFunc", "Audio thread is already closed.");
+	}
 
-	PrintMessageToDebugLog("CloseThreadsFunc", "Closing events processer thread...");
-	if (!CloseThread(&EPThread))
-		PrintMessageToDebugLog("CloseThreadsFunc", "Events processer thread is already closed.");
+	if (!ManagedSettings.NotesCatcherWithAudio && EPThread.ThreadAddress) {
+		PrintMessageToDebugLog("CloseThreadsFunc", "Closing events processer thread...");
+		if (CloseThread(&EPThread))
+			ResetEvent(EPThreadDone);
+		else
+			PrintMessageToDebugLog("CloseThreadsFunc", "Events processer thread is already closed.");
+	}
 
 	if (MainClose)
 	{
+		stop_svthread = TRUE;
+
 		// Close main as well
 		PrintMessageToDebugLog("CloseThreadsFunc", "Closing main thread...");
 		if (!CloseThread(&HealthThread))
 			PrintMessageToDebugLog("CloseThreadsFunc", "Main thread is already closed.");
+
+		stop_svthread = FALSE;
 	}
 
 	PrintMessageToDebugLog("CloseThreadsFunc", "Threads closed.");

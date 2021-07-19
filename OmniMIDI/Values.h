@@ -87,7 +87,7 @@ CookedPlayer* OMCookedPlayer;
 const GUID OMCLSID = { 0x62F3192B, 0xA961, 0x456D, { 0xAB, 0xCA, 0xA5, 0xC9, 0x5A, 0x14, 0xB9, 0xAA } };
 static ULONGLONG TickStart = 0;			// For TGT64
 static HSTREAM OMStream = NULL;
-static HANDLE OMReady = NULL, ATThreadDone = NULL, EPThreadDone = NULL;
+static HANDLE OMReady = NULL, LiveChanges = NULL, ATThreadDone = NULL, EPThreadDone = NULL;
 static HMIDI OMHMIDI = NULL, OMFeedback = NULL;
 static HDRVR OMHDRVR = NULL;
 static DWORD_PTR OMCallback = NULL;

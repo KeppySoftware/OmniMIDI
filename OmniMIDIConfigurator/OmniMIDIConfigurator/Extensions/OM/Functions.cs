@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
@@ -55,10 +56,27 @@ namespace OmniMIDIConfigurator
         [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
 
+        [DllImport("Kernel32.dll", SetLastError = true)]
+        static extern IntPtr OpenEvent(uint dwDesiredAccess, bool bInheritHandle, string lpName);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool SetEvent(IntPtr hEvent);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool CloseHandle(IntPtr hObject);
+
         // Get size of memory
         [return: MarshalAs(UnmanagedType.Bool)]
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
+
+        const uint STANDARD_RIGHTS_REQUIRED = 0x000F0000;
+        const uint SYNCHRONIZE = 0x00100000;
+        const uint EVENT_ALL_ACCESS = (STANDARD_RIGHTS_REQUIRED | SYNCHRONIZE | 0x3);
+        const uint EVENT_MODIFY_STATE = 0x0002;
+        const long ERROR_FILE_NOT_FOUND = 2L;
 
         public static RegistryKey D32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
         public static RegistryKey D64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
@@ -160,6 +178,25 @@ namespace OmniMIDIConfigurator
 
                 default:
                     return "NA";
+            }
+        }
+
+        public static void SignalLiveChanges()
+        {
+            if (!Properties.Settings.Default.LiveChanges)
+                return;
+
+            // Program.SynthSettings.SetValue("LiveChanges", "1", RegistryValueKind.DWord);
+
+            // Spam the event to make all the apps get the changes
+            for (int i = 0; i < 65536; i++)
+            {
+                IntPtr Handle = OpenEvent(EVENT_ALL_ACCESS | EVENT_MODIFY_STATE, false, "OMLiveChanges");
+                if (Handle != IntPtr.Zero)
+                {
+                    SetEvent(Handle);
+                    CloseHandle(Handle);
+                }
             }
         }
 
@@ -405,7 +442,7 @@ namespace OmniMIDIConfigurator
                     break;
             }
 
-            if (Properties.Settings.Default.LiveChanges) Program.SynthSettings.SetValue("LiveChanges", "1", RegistryValueKind.DWord);
+            Functions.SignalLiveChanges();
         }
 
         // WinMM Patch

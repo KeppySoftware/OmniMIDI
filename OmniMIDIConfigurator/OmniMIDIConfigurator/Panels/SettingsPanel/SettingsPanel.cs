@@ -311,7 +311,7 @@ namespace OmniMIDIConfigurator
 
             if (OV)
             {
-                Program.SynthSettings.SetValue("LiveChanges", "1", RegistryValueKind.DWord);
+                Functions.SignalLiveChanges();
                 Functions.LiveChanges.PreviousEngine = (int)Program.SynthSettings.GetValue("CurrentEngine", AudioEngine.WASAPI_ENGINE);
                 Functions.LiveChanges.PreviousFrequency = (int)Program.SynthSettings.GetValue("AudioFrequency", 44100);
                 Functions.LiveChanges.PreviousBuffer = (int)Program.SynthSettings.GetValue("BufferLength", 50);
@@ -330,7 +330,7 @@ namespace OmniMIDIConfigurator
                         Functions.LiveChanges.AudioBitDepth != (int)Program.SynthSettings.GetValue("AudioBitDepth", 0) ||
                         Functions.LiveChanges.NotesCatcherWithAudio != (int)Program.SynthSettings.GetValue("NotesCatcherWithAudio", 0))
                     {
-                        Program.SynthSettings.SetValue("LiveChanges", 1, RegistryValueKind.DWord);
+                        Functions.SignalLiveChanges();
                         Functions.LiveChanges.PreviousEngine = (int)Program.SynthSettings.GetValue("CurrentEngine", AudioEngine.WASAPI_ENGINE);
                         Functions.LiveChanges.PreviousFrequency = (int)Program.SynthSettings.GetValue("AudioFrequency", 44100);
                         Functions.LiveChanges.PreviousBuffer = (int)Program.SynthSettings.GetValue("BufferLength", 50);
@@ -467,8 +467,7 @@ namespace OmniMIDIConfigurator
                         DefaultAudioOutput Dlg = new DefaultAudioOutput(true);
                         if (Dlg.ShowDialog() == DialogResult.Yes)
                         {
-                            if (Properties.Settings.Default.LiveChanges)
-                                Program.SynthSettings.SetValue("LiveChanges", 1, RegistryValueKind.DWord);
+                            Functions.SignalLiveChanges();
                             goto ReturnHere;
                         }
                     }
@@ -477,8 +476,7 @@ namespace OmniMIDIConfigurator
                         DefaultWASAPIAudioOutput Dlg = new DefaultWASAPIAudioOutput();
                         if (Dlg.ShowDialog() == DialogResult.Yes)
                         {
-                            if (Properties.Settings.Default.LiveChanges)
-                                Program.SynthSettings.SetValue("LiveChanges", 1, RegistryValueKind.DWord);
+                            Functions.SignalLiveChanges();
                             goto ReturnHere;
                         }
                     }

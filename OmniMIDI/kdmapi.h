@@ -278,11 +278,22 @@ BOOL PrepareDriver() {
 
 // KDMAPI calls
 BOOL StreamHealthCheck() {
+	BOOL LiveChangesB = FALSE;
+
 	// If BASS is forbidden from initializing itself, then abort immediately
-	if (block_bassinit) return FALSE;
+	if (block_bassinit || stop_svthread) return FALSE;
+
+	if (WaitForSingleObject(LiveChanges, 50) == WAIT_OBJECT_0)
+	{
+		PrintMessageToDebugLog("StreamWatchdog", "Received LiveChanges event!");
+		LiveChangesB = TRUE;
+
+		// Wait for other LiveChanges to be received by other apps
+		Sleep(200);
+	}
 
 	// Check if the call failed
-	if ((BASS_ChannelIsActive(OMStream) == BASS_ACTIVE_STOPPED || ManagedSettings.LiveChanges)) {
+	if ((BASS_ChannelIsActive(OMStream) == BASS_ACTIVE_STOPPED || LiveChangesB)) {
 		PrintMessageToDebugLog("StreamWatchdog", "Stream is down! Restarting audio stream...");
 
 		// Restart feedback mode just in case
@@ -291,6 +302,7 @@ BOOL StreamHealthCheck() {
 
 		// It did, reload the settings and reallocate the memory for the buffer
 		CloseThreads(FALSE);
+
 		LoadSettings(TRUE, FALSE);
 
 		// Initialize the BASS output device, and set up the streams
@@ -300,6 +312,8 @@ BOOL StreamHealthCheck() {
 
 			// Done, now initialize the threads
 			CreateThreads();
+
+			ResetEvent(LiveChanges);
 		}
 		else PrintMessageToDebugLog("StreamWatchdog", "Failed to initialize stream! Retrying...");
 
@@ -343,7 +357,7 @@ void Supervisor(LPVOID lpV) {
 		// Check system
 		PrintMessageToDebugLog("StreamWatchdog", "Checking for settings changes or hotkeys...");
 
-		while (!stop_thread) {
+		while (!stop_svthread) {
 			// Check if the threads and streams are still alive
 			if (StreamHealthCheck());
 			{
@@ -365,27 +379,14 @@ void Supervisor(LPVOID lpV) {
 			}
 
 			// I SLEEP
-			Sleep(333);
+			Sleep(50);
 		}
 	}
 	catch (...) {
 		CrashMessage(L"SettingsAndHealthThread");
 	}
 
-	// Wait for the other threads to finish
-	PrintMessageToDebugLog("StreamWatchdog", "Waiting for events processer thread...");
-	if (!ManagedSettings.NotesCatcherWithAudio)
-	{
-		if (WaitForSingleObject(EPThreadDone, INFINITE) == WAIT_OBJECT_0)
-			ResetEvent(EPThreadDone);
-	}
-
-	if (ManagedSettings.CurrentEngine != WASAPI_ENGINE &&
-		ManagedSettings.CurrentEngine != ASIO_ENGINE) {
-		PrintMessageToDebugLog("StreamWatchdog", "Waiting for audio renderer thread...");
-		if (WaitForSingleObject(ATThreadDone, INFINITE) == WAIT_OBJECT_0)
-			ResetEvent(ATThreadDone);
-	}
+	CloseThreads(FALSE);
 
 	// Unload BASS functions
 	FreeFonts();
@@ -429,6 +430,9 @@ BOOL DoStartClient() {
 		if (!EPThreadDone)
 			EPThreadDone = CreateEvent(NULL, TRUE, FALSE, L"EPThreadDone");
 
+		if (!LiveChanges)
+			LiveChanges = CreateEvent(NULL, TRUE, FALSE, L"OMLiveChanges");
+
 		// Create the main thread
 		PrintMessageToDebugLog("StartDriver", "Starting main watchdog thread...");
 		CheckIfThreadClosed(&HealthThread);
@@ -438,6 +442,7 @@ BOOL DoStartClient() {
 
 		// Wait for the SoundFonts to load, then close the event's handle
 		PrintMessageToDebugLog("StartDriver", "Waiting for the driver to signal if it's ready...");
+
 		if (WaitForSingleObject(OMReady, INFINITE) == WAIT_OBJECT_0)
 			ResetEvent(OMReady);
 
@@ -478,6 +483,11 @@ BOOL DoStopClient() {
 		{
 			CloseHandle(EPThreadDone);
 			EPThreadDone = NULL;
+		}
+		if (LiveChanges)
+		{
+			CloseHandle(LiveChanges);
+			LiveChanges = NULL;
 		}
 
 		// Boopers

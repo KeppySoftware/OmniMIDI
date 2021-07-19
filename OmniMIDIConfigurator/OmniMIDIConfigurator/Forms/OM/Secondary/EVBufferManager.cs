@@ -151,7 +151,7 @@ namespace OmniMIDIConfigurator
         {
             Program.SynthSettings.SetValue("EvBufferSize", ArraySize.Value, Microsoft.Win32.RegistryValueKind.QWord);
             Program.SynthSettings.SetValue("EvBufferMultRatio", RatioVal.Value, Microsoft.Win32.RegistryValueKind.DWord);
-            if (Properties.Settings.Default.LiveChanges) Program.SynthSettings.SetValue("LiveChanges", "1", Microsoft.Win32.RegistryValueKind.DWord);
+            Functions.SignalLiveChanges();
             Close();
         }
 
