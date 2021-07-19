@@ -1242,7 +1242,6 @@
             // Troubleshooter
             // 
             this.Troubleshooter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Troubleshooter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Troubleshooter.Location = new System.Drawing.Point(515, 265);
             this.Troubleshooter.Name = "Troubleshooter";
             this.Troubleshooter.Size = new System.Drawing.Size(150, 23);

@@ -287,9 +287,6 @@ BOOL StreamHealthCheck() {
 	{
 		PrintMessageToDebugLog("StreamWatchdog", "Received LiveChanges event!");
 		LiveChangesB = TRUE;
-
-		// Wait for other LiveChanges to be received by other apps
-		Sleep(200);
 	}
 
 	// Check if the call failed
@@ -312,8 +309,6 @@ BOOL StreamHealthCheck() {
 
 			// Done, now initialize the threads
 			CreateThreads();
-
-			ResetEvent(LiveChanges);
 		}
 		else PrintMessageToDebugLog("StreamWatchdog", "Failed to initialize stream! Retrying...");
 

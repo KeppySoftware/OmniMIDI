@@ -8,6 +8,7 @@ using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Un4seen.Bass;
@@ -61,6 +62,9 @@ namespace OmniMIDIConfigurator
 
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern bool SetEvent(IntPtr hEvent);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool ResetEvent(IntPtr hEvent);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
@@ -188,15 +192,19 @@ namespace OmniMIDIConfigurator
 
             // Program.SynthSettings.SetValue("LiveChanges", "1", RegistryValueKind.DWord);
 
-            // Spam the event to make all the apps get the changes
-            for (int i = 0; i < 65536; i++)
+            // Open the OMLiveChanges event
+            IntPtr Handle = OpenEvent(EVENT_ALL_ACCESS | EVENT_MODIFY_STATE, false, "OMLiveChanges");
+            if (Handle != IntPtr.Zero)
             {
-                IntPtr Handle = OpenEvent(EVENT_ALL_ACCESS | EVENT_MODIFY_STATE, false, "OMLiveChanges");
-                if (Handle != IntPtr.Zero)
-                {
-                    SetEvent(Handle);
-                    CloseHandle(Handle);
-                }
+                // Signal the event
+                SetEvent(Handle);
+
+                // Wait for all the OmniMIDI instances to pick the message up
+                Thread.Sleep(100);
+
+                // Reset the event and close its handle here
+                ResetEvent(Handle);
+                CloseHandle(Handle);
             }
         }
 

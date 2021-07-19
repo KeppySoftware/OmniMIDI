@@ -407,6 +407,8 @@ void PrintMessageToDebugLog(LPCSTR Stage, LPCSTR Status) {
 
 		// Flush buffer
 		fflush(DebugLog);
+
+		Sleep(1);
 	}
 }
 

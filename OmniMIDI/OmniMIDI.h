@@ -131,7 +131,7 @@ typedef struct
 	BOOL VolumeMonitor = FALSE;				// Volume monitoring
 
 	DWORD AudioBitDepth = 0;				// Floating point audio
-	DWORD AudioFrequency = 44100;			// Audio frequency
+	DWORD AudioFrequency = 48000;			// Audio frequency
 	DWORD AudioOutputReg = 0;				// Audio output (DEPRECATED)
 	DWORD BufferLength = 30;				// Default
 	DWORD ChannelUpdateLength = 0;			// Length of buffer in BASS_ChannelUpdate

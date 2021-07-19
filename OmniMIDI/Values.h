@@ -298,10 +298,14 @@ DWORD pitchshiftchan[16];
 #define NT_SUCCESS(StatCode) ((NTSTATUS)(StatCode) == 0)
 #define NTAPI __stdcall
 // these functions have identical prototypes
+typedef NTSTATUS(NTAPI* NSTR)(IN ULONG, IN BOOLEAN, OUT PULONG);
+typedef NTSTATUS(NTAPI* NQTR)(OUT PULONG, OUT PULONG, OUT PULONG);
 typedef NTSTATUS(NTAPI* NDE)(BOOLEAN, INT64*);
 typedef NTSTATUS(NTAPI* NQST)(QWORD*);
 typedef NTSTATUS(NTAPI* DDP)(DWORD, HANDLE, UINT, LONG, LONG);
 
+NSTR NtSetTimerResolution = 0;
+NQTR NtQueryTimerResolution = 0;
 NDE NtDelayExecution = 0;
 NQST NtQuerySystemTime = 0;
 DDP DefDriverProcImp = 0;

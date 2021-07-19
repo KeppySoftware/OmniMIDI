@@ -107,6 +107,8 @@ void NTSleep(__int64 usec) {
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 {
+	static ULONG Min, Max, Org, Dummy;
+
 	switch (CallReason) {
 	case DLL_PROCESS_ATTACH:
 	{
@@ -118,17 +120,29 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 		hinst = hModule;
 		BASS_MIDI_StreamEvent = DummyBMSE;
 
-		if (!NtDelayExecution || !NtQuerySystemTime) {
+		if (!NtDelayExecution || !NtQuerySystemTime || !NtQueryTimerResolution || !NtSetTimerResolution) {
 			NtDelayExecution = (NDE)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtDelayExecution");
 			NtQuerySystemTime = (NQST)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtQuerySystemTime");
+			NtQueryTimerResolution = (NQTR)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtQueryTimerResolution");
+			NtSetTimerResolution = (NSTR)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtSetTimerResolution");
 
-			if (!NtDelayExecution || !NtQuerySystemTime) {
+			if (!NtDelayExecution || !NtQuerySystemTime || !NtQueryTimerResolution || !NtSetTimerResolution) {
 				OutputDebugStringA("Failed to parse NT functions from NTDLL! OmniMIDI will not load.");
 				return FALSE;
 			}
 
 			if (!NT_SUCCESS(NtQuerySystemTime(&TickStart))) {
 				OutputDebugStringA("Failed to parse starting tick through NtQuerySystemTime! OmniMIDI will not load.");
+				return FALSE;
+			}
+
+			if (!NT_SUCCESS(NtQueryTimerResolution(&Min, &Max, &Org))) {
+				OutputDebugStringA("Failed to parse maximum resolution time from NtQueryTimerResolution! OmniMIDI will not load.");
+				return FALSE;
+			}
+
+			if (!NT_SUCCESS(NtSetTimerResolution(Max, true, &Org))) {
+				OutputDebugStringA("Failed to set timer resolution! OmniMIDI will not load.");
 				return FALSE;
 			}
 
@@ -140,6 +154,10 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 	}
 	case DLL_PROCESS_DETACH:
 	{
+		if (NtSetTimerResolution) {
+			NtSetTimerResolution(Org, true, &Dummy);
+		}
+
 		hinst = NULL;
 		break;
 	}
