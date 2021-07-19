@@ -83,10 +83,12 @@ namespace OmniMIDIConfigurator
                 case AudioEngine.XA_ENGINE:
                     ChangeDefaultOutput.Text = "Advanced...";
                     BufferText.Text = "The output buffer can be controlled through the engine's advanced settings";
+                    OldBuff.Enabled = true;
                     break;
                 case AudioEngine.AUDTOWAV:
                     ChangeDefaultOutput.Text = "Directory...";
                     BufferText.Text = "The output buffer isn't needed when outputting to a .WAV file";
+                    OldBuff.Enabled = true;
                     break;
                 case AudioEngine.ASIO_ENGINE:
                     ChangeDefaultOutput.Text = "Devices...";
@@ -111,12 +113,14 @@ namespace OmniMIDIConfigurator
                     }
 
                     BufferText.Text = "The output buffer is controlled by the ASIO device itself";
+                    OldBuff.Enabled = !Convert.ToBoolean(Convert.ToInt32(Program.SynthSettings.GetValue("ASIODirectFeed", "0")));
                     break;
                 case AudioEngine.WASAPI_ENGINE:
                 case AudioEngine.DSOUND_ENGINE:
                 default:
                     ChangeDefaultOutput.Text = "Output...";
                     BufferText.Text = "Output buffer (in ms, from 1 to 1000. If the buffer is too small, it'll be set automatically to the lowest value possible)";
+                    OldBuff.Enabled = true;
                     break;
             }
 
@@ -131,7 +135,6 @@ namespace OmniMIDIConfigurator
             VolSimView.Enabled = NoAtW ? true : false;
             VolKnob.Enabled = NoAtW ? true : false;
             bufsize.Enabled = NoASIOXAE ? true : false;
-            OldBuff.Enabled = NoAtW ? true : false;
 
             PreviousValue = AudioEngBox.SelectedIndex;
             if (S) Program.SynthSettings.SetValue("CurrentEngine", AudioEngBox.SelectedIndex, RegistryValueKind.DWord);
@@ -460,7 +463,7 @@ namespace OmniMIDIConfigurator
                     break;
                 case AudioEngine.WASAPI_ENGINE:
                 ReturnHere:
-                    Boolean OWM = Convert.ToBoolean(Convert.ToInt32(Program.SynthSettings.GetValue("OldWASAPIMode", "0")));
+                    Boolean OWM = Convert.ToBoolean(Program.SynthSettings.GetValue("OldWASAPIMode", "0"));
 
                     if (OWM)
                     {
@@ -484,6 +487,7 @@ namespace OmniMIDIConfigurator
                     break;
                 case AudioEngine.ASIO_ENGINE:
                     new DefaultASIOAudioOutput(Control.ModifierKeys == Keys.Shift).ShowDialog();
+                    OldBuff.Enabled = !Convert.ToBoolean(Convert.ToInt32(Program.SynthSettings.GetValue("ASIODirectFeed", "0")));
                     break;
                 case AudioEngine.XA_ENGINE:
                     new XAOutputSettings().ShowDialog();

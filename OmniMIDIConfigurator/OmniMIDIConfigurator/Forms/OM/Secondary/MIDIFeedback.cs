@@ -14,6 +14,7 @@ namespace OmniMIDIConfigurator
         {
             InitializeComponent();
 
+            bool DevFound = false;
             int NumDevs = WinMM.midiOutGetNumDevs();
             string OldDev = (string)Program.SynthSettings.GetValue("FeedbackDevice", "Microsoft GS Wavetable Synth");
             MIDIOUTCAPS Caps = new MIDIOUTCAPS();
@@ -34,7 +35,17 @@ namespace OmniMIDIConfigurator
             for (int c = 0; c < MIDIOutDevs.Items.Count; c++)
             {
                 if (MIDIOutDevs.Items[c].Equals(OldDev))
+                { 
                     MIDIOutDevs.SelectedIndex = c;
+                    DevFound = true;
+                    break;
+                }
+            }
+
+            if (!DevFound)
+            {
+                int index = MIDIOutDevs.FindStringExact("Microsoft GS Wavetable Synth");
+                if (index != -1) MIDIOutDevs.SelectedIndex = index;
             }
 
             EnableFeedback.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("FeedbackEnabled", 0));
@@ -170,7 +181,7 @@ namespace OmniMIDIConfigurator
 
         private void OKBtn_Click(object sender, EventArgs e)
         {
-            Program.SynthSettings.SetValue("FeedbackDevice", MIDIOutDevs.SelectedItem.ToString(), RegistryValueKind.String);
+            Program.SynthSettings.SetValue("FeedbackDevice", MIDIOutDevs.Items.Count > 0 ? MIDIOutDevs.SelectedItem.ToString() : "None", RegistryValueKind.String);
             Program.SynthSettings.SetValue("FeedbackEnabled", EnableFeedback.Checked ? 1 : 0, RegistryValueKind.DWord);
 
             SaveWhitelist();

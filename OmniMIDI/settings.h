@@ -54,13 +54,14 @@ void CloseRegistryKey(RegKey &hKey) {
 
 BOOL CloseThread(Thread* thread) {
 	// Wait for the thread to finish its job
-	if (thread->ThreadHandle) {
+	if (thread->ThreadAddress) {
 		PrintMessageToDebugLog("CloseThread", "Waiting for passed thread to finish...");
 		WaitForSingleObject(thread->ThreadHandle, INFINITE);
 
 		// And mark it as NULL
 		PrintMessageToDebugLog("CloseThread", "Cleaning up...");
-		CloseHandle(thread->ThreadHandle);
+		if (!CloseHandle(thread->ThreadHandle))
+			CrashMessage(L"CloseThread");
 		thread->ThreadHandle = NULL;
 		thread->ThreadAddress = 0;
 

@@ -199,7 +199,7 @@ void DebugPipe(LPVOID lpV) {
 	// Thread DPThread;
 
 	PrintMessageToDebugLog("DebugPipe", "Initializing debug pipe thread...");
-	while (true) {
+	while (!stop_svthread) {
 		/*
 		// Check if parser is present
 		if (!DPThread.ThreadHandle)
@@ -277,6 +277,8 @@ void InitializeEventsProcesserThreads() {
 
 	// If the EventProcesser thread is not valid, then open a new one
 	if (!EPThread.ThreadHandle) {
+		if (ManagedSettings.CurrentEngine == ASIO_ENGINE && ManagedSettings.ASIODirectFeed) return;
+
 		EPThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastEventsProcesser : EventsProcesser), 0, 0, &EPThread.ThreadAddress);
 		SetThreadPriority(EPThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 		PrintMessageToDebugLog("InitializeEventsProcesserThreads", "Done!");
@@ -287,7 +289,8 @@ void AudioEngine(LPVOID lpParam) {
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	try {
 		// Skip if ASIO isn't using the direct feed mode
-		if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
+		if (ManagedSettings.CurrentEngine == ASIO_ENGINE && !ManagedSettings.ASIODirectFeed) return;
+		else if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 			do {
 				// Check if HyperMode has been disabled
 				if (HyperMode) break;
@@ -310,11 +313,8 @@ void AudioEngine(LPVOID lpParam) {
 				}
 				case ASIO_ENGINE:
 				{
-					if (ManagedSettings.NotesCatcherWithAudio)
-					{
-						SetNoteValuesFromSettings();
-						_PlayBufDataChk();
-					}
+					SetNoteValuesFromSettings();
+					_PlayBufDataChk();
 
 					break;
 				}
@@ -362,7 +362,8 @@ void FastAudioEngine(LPVOID lpParam) {
 	PrintMessageToDebugLog("AudioEngine", "Initializing fast audio rendering thread...");
 	try {
 		// Skip if ASIO isn't using the direct feed mode
-		if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
+		if (ManagedSettings.CurrentEngine == ASIO_ENGINE && !ManagedSettings.ASIODirectFeed) return;
+		else if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
 			do {
 				// Check if HyperMode has been disabled
 				if (!HyperMode) break;
@@ -382,8 +383,7 @@ void FastAudioEngine(LPVOID lpParam) {
 				}
 				case ASIO_ENGINE:
 				{
-					if (ManagedSettings.NotesCatcherWithAudio)
-						_PlayBufDataChk();
+					_PlayBufDataChk();
 
 					break;
 				}
@@ -463,7 +463,7 @@ BOOL IsThisThreadActive(HANDLE thread) {
 }
 
 void CheckIfThreadClosed(Thread* thread) {
-	if (!thread->ThreadHandle) {
+	if (!thread->ThreadAddress) {
 		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "The address of the given thread is null, so it's not online.");
 		return;
 	}
@@ -491,23 +491,23 @@ void CloseThreads(BOOL MainClose) {
 	stop_thread = TRUE;
 
 	// Wait for each thread to close, and free their handles
-	if (ManagedSettings.CurrentEngine != WASAPI_ENGINE &&
-		ManagedSettings.CurrentEngine != ASIO_ENGINE && 
-		ATThread.ThreadAddress) {
-		PrintMessageToDebugLog("CloseThreadsFunc", "Closing audio thread...");
+	PrintMessageToDebugLog("CloseThreadsFunc", "Closing audio thread...");
+	if (CloseThread(&ATThread))
+		ResetEvent(ATThreadDone);
+	else
+		PrintMessageToDebugLog("CloseThreadsFunc", "Audio thread is already closed.");
+	if (ATThread.ThreadAddress) {
 		if (CloseThread(&ATThread))
 			ResetEvent(ATThreadDone);
 		else
 			PrintMessageToDebugLog("CloseThreadsFunc", "Audio thread is already closed.");
 	}
 
-	if (!ManagedSettings.NotesCatcherWithAudio && EPThread.ThreadAddress) {
-		PrintMessageToDebugLog("CloseThreadsFunc", "Closing events processer thread...");
-		if (CloseThread(&EPThread))
-			ResetEvent(EPThreadDone);
-		else
-			PrintMessageToDebugLog("CloseThreadsFunc", "Events processer thread is already closed.");
-	}
+	PrintMessageToDebugLog("CloseThreadsFunc", "Closing events processer thread...");
+	if (CloseThread(&EPThread))
+		ResetEvent(EPThreadDone);
+	else
+		PrintMessageToDebugLog("CloseThreadsFunc", "Events processer thread is already closed.");
 
 	if (MainClose)
 	{
@@ -531,23 +531,18 @@ void CreateThreads() {
 
 	PrintMessageToDebugLog("CreateThreadsFunc", "Creating threads...");
 
-	// Check if the current engine is ASIO or WASAPI
-	if (ManagedSettings.CurrentEngine == ASIO_ENGINE && !ManagedSettings.ASIODirectFeed);
-	else if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
-		// It's not, we need a separate thread to render the audio
-		PrintMessageToDebugLog("CreateThreadsFunc", "Opening audio thread...");
+	// Open the audio thread
+	PrintMessageToDebugLog("CreateThreadsFunc", "Opening audio thread...");
 
-		// Check if the audio thread is already present, and close it
-		CheckIfThreadClosed(&ATThread);
+	// Check if the audio thread is already present, and close it
+	CheckIfThreadClosed(&ATThread);
 
-		// Recreate it from scratch, and give it a priority
-		ATThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastAudioEngine : AudioEngine), NULL, 0, &ATThread.ThreadAddress);
-		SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
-	}
-	if (ATThread.ThreadHandle == nullptr) SetEvent(ATThreadDone);
+	// Recreate it from scratch, and give it a priority
+	ATThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastAudioEngine : AudioEngine), NULL, 0, &ATThread.ThreadAddress);
+	SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 	
 	// Check if the debug thread is working
-	if (!DThread.ThreadHandle)
+	if (!DThread.ThreadAddress)
 	{
 		PrintMessageToDebugLog("CreateThreadsFunc", "Opening debug thread...");
 
