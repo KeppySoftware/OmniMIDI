@@ -20,23 +20,13 @@ namespace OmniMIDIConfigurator
                 UpdateBtn.Enabled = false;
             }
 
-            var OnlyFirstTenReleases = new Octokit.ApiOptions
-            {
-                PageSize = 11,
-                PageCount = 1
-            };
-
             try
             {
                 ReleasesList.SelectedIndexChanged -= ReleasesList_SelectedIndexChanged;
 
-                IReadOnlyList<Octokit.Release> Releases = UpdateSystem.UpdateClient.Repository.Release.GetAll("KeppySoftware", "OmniMIDI", OnlyFirstTenReleases).Result;
-                foreach (Octokit.Release OneRel in Releases)
-                {
-                    Version x = null;
-                    Version.TryParse(OneRel.TagName, out x);
-                    ReleasesList.Items.Add(x.ToString());
-                }
+                var Releases = UpdateSystem.UpdateClient.Repository.Release.GetAll("KeppySoftware", "OmniMIDI", new Octokit.ApiOptions { PageSize = 11, PageCount = 1 }).Result;
+                foreach (var OneRel in Releases)
+                    ReleasesList.Items.Add(OneRel.TagName);
 
                 ReleasesList.SelectedIndex = 0;
                 ReleasesList.SelectedIndexChanged += ReleasesList_SelectedIndexChanged;

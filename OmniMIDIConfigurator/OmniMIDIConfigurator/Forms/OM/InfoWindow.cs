@@ -45,7 +45,7 @@ namespace OmniMIDIConfigurator
 
             VerLabel.Text = ReturnDriverAssemblyVersion(
                 "OmniMIDI", 
-                "CR", 
+                "PR", 
                 new int[] { Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart }
                 );
             VerLabel.Cursor = Program.SystemHandCursor;
@@ -92,7 +92,6 @@ namespace OmniMIDIConfigurator
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
-            if (Properties.Settings.Default.PreRelease) VerLabel.Text += " (PR)";
 
             // Date check :^)
             if (DateTime.Today.Month == 4 && DateTime.Today.Day == 1)

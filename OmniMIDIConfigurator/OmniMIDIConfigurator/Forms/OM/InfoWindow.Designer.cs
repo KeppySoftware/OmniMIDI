@@ -149,7 +149,7 @@
             // 
             this.KDMAPIVer.AutoSize = true;
             this.KDMAPIVer.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.KDMAPIVer.Location = new System.Drawing.Point(105, 57);
+            this.KDMAPIVer.Location = new System.Drawing.Point(95, 57);
             this.KDMAPIVer.Name = "KDMAPIVer";
             this.KDMAPIVer.Size = new System.Drawing.Size(73, 13);
             this.KDMAPIVer.TabIndex = 1;
@@ -161,7 +161,7 @@
             this.CurBranch.AutoSize = true;
             this.CurBranch.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CurBranch.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.CurBranch.Location = new System.Drawing.Point(105, 76);
+            this.CurBranch.Location = new System.Drawing.Point(95, 76);
             this.CurBranch.Name = "CurBranch";
             this.CurBranch.Size = new System.Drawing.Size(58, 13);
             this.CurBranch.TabIndex = 12;
@@ -170,7 +170,7 @@
             // BASSMIDIVer
             // 
             this.BASSMIDIVer.AutoSize = true;
-            this.BASSMIDIVer.Location = new System.Drawing.Point(105, 38);
+            this.BASSMIDIVer.Location = new System.Drawing.Point(95, 38);
             this.BASSMIDIVer.Name = "BASSMIDIVer";
             this.BASSMIDIVer.Size = new System.Drawing.Size(54, 13);
             this.BASSMIDIVer.TabIndex = 11;
@@ -179,7 +179,7 @@
             // BASSVer
             // 
             this.BASSVer.AutoSize = true;
-            this.BASSVer.Location = new System.Drawing.Point(105, 19);
+            this.BASSVer.Location = new System.Drawing.Point(95, 19);
             this.BASSVer.Name = "BASSVer";
             this.BASSVer.Size = new System.Drawing.Size(54, 13);
             this.BASSVer.TabIndex = 10;
@@ -208,18 +208,18 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(6, 38);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(98, 13);
+            this.label5.Size = new System.Drawing.Size(81, 13);
             this.label5.TabIndex = 5;
-            this.label5.Text = "BASSMIDI version:";
+            this.label5.Text = "MIDI library ver:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 19);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(75, 13);
+            this.label4.Size = new System.Drawing.Size(85, 13);
             this.label4.TabIndex = 4;
-            this.label4.Text = "BASS version:";
+            this.label4.Text = "Audio library ver:";
             // 
             // label1
             // 

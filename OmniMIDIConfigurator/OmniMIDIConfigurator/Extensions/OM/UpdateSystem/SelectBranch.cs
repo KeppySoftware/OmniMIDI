@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace OmniMIDIConfigurator
@@ -14,6 +8,15 @@ namespace OmniMIDIConfigurator
         public SelectBranch()
         {
             InitializeComponent();
+
+            BranchSel.Items.Add(Properties.Settings.Default.PreReleaseBranch[0]);
+            BranchSel.Items.Add(Properties.Settings.Default.StableBranch[0]);
+            BranchSel.Items.Add(Properties.Settings.Default.SlowBranch[0]);
+
+            label2.Text = String.Format(label2.Text, 
+                Properties.Settings.Default.PreReleaseBranch[0].Replace(" branch", ""),
+                Properties.Settings.Default.StableBranch[0].Replace(" branch", ""),
+                Properties.Settings.Default.SlowBranch[0].Replace(" branch", ""));
         }
 
         private string ReturnBranch(String Branch)
@@ -23,93 +26,83 @@ namespace OmniMIDIConfigurator
 
         private void SelectBranch_Load(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.UpdateBranch == "canary")
+            if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.PreReleaseBranch[1])
             {
-                BranchSel.Text = "Canary branch";
-                CurrentBranch.Text = ReturnBranch("Canary branch");
+                BranchSel.Text = Properties.Settings.Default.PreReleaseBranch[0];
+                CurrentBranch.Text = ReturnBranch(Properties.Settings.Default.PreReleaseBranch[0]);
             }
-            else if (Properties.Settings.Default.UpdateBranch == "normal")
+            else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.StableBranch[1])
             {
-                BranchSel.Text = "Normal branch (Default)";
-                CurrentBranch.Text = ReturnBranch("Normal branch");
+                BranchSel.Text = Properties.Settings.Default.StableBranch[0];
+                CurrentBranch.Text = ReturnBranch(Properties.Settings.Default.StableBranch[0]);
             }
-            else if (Properties.Settings.Default.UpdateBranch == "delay")
+            else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.SlowBranch[1])
             {
-                BranchSel.Text = "Delayed branch";
-                CurrentBranch.Text = ReturnBranch("Delayed branch");
-            }
-            else if (Properties.Settings.Default.UpdateBranch == "choose")
-            {
-                BranchSel.Text = "Choose a branch";
-                CurrentBranch.Text = ReturnBranch("None selected");
+                BranchSel.Text = Properties.Settings.Default.SlowBranch[0];
+                CurrentBranch.Text = ReturnBranch(Properties.Settings.Default.SlowBranch[0]);
             }
             else
             {
-                BranchSel.Text = "Normal branch (Default)";
-                CurrentBranch.Text = ReturnBranch("Normal branch");
+                BranchSel.Text = "Choose a branch";
+                CurrentBranch.Text = ReturnBranch("None selected");
             }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (BranchSel.Text == "Canary branch")
+            if (BranchSel.Text.Equals(Properties.Settings.Default.PreReleaseBranch[0]))
             {
-                Properties.Settings.Default.UpdateBranch = "canary";
+                Properties.Settings.Default.UpdateBranch = Properties.Settings.Default.PreReleaseBranch[1];
                 Properties.Settings.Default.Save();
-                Close();
             }
-            else if (BranchSel.Text == "Normal branch (Default)")
+            else if (BranchSel.Text == Properties.Settings.Default.StableBranch[0])
             {
-                Properties.Settings.Default.UpdateBranch = "normal";
+                Properties.Settings.Default.UpdateBranch = Properties.Settings.Default.StableBranch[1];
                 Properties.Settings.Default.Save();
-                Close();
             }         
-            else if (BranchSel.Text == "Delayed branch")
+            else if (BranchSel.Text == Properties.Settings.Default.SlowBranch[0])
             {
-                Properties.Settings.Default.UpdateBranch = "delay";
+                Properties.Settings.Default.UpdateBranch = Properties.Settings.Default.SlowBranch[1];
                 Properties.Settings.Default.Save();
-                Close();
             }
-            else if (BranchSel.Text == "")
+
+            if (String.IsNullOrEmpty(BranchSel.Text))
             {
                 MessageBox.Show("Select a branch first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
+
+            Close();
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            base.OnFormClosing(e);
-
+            // Ignore any change, and let the user select on next boot
             if (e.CloseReason == CloseReason.WindowsShutDown)
-            {
-                Properties.Settings.Default.UpdateBranch = "normal";
-                Properties.Settings.Default.Save();
                 return;
-            }
 
-            if (BranchSel.Text == "Canary branch")
+            if (BranchSel.Text.Equals(Properties.Settings.Default.PreReleaseBranch[0]))
             {
-                Properties.Settings.Default.UpdateBranch = "canary";
+                Properties.Settings.Default.UpdateBranch = Properties.Settings.Default.PreReleaseBranch[1];
                 Properties.Settings.Default.Save();
-                return;
             }
-            else if (BranchSel.Text == "Normal branch (Default)")
+            else if (BranchSel.Text == Properties.Settings.Default.StableBranch[0])
             {
-                Properties.Settings.Default.UpdateBranch = "normal";
+                Properties.Settings.Default.UpdateBranch = Properties.Settings.Default.StableBranch[1];
                 Properties.Settings.Default.Save();
-                return;
             }
-            else if (BranchSel.Text == "Delayed branch")
+            else if (BranchSel.Text == Properties.Settings.Default.SlowBranch[0])
             {
-                Properties.Settings.Default.UpdateBranch = "delay";
+                Properties.Settings.Default.UpdateBranch = Properties.Settings.Default.SlowBranch[1];
                 Properties.Settings.Default.Save();
-                return;
             }
-            else if (BranchSel.Text == "")
+            else if (String.IsNullOrEmpty(BranchSel.Text))
             {
                 e.Cancel = true;
                 MessageBox.Show("Select a branch first!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            base.OnFormClosing(e);
         }
     }
 }

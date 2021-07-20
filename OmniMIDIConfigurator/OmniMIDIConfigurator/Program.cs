@@ -160,7 +160,10 @@ namespace OmniMIDIConfigurator
                 }
             }
 
-            if (Properties.Settings.Default.UpdateBranch == "choose")
+            if (Properties.Settings.Default.UpdateBranch == "choose" || 
+                (Properties.Settings.Default.UpdateBranch != Properties.Settings.Default.PreReleaseBranch[1] &&
+                Properties.Settings.Default.UpdateBranch != Properties.Settings.Default.StableBranch[1] &&
+                Properties.Settings.Default.UpdateBranch != Properties.Settings.Default.SlowBranch[1]))
             {
                 SelectBranch frm = new SelectBranch();
                 frm.ShowInTaskbar = true;

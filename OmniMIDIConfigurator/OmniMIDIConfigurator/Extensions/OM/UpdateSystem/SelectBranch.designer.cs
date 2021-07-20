@@ -51,10 +51,6 @@
             // 
             this.BranchSel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.BranchSel.FormattingEnabled = true;
-            this.BranchSel.Items.AddRange(new object[] {
-            "Canary branch",
-            "Normal branch (Default)",
-            "Delayed branch"});
             this.BranchSel.Location = new System.Drawing.Point(234, 15);
             this.BranchSel.Name = "BranchSel";
             this.BranchSel.Size = new System.Drawing.Size(167, 21);

@@ -112,44 +112,38 @@ namespace OmniMIDIConfigurator
 
         public static string GetCurrentBranch()
         {
-            if (Properties.Settings.Default.UpdateBranch == "canary")
-                return "Canary branch";
-            else if (Properties.Settings.Default.UpdateBranch == "normal")
-                return "Normal branch";
-            else if (Properties.Settings.Default.UpdateBranch == "delay")
-                return "Delayed branch";
-            else if (Properties.Settings.Default.UpdateBranch == "choose")
-                return "No branch selected";
+            if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.PreReleaseBranch[1])
+                return Properties.Settings.Default.PreReleaseBranch[0];
+            else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.StableBranch[1])
+                return Properties.Settings.Default.StableBranch[0];
+            else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.SlowBranch[1])
+                return Properties.Settings.Default.SlowBranch[0];
             else
-                return "Normal branch";
+                return "No branch selected";
         }
 
         public static Color GetCurrentBranchColor()
         {
-            if (Properties.Settings.Default.UpdateBranch == "canary")
+            if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.PreReleaseBranch[1])
                 return Color.FromArgb(221, 172, 5);
-            else if (Properties.Settings.Default.UpdateBranch == "normal")
+            else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.StableBranch[1])
                 return Color.FromArgb(158, 14, 204);
-            else if (Properties.Settings.Default.UpdateBranch == "delay")
+            else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.SlowBranch[1])
                 return Color.FromArgb(84, 110, 122);
-            else if (Properties.Settings.Default.UpdateBranch == "choose")
-                return Color.FromArgb(182, 0, 0);
             else
-                return Color.FromArgb(255, 255, 255);
+                return Color.FromArgb(182, 0, 0);
         }
 
         public static string GetCurrentBranchToolTip()
         {
-            if (Properties.Settings.Default.UpdateBranch == "canary")
+            if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.PreReleaseBranch[1])
                 return "Receive all updates.\nYou may get broken updates that haven't been fully tested.\nDesigned for testers and early adopters.";
-            else if (Properties.Settings.Default.UpdateBranch == "normal")
+            else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.StableBranch[1])
                 return "Receive occasional updates and urgent bugfixes (Eg. from version x.x.1.x to x.x.2.x).\nRecommended.";
-            else if (Properties.Settings.Default.UpdateBranch == "delay")
+            else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.SlowBranch[1])
                 return "You will only get major releases (Eg. from version x.1.x.x to x.2.x.x).\nFor those who do not wish to update often.\nNot recommended.";
-            else if (Properties.Settings.Default.UpdateBranch == "choose")
-                return "No information, since you didn't chose a branch.";
             else
-                return "Receive occasional updates and urgent bugfixes (Eg. from version x.x.1.x to x.x.2.x).\nRecommended.";
+                return "No information, since you didn't chose a branch.";
         }
 
         public static string CheckForUpdatesMini()
@@ -163,22 +157,22 @@ namespace OmniMIDIConfigurator
             {
                 try
                 {
-                    Octokit.Release Release = UpdateClient.Repository.Release.GetLatest("KeppySoftware", "OmniMIDI").Result;
+                    var Releases = UpdateSystem.UpdateClient.Repository.Release.GetAll("KeppySoftware", "OmniMIDI", new Octokit.ApiOptions { PageSize = 1, PageCount = 1 }).Result;
                     FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateFileVersion);
 
                     Version DriverOnline = null;
-                    Version.TryParse(Release.TagName, out DriverOnline);
+                    Version.TryParse(Releases[0].TagName, out DriverOnline);
                     Version DriverCurrent = null;
                     Version.TryParse(Driver.FileVersion.ToString(), out DriverCurrent);
 
-                    if (Properties.Settings.Default.UpdateBranch == "canary")
+                    if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.PreReleaseBranch[1])
                     {
                         if (DriverCurrent < DriverOnline)
                             return "yes";
                         else
                             return "no";
                     }
-                    else if (Properties.Settings.Default.UpdateBranch == "normal")
+                    else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.StableBranch[1])
                     {
                         if (DriverCurrent.Major < DriverOnline.Major || DriverCurrent.Minor < DriverOnline.Minor)
                         {
@@ -190,7 +184,7 @@ namespace OmniMIDIConfigurator
                         else
                             return "no";
                     }
-                    else if (Properties.Settings.Default.UpdateBranch == "delay")
+                    else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.SlowBranch[1])
                     {
                         if (DriverCurrent.Major < DriverOnline.Major)
                         {
@@ -226,18 +220,18 @@ namespace OmniMIDIConfigurator
             {
                 try
                 {
-                    Octokit.Release Release = UpdateClient.Repository.Release.GetLatest("KeppySoftware", "OmniMIDI").Result;
+                    var Releases = UpdateSystem.UpdateClient.Repository.Release.GetAll("KeppySoftware", "OmniMIDI", new Octokit.ApiOptions { PageSize = 1, PageCount = 1 }).Result;
                     FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateFileVersion);
 
                     Version DriverOnline = null;
-                    Version.TryParse(Release.TagName, out DriverOnline);
+                    Version.TryParse(Releases[0].TagName, out DriverOnline);
                     Version DriverCurrent = null;
                     Version.TryParse(Driver.FileVersion.ToString(), out DriverCurrent);
 
-                    if (Properties.Settings.Default.UpdateBranch == "canary")
+                    if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.PreReleaseBranch[1])
                     {
                         if (DriverCurrent < DriverOnline)
-                            TriggerUpdateWindow(DriverCurrent, DriverOnline, Release.TagName, forced, startup, isitfromthechangelogwindow);
+                            TriggerUpdateWindow(DriverCurrent, DriverOnline, Releases[0].TagName, forced, startup, isitfromthechangelogwindow);
                         else
                         {
                             if (forced)
@@ -246,12 +240,25 @@ namespace OmniMIDIConfigurator
                                 NoUpdates(startup, internetok);
                         }
                     }
-                    else if (Properties.Settings.Default.UpdateBranch == "normal")
+                    else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.StableBranch[1])
                     {
                         if (DriverCurrent.Major < DriverOnline.Major || DriverCurrent.Minor < DriverOnline.Minor)
                         {
                             if ((DriverCurrent.Build >= DriverOnline.Build || DriverCurrent.Build < DriverOnline.Build))
-                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Release.TagName, forced, startup, isitfromthechangelogwindow);
+                            {
+                                if (Releases[0].Prerelease)
+                                {
+                                    DialogResult Msg = Program.ShowError(1, 
+                                        "Warning", 
+                                        "This version of OmniMIDI is a pre-release, and it's not meant for people in your current branch.\n\n" +
+                                        "Are you sure you want to continue with the update?", null);
+
+                                    if (Msg == DialogResult.No)
+                                        return;
+                                }
+
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Releases[0].TagName, forced, startup, isitfromthechangelogwindow);
+                            }
                             else
                             {
                                 if (forced)
@@ -268,12 +275,25 @@ namespace OmniMIDIConfigurator
                                 NoUpdates(startup, internetok);
                         }
                     }
-                    else if (Properties.Settings.Default.UpdateBranch == "delay")
+                    else if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.SlowBranch[1])
                     {
                         if (DriverCurrent.Major < DriverOnline.Major)
                         {
                             if ((DriverCurrent.Minor >= DriverOnline.Minor || DriverCurrent.Minor < DriverOnline.Minor))
-                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Release.TagName, forced, startup, isitfromthechangelogwindow);
+                            {
+                                if (Releases[0].Prerelease)
+                                {
+                                    DialogResult Msg = Program.ShowError(1,
+                                        "Warning",
+                                        "This version of OmniMIDI is a pre-release, and it's not meant for people in your current branch.\n\n" +
+                                        "Are you sure you want to continue with the update?", null);
+
+                                    if (Msg == DialogResult.No)
+                                        return;
+                                }
+
+                                TriggerUpdateWindow(DriverCurrent, DriverOnline, Releases[0].TagName, forced, startup, isitfromthechangelogwindow);
+                            }
                             else
                             {
                                 if (forced)
