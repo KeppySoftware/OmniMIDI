@@ -331,6 +331,9 @@ DWORD(CALLBACK* _ProcData)(void* buffer, DWORD length, void* user) = DummyProcDa
 // ----------------------------------------------------------------------
 
 // OWINMM
+MMRESULT DummymidiOutShortMsg(HMIDIOUT, DWORD) noexcept { return MMSYSERR_NOERROR; };
+MMRESULT DummymidiOutLongMsg(HMIDIOUT, LPMIDIHDR, UINT) noexcept { return MMSYSERR_NOERROR; };
+
 typedef HMODULE(WINAPI* GO)();
 typedef UINT(WINAPI* SGV)();
 typedef MMRESULT(WINAPI* MOC)(HMIDIOUT);
@@ -346,7 +349,7 @@ GO GetOWINMM = 0;
 SGV SystemGetVersion = 0;
 MOC MMmidiOutClose = 0;
 MOO MMmidiOutOpen = 0;
-MOSM MMmidiOutShortMsg = 0;
-MOLM MMmidiOutLongMsg = 0;
+MOSM MMmidiOutShortMsg = DummymidiOutShortMsg;
+MOLM MMmidiOutLongMsg = DummymidiOutLongMsg;
 MOGND MMmidiOutGetNumDevs = 0;
 MOGDCW MMmidiOutGetDevCapsW = 0;

@@ -41,7 +41,12 @@ BOOL EnableMIDIFeedbackMode() {
 
 		// If minimal playback is enabled, abort the feedback initialization process,
 		// since the required functions aren't called in this mode.
-		if (!FeedbackEnabled || FeedbackBlacklisted || HyperMode)
+		if (HyperMode)
+			return FALSE;
+
+		// If the process has been blacklisted through KDMAPI,
+		// or the feedback mode isn't enabled, return and don't load OWINMM
+		if (!FeedbackEnabled || FeedbackBlacklisted)
 			return FeedbackEnabled;
 
 		if (!MIDIFeedbackWhitelist())
@@ -49,8 +54,6 @@ BOOL EnableMIDIFeedbackMode() {
 			PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Feedback mode is enabled, but the app isn't allowed to use it.");
 			return FALSE;
 		}
-
-		PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Feedback mode enabled. Searching for feedback target device...");
 
 		if (!owinmm) {
 			// First check if the user patched the app using WinMMWRP 4.5+
@@ -104,6 +107,8 @@ BOOL EnableMIDIFeedbackMode() {
 			}
 		}
 
+		PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Feedback mode enabled. Searching for feedback target device...");
+
 		// Get the total number of devices from OWINMM
 		NumDevs = MMmidiOutGetNumDevs();
 
@@ -143,6 +148,9 @@ BOOL EnableMIDIFeedbackMode() {
 
 BOOL DisableMIDIFeedbackMode() {
 	try {
+		MMmidiOutShortMsg = DummymidiOutShortMsg;
+		MMmidiOutLongMsg = DummymidiOutLongMsg;
+
 		if (OMFeedback) {
 			PrintMessageToDebugLog("DisableMIDIFeedbackMode", "Disabling feedback mode...");
 
@@ -163,9 +171,10 @@ BOOL DisableMIDIFeedbackMode() {
 			PrintMessageToDebugLog("DisableMIDIFeedbackMode", "Disabled.");
 		}
 
-		if (owinmm && !GetOWINMM)
+		if (owinmm && !GetOWINMM) {
 			if (!FreeLibrary(owinmm))
 				throw;
+		}
 
 		return TRUE;
 	}
@@ -191,7 +200,7 @@ DWORD WINAPI DebugParser(Thread* DPThread) {
 
 void TerminateThread(Thread* thread, BOOL T, DWORD excode) {
 	CloseHandle(thread->ThreadHandle);
-	thread->ThreadHandle = nullptr;
+	thread->ThreadHandle = NULL;
 	if (T) _endthreadex(excode);
 }
 
@@ -462,29 +471,18 @@ BOOL IsThisThreadActive(HANDLE thread) {
 	return result;
 }
 
-void CheckIfThreadClosed(Thread* thread) {
-	if (!thread->ThreadAddress) {
+BOOL CheckIfThreadClosed(Thread* thread) {
+	if (!thread->ThreadHandle) {
 		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "The address of the given thread is null, so it's not online.");
-		return;
+		return FALSE;
 	}
 
 	// Check if the thread is still alive
-	PrintMessageToDebugLog("CheckIfThreadClosedFunc", "Checking if previous thread passed to this function is still alive...");
+	PrintMessageToDebugLog("CheckIfThreadClosedFunc", "Checking if thread passed to this function is still alive...");
 	BOOL result = (WaitForSingleObject(thread, 0) != WAIT_OBJECT_0);
 
-	// Oh no it is!
-	if (result) {
-		// KILL IT. DO IT.
-		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It is! I'm now waiting for it to stop...");
-
-		WaitForSingleObject(thread, INFINITE);
-		thread->ThreadHandle = NULL;
-
-		PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It stopped! Starting thread again...");
-		return;
-	}
-
-	PrintMessageToDebugLog("CheckIfThreadClosedFunc", "It's not! Starting thread again...");
+	PrintMessageToDebugLog("CheckIfThreadClosedFunc", result ? "It is! I'm now waiting for it to stop..." : "It's not! Starting thread again...");
+	return result;
 }
 
 void CloseThreads(BOOL MainClose) {
@@ -496,12 +494,6 @@ void CloseThreads(BOOL MainClose) {
 		ResetEvent(ATThreadDone);
 	else
 		PrintMessageToDebugLog("CloseThreadsFunc", "Audio thread is already closed.");
-	if (ATThread.ThreadAddress) {
-		if (CloseThread(&ATThread))
-			ResetEvent(ATThreadDone);
-		else
-			PrintMessageToDebugLog("CloseThreadsFunc", "Audio thread is already closed.");
-	}
 
 	PrintMessageToDebugLog("CloseThreadsFunc", "Closing events processer thread...");
 	if (CloseThread(&EPThread))
@@ -534,15 +526,16 @@ void CreateThreads() {
 	// Open the audio thread
 	PrintMessageToDebugLog("CreateThreadsFunc", "Opening audio thread...");
 
-	// Check if the audio thread is already present, and close it
-	CheckIfThreadClosed(&ATThread);
+	// Check if the audio thread is already present
+	if (CheckIfThreadClosed(&ATThread))
+		CloseThread(&ATThread);
 
 	// Recreate it from scratch, and give it a priority
 	ATThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastAudioEngine : AudioEngine), NULL, 0, &ATThread.ThreadAddress);
 	SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 	
 	// Check if the debug thread is working
-	if (!DThread.ThreadAddress)
+	if (!DThread.ThreadHandle)
 	{
 		PrintMessageToDebugLog("CreateThreadsFunc", "Opening debug thread...");
 
