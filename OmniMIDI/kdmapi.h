@@ -416,6 +416,7 @@ void Supervisor(LPVOID lpV) {
 BOOL DoStartClient() {
 	if (!DriverInitStatus && !block_bassinit) {
 		// Create an event, to wait for the driver to be ready
+		PrintMessageToDebugLog("StartDriver", "Creating handles...");
 		if (!OMReady)
 			OMReady = CreateEvent(NULL, TRUE, FALSE, L"OMReady");
 
@@ -427,6 +428,16 @@ BOOL DoStartClient() {
 
 		if (!LiveChanges)
 			LiveChanges = CreateEvent(NULL, TRUE, FALSE, L"OMLiveChanges");
+
+		if (NT_SUCCESS(NtQueryTimerResolution(&Min, &Max, &Org))) {
+			PrintMessageToDebugLog("StartDriver", "Queried NtQueryTimerResolution.");
+			if (NT_SUCCESS(NtSetTimerResolution(Max, true, &Org))) {
+				PrintMessageToDebugLog("StartDriver", "Timings tightened through NtSetTimerResolution");
+				PrintStreamValueToDebugLog("StartDriver", "New resolution (ns)", Max);
+			}
+			else PrintMessageToDebugLog("StartDriver", "NtSetTimerResolution failed. Timings will not be tightened.");
+		}
+		else PrintMessageToDebugLog("StartDriver", "NtQueryTimerResolution failed. Timings will not be tightened.");
 
 		// Create the main thread
 		PrintMessageToDebugLog("StartDriver", "Starting main watchdog thread...");
@@ -469,21 +480,28 @@ BOOL DoStopClient() {
 			CloseHandle(OMReady);
 			OMReady = NULL;
 		}		
+
 		if (ATThreadDone)
 		{
 			CloseHandle(ATThreadDone);
 			ATThreadDone = NULL;
 		}
+
 		if (EPThreadDone)
 		{
 			CloseHandle(EPThreadDone);
 			EPThreadDone = NULL;
 		}
+
 		if (LiveChanges)
 		{
 			CloseHandle(LiveChanges);
 			LiveChanges = NULL;
 		}
+
+		if (Org)
+			if (NT_SUCCESS(NtSetTimerResolution(Org, true, &Dummy)))
+				PrintMessageToDebugLog("StopDriver", "Timings reset to normal through NtSetTimerResolution");
 
 		// Boopers
 		DriverInitStatus = FALSE;

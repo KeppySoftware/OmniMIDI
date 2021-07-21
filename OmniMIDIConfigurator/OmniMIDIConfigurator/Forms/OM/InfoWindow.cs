@@ -1,19 +1,10 @@
 ﻿using Microsoft.VisualBasic.Devices;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace OmniMIDIConfigurator
@@ -87,7 +78,7 @@ namespace OmniMIDIConfigurator
             }
             else KDMAPIVer.Text = "N/A";
 
-            CopyrightLabel.Text = String.Format(CopyrightLabel.Text, DateTime.Today.Year);
+            CopyrightLabel.Text = String.Format(CopyrightLabel.Text, new DateTime(CompileTime.Ticks, DateTimeKind.Utc).Year);
 
             CurBranch.Text = UpdateSystem.GetCurrentBranch();
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();

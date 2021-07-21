@@ -151,8 +151,13 @@ namespace OmniMIDIConfigurator
 
             // Set updater
             FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\OmniMIDI.dll");
-            VersionLabel.Text = String.Format("Version {0}.{1}.{2}.{3}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart);
- 
+
+            // PR check
+            if (Driver.FilePrivatePart != 0)
+                VersionLabel.Text = String.Format("Version {0}.{1}.{2} (PR{3})", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart);
+            else
+                VersionLabel.Text = String.Format("Version {0}.{1}.{2}", Driver.FileMajorPart, Driver.FileMinorPart, Driver.FileBuildPart, Driver.FilePrivatePart);
+
             Shown += CheckUpdatesStartUp;
             DWCF.Checked = Properties.Settings.Default.DrawControlsFaster;
 
@@ -262,11 +267,6 @@ namespace OmniMIDIConfigurator
         private void AssignListToApp_Click(object sender, EventArgs e)
         {
             new SFListAssign().ShowDialog();
-        }
-
-        private void ChangeWAVOutput_Click(object sender, EventArgs e)
-        {
-            new OutputWAVDir().ShowDialog();
         }
 
         private void CloseConfigurator_Click(object sender, EventArgs e)
@@ -434,6 +434,11 @@ namespace OmniMIDIConfigurator
             UpdateSystem.CheckForUpdates((Control.ModifierKeys == Keys.Shift), false, false);
         }
 
+        private void CUBBtn_Click(object sender, EventArgs e)
+        {
+            new SelectBranch().ShowDialog();
+        }
+
         private void ChangelogCurrent_Click(object sender, EventArgs e)
         {
             try
@@ -466,7 +471,7 @@ namespace OmniMIDIConfigurator
 
         private void KDMAPIDoc_Click(object sender, EventArgs e)
         {
-            Process.Start(String.Format("{0}/blob/master/KDMAPI.md", Properties.Settings.Default.ProjectLink));
+            Process.Start(String.Format("{0}/blob/master/DeveloperContent/KDMAPI.md", Properties.Settings.Default.ProjectLink));
         }
 
         private void DLDriverSrc_Click(object sender, EventArgs e)

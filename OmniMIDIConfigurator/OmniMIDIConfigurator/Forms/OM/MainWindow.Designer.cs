@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.MWTab = new System.Windows.Forms.TabControl();
             this.ListsEdt = new System.Windows.Forms.TabPage();
-            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.Set = new System.Windows.Forms.TabPage();
             this.ExportPres = new System.Windows.Forms.Button();
             this.ImportPres = new System.Windows.Forms.Button();
@@ -41,7 +40,6 @@
             this.QILabel = new System.Windows.Forms.Label();
             this.RestoreDefault = new System.Windows.Forms.Button();
             this.ApplySettings = new System.Windows.Forms.Button();
-            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWSStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -50,9 +48,7 @@
             this.OpenDW = new System.Windows.Forms.MenuItem();
             this.OpenM = new System.Windows.Forms.MenuItem();
             this.OpenBM = new System.Windows.Forms.MenuItem();
-            this.menuItem18 = new System.Windows.Forms.MenuItem();
             this.AssignListToApp = new System.Windows.Forms.MenuItem();
-            this.ChangeWAVOutput = new System.Windows.Forms.MenuItem();
             this.menuItem21 = new System.Windows.Forms.MenuItem();
             this.CloseConfigurator = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
@@ -91,6 +87,10 @@
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.DLDriverSrc = new System.Windows.Forms.MenuItem();
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
+            this.CUBBtn = new System.Windows.Forms.MenuItem();
+            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
+            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWTab.SuspendLayout();
             this.ListsEdt.SuspendLayout();
             this.Set.SuspendLayout();
@@ -107,7 +107,7 @@
             this.MWTab.Location = new System.Drawing.Point(0, 0);
             this.MWTab.Name = "MWTab";
             this.MWTab.SelectedIndex = 0;
-            this.MWTab.Size = new System.Drawing.Size(706, 470);
+            this.MWTab.Size = new System.Drawing.Size(715, 483);
             this.MWTab.TabIndex = 0;
             this.MWTab.SelectedIndexChanged += new System.EventHandler(this.MWTab_SelectedIndexChanged);
             // 
@@ -117,20 +117,10 @@
             this.ListsEdt.Location = new System.Drawing.Point(4, 22);
             this.ListsEdt.Name = "ListsEdt";
             this.ListsEdt.Padding = new System.Windows.Forms.Padding(3);
-            this.ListsEdt.Size = new System.Drawing.Size(698, 444);
+            this.ListsEdt.Size = new System.Drawing.Size(698, 436);
             this.ListsEdt.TabIndex = 0;
             this.ListsEdt.Text = "Lists editor";
             this.ListsEdt.UseVisualStyleBackColor = true;
-            // 
-            // SFLEPanel
-            // 
-            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
-            this.SFLEPanel.Name = "SFLEPanel";
-            this.SFLEPanel.Size = new System.Drawing.Size(698, 444);
-            this.SFLEPanel.TabIndex = 0;
             // 
             // Set
             // 
@@ -145,7 +135,7 @@
             this.Set.Location = new System.Drawing.Point(4, 22);
             this.Set.Name = "Set";
             this.Set.Padding = new System.Windows.Forms.Padding(3);
-            this.Set.Size = new System.Drawing.Size(698, 444);
+            this.Set.Size = new System.Drawing.Size(707, 457);
             this.Set.TabIndex = 1;
             this.Set.Text = "Settings";
             this.Set.UseVisualStyleBackColor = true;
@@ -153,7 +143,7 @@
             // ExportPres
             // 
             this.ExportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ExportPres.Location = new System.Drawing.Point(269, 417);
+            this.ExportPres.Location = new System.Drawing.Point(268, 430);
             this.ExportPres.Name = "ExportPres";
             this.ExportPres.Size = new System.Drawing.Size(45, 23);
             this.ExportPres.TabIndex = 6;
@@ -164,7 +154,7 @@
             // ImportPres
             // 
             this.ImportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ImportPres.Location = new System.Drawing.Point(222, 417);
+            this.ImportPres.Location = new System.Drawing.Point(221, 430);
             this.ImportPres.Name = "ImportPres";
             this.ImportPres.Size = new System.Drawing.Size(45, 23);
             this.ImportPres.TabIndex = 5;
@@ -177,7 +167,7 @@
             this.SeparatorPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SeparatorPres.Enabled = false;
             this.SeparatorPres.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SeparatorPres.Location = new System.Drawing.Point(208, 416);
+            this.SeparatorPres.Location = new System.Drawing.Point(207, 429);
             this.SeparatorPres.Name = "SeparatorPres";
             this.SeparatorPres.Size = new System.Drawing.Size(10, 23);
             this.SeparatorPres.TabIndex = 50;
@@ -192,7 +182,7 @@
             "Audio engine settings",
             "Synthesizer settings",
             "Debug & legacy set."});
-            this.QICombo.Location = new System.Drawing.Point(77, 418);
+            this.QICombo.Location = new System.Drawing.Point(76, 431);
             this.QICombo.Name = "QICombo";
             this.QICombo.Size = new System.Drawing.Size(130, 21);
             this.QICombo.TabIndex = 4;
@@ -202,7 +192,7 @@
             // 
             this.QILabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.QILabel.AutoSize = true;
-            this.QILabel.Location = new System.Drawing.Point(7, 422);
+            this.QILabel.Location = new System.Drawing.Point(6, 435);
             this.QILabel.Name = "QILabel";
             this.QILabel.Size = new System.Drawing.Size(66, 13);
             this.QILabel.TabIndex = 4;
@@ -211,7 +201,7 @@
             // RestoreDefault
             // 
             this.RestoreDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.RestoreDefault.Location = new System.Drawing.Point(516, 417);
+            this.RestoreDefault.Location = new System.Drawing.Point(527, 430);
             this.RestoreDefault.Name = "RestoreDefault";
             this.RestoreDefault.Size = new System.Drawing.Size(95, 23);
             this.RestoreDefault.TabIndex = 3;
@@ -221,31 +211,21 @@
             // ApplySettings
             // 
             this.ApplySettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ApplySettings.Location = new System.Drawing.Point(617, 417);
+            this.ApplySettings.Location = new System.Drawing.Point(628, 430);
             this.ApplySettings.Name = "ApplySettings";
             this.ApplySettings.Size = new System.Drawing.Size(75, 23);
             this.ApplySettings.TabIndex = 2;
             this.ApplySettings.Text = "Apply";
             this.ApplySettings.UseVisualStyleBackColor = true;
             // 
-            // SETPanel
-            // 
-            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SETPanel.Location = new System.Drawing.Point(0, 0);
-            this.SETPanel.Name = "SETPanel";
-            this.SETPanel.Size = new System.Drawing.Size(698, 412);
-            this.SETPanel.TabIndex = 1;
-            // 
             // MWSStrip
             // 
             this.MWSStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.VersionLabel});
-            this.MWSStrip.Location = new System.Drawing.Point(0, 468);
+            this.MWSStrip.Location = new System.Drawing.Point(0, 480);
             this.MWSStrip.Name = "MWSStrip";
-            this.MWSStrip.Size = new System.Drawing.Size(704, 22);
+            this.MWSStrip.Size = new System.Drawing.Size(713, 22);
             this.MWSStrip.SizingGrip = false;
             this.MWSStrip.TabIndex = 1;
             this.MWSStrip.Text = "statusStrip1";
@@ -253,7 +233,7 @@
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(592, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(601, 17);
             this.toolStripStatusLabel1.Spring = true;
             this.toolStripStatusLabel1.Text = " ";
             // 
@@ -281,9 +261,7 @@
             this.OpenDW,
             this.OpenM,
             this.OpenBM,
-            this.menuItem18,
             this.AssignListToApp,
-            this.ChangeWAVOutput,
             this.menuItem21,
             this.CloseConfigurator});
             this.menuItem11.Text = "Functions";
@@ -306,31 +284,20 @@
             this.OpenBM.Text = "Open blacklist manager";
             this.OpenBM.Click += new System.EventHandler(this.OpenBM_Click);
             // 
-            // menuItem18
-            // 
-            this.menuItem18.Index = 3;
-            this.menuItem18.Text = "-";
-            // 
             // AssignListToApp
             // 
-            this.AssignListToApp.Index = 4;
+            this.AssignListToApp.Index = 3;
             this.AssignListToApp.Text = "Assign a soundfont list to a specific app";
             this.AssignListToApp.Click += new System.EventHandler(this.AssignListToApp_Click);
             // 
-            // ChangeWAVOutput
-            // 
-            this.ChangeWAVOutput.Index = 5;
-            this.ChangeWAVOutput.Text = "Change WAV output directory";
-            this.ChangeWAVOutput.Click += new System.EventHandler(this.ChangeWAVOutput_Click);
-            // 
             // menuItem21
             // 
-            this.menuItem21.Index = 6;
+            this.menuItem21.Index = 4;
             this.menuItem21.Text = "-";
             // 
             // CloseConfigurator
             // 
-            this.CloseConfigurator.Index = 7;
+            this.CloseConfigurator.Index = 5;
             this.CloseConfigurator.Text = "Exit";
             this.CloseConfigurator.Click += new System.EventHandler(this.CloseConfigurator_Click);
             // 
@@ -509,14 +476,16 @@
             this.menuItem2.Index = 3;
             this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.DriverInfo,
-            this.BugReport,
-            this.menuItem14,
+            this.CUBBtn,
             this.CFUBtn,
+            this.menuItem14,
             this.ChangelogCurrent,
             this.ChangelogLatest,
             this.menuItem19,
-            this.KDMAPIDoc,
-            this.DLDriverSrc});
+            this.BugReport,
+            this.DLDriverSrc,
+            this.menuItem6,
+            this.KDMAPIDoc});
             this.menuItem2.Text = "?";
             // 
             // DriverInfo
@@ -527,18 +496,18 @@
             // 
             // BugReport
             // 
-            this.BugReport.Index = 1;
+            this.BugReport.Index = 7;
             this.BugReport.Text = "Create an issue on GitHub";
             this.BugReport.Click += new System.EventHandler(this.BugReport_Click);
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 2;
+            this.menuItem14.Index = 3;
             this.menuItem14.Text = "-";
             // 
             // CFUBtn
             // 
-            this.CFUBtn.Index = 3;
+            this.CFUBtn.Index = 2;
             this.CFUBtn.Text = "Check for updates";
             this.CFUBtn.Click += new System.EventHandler(this.CFUBtn_Click);
             // 
@@ -561,7 +530,7 @@
             // 
             // KDMAPIDoc
             // 
-            this.KDMAPIDoc.Index = 7;
+            this.KDMAPIDoc.Index = 10;
             this.KDMAPIDoc.Text = "KDMAPI documentation";
             this.KDMAPIDoc.Click += new System.EventHandler(this.KDMAPIDoc_Click);
             // 
@@ -575,11 +544,42 @@
             // 
             this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
             // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 9;
+            this.menuItem6.Text = "-";
+            // 
+            // CUBBtn
+            // 
+            this.CUBBtn.Index = 1;
+            this.CUBBtn.Text = "Change update branch";
+            this.CUBBtn.Click += new System.EventHandler(this.CUBBtn_Click);
+            // 
+            // SFLEPanel
+            // 
+            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
+            this.SFLEPanel.Name = "SFLEPanel";
+            this.SFLEPanel.Size = new System.Drawing.Size(698, 436);
+            this.SFLEPanel.TabIndex = 0;
+            // 
+            // SETPanel
+            // 
+            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SETPanel.Location = new System.Drawing.Point(0, 0);
+            this.SETPanel.Name = "SETPanel";
+            this.SETPanel.Size = new System.Drawing.Size(707, 425);
+            this.SETPanel.TabIndex = 1;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(704, 490);
+            this.ClientSize = new System.Drawing.Size(713, 502);
             this.Controls.Add(this.MWSStrip);
             this.Controls.Add(this.MWTab);
             this.DoubleBuffered = true;
@@ -656,14 +656,14 @@
         private System.Windows.Forms.MenuItem RestoreConfSettings;
         private System.Windows.Forms.MenuItem menuItem17;
         private System.Windows.Forms.MenuItem RestoreSFListEdWidth;
-        private System.Windows.Forms.MenuItem menuItem18;
         private System.Windows.Forms.MenuItem AssignListToApp;
-        private System.Windows.Forms.MenuItem ChangeWAVOutput;
         private System.Windows.Forms.MenuItem menuItem16;
         private System.Windows.Forms.MenuItem OMDRegister;
         private System.Windows.Forms.MenuItem OMDUnregister;
         private System.Windows.Forms.MenuItem menuItem20;
         private System.Windows.Forms.MenuItem DWCF;
+        private System.Windows.Forms.MenuItem CUBBtn;
+        private System.Windows.Forms.MenuItem menuItem6;
     }
 }
 

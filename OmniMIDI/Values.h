@@ -304,6 +304,7 @@ typedef NTSTATUS(NTAPI* NDE)(BOOLEAN, INT64*);
 typedef NTSTATUS(NTAPI* NQST)(QWORD*);
 typedef NTSTATUS(NTAPI* DDP)(DWORD, HANDLE, UINT, LONG, LONG);
 
+static ULONG Min, Max, Org, Dummy;
 NSTR NtSetTimerResolution = 0;
 NQTR NtQueryTimerResolution = 0;
 NDE NtDelayExecution = 0;

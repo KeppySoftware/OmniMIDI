@@ -3,13 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+using System.Reflection;
 using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Un4seen.Bass;
 
@@ -359,7 +357,8 @@ namespace OmniMIDIConfigurator
                     String.Format("OmniMIDI ~ {0} driver not registered", WhichBit),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                if (RES == DialogResult.Yes) Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", "/register");
+                if (RES == DialogResult.Yes) 
+                    Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", "/register").WaitForExit();
             }
 
             return Registered;
