@@ -64,7 +64,7 @@
 
 // The Windows 7 version of audiosessiontypes.h does not define AUDIO_STREAM_CATEGORY, so if we are targeting
 // Windows 7 we might have to define it here, depending on which SDK is used.
-#if _WIN32_WINNT < _WIN32_WINNT_WIN8
+#if _MSC_VER > 1900 and _WIN32_WINNT < _WIN32_WINNT_WIN8
 
 // If we are compiling for Windows 7, we might be using the Windows 7 Platform SDK, which does not have AUDIO_STREAM_CATEGORY.
 // But we might be using a newer SDK (such as the Win8 Platform SDK), which has AUDIO_STREAM_CATEGORY.

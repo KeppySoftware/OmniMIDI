@@ -32,8 +32,8 @@ DWORD BlackListSystem(){
 	wchar_t TempString[NTFS_MAX_PATH] = { 0 };
 
 	// Start the system
-	SHGetFolderPathW(NULL, CSIDL_SYSTEMX86, NULL, 0, SysDir32);
-	SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, UserProfile);
+	GetFolderPath(FOLDERID_SystemX86, CSIDL_SYSTEMX86, SysDir32, sizeof(SysDir32));
+	GetFolderPath(FOLDERID_Profile, CSIDL_PROFILE, UserProfile, sizeof(UserProfile));
 
 	DBLDir.append(SysDir32);
 	DBLDir.append(_T("\\OmniMIDI\\OmniMIDI.dbl"));
@@ -92,7 +92,7 @@ BOOL MIDIFeedbackWhitelist() {
 	wchar_t TempString[NTFS_MAX_PATH] = { 0 };
 
 	// Start the system
-	SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, UserProfile);
+	GetFolderPath(FOLDERID_Profile, CSIDL_PROFILE, UserProfile, sizeof(UserProfile));
 
 	UBLDir.append(UserProfile);
 	UBLDir.append(_T("\\OmniMIDI\\MIDIFeedback.whitelist"));

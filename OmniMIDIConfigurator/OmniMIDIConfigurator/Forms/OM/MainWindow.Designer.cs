@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.MWTab = new System.Windows.Forms.TabControl();
             this.ListsEdt = new System.Windows.Forms.TabPage();
+            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.Set = new System.Windows.Forms.TabPage();
             this.ExportPres = new System.Windows.Forms.Button();
             this.ImportPres = new System.Windows.Forms.Button();
@@ -40,6 +41,7 @@
             this.QILabel = new System.Windows.Forms.Label();
             this.RestoreDefault = new System.Windows.Forms.Button();
             this.ApplySettings = new System.Windows.Forms.Button();
+            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWSStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -78,19 +80,17 @@
             this.DWCF = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.DriverInfo = new System.Windows.Forms.MenuItem();
-            this.BugReport = new System.Windows.Forms.MenuItem();
-            this.menuItem14 = new System.Windows.Forms.MenuItem();
+            this.CUBBtn = new System.Windows.Forms.MenuItem();
             this.CFUBtn = new System.Windows.Forms.MenuItem();
+            this.menuItem14 = new System.Windows.Forms.MenuItem();
             this.ChangelogCurrent = new System.Windows.Forms.MenuItem();
             this.ChangelogLatest = new System.Windows.Forms.MenuItem();
             this.menuItem19 = new System.Windows.Forms.MenuItem();
-            this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
+            this.BugReport = new System.Windows.Forms.MenuItem();
             this.DLDriverSrc = new System.Windows.Forms.MenuItem();
-            this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
-            this.CUBBtn = new System.Windows.Forms.MenuItem();
-            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
-            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
+            this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
+            this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.MWTab.SuspendLayout();
             this.ListsEdt.SuspendLayout();
             this.Set.SuspendLayout();
@@ -117,10 +117,20 @@
             this.ListsEdt.Location = new System.Drawing.Point(4, 22);
             this.ListsEdt.Name = "ListsEdt";
             this.ListsEdt.Padding = new System.Windows.Forms.Padding(3);
-            this.ListsEdt.Size = new System.Drawing.Size(698, 436);
+            this.ListsEdt.Size = new System.Drawing.Size(707, 457);
             this.ListsEdt.TabIndex = 0;
             this.ListsEdt.Text = "Lists editor";
             this.ListsEdt.UseVisualStyleBackColor = true;
+            // 
+            // SFLEPanel
+            // 
+            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
+            this.SFLEPanel.Name = "SFLEPanel";
+            this.SFLEPanel.Size = new System.Drawing.Size(707, 457);
+            this.SFLEPanel.TabIndex = 0;
             // 
             // Set
             // 
@@ -217,6 +227,16 @@
             this.ApplySettings.TabIndex = 2;
             this.ApplySettings.Text = "Apply";
             this.ApplySettings.UseVisualStyleBackColor = true;
+            // 
+            // SETPanel
+            // 
+            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SETPanel.Location = new System.Drawing.Point(0, 0);
+            this.SETPanel.Name = "SETPanel";
+            this.SETPanel.Size = new System.Drawing.Size(707, 425);
+            this.SETPanel.TabIndex = 1;
             // 
             // MWSStrip
             // 
@@ -494,22 +514,22 @@
             this.DriverInfo.Text = "Information about the driver";
             this.DriverInfo.Click += new System.EventHandler(this.DriverInfo_Click);
             // 
-            // BugReport
+            // CUBBtn
             // 
-            this.BugReport.Index = 7;
-            this.BugReport.Text = "Create an issue on GitHub";
-            this.BugReport.Click += new System.EventHandler(this.BugReport_Click);
-            // 
-            // menuItem14
-            // 
-            this.menuItem14.Index = 3;
-            this.menuItem14.Text = "-";
+            this.CUBBtn.Index = 1;
+            this.CUBBtn.Text = "Change update branch";
+            this.CUBBtn.Click += new System.EventHandler(this.CUBBtn_Click);
             // 
             // CFUBtn
             // 
             this.CFUBtn.Index = 2;
             this.CFUBtn.Text = "Check for updates";
             this.CFUBtn.Click += new System.EventHandler(this.CFUBtn_Click);
+            // 
+            // menuItem14
+            // 
+            this.menuItem14.Index = 3;
+            this.menuItem14.Text = "-";
             // 
             // ChangelogCurrent
             // 
@@ -528,11 +548,11 @@
             this.menuItem19.Index = 6;
             this.menuItem19.Text = "-";
             // 
-            // KDMAPIDoc
+            // BugReport
             // 
-            this.KDMAPIDoc.Index = 10;
-            this.KDMAPIDoc.Text = "KDMAPI documentation";
-            this.KDMAPIDoc.Click += new System.EventHandler(this.KDMAPIDoc_Click);
+            this.BugReport.Index = 7;
+            this.BugReport.Text = "Create an issue on GitHub";
+            this.BugReport.Click += new System.EventHandler(this.BugReport_Click);
             // 
             // DLDriverSrc
             // 
@@ -540,40 +560,20 @@
             this.DLDriverSrc.Text = "Download the driver\'s source code";
             this.DLDriverSrc.Click += new System.EventHandler(this.DLDriverSrc_Click);
             // 
-            // CheckUpdates
-            // 
-            this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
-            // 
             // menuItem6
             // 
             this.menuItem6.Index = 9;
             this.menuItem6.Text = "-";
             // 
-            // CUBBtn
+            // KDMAPIDoc
             // 
-            this.CUBBtn.Index = 1;
-            this.CUBBtn.Text = "Change update branch";
-            this.CUBBtn.Click += new System.EventHandler(this.CUBBtn_Click);
+            this.KDMAPIDoc.Index = 10;
+            this.KDMAPIDoc.Text = "KDMAPI documentation";
+            this.KDMAPIDoc.Click += new System.EventHandler(this.KDMAPIDoc_Click);
             // 
-            // SFLEPanel
+            // CheckUpdates
             // 
-            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
-            this.SFLEPanel.Name = "SFLEPanel";
-            this.SFLEPanel.Size = new System.Drawing.Size(698, 436);
-            this.SFLEPanel.TabIndex = 0;
-            // 
-            // SETPanel
-            // 
-            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SETPanel.Location = new System.Drawing.Point(0, 0);
-            this.SETPanel.Name = "SETPanel";
-            this.SETPanel.Size = new System.Drawing.Size(707, 425);
-            this.SETPanel.TabIndex = 1;
+            this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
             // 
             // MainWindow
             // 

@@ -554,7 +554,7 @@ void InitializeBASSVST() {
 	wchar_t LoudMax[MAX_PATH] = { 0 };
 
 	// Get the user profile path
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, LoudMax);
+	GetFolderPath(FOLDERID_Profile, CSIDL_PROFILE, LoudMax, sizeof(LoudMax));
 
 	// Append the right DLL name to the path
 #if defined(_M_AMD64)
@@ -1041,7 +1041,7 @@ BEGSWITCH:
 				MessageBox(NULL, encpath, L"DEBUG", MB_OK);
 			}
 			// Otherwise, set the default path to the desktop
-			else if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, encpath))) PathAppend(encpath, result2);
+			else if (GetFolderPath(FOLDERID_Desktop, CSIDL_DESKTOPDIRECTORY, encpath, sizeof(encpath))) PathAppend(encpath, result2);
 
 			// Convert some values for the following MsgBox
 			const int result = MessageBox(NULL, L"You've enabled the \"Output to WAV\" mode.\n\nPress YES to confirm, or press NO to open the configurator\nand disable it.", L"OmniMIDI", MB_ICONINFORMATION | MB_YESNO | MB_SYSTEMMODAL);
@@ -1062,7 +1062,7 @@ BEGSWITCH:
 			case IDNO:
 				// Otherwise, open the configurator
 				TCHAR configuratorapp[MAX_PATH];
-				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+				if (GetFolderPath(FOLDERID_SystemX86, CSIDL_SYSTEMX86, configuratorapp, sizeof(configuratorapp)))
 				{
 					PathAppend(configuratorapp, _T("\\OmniMIDI\\OmniMIDIConfigurator.exe"));
 					ShellExecute(NULL, L"open", configuratorapp, L"/AT", NULL, SW_SHOWNORMAL);

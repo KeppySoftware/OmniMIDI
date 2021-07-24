@@ -283,6 +283,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change default WASAPI output";
+            this.Load += new System.EventHandler(this.DefaultWASAPIAudioOutput_Load);
             this.InfoGroupBox.ResumeLayout(false);
             this.InfoGroupBox.PerformLayout();
             this.groupBox1.ResumeLayout(false);

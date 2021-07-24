@@ -103,7 +103,8 @@ BOOL LoadSoundfont(int whichsf) {
 	DWORD CurrentList = (whichsf + 1);
 
 	memset(ListToLoad, 0, sizeof(ListToLoad));
-	if (!SHGetFolderPathW(NULL, V ? CSIDL_APPDATA : CSIDL_PROFILE, NULL, SHGFP_TYPE_CURRENT, ListToLoad)) {
+
+	if (GetFolderPath(V ? FOLDERID_RoamingAppData : FOLDERID_Profile, V ? CSIDL_APPDATA : CSIDL_PROFILE, ListToLoad, sizeof(ListToLoad))) {
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Loading soundfont list...");
 
 		if (V) swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, CSFFileTemplate);
@@ -133,7 +134,7 @@ bool LoadSoundfontStartup() {
 
 	for (int i = 0; i < 7; ++i) {
 		memset(CurrentAppList, 0, sizeof(CurrentAppList));
-		if (!SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, CurrentAppList)) {
+		if (GetFolderPath(FOLDERID_Profile, CSIDL_PROFILE, CurrentAppList, sizeof(CurrentAppList))) {
 			swprintf_s(CurrentAppList + wcslen(CurrentAppList), NTFS_MAX_PATH, OMFileTemplate, L"applists", OMLetters[i], L"applist");
 
 			PrintMessageWToDebugLog(L"LoadSoundfontStartup", CurrentAppList);
@@ -162,7 +163,7 @@ bool LoadSoundfontStartup() {
 
 void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory, BOOL Opt) {
 	HMODULE Temp = NULL;
-	PWSTR SysDir = NULL;
+	wchar_t SysDir[MAX_PATH] = { 0 };
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 	wchar_t Msg[1024] = { 0 };
 	WIN32_FIND_DATA FD = { 0 };
@@ -181,11 +182,10 @@ void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory, BOOL
 			Target->AppOwnDLL = TRUE;
 			return;
 		}
-		else Target->AppOwnDLL = FALSE;
+		else Target->AppOwnDLL = FALSE;	
 
-		if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
+		if (GetFolderPath(FOLDERID_System, NULL, SysDir, sizeof(SysDir))) {
 			swprintf_s(DLLPath, MAX_PATH, Opt ? L"%s\\OmniMIDI\\opt\\%s\0" : L"%s\\OmniMIDI\\%s\0", SysDir, RequestedLib);
-			CoTaskMemFree(SysDir);
 
 			if (FindFirstFile(DLLPath, &FD) == INVALID_HANDLE_VALUE)
 			{
@@ -200,25 +200,20 @@ void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory, BOOL
 				else PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
 			}
 		}
-		else {
-			CoTaskMemFree(SysDir);
-			DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
-		}
-
+		else DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The library is already in memory. The HMODULE will be a pointer to that address.");
 }
 
 void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
-	PWSTR SysDir = NULL;
+	wchar_t SysDir[MAX_PATH] = { 0 };
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
 	if (!(*Target)) {
 		PrintLoadedDLLToDebugLog(RequestedLib, "No plugin has been found in memory. The driver will now load the DLL...");
 
-		if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
+		if (GetFolderPath(FOLDERID_System, NULL, SysDir, sizeof(SysDir))) {
 			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", SysDir, RequestedLib);
-			CoTaskMemFree(SysDir);
 
 			(*Target) = BASS_PluginLoad((char*)&DLLPath, BASS_UNICODE);
 			if (BASS_ErrorGetCode() != 0) {
@@ -227,10 +222,7 @@ void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 			}
 			else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is now in memory.");
 		}
-		else {
-			CoTaskMemFree(SysDir);
-			DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
-		}
+		else DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is already in memory. The HPLUGIN will be a pointer to that address.");
 }
@@ -1111,7 +1103,7 @@ void KeyShortcuts()
 						if (BASSLoadedToMemory && bass_initialized) BASS_ASIO_ControlPanel();
 					}
 					else {
-						if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, OMConfiguratorDir)))
+						if (GetFolderPath(FOLDERID_SystemX86, CSIDL_SYSTEMX86, OMConfiguratorDir, sizeof(OMConfiguratorDir)))
 						{
 							PathAppend(OMConfiguratorDir, _T("\\OmniMIDI\\OmniMIDIMixerWindow.exe"));
 							ShellExecute(NULL, L"open", OMConfiguratorDir, NULL, NULL, SW_SHOWNORMAL);
@@ -1124,7 +1116,7 @@ void KeyShortcuts()
 				// ALT + 0
 				if (Keys[0x30])
 				{
-					if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, OMConfiguratorDir)))
+					if (GetFolderPath(FOLDERID_SystemX86, CSIDL_SYSTEMX86, OMConfiguratorDir, sizeof(OMConfiguratorDir)))
 					{
 						PathAppend(OMConfiguratorDir, _T("\\OmniMIDI\\OmniMIDIDebugWindow.exe"));
 						ShellExecute(NULL, L"open", OMConfiguratorDir, NULL, NULL, SW_SHOWNORMAL);

@@ -64,6 +64,9 @@
     <ClInclude Include="sound_out.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Funcs.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />

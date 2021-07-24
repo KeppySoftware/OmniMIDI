@@ -10,150 +10,6 @@ static HANDLE ExceptionHandler = nullptr;
 static const char hex[] = "0123456789ABCDEF";
 static std::mutex DebugMutex;
 static BOOL IntroAlreadyShown = FALSE;
-static BOOL InfoAlreadyGot = FALSE;
-
-double GetThreadUsage(Thread* Thread) {
-	if (WaitForSingleObject(Thread->ThreadHandle, 0) == WAIT_OBJECT_0) return 0.0;
-
-	SYSTEM_INFO sysInfo;
-	FILETIME ftime, fsys, fuser;
-	ULARGE_INTEGER now, sys, user;
-	double percent;
-
-	GetSystemTimeAsFileTime(&ftime);
-	memcpy(&now, &ftime, sizeof(FILETIME));
-
-	GetThreadTimes(Thread->ThreadHandle, &ftime, &ftime, &fsys, &fuser);
-	GetSystemInfo(&sysInfo);
-	CPUThreadsAvailable = sysInfo.dwNumberOfProcessors;
-
-	memcpy(&sys, &fsys, sizeof(FILETIME));
-	memcpy(&user, &fuser, sizeof(FILETIME));
-	percent = (sys.QuadPart - Thread->KernelCPU.QuadPart) +
-		(user.QuadPart - Thread->UserCPU.QuadPart);
-	percent /= (now.QuadPart - Thread->CPU.QuadPart);
-	percent /= CPUThreadsAvailable;
-	Thread->CPU = now;
-	Thread->UserCPU = user;
-	Thread->KernelCPU = sys;
-
-	return percent * 100;
-}
-
-void GetAppName() {
-	if (!InfoAlreadyGot)
-	{
-		GetModuleFileName(NULL, AppPathW, NTFS_MAX_PATH);
-		wcstombs(AppPath, AppPathW, sizeof(AppPath));
-
-		wcsncpy(AppNameW, PathFindFileNameW(AppPathW), MAX_PATH);
-		wcstombs(AppName, AppNameW, sizeof(AppName));
-
-		InfoAlreadyGot = TRUE;
-	}
-}
-
-static VOID MakeMiniDump(LPEXCEPTION_POINTERS exc) {
-	TCHAR CurrentTime[MAX_PATH];
-	TCHAR DumpDir[MAX_PATH];
-
-	auto hDbgHelp = LoadLibraryA("dbghelp");
-	if (hDbgHelp == nullptr)
-		return;
-	auto pMiniDumpWriteDump = (decltype(&MiniDumpWriteDump))GetProcAddress(hDbgHelp, "MiniDumpWriteDump");
-	if (pMiniDumpWriteDump == nullptr)
-		return;
-
-	// Get the debug info first
-	GetAppName();
-
-	// Get user profile's path
-	SHGetFolderPath(NULL, CSIDL_PROFILE, NULL, 0, DumpDir);
-
-	// Append "\OmniMIDI\dumpfiles\" to "%userprofile%"
-	wcscat_s(DumpDir, MAX_PATH, L"\\OmniMIDI\\dumpfiles\\");
-
-	// Create "%userprofile%\OmniMIDI\dumpfiles\", in case it doesn't exist
-	CreateDirectory(DumpDir, NULL);
-
-	// Append the app's filename to the output file's path
-	wcscat_s(DumpDir, MAX_PATH, AppNameW);
-
-	// Parse current time, and append it
-	struct tm *sTm;
-	time_t now = time(0);
-	sTm = gmtime(&now);
-	wcsftime(CurrentTime, sizeof(CurrentTime), L" - %d-%m-%Y %H.%M.%S", sTm);
-	wcscat_s(DumpDir, MAX_PATH, CurrentTime);
-
-	// Append file extension, and that's it
-	wcscat_s(DumpDir, MAX_PATH, _T(" (OmniMIDI Minidump).mdmp"));
-
-	auto hFile = CreateFileW(DumpDir, GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-	if (hFile == INVALID_HANDLE_VALUE)
-		return;
-
-	MINIDUMP_EXCEPTION_INFORMATION exceptionInfo;
-	exceptionInfo.ThreadId = GetCurrentThreadId();
-	exceptionInfo.ExceptionPointers = exc;
-	exceptionInfo.ClientPointers = FALSE;
-
-	auto dumped = pMiniDumpWriteDump(
-		GetCurrentProcess(),
-		GetCurrentProcessId(),
-		hFile,
-		MINIDUMP_TYPE(MiniDumpWithFullMemory | MiniDumpIgnoreInaccessibleMemory),
-		exc ? &exceptionInfo : nullptr,
-		NULL,
-		NULL);
-
-	CloseHandle(hFile);
-	return;
-}
-
-void CrashMessage(LPCWSTR part) {
-	WCHAR ErrorMessage[NTFS_MAX_PATH] = { 0 };
-	DWORD ErrorID = GetLastError();
-
-	fwprintf(DebugLog, L"(Error at \"%s\", Code 0x%08x) - Fatal error during the execution of the driver.", part, ErrorID);
-
-	swprintf(ErrorMessage, L"An error has been detected while executing the following function: %s\n", part);
-
-	//Get the error message, if any.
-	if (ErrorID != 0) {
-		TCHAR* ERR;
-		if (FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
-			NULL,
-			ErrorID,
-			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			(LPWSTR)&ERR,
-			0,
-			NULL)) 
-		{
-			swprintf(
-				ErrorMessage + wcslen(ErrorMessage),
-				L"\nError code: 0x%08X - %s\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n",
-				ErrorID, ERR
-			);
-
-			LocalFree(ERR);
-		}
-	}
-
-	swprintf(
-		ErrorMessage + wcslen(ErrorMessage),
-		L"\nClick OK to close the program."
-	);
-
-	MessageBoxW(NULL, ErrorMessage, L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
-
-	block_bassinit = TRUE;
-	stop_svthread = TRUE;
-
-	MakeMiniDump(nullptr);
-
-	exit(ErrorID);
-}
 
 bool GetVersionInfo(
 	LPCTSTR filename,
@@ -197,14 +53,16 @@ bool GetVersionInfo(
 
 void CreateConsole() {
 	if (!IntroAlreadyShown) {
-		TCHAR* MainLibrary = (TCHAR*)malloc(sizeof(TCHAR) * NTFS_MAX_PATH);
-		TCHAR* DebugDir = (TCHAR*)malloc(sizeof(TCHAR) * NTFS_MAX_PATH);
+		TCHAR MainLibrary[MAX_PATH] = { 0 };
+		TCHAR DebugDir[MAX_PATH] = { 0 };
+
+		// Get user profile's path
+		if (!GetFolderPath(FOLDERID_Profile, CSIDL_PROFILE, DebugDir, sizeof(DebugDir))) {
+			return;
+		}
 
 		// Get the debug info first
 		GetAppName();
-
-		// Get user profile's path
-		SHGetFolderPathW(NULL, CSIDL_PROFILE, NULL, 0, DebugDir);
 
 		// Append "\OmniMIDI\debug\" to "%userprofile%"
 		wcscat_s(DebugDir, NTFS_MAX_PATH, L"\\OmniMIDI\\debug\\");
@@ -239,9 +97,6 @@ void CreateConsole() {
 			fprintf(DebugLog, "Copyright(C) 2013 - KaleidonKep99\n\n");
 			IntroAlreadyShown = TRUE;
 		}
-
-		free(MainLibrary);
-		free(DebugDir);
 	}
 }
 
@@ -738,6 +593,7 @@ static BOOL IsExceptionValid(DWORD ex) {
 }
 
 static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
+#ifdef _DEBUG
 	if (!IsExceptionValid(exc->ExceptionRecord->ExceptionCode)) return 0;
 
 	HANDLE CurrentProcess = GetCurrentProcess();
@@ -938,12 +794,13 @@ static LONG WINAPI OmniMIDICrashHandler(LPEXCEPTION_POINTERS exc) {
 	PrintMessageToDebugLog("OmniMIDICrashHandler", MessageBuf);
 	MessageBoxA(NULL, MessageBuf, "OmniMIDI - An error has occurred", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 	MakeMiniDump(exc);
+#endif
 
 	return EXCEPTION_EXECUTE_HANDLER;
 }
 
 BOOL EnableBuiltInHandler(LPCSTR Stage) {
-#ifndef _DEBUG
+#ifdef _DEBUG
 	if (ManagedSettings.DebugMode) {
 		PrintMessageToDebugLog(Stage, "Initializing OmniMIDICrashHandler...");
 		if (NULL == (ExceptionHandler = AddVectoredExceptionHandler(1, OmniMIDICrashHandler))) {
@@ -957,7 +814,7 @@ BOOL EnableBuiltInHandler(LPCSTR Stage) {
 }
 
 BOOL DisableBuiltInHandler(LPCSTR Stage) {
-#ifndef _DEBUG
+#ifdef _DEBUG
 	if (ExceptionHandler != nullptr) {
 		PrintMessageToDebugLog(Stage, "Removing OmniMIDICrashHandler...");
 		if (!RemoveVectoredExceptionHandler(ExceptionHandler)) {

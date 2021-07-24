@@ -40,13 +40,14 @@ namespace OmniMIDIConfigurator
         {
             try
             {
+                InitializeComponent();
+
                 if (GetWASAPIDevicesCount() < 1)
                 {
                     Program.ShowError(4, "Error", "No WASAPI devices detected.\n\nClick OK to close this window.", null);
                     Close();
+                    return;
                 }
-
-                InitializeComponent();
 
                 BASS_WASAPI_DEVICEINFO info = new BASS_WASAPI_DEVICEINFO();
 
@@ -70,10 +71,10 @@ namespace OmniMIDIConfigurator
 
                 DevicesList.SelectedIndex = 0;
 
-                ExclusiveMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("WASAPIExclusive", 0));
-                WASAPIRawMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("WASAPIRawMode", 0));
-                NoDoubleBuffering.Checked = !Convert.ToBoolean(Program.SynthSettings.GetValue("WASAPIDoubleBuf", 1));
-                AsyncMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("WASAPIAsyncMode", 0));
+                ExclusiveMode.Checked = Convert.ToBoolean(Convert.ToInt32(Program.SynthSettings.GetValue("WASAPIExclusive", 0)));
+                WASAPIRawMode.Checked = Convert.ToBoolean(Convert.ToInt32(Program.SynthSettings.GetValue("WASAPIRawMode", 0)));
+                NoDoubleBuffering.Checked = !Convert.ToBoolean(Convert.ToInt32(Program.SynthSettings.GetValue("WASAPIDoubleBuf", 1)));
+                AsyncMode.Checked = Convert.ToBoolean(Convert.ToInt32(Program.SynthSettings.GetValue("WASAPIAsyncMode", 0)));
 
                 if (!IsWindows81OrNewer())
                 {
@@ -103,7 +104,7 @@ namespace OmniMIDIConfigurator
             {
                 MessageBox.Show("Unable to load the dialog.\nBASS is probably unable to start, or it's missing.\n\nError:\n" + ex.ToString(), "Oh no! OmniMIDI encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
-                Dispose();
+                return;
             }
         }
 
@@ -116,8 +117,8 @@ namespace OmniMIDIConfigurator
             for (numbdev = 0; BassWasapi.BASS_WASAPI_GetDeviceInfo(numbdev, info); numbdev++)
             {
                 if (info.flags.HasFlag(BASSWASAPIDeviceInfo.BASS_DEVICE_ENABLED) &&
-                    !info.flags.HasFlag(BASSWASAPIDeviceInfo.BASS_DEVICE_LOOPBACK) &&
-                    !info.flags.HasFlag(BASSWASAPIDeviceInfo.BASS_DEVICE_INPUT))
+                    !info.flags.HasFlag(BASSWASAPIDeviceInfo.BASS_DEVICE_INPUT) &&
+                    !info.flags.HasFlag(BASSWASAPIDeviceInfo.BASS_DEVICE_LOOPBACK))
                     AvailableDevices++;
             }
 
@@ -194,7 +195,6 @@ namespace OmniMIDIConfigurator
             BassWasapi.BASS_WASAPI_Free();
             Functions.SetDefaultDevice(AudioEngine.WASAPI_ENGINE, ((WASAPIDevice)DevicesList.SelectedItem).RealID);
             Close();
-            Dispose();
         }
 
         private void OldWASAPIMode_Click(object sender, EventArgs e)
@@ -207,6 +207,11 @@ namespace OmniMIDIConfigurator
                 DialogResult = RES;
                 Close();
             }
+        }
+
+        private void DefaultWASAPIAudioOutput_Load(object sender, EventArgs e)
+        {
+
         }
     }
 

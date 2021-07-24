@@ -71,6 +71,38 @@ class XAudio2Output : public sound_out
 		this->buffer_read_cursor = (buffer_read_cursor + 1) % num_frames;
 	}
 
+	BOOL GetFolderPath(const GUID FolderID, const int CSIDL, wchar_t* P, size_t PS) {
+#ifdef XP
+		if (typedef HRESULT(WINAPI* SHGKP)(REFKNOWNFOLDERID, DWORD, HANDLE, PWSTR*); true) {
+			SHGKP SHGetKnownFolderPath = (SHGKP)GetProcAddress(GetModuleHandle(L"shell32"), "SHGetKnownFolderPath");
+
+			if (SHGetKnownFolderPath) {
+#endif
+				PWSTR Dir;
+
+				if (SUCCEEDED(SHGetKnownFolderPath(FolderID, 0, NULL, &Dir))) {
+					swprintf_s(P, PS, L"%s", Dir);
+					CoTaskMemFree(Dir);
+					return TRUE;
+				}
+
+				CoTaskMemFree(Dir);
+#ifdef XP
+			}
+			else {
+				LPWSTR Dir;
+
+				if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL, NULL, SHGFP_TYPE_CURRENT, Dir))) {
+					swprintf_s(P, PS, L"%s", Dir);
+					return TRUE;
+				}
+			}
+		}
+#endif
+
+		return FALSE;
+	}
+
 	void* hwnd;
 	bool			loaded;
 	volatile bool   device_changed;
@@ -110,7 +142,7 @@ public:
 			if (!(XALib = LoadLibrary(L"XAudio2_9")))
 			{
 				// Try to get XAudio2_9_win7 from OmniMIDI's folder
-				if (SUCCEEDED(SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &SysDir))) {
+				if (GetFolderPath(FOLDERID_System, CSIDL_SYSTEM, SysDir, sizeof(SysDir))) {
 					swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s\0", SysDir, L"XAudio2_9_win7.dll");
 					CoTaskMemFree(SysDir);
 

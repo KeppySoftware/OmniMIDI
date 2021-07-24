@@ -16,8 +16,6 @@ typedef long NTSTATUS;
 #define CUR_REV		0
 
 #define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
-#define STRICT
-#define VC_EXTRALEAN
 #define WIN32_LEAN_AND_MEAN
 #define __STDC_LIMIT_MACROS
 #define _CRT_SECURE_CPP_OVERLOAD_STANDARD_NAMES 1
@@ -41,26 +39,17 @@ typedef long NTSTATUS;
 #include <Psapi.h>
 #include <atlbase.h>
 #include <cstdint>
-#include <comdef.h>
 #include <fstream>
 #include <iostream>
 #include <codecvt>
 #include <string>
 #include <future>
 #include <mmddk.h>
-#include <process.h>
 #include <shlobj.h>
 #include <sstream>
 #include <stdio.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <time.h>
 #include <vector>
-#include <algorithm>
-#include <windows.h>
 #include <Dbghelp.h>
-#include <mmsystem.h>
-#include <dsound.h>
 #include <assert.h>
 #include "Resource.h"
 #include "OmniMIDI.h"
@@ -77,22 +66,11 @@ typedef long NTSTATUS;
 // Important
 #include "LockSystem.h"
 #include "Values.h"
+#include "Funcs.h"
 #include "Debug.h"
 
 // Shakra backport
 #include "ShakraRegSystem.h"
-
-// F**k Sleep() tbh
-void NTSleep(__int64 usec) {
-	__int64 neg = (usec * -1);
-	NtDelayExecution(FALSE, &neg);
-}
-
-// Predefined sleep values, useful for redundancy
-#define _FWAIT NTSleep(1)								// Fast wait
-#define _WAIT NTSleep(100)								// Normal wait
-#define _SWAIT NTSleep(5000)							// Slow wait
-#define _CFRWAIT NTSleep(16667)							// Cap framerate wait
 
 // Variables
 #include "BASSErrors.h"
@@ -169,7 +147,7 @@ LONG WINAPI DriverProc(DWORD dwDriverIdentifier, HANDLE hdrvr, UINT uMsg, LONG l
 
 	case DRV_CONFIGURE:
 		TCHAR configuratorapp[MAX_PATH];
-		if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_SYSTEMX86, NULL, 0, configuratorapp)))
+		if (GetFolderPath(FOLDERID_SystemX86, CSIDL_SYSTEMX86, configuratorapp, sizeof(configuratorapp)))
 		{
 			PathAppend(configuratorapp, _T("\\OmniMIDI\\OmniMIDIConfigurator.exe"));
 			ShellExecute(NULL, L"open", configuratorapp, L"/AST", NULL, SW_SHOWNORMAL);

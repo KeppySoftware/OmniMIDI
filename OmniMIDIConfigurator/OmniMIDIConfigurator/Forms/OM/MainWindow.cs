@@ -164,7 +164,7 @@ namespace OmniMIDIConfigurator
             // Check if MIDI mapper is available
             OMAPCpl.Visible = Functions.CheckMIDIMapper();
 
-            if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.PreReleaseBranch[1])
+            if (Properties.Settings.Default.UpdateBranch == Properties.Settings.Default.PreReleaseBranch[1] && Driver.FilePrivatePart > 0)
                 Text += String.Format(" (PR{0})", Driver.FilePrivatePart);
 
             // Add dynamic controls

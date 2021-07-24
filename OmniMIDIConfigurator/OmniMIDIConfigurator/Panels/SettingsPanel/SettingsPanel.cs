@@ -458,40 +458,28 @@ namespace OmniMIDIConfigurator
                 case AudioEngine.AUDTOWAV:
                     new OutputWAVDir().ShowDialog(this);
                     break;
+
                 case AudioEngine.DSOUND_ENGINE:
                     new DefaultAudioOutput(false).ShowDialog(this);
                     break;
+
                 case AudioEngine.WASAPI_ENGINE:
-                ReturnHere:
-                    Boolean OWM = Convert.ToBoolean(Program.SynthSettings.GetValue("OldWASAPIMode", "0"));
-
+                    Boolean OWM = Convert.ToBoolean(Program.SynthSettings.GetValue("OldWASAPIMode", 0));
                     if (OWM)
-                    {
-                        DefaultAudioOutput Dlg = new DefaultAudioOutput(true);
-                        if (Dlg.ShowDialog() == DialogResult.Yes)
-                        {
-                            Functions.SignalLiveChanges();
-                            goto ReturnHere;
-                        }
-                    }
+                        new DefaultAudioOutput(true).ShowDialog();
                     else
-                    {
-                        DefaultWASAPIAudioOutput Dlg = new DefaultWASAPIAudioOutput();
-                        if (Dlg.ShowDialog() == DialogResult.Yes)
-                        {
-                            Functions.SignalLiveChanges();
-                            goto ReturnHere;
-                        }
-                    }
-
+                        new DefaultWASAPIAudioOutput().ShowDialog();
                     break;
+
                 case AudioEngine.ASIO_ENGINE:
                     new DefaultASIOAudioOutput(Control.ModifierKeys == Keys.Shift).ShowDialog();
                     OldBuff.Enabled = !Convert.ToBoolean(Convert.ToInt32(Program.SynthSettings.GetValue("ASIODirectFeed", "0")));
                     break;
+
                 case AudioEngine.XA_ENGINE:
                     new XAOutputSettings().ShowDialog();
                     break;
+
                 default:
                     break;
             }
