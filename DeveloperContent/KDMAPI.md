@@ -301,16 +301,40 @@ KShortMsgNoBuf = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendDirectD
 
 ### **SendDirectLongData/SendDirectLongDataNoBuf**
 Allows you to send MIDIHDR/System Exclusive events to the driver.<br />
-Both functions do the same thing. SendDirectLongDataNoBuf directly calls SendDirectLongData. I left NoBuf for retrocompatibility purpose with old patches.<br />
 You can handle the preparation of the buffer through **PrepareLongData**/**UnprepareLongData**.<br />
 The available arguments are:
 
 - `MIDIHDR* IIMidiHdr`: The pointer to the MIDIHDR.
+- `UINT IIMidiHdrSize`: Size of the MIDIHDR struct passed to IIMidiHdr.
+```c
+MMRESULT(WINAPI*KLongMsg)(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize) = 0;
+KLongMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendDirectLongData");
+...
+	MMRESULT res = KLongMsg(&IIMidiHdr, IIMidiHdrSize);
+	if (res) {
+		printf("Something went wrong, it's supposed to return 0.\nReturned value: %d", res);
+	}
+...
+```
+<hr />
+
+### **SendDirectLongDataNoBuf**
+Allows you to send MIDIHDR/System Exclusive events to the driver.<br />
+Both functions do the same thing. SendDirectLongDataNoBuf directly calls SendDirectLongData. I left NoBuf for retrocompatibility purpose with old patches.<br />
+You can handle the preparation of the buffer through **PrepareLongData**/**UnprepareLongData**.<br />
+The available arguments are:
+
+- `LPSTR MidiHdrData`: The pointer to the data buffer.
+- `DWORD MidiHdrDataLen`: Length of the data buffer.
 ```c
 MMRESULT(WINAPI*KLongMsg)(MIDIHDR* IIMidiHdr) = 0;
-KLongMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendDirectLongData"); // Or SendDirectLongDataNoBuf
+KLongMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendDirectLongDataNoBuf");
 ...
-	MMRESULT res = KLongMsg(&IIMidiHdr);
+	char DataBuf[32768];
+...
+	// Something with the data buffer...
+...
+	MMRESULT res = KLongMsgNoBuf(&DataBuf, sizeof(DataBuf));
 	if (res) {
 		printf("Something went wrong, it's supposed to return 0.\nReturned value: %d", res);
 	}
@@ -324,11 +348,12 @@ Once a buffer is prepared, it becomes read-only.<br />
 The available arguments are:
 
 - `MIDIHDR* IIMidiHdr`: The pointer to the MIDIHDR.
+- `UINT IIMidiHdrSize`: Size of the MIDIHDR struct passed to IIMidiHdr.
 ```c
-MMRESULT(WINAPI*KPrepLongMsg)(MIDIHDR* IIMidiHdr) = 0;
+MMRESULT(WINAPI*KPrepLongMsg)(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize) = 0;
 KPrepLongMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "PrepareLongData");
 ...
-	MMRESULT res = KPrepLongMsg(&IIMidiHdr);
+	MMRESULT res = KPrepLongMsg(&IIMidiHdr, IIMidiHdrSize);
 	if (res) {
 		printf("Something went wrong, it's supposed to return 0.\nReturned value: %d", res);
 	}
@@ -342,11 +367,12 @@ It is **MANDATORY** to unprepare a MIDIHDR before editing it, since PrepareLongD
 The available arguments are:
 
 - `MIDIHDR* IIMidiHdr`: The pointer to the MIDIHDR.
+- `UINT IIMidiHdrSize`: Size of the MIDIHDR struct passed to IIMidiHdr.
 ```c
-MMRESULT(WINAPI*KUnprepLongMsg)(MIDIHDR* IIMidiHdr) = 0;
+MMRESULT(WINAPI*KUnprepLongMsg)(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize) = 0;
 KUnprepLongMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "UnprepareLongData");
 ...
-	MMRESULT res = KUnprepLongMsg(&IIMidiHdr);
+	MMRESULT res = KUnprepLongMsg(&IIMidiHdr, IIMidiHdrSize);
 	if (res) {
 		printf("Something went wrong, it's supposed to return 0.\nReturned value: %d", res);
 	}
