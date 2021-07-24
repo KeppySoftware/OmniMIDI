@@ -14,13 +14,13 @@
 #define DevEnum "OmniMIDIDevEnum"
 #define DriverRegister "OmniMIDIDriverRegister"
 #define Email 'kaleidonkep99@outlook.com'
-#define Icon "Branding\OMSetupICO.ico"
+#define Icon "Branding\OMSetup.ico"
 #define InstallDir "OmniMIDI"
 #define Link 'https://github.com/KeppySoftware/OmniMIDI'
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '14.6.3.0'
+#define Version '14.6.3.21'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -81,29 +81,26 @@ DisableWelcomePage=False
 
 [Files]
 ; 64-bit OS
-Source: "{#outputdir64}\{#DevEnum}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DevEnum}.exe"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
+Source: "{#outputdir64}\{#DriverRegister}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DriverRegister}.exe"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
 Source: "{#outputdir64}\{#InstallDir}.dll"; DestDir: "{sys}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
 Source: "{#outputdir64}\{#MIDIMapper}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsAMD64
 
 ; ARM64 OS
-; Source: "{#outputdirARM64}\{#DevEnum}.exe"; DestDir: "{win}\Sysnative\{#InstallDir}"; DestName: "{#DevEnum}.exe"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsARM64
+; Source: "{#outputdirARM64}\{#DriverRegister}.exe"; DestDir: "{win}\Sysnative\{#InstallDir}"; DestName: "{#DriverRegister}.exe"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsARM64
 Source: "{#outputdirARM64}\{#InstallDir}.dll"; DestDir: "{win}\Sysnative"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsARM64
 Source: "{#outputdirARM64}\{#MIDIMapper}.dll"; DestDir: "{win}\Sysnative\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: WindowsARM64
 
 ; 32-bit files for AMD64 and ARM64
 Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#outputdir32}\{#DebugWindow}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#DebugWindow}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
-Source: "{#outputdir32}\{#DevEnum}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#DevEnum}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#outputdir32}\{#MixerWindow}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#MixerWindow}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#outputdir32}\{#InstallDir}.dll"; DestDir: "{syswow64}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: Windows64
 Source: "{#outputdir32}\{#MIDIMapper}.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: Windows64
-Source: "{#outputdir32}\{#DriverRegister}.exe"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "{#DriverRegister}.exe"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#outputdir32}\sfzguide.txt"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "sfzguide.txt"; Flags: replacesameversion ignoreversion; Check: Windows64
 
 ; 32-bit files for IA32 OS
 Source: "{#outputdir32}\{#Configurator}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#Configurator}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#DebugWindow}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DebugWindow}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
-Source: "{#outputdir32}\{#DevEnum}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#DevEnum}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#MixerWindow}.exe"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MixerWindow}.exe"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#InstallDir}.dll"; DestDir: "{sys}"; DestName: "{#InstallDir}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: not WindowsAMD64
 Source: "{#outputdir32}\{#MIDIMapper}.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "{#MIDIMapper}.dll"; Flags: replacesameversion ignoreversion restartreplace; Check: not WindowsAMD64
@@ -236,8 +233,7 @@ Type: files; Name: "{tmp}\LoudMax64.dll"
 [Run]
 Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: Windows64
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Flags: runascurrentuser postinstall waituntilidle; Description: "Run the configurator, to set up soundfonts"; StatusMsg: "Run the configurator, to set up soundfonts"; Check: WindowsIA32
-Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/register"; Flags: waituntilterminated; StatusMsg: "Registering driver..."; Check: Windows64
-Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/register"; Flags: waituntilterminated; StatusMsg: "Registering driver..."; Check: WindowsIA32
+Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/register"; Flags: runhidden waituntilterminated; StatusMsg: "Registering driver..."
 
 // Create symlink
 Filename: "cmd.exe"; Parameters: "/C mklink {syswow64}\{#InstallDir}\{#InstallDir}.dll {syswow64}\{#InstallDir}.dll"; Flags: waituntilterminated; StatusMsg: "Symlinking for KDMAPI..."; Check: WindowsAMD64
@@ -248,10 +244,8 @@ Filename: "{syswow64}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/prepare"
 Filename: "{sys}\{#InstallDir}\{#Configurator}.exe"; Parameters: "/prepare"; Flags: runasoriginaluser waituntilterminated; StatusMsg: "Writing required registry keys..."; Check: WindowsIA32
 
 [UninstallRun]
-Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/umidimap"; Flags: waituntilterminated; StatusMsg: "Unregistering MIDI Mapper..."; Check: Windows64
-Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/umidimap"; Flags: waituntilterminated; StatusMsg: "Unregistering MIDI Mapper..."; Check: WindowsIA32
-Filename: "{syswow64}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/unregister"; Flags: waituntilterminated; StatusMsg: "Unregistering driver..."; Check: Windows64
-Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/unregister"; Flags: waituntilterminated; StatusMsg: "Unregistering driver..."; Check: WindowsIA32
+Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/umidimap"; Flags: runhidden waituntilterminated; StatusMsg: "Unregistering MIDI Mapper..."
+Filename: "{sys}\{#InstallDir}\{#DriverRegister}.exe"; Parameters: "/unregister"; Flags: runhidden waituntilterminated; StatusMsg: "Unregistering driver..."
 
 [Messages]
 WindowsVersionNotSupported={#ProductName} support for Windows XP ended on October 29th, 2016.%n%nIf you want to get further updates, please update to Windows Vista or newer.

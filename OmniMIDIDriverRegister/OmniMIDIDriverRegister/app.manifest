@@ -16,7 +16,7 @@
             Se si desidera utilizzare la virtualizzazione dei file e del registro di sistema per la compatibilità con le versioni precedenti, 
             eliminare il nodo requestedExecutionLevel.
         -->
-        <requestedExecutionLevel level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
       </requestedPrivileges>
     </security>
   </trustInfo>

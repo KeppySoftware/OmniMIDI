@@ -106,6 +106,33 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 	DWORD shakraSize = sizeof(ShakraKey);
 	bool OnlyDrivers32 = true;
 
+	/*
+	if (_stricmp(CommandLine, "EnumDevs") == 0) {
+		AllocConsole();
+
+		owinmm = LoadLibraryW(L"winmm.dll");
+		MMmidiOutGetNumDevs = (MOGND)GetProcAddress(owinmm, "midiOutGetNumDevs");
+		MMmidiOutGetDevCapsW = (MOGDCW)GetProcAddress(owinmm, "midiOutGetDevCapsW");
+
+		char ch;
+		FILE* stream = nullptr;
+		MIDIOUTCAPSW CapsW;
+		DWORD Devs = MMmidiOutGetNumDevs();
+
+		::_wfreopen_s(&stream, L"CONOUT$", L"w", stdout);
+
+		for (DWORD i = 0; i < Devs; i++) {
+			if (MMmidiOutGetDevCapsW(i, &CapsW, sizeof(MIDIOUTCAPSW)) == MMSYSERR_NOERROR) {
+				fwprintf(stdout, L"%s%s", CapsW.szPname, i == Devs - 1 ? L"\0" : L"\n");
+			}
+		}
+
+		FreeLibrary(owinmm);
+		fclose(stream);
+		return;
+	}
+	*/
+
 	// We need to register, woohoo
 	if (_stricmp(CommandLine, "RegisterDrv") == 0 || _stricmp(CommandLine, "UnregisterDrv") == 0) {
 		// If user is not an admin, abort.

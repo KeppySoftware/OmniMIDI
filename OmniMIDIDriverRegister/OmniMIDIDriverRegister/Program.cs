@@ -6,105 +6,138 @@ using Microsoft.Win32;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Security.Principal;
+using System.Reflection;
 
 namespace OmniMIDIDriverRegister
 {
+    internal static class WinMM
+    {
+        [DllImport("winmm")]
+        internal static extern int midiOutGetNumDevs();
+
+        [DllImport("winmm")]
+        internal static extern int midiOutGetDevCaps(
+            uint uDeviceID,
+            out MIDIOUTCAPS caps,
+            uint cbMidiOutCaps);
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct MIDIOUTCAPS
+    {
+        public ushort wMid;
+        public ushort wPid;
+        public uint vDriverVersion;     //MMVERSION
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+        public string szPname;
+        public ushort wTechnology;
+        public ushort wVoices;
+        public ushort wNotes;
+        public ushort wChannelMask;
+        public uint dwSupport;
+    }
+
     class Program
     {
         [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
 
-        public static RegistryKey driver32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
-        public static RegistryKey driver64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
-        public static RegistryKey clsid32 = driver32.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true);
-        public static RegistryKey clsid64 = driver64.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true);
+        public static string Argument = "/showdialog";
 
         static void Main(string[] args)
         {
-            string arg = "/showdialog";
-            if (args.Length > 0) arg = args[0];
-
-            if (arg == "/register" || arg == "/registerv")
-            {
-                Register();
-
-                /*
-                Register(true, "x86", clsid32);
-                if (Environment.Is64BitOperatingSystem) Register(arg == "/register" ? true : false, "x64", clsid64);
-                */
-            }
-            else if (arg == "/unregister" || arg == "/unregisterv")
-            {
-                Unregister();
-
-                /*
-                Unregister(true, "x86", clsid32);
-                if (Environment.Is64BitOperatingSystem) Unregister(arg == "/unregister" ? true : false, "x64", clsid64);
-                */
-            }
-            /*
-            else if (arg == "/registerv")
-            {
-                Register(false, "x86", clsid32);
-                if (Environment.Is64BitOperatingSystem) Register(false, "x64", clsid64);
-            }
-            else if (arg == "/unregisterv")
-            {
-                Unregister(false, "x86", clsid32);
-                if (Environment.Is64BitOperatingSystem) Unregister(false, "x64", clsid64);
-            }
-            */
-            else if (arg == "/rmidimap")
-            {
-                RegisterMidiMapper(true, false);
-            }
-            else if (arg == "/umidimap")
-            {
-                RegisterMidiMapper(true, true);
-            }
-            else if (arg == "/rmidimapv")
-            {
-                RegisterMidiMapper(false, false);
-            }
-            else if (arg == "/umidimapv")
-            {
-                RegisterMidiMapper(false, true);
-            }
-            else if (arg == "/showdialog")
+            if (args.Length > 0) Argument = args[0];
+            else
             {
                 Application.EnableVisualStyles();
                 new OmniMIDIDefaultDialog().ShowDialog();
-                Application.Exit();
+                return;
             }
-            else if (arg == "/help")
+
+            switch (Argument.ToLowerInvariant())
             {
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine("OmniMIDI Register/Unregister Tool\n");
-                sb.AppendLine("/showdialog = Show a dialog that allows you to register/unregister the driver manually");
-                sb.AppendLine("/register = Register the driver as a MIDI device");
-                sb.AppendLine("/unregister = Unregister the driver");
-                sb.AppendLine("/help = This list");
-                MessageBox.Show(sb.ToString(), "OmniMIDI R/U Tool ~ Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Application.Exit();
+                case "/enum":
+                    MIDIOUTCAPS OutCaps = new MIDIOUTCAPS();
+                    int NumDevs = WinMM.midiOutGetNumDevs();
+
+                    for (uint i = 0; i < NumDevs; i++)
+                    {
+                        WinMM.midiOutGetDevCaps(i, out OutCaps, (uint)Marshal.SizeOf(OutCaps));
+                        Console.WriteLine(OutCaps.szPname);
+                    }
+
+                    return;
+                case "/register":
+                case "/registerv":
+                    Register();
+                    return;
+                case "/unregister":
+                case "/unregisterv":
+                    Unregister();
+                    return;
+                case "/rmidimap":
+                    RegisterMidiMapper(true, false);
+                    return;
+                case "/umidimap":
+                    RegisterMidiMapper(true, true);
+                    return;
+                case "/rmidimapv":
+                    RegisterMidiMapper(false, false);
+                    return;
+                case "/umidimapv":
+                    RegisterMidiMapper(false, true);
+                    return;
+                case "/showhelp":
+                case "/help":
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine("OmniMIDI Register/Unregister Tool\n");
+                    sb.AppendLine("/showdialog = Show a dialog that allows you to register/unregister the driver manually");
+                    sb.AppendLine("/register = Register the driver as a MIDI device");
+                    sb.AppendLine("/unregister = Unregister the driver");
+                    sb.AppendLine("/help = This list");
+                    MessageBox.Show(sb.ToString(), "OmniMIDI R/U Tool ~ Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                default:
+                    MessageBox.Show("Invalid argument.\nType \"OmniMIDIDriverRegister.exe /help\" to see the available commands.", "OmniMIDI R/U Tool ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                    return;
             }
-            else
+        }
+
+        public static bool RestartAsAdminIfRequired()
+        {
+            bool isElevated = false;
+            using (WindowsIdentity identity = WindowsIdentity.GetCurrent())
             {
-                MessageBox.Show("Invalid argument.\nType \"OmniMIDIDriverRegister.exe /help\" to see the available commands.", "OmniMIDI R/U Tool ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                Application.Exit();
+                WindowsPrincipal principal = new WindowsPrincipal(identity);
+                isElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+                identity.Dispose();
             }
+            
+            if (!isElevated)
+            {
+                ProcessStartInfo elevated = new ProcessStartInfo(Assembly.GetEntryAssembly().Location);
+                elevated.Arguments = Argument;
+                elevated.UseShellExecute = true;
+                elevated.Verb = "runas";
+                Process.Start(elevated);
+                return false;
+            }
+
+            return true;
         }
 
         public static void ShowMessage(bool IsSilent, String Text, String Title, MessageBoxIcon TypeOfError)
         {
             if (!IsSilent)
-            {
                 MessageBox.Show(Text, String.Format("OmniMIDI R/U Tool ~ {0}", Title), MessageBoxButtons.OK, TypeOfError);
-            }
         }
 
         public static void Register(/* bool IsSilent, String WhichBit, RegistryKey WhichKey */)
         {
-            String SysDir = Environment.ExpandEnvironmentVariables(String.Format(@"%windir%\{0}", Environment.Is64BitOperatingSystem ? "Sysnative" : "System32"));
+            if (!RestartAsAdminIfRequired()) return;
+
+            String SysDir = Environment.ExpandEnvironmentVariables(@"%windir%\System32");
 
             ProcessStartInfo SI = new ProcessStartInfo();
             SI.UseShellExecute = true;
@@ -154,6 +187,8 @@ namespace OmniMIDIDriverRegister
 
         public static void Unregister(/* bool IsSilent, String WhichBit, RegistryKey WhichKey */)
         {
+            if (!RestartAsAdminIfRequired()) return;
+
             ProcessStartInfo SI = new ProcessStartInfo();
             SI.UseShellExecute = true;
             SI.Verb = "RunAs";
@@ -196,6 +231,14 @@ namespace OmniMIDIDriverRegister
 
         public static void RegisterMidiMapper(bool IsSilent, bool Uninstall)
         {
+            if (!RestartAsAdminIfRequired()) return;
+
+            RegistryKey driver32 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32);
+            RegistryKey driver64 = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+
+            RegistryKey clsid32 = driver32.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true);
+            RegistryKey clsid64 = driver64.OpenSubKey("Software\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", true);
+
             if (!Uninstall)
             {
                 Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Multimedia\MIDIMap");
@@ -222,6 +265,15 @@ namespace OmniMIDIDriverRegister
                     clsid32.SetValue("midimapper", "midimap.dll");
                 }
                 ShowMessage(IsSilent, "MIDI mapper succesfully unregistered.", "Information", MessageBoxIcon.Information);
+            }
+
+            clsid32.Close();
+            driver32.Close();
+
+            if (Environment.Is64BitOperatingSystem)
+            {
+                clsid64.Close();
+                driver64.Close();
             }
         }
     }

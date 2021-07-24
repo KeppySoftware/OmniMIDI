@@ -274,16 +274,6 @@ namespace OmniMIDIConfigurator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap OMLauncherChristmas {
-            get {
-                object obj = ResourceManager.GetObject("OMLauncherChristmas", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap OMLauncherFish {
             get {
                 object obj = ResourceManager.GetObject("OMLauncherFish", resourceCulture);

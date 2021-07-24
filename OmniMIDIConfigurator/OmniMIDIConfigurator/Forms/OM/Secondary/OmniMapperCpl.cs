@@ -41,19 +41,32 @@ namespace OmniMIDIConfigurator
             {
                 default:
                 case "i386":
-                    Ex = Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDevEnum.exe";
-                    break;
+                    List<string> SDevs = new List<string>();
+                    MIDIOUTCAPS Caps;
+                    int Devs = WinMM.midiOutGetNumDevs();
+
+                    for (int i = 0; i < Devs; i++)
+                    {
+                        if (WinMM.midiOutGetDevCaps((uint)i, out Caps, (uint)Marshal.SizeOf(typeof(MIDIOUTCAPS))) == 0) {
+                            SDevs.Add(Caps.szPname);
+                        }
+                    }
+
+                    if (Environment.Is64BitOperatingSystem)
+                        Functions.Wow64RevertWow64FsRedirection(Dummy);
+
+                    return SDevs.ToArray();
                 case "AMD64":
                     if (!Environment.Is64BitOperatingSystem)
                         return new String[0];
 
-                    Ex = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\OmniMIDI\\OmniMIDIDevEnum.exe";
+                    Ex = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe";
                     break;
                 case "ARM64":
                     if (Functions.GetProcessorArchitecture() != "ARM64")
                         return new String[0];
 
-                    Ex = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\OmniMIDI\\OmniMIDIDevEnum.exe";
+                    Ex = Environment.GetFolderPath(Environment.SpecialFolder.System) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe";
                     break;
             }
 

@@ -1115,7 +1115,6 @@
             // KSLogo
             // 
             this.KSLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.KSLogo.BackgroundImage = global::OmniMIDIDebugWindow.Properties.Resources.DebugIcon;
             this.KSLogo.Cursor = System.Windows.Forms.Cursors.Help;
             this.KSLogo.Location = new System.Drawing.Point(9, 207);
             this.KSLogo.Name = "KSLogo";

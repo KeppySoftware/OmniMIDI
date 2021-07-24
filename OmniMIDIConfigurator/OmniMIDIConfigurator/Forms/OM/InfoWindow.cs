@@ -84,13 +84,7 @@ namespace OmniMIDIConfigurator
             CurBranch.ForeColor = UpdateSystem.GetCurrentBranchColor();
             BranchToolTip.SetToolTip(CurBranch, UpdateSystem.GetCurrentBranchToolTip());
 
-            // Date check :^)
-            if (DateTime.Today.Month == 4 && DateTime.Today.Day == 1)
-                OMBigLogo.Image = Properties.Resources.OMLauncherFish;
-            else if (DateTime.Today.Month == 12 && (DateTime.Today.Day >= 23 && DateTime.Today.Day <= 26))
-                OMBigLogo.Image = Properties.Resources.OMLauncherChristmas;
-            else
-                OMBigLogo.Image = Properties.Resources.OMLauncher;
+            OMBigLogo.Image = Properties.Resources.OMLauncher;
 
             BecomePatron.Cursor = Program.SystemHandCursor;
             BecomePatron.Image = Properties.Resources.PatreonLogo;

@@ -29,7 +29,7 @@
 /OmniMIDI/ipch
 /OmniMIDI/out
 /OmniMIDI/output
-/OmniMIDI/x64
+/OmniMIDI/64
 /OmniMIDI/packages/
 /OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/LoudMax
 /OmniMIDIConfigurator/OmniMIDIConfigurator/Resources/Text/TelemetryLoginData.txt
@@ -45,10 +45,6 @@
 /OmniMIDIDriverRegister/output/
 /OmniMIDIMixerWindow/OmniMIDIMixerWindow/bin
 /OmniMIDIMixerWindow/OmniMIDIMixerWindow/obj
-/OmniMIDIDevEnum/.vs/
-/OmniMIDIDevEnum/OmniMIDIDevEnum/bin/
-/OmniMIDIDevEnum/OmniMIDIDevEnum/obj/
-/OmniMIDIDevEnum/output/
 /OmniMIDIconfig
 /OmniMapper/.vs/
 /OmniMapper/OmniMapper/*.dll

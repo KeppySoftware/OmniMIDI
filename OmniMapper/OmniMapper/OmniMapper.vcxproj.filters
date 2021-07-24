@@ -40,4 +40,12 @@
       <Filter>File di origine</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico">
+      <Filter>File di risorse</Filter>
+    </Image>
+    <Image Include="ommapper.ico">
+      <Filter>File di risorse</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
