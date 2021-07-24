@@ -116,6 +116,29 @@ namespace OmniMIDIConfigurator
             {
                 switch (Arg.ToLowerInvariant())
                 {
+                    case "/troubleshoot":
+                        Functions.ResetFaultTolerantHeap();
+                        Functions.ResetAppCompat();
+                        SynthSettings = Registry.CurrentUser.OpenSubKey(SSPath, true);
+                        if (SynthSettings == null)
+                        {
+                            OpenRequiredKey(ref Mixer, MIPath, true);
+                            OpenRequiredKey(ref Channels, CHPath, true);
+                            OpenRequiredKey(ref ChanOverride, COPath, true);
+                            OpenRequiredKey(ref SynthSettings, SSPath, true);
+                            OpenRequiredKey(ref Mapper, MPPath, true);
+                            OpenRequiredKey(ref Watchdog, WPath, true);
+                            Functions.ResetDriverSettings();
+                        }
+                        var c1 = Process.GetCurrentProcess();
+                        Process.GetProcessesByName(c1.ProcessName)
+                            .Where(t => t.Id != c1.Id)
+                            .ToList()
+                            .ForEach(t => t.Kill());
+
+                        Properties.Settings.Default.Reset();
+                        UpdateSystem.CheckForTLS12ThenUpdate(Driver.FileVersion, UpdateSystem.WIPE_SETTINGS);
+                        return;
                     case "/prepare":
                         SynthSettings = Registry.CurrentUser.OpenSubKey(SSPath, true);
                         if (SynthSettings == null)
@@ -130,9 +153,9 @@ namespace OmniMIDIConfigurator
                         }
                         return;
                     case "/rei":
-                        var current = Process.GetCurrentProcess();
-                        Process.GetProcessesByName(current.ProcessName)
-                            .Where(t => t.Id != current.Id)
+                        var c2 = Process.GetCurrentProcess();
+                        Process.GetProcessesByName(c2.ProcessName)
+                            .Where(t => t.Id != c2.Id)
                             .ToList()
                             .ForEach(t => t.Kill());
 

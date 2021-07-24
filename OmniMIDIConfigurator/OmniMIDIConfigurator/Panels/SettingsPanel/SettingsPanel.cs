@@ -606,7 +606,6 @@ namespace OmniMIDIConfigurator
 
         private void Troubleshooter_Click(object sender, EventArgs e)
         {
-            IntPtr Dummy = new IntPtr();
             bool IsProcessElevated = false;
 
             using (WindowsIdentity Identity = WindowsIdentity.GetCurrent())
@@ -631,23 +630,7 @@ namespace OmniMIDIConfigurator
             if (Q1 == DialogResult.No)
                 return;
 
-            if (Environment.Is64BitOperatingSystem)
-                Functions.Wow64DisableWow64FsRedirection(ref Dummy);
-
-            // Step 1: FTH reset
-            using (Process proc = new Process())
-            {
-                proc.StartInfo.FileName = "rundll32.exe";
-                proc.StartInfo.Arguments = "fthsvc.dll,FthSysprepSpecialize";
-                proc.StartInfo.UseShellExecute = false;
-                proc.StartInfo.RedirectStandardOutput = true;
-                proc.StartInfo.CreateNoWindow = true;
-                proc.Start();
-                proc.WaitForExit();
-            }
-
-            if (Environment.Is64BitOperatingSystem)
-                Functions.Wow64RevertWow64FsRedirection(Dummy);
+            Functions.ResetFaultTolerantHeap();
 
             DialogResult M1 = MessageBox.Show("OmniMIDI has reset the Fault Tolerant Heap system.\n\n" +
                 "Open the MIDI application that had issues working and/or detecting OmniMIDI, and check if this fixed the issue.", 
@@ -663,15 +646,7 @@ namespace OmniMIDIConfigurator
             if (Q2 == DialogResult.No)
                 return;
 
-            // Step 2: AppCompatFlags reset
-
-            RegistryKey CU = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", true);
-            CU.DeleteSubKeyTree("AppCompatFlags", false);
-            CU.Dispose();
-
-            RegistryKey LM = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", true);
-            LM.DeleteSubKeyTree("AppCompatFlags", false);
-            LM.Dispose();
+            Functions.ResetAppCompat();
 
             DialogResult M2 = MessageBox.Show("OmniMIDI has reset all the AppCompatFlags in the system.\n\n" +
                 "Open the MIDI application that had issues working and/or detecting OmniMIDI, and check if this fixed the issue.",

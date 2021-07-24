@@ -73,6 +73,7 @@ namespace OmniMIDIConfigurator
             using (Process process = new Process())
             {
                 process.StartInfo.FileName = Ex;
+                process.StartInfo.Arguments = "/enum";
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.CreateNoWindow = true;

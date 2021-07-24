@@ -735,5 +735,39 @@ namespace OmniMIDIConfigurator
 
             Properties.Settings.Default[PN] = PV.PropertyValue;
         }
+
+        public static void ResetFaultTolerantHeap()
+        {
+            IntPtr Dummy = new IntPtr();
+
+            if (Environment.Is64BitOperatingSystem)
+                Wow64DisableWow64FsRedirection(ref Dummy);
+
+            // Step 1: FTH reset
+            using (Process proc = new Process())
+            {
+                proc.StartInfo.FileName = "rundll32.exe";
+                proc.StartInfo.Arguments = "fthsvc.dll,FthSysprepSpecialize";
+                proc.StartInfo.UseShellExecute = false;
+                proc.StartInfo.RedirectStandardOutput = true;
+                proc.StartInfo.CreateNoWindow = true;
+                proc.Start();
+                proc.WaitForExit();
+            }
+
+            if (Environment.Is64BitOperatingSystem)
+                Wow64RevertWow64FsRedirection(Dummy);
+        }
+
+        public static void ResetAppCompat()
+        {
+            RegistryKey CU = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", true);
+            CU.DeleteSubKeyTree("AppCompatFlags", false);
+            CU.Dispose();
+
+            RegistryKey LM = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion", true);
+            LM.DeleteSubKeyTree("AppCompatFlags", false);
+            LM.Dispose();
+        }
     }
 }
