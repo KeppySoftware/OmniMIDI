@@ -16,6 +16,12 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 #define KDMAPI WINAPI
 #endif
 
+// KDMAPI version
+#define CUR_MAJOR	4
+#define CUR_MINOR	0
+#define CUR_BUILD	0
+#define CUR_REV		0
+
 // Audio engines
 #define AUDTOWAV 0
 #define DXAUDIO_ENGINE 1
@@ -188,7 +194,7 @@ BOOL KDMAPI(TerminateKDMAPIStream)();
 VOID KDMAPI(ResetKDMAPIStream)();
 
 // Send short messages through KDMAPI. (Like midiOutShortMsg)
-UINT KDMAPI(SendCustomEvent)(DWORD eventtype, DWORD chan, DWORD param);
+UINT KDMAPI(SendCustomEvent)(DWORD eventtype, DWORD chan, DWORD param) noexcept;
 
 // Send short messages through KDMAPI. (Like midiOutShortMsg)
 UINT KDMAPI(SendDirectData)(DWORD dwMsg);
@@ -197,16 +203,16 @@ UINT KDMAPI(SendDirectData)(DWORD dwMsg);
 UINT KDMAPI(SendDirectDataNoBuf)(DWORD dwMsg);
 
 // Send long messages through KDMAPI. (Like midiOutLongMsg)
-UINT KDMAPI(SendDirectLongData)(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(SendDirectLongData)(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize);
 
 // Send long messages through KDMAPI like SendDirectLongData, but bypasses the buffer. (Like midiOutLongMsg)
-UINT KDMAPI(SendDirectLongDataNoBuf)(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(SendDirectLongDataNoBuf)(LPSTR MidiHdrData, DWORD MidiHdrDataLen);
 
 // Prepares the long data, and locks its memory to prevent apps from writing to it.
-UINT KDMAPI(PrepareLongData)(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(PrepareLongData)(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize);
 
 // Unlocks the memory, and unprepares the long data.
-UINT KDMAPI(UnprepareLongData)(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(UnprepareLongData)(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize);
 
 // Get or set the current settings for the driver.
 BOOL KDMAPI(DriverSettings)(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue);

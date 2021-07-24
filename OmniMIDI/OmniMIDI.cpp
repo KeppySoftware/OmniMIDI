@@ -9,12 +9,6 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 typedef unsigned __int64 QWORD;
 typedef long NTSTATUS;
 
-// KDMAPI version
-#define CUR_MAJOR	3
-#define CUR_MINOR	0
-#define CUR_BUILD	0
-#define CUR_REV		0
-
 #define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
 #define WIN32_LEAN_AND_MEAN
 #define __STDC_LIMIT_MACROS
@@ -357,7 +351,7 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		return _PrsData(dwParam1);
 	case MODM_LONGDATA:
 		// Pass it to a KDMAPI function
-		RetVal = SendDirectLongData((MIDIHDR*)dwParam1);
+		RetVal = SendDirectLongData((MIDIHDR*)dwParam1, dwParam2);
 
 		// Tell the app that the buffer has been played
 		DoCallback(MOM_DONE, dwParam1, 0);
@@ -572,14 +566,14 @@ MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwPar
 		MIDIHDR* MIDIHeader = (MIDIHDR*)dwParam1;
 
 		// Pass it to a KDMAPI function
-		return PrepareLongData(MIDIHeader);
+		return PrepareLongData(MIDIHeader, dwParam2);
 	}
 	case MODM_UNPREPARE:
 	{
 		MIDIHDR* MIDIHeader = (MIDIHDR*)dwParam1;
 
 		// Pass it to a KDMAPI function
-		return UnprepareLongData(MIDIHeader);
+		return UnprepareLongData(MIDIHeader, dwParam2);
 	}
 	case MODM_GETNUMDEVS:
 		// Return "1" if the process isn't blacklisted, otherwise the driver doesn't exist OwO

@@ -223,10 +223,15 @@ void __inline PrepareForBASSMIDIHyper(DWORD LastRunningStatus, DWORD_PTR dwParam
 }
 
 BOOL __inline SendLongToBASSMIDI(LPMIDIHDR IIMidiHdr) {
+	// If dwBytesRecorded is 0, use dwBufferLength instead
+	// Thank you MSDN for not telling me about it, 
+	// and thanks to Windows Media Player for doing this...
+	DWORD FLen = IIMidiHdr->dwBytesRecorded < 1 ? IIMidiHdr->dwBufferLength : IIMidiHdr->dwBytesRecorded;
+
 	// The buffer doesn't exist or isn't ready
 	if (!IIMidiHdr || !(IIMidiHdr->dwFlags & MHDR_PREPARED)) return FALSE;
 
-	const int rec = (BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, IIMidiHdr->dwBufferLength) != -1);
+	const int rec = (BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, FLen) != -1);
 	PrintLongMessageToDebugLog(rec, IIMidiHdr);
 
 	return rec;
