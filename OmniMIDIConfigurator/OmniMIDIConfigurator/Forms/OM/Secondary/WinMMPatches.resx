@@ -118,6 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="WinMMWRPDesc.Text" xml:space="preserve">
-    <value>The MME API (also known as WinMM) was the first universal and standardized Windows audio API. Wave sound events and MIDI I/O use MME. Ever since Microsoft released Windows 8, the MIDI functions have been affected by horrible latency issues. The wrapper aims to fix those issues.</value>
+    <value>The Windows Multimedia Wrapper has been created to improve performance on Windows 8.x and later, which suffer from some weird overhead issues in the midiOutxxx functions.
+If you want to pick the architecture of the patch yourself, hold SHIFT while clicking the patch button.</value>
   </data>
 </root>

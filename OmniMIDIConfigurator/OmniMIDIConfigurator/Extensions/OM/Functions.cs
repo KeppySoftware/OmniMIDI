@@ -39,6 +39,14 @@ namespace OmniMIDIConfigurator
             public short wProcessorLevel;
             public short wProcessorRevision;
         }
+
+        public enum FILE_ARCH
+        {
+            UNK,
+            i386,
+            AMD64,
+            AArch64,
+        }
     }
 
     class Functions
@@ -453,19 +461,49 @@ namespace OmniMIDIConfigurator
         }
 
         // WinMM Patch
-        public enum MachineType { Native = 0x0000, x86 = 0x014C, Itanium = 0x0200, x64 = 0x8664, ARM64 = 0xAA64 }
-
-        public static MachineType GetAppCompiledMachineType(string fileName)
+        public static PA.FILE_ARCH GetAppCompiledMachineType(string fileName)
         {
-            const int PE_POINTER_OFFSET = 60, MACHINE_OFFSET = 4;
-            byte[] data = new byte[4096];
+            using (var stream = File.OpenRead(fileName))
+            {
+                if (stream == null)
+                    return PA.FILE_ARCH.UNK;
 
-            using (Stream s = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-                s.Read(data, 0, 4096);
+                var length = stream.Length;
+                if (length < 64)
+                    return PA.FILE_ARCH.UNK;
 
-            int PE_HEADER_ADDR = BitConverter.ToInt32(data, PE_POINTER_OFFSET);
-            int machineUint = BitConverter.ToUInt16(data, PE_HEADER_ADDR + MACHINE_OFFSET);
-            return (MachineType)machineUint;
+                var reader = new BinaryReader(stream);
+                stream.Position = 60;
+                var peHeaderPtr = reader.ReadUInt32();
+                if (peHeaderPtr == 0)
+                {
+                    peHeaderPtr = 128;
+                }
+                if (peHeaderPtr > length - 256)
+                    return PA.FILE_ARCH.UNK;
+
+                stream.Position = peHeaderPtr;
+                var peSignature = reader.ReadUInt32();
+                if (peSignature != 0x00004550)
+                    return PA.FILE_ARCH.UNK;
+
+                var machine = reader.ReadUInt16();
+
+                switch (machine)
+                {
+                    case 0x8664:
+                        return PA.FILE_ARCH.AMD64;
+
+                    case 0x14C:
+                        return PA.FILE_ARCH.i386;
+
+                    case 0xAA64:
+                        return PA.FILE_ARCH.AArch64;
+
+                    default:
+                        return PA.FILE_ARCH.UNK;
+                }
+            }
         }
 
         public static bool IsProcessElevated()
@@ -534,7 +572,7 @@ namespace OmniMIDIConfigurator
             return (Functions.CLSID32.GetValue("midimapper", "midimap.dll").ToString() == "OmniMIDI\\OmniMapper.dll");
         }
 
-        public static DialogResult ApplyWinMMWRPPatch(Boolean DAWMode)
+        public static DialogResult ApplyWinMMWRPPatch(Boolean DAWMode, PA.FILE_ARCH Override, out String Status)
         {
             OpenFileDialog WinMMDialog = new OpenFileDialog();
             WinMMDialog.Filter = "Executables (*.exe)|*.exe;";
@@ -546,7 +584,7 @@ namespace OmniMIDIConfigurator
             {
                 try
                 {
-                    MachineType BitApp = GetAppCompiledMachineType(WinMMDialog.FileName);
+                    PA.FILE_ARCH BitApp = Override != PA.FILE_ARCH.UNK ? Override : GetAppCompiledMachineType(WinMMDialog.FileName);
                     String DirectoryPath = Path.GetDirectoryName(WinMMDialog.FileName);
 
                     Properties.Settings.Default.LastPatchPath = WinMMDialog.FileName;
@@ -557,20 +595,31 @@ namespace OmniMIDIConfigurator
                         DirectoryPath.Contains(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysArm32")))
                     {
                         Program.ShowError(4, "Error", "I'm afraid I can't do that, Dave.", null);
+                        Status = "SYSDIR";
                         WinMMDialog.Dispose();
                         return DialogResult.No;
                     }
 
                     RemovePatchFiles(WinMMDialog.FileName, true);
-                    if (BitApp == MachineType.x86)
+                    if (BitApp == PA.FILE_ARCH.i386)
+                    {
+                        Status = "x86 (i386)";
                         File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm32DAW : Properties.Resources.winmm32wrp);
-                    else if (BitApp == MachineType.x64)
+                    }
+                    else if (BitApp == PA.FILE_ARCH.AMD64)
+                    {
+                        Status = "x64 (AMD64)";
                         File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm64DAW : Properties.Resources.winmm64wrp);
-                    else if (BitApp == MachineType.ARM64)
+                    }
+                    else if (BitApp == PA.FILE_ARCH.AArch64)
+                    {
+                        Status = "ARM64 (AArch64)";
                         File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmmARM64DAW : Properties.Resources.winmmARM64wrp);
+                    }
                     else
                     {
                         Program.ShowError(4, "Error", "Unable to patch the following executable!\nThe configurator can only patch x86, x86-64 and ARM64 executables.\n\nPress OK to continue", null);
+                        Status = "UNK (UNK)";
                         WinMMDialog.Dispose();
                         return DialogResult.No;
                     }
@@ -578,6 +627,7 @@ namespace OmniMIDIConfigurator
                 catch
                 {
                     RestartAsAdmin();
+                    Status = "ADMINREQ";
                     WinMMDialog.Dispose();
                     return DialogResult.No;
                 }
@@ -586,6 +636,7 @@ namespace OmniMIDIConfigurator
                 return DialogResult.OK;
             }
 
+            Status = "Cancelled";
             WinMMDialog.Dispose();
             return DialogResult.Abort;
         }
