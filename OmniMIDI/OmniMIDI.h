@@ -225,4 +225,7 @@ VOID KDMAPI(LoadCustomSoundFontsList)(LPWSTR Directory);
 
 // timeGetTime, but 64-bit
 DWORD64 KDMAPI(timeGetTime64)();
+
+// modMessage
+MMRESULT KDMAPI(modMessage)(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 #endif

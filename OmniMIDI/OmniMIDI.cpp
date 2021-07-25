@@ -331,7 +331,7 @@ MMRESULT DequeueMIDIHDRs()
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
+extern "C" MMRESULT WINAPI modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2)
 {
 	static BOOL PreventInit = FALSE;
 

@@ -512,7 +512,7 @@ BOOL DoStopClient() {
 	return TRUE;
 }
 
-BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) {
+extern "C" BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision) {
 	if (Major == NULL || Minor == NULL || Build == NULL || Revision == NULL) {
 		PrintMessageToDebugLog("KDMAPI_RKV", "One of the pointers passed to the RKV function is invalid.");
 		MessageBox(NULL, L"One of the pointers passed to the ReturnKDMAPIVer function is invalid!", L"KDMAPI ERROR", MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
@@ -525,7 +525,7 @@ BOOL KDMAPI ReturnKDMAPIVer(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD
 	return TRUE;
 }
 
-BOOL KDMAPI IsKDMAPIAvailable() {
+extern "C" BOOL KDMAPI IsKDMAPIAvailable() {
 	// Parse the current state of the KDMAPI
 	OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
@@ -541,7 +541,7 @@ BOOL KDMAPI IsKDMAPIAvailable() {
 	return KDMAPIEnabled;
 }
 
-BOOL KDMAPI InitializeKDMAPIStream() {
+extern "C" BOOL KDMAPI InitializeKDMAPIStream() {
 	if (!AlreadyInitializedViaKDMAPI && !bass_initialized) {
 		PrintMessageToDebugLog("KDMAPI_IKS", "The app requested the driver to initialize its audio stream.");
 
@@ -569,7 +569,7 @@ BOOL KDMAPI InitializeKDMAPIStream() {
 	return FALSE;
 }
 
-BOOL KDMAPI TerminateKDMAPIStream() {
+extern "C" BOOL KDMAPI TerminateKDMAPIStream() {
 	// If the driver is already initialized, close it
 	if (AlreadyInitializedViaKDMAPI && bass_initialized) {
 		// Prevent BASS from reinitializing itself
@@ -597,7 +597,7 @@ BOOL KDMAPI TerminateKDMAPIStream() {
 	return FALSE;
 }
 
-BOOL KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM) {
+extern "C" BOOL KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM) {
 	// Copy values to memory
 	const BOOL NV = ((OMCM != NULL) && (!OMCB && !OMI));
 
@@ -661,36 +661,36 @@ BOOL KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI
 	return TRUE;
 }
 
-VOID KDMAPI RunCallbackFunction(DWORD Msg, DWORD_PTR P1, DWORD_PTR P2) {
+extern "C" VOID KDMAPI RunCallbackFunction(DWORD Msg, DWORD_PTR P1, DWORD_PTR P2) {
 	DoCallback(Msg, P1, P2);
 }
 
-VOID KDMAPI NoFeedbackMode() {
+extern "C" VOID KDMAPI NoFeedbackMode() {
 	FeedbackBlacklisted = TRUE;
 }
 
-VOID KDMAPI ResetKDMAPIStream() {
+extern "C" VOID KDMAPI ResetKDMAPIStream() {
 	// Redundant
 	if (bass_initialized)
 		ResetSynth(FALSE, TRUE);
 }
 
-BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) noexcept {
+extern "C" BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param) noexcept {
 	return _BMSE(OMStream, chan, eventtype, param);
 }
 
-MMRESULT KDMAPI SendDirectData(DWORD dwMsg) noexcept {
+extern "C" MMRESULT KDMAPI SendDirectData(DWORD dwMsg) noexcept {
 	// Send it to the pointed ParseData function (Either ParseData or ParseDataHyper)
 	return _PrsData(dwMsg);
 }
 
-MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) noexcept {
+extern "C" MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) noexcept {
 	// Send the data directly to BASSMIDI, bypassing the buffer altogether
 	_PforBASSMIDI(0, dwMsg);
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {
+extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {
 	// What's this for? You'll see...
 	DWORD FLen = 0;
 
@@ -734,7 +734,7 @@ MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {
+extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {
 	// What's this for? You'll see...
 	DWORD FLen = 0;
 
@@ -784,7 +784,7 @@ MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {
+extern "C" MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {
 	// Check if the MIDIHDR buffer is valid and if the stream is alive
 	while (!bass_initialized)					// The driver isn't ready
 		/* return */ DebugResult("SendDirectLongData", MIDIERR_NOTREADY, "BASS hasn't been initialized yet.");
@@ -824,7 +824,7 @@ MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {
 	return MMSYSERR_NOERROR;
 }
 
-MMRESULT KDMAPI SendDirectLongDataNoBuf(LPSTR MidiHdrData, DWORD MidiHdrDataLen) {
+extern "C" MMRESULT KDMAPI SendDirectLongDataNoBuf(LPSTR MidiHdrData, DWORD MidiHdrDataLen) {
 	if (!MidiHdrData)
 		// The buffer doesn't exist, invalid parameter
 		return DebugResult("SendDirectLongDataNoBuf", MMSYSERR_INVALPARAM, "No pointer has been passed to MidiHdrData.");
@@ -858,7 +858,7 @@ MMRESULT KDMAPI SendDirectLongDataNoBuf(LPSTR MidiHdrData, DWORD MidiHdrDataLen)
 	return MMSYSERR_NOERROR;
 }
 
-BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) {
+extern "C" BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue) {
 	switch (Setting) 
 	{
 
@@ -941,13 +941,13 @@ BOOL KDMAPI DriverSettings(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue
 	return TRUE;
 }
 
-DebugInfo* KDMAPI GetDriverDebugInfo() {
+extern "C" DebugInfo* KDMAPI GetDriverDebugInfo() {
 	// Parse the debug info, and return them to the app.
 	PrintMessageToDebugLog("KDMAPI_GDDI", "Passed pointer to DebugInfo to the KDMAPI-ready application.");
 	return &ManagedDebugInfo;
 }
 
-BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
+extern "C" BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 	// Load the SoundFont from the specified path (It can be a sf2/sfz or a sflist)
 	if (!AlreadyInitializedViaKDMAPI) {
 		MessageBox(NULL, L"Initialize OmniMIDI before loading a SoundFont!", L"KDMAPI ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
@@ -957,7 +957,7 @@ BOOL KDMAPI LoadCustomSoundFontsList(LPWSTR Directory) {
 	return FontLoader(Directory);
 }
 
-DWORD64 KDMAPI timeGetTime64() {
+extern "C" DWORD64 KDMAPI timeGetTime64() {
 	ULONGLONG CurrentTime;
 	NtQuerySystemTime(&CurrentTime);
 	return (((CurrentTime) - TickStart) * (SpeedHack / 10000.0));
