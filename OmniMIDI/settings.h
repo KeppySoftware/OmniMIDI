@@ -426,7 +426,12 @@ void FreeUpMemory() {
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing EV buffer...");
 	if (EVBuffer.Buffer)
 	{
-		delete[] EVBuffer.Buffer;
+		if (VirtualUnlock(EVBuffer.Buffer, EVBuffer.BufSize * sizeof(DWORD)))
+			PrintMessageToDebugLog("AllocateMemoryFunc", "Unlocked buffer from RAM.");
+
+		if (!VirtualFree(EVBuffer.Buffer, 0, MEM_RELEASE))
+			CrashMessage(L"EVBuffer VirtualFree");
+
 		EVBuffer.Buffer = NULL;
 		EVBuffer.BufSize = 0;
 		EVBuffer.WriteHead = 0;
@@ -504,27 +509,32 @@ void AllocateMemory(BOOL restart) {
 		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "Total RAM available (in bytes)", FALSE, status.ullTotalPhys);
 
 		// Begin allocating the EVBuffer
-		if (EVBuffer.Buffer != nullptr) PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer already allocated.");
+		if (EVBuffer.Buffer != NULL) PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer already allocated.");
 		else {
 			PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating EV buffer...");
-			EVBuffer.Buffer = new (std::nothrow) DWORD[EvBufferSize];
 			EVBuffer.BufSize = EvBufferSize;
-			if (EVBuffer.Buffer == nullptr) {
+			EVBuffer.Buffer = (DWORD*)VirtualAlloc(NULL, EVBuffer.BufSize * sizeof(DWORD), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+			if (EVBuffer.Buffer == NULL) {
 				MessageBox(NULL, L"An error has occured while allocating the events buffer!\nIt will now default to 4096 bytes.\n\nThe EVBuffer settings have been reset.", L"OmniMIDI - Error allocating memory", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
 				ResetEVBufferSettings();
-				EVBuffer.Buffer = new (std::nothrow) DWORD[EvBufferSize];
 				EVBuffer.BufSize = EvBufferSize;
-				if (EVBuffer.Buffer == nullptr) {
+				EVBuffer.Buffer = (DWORD*)VirtualAlloc(NULL, EVBuffer.BufSize * sizeof(DWORD), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+				if (EVBuffer.Buffer == NULL) {
 					MessageBox(NULL, L"Fatal error while allocating the events buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 					exit(ERROR_NOT_ENOUGH_MEMORY);
 				}
 			}
 
-			memset(EVBuffer.Buffer, 0, sizeof(EVBuffer.Buffer));
+			if (!VirtualLock(EVBuffer.Buffer, EVBuffer.BufSize * sizeof(DWORD))) {
+				MessageBox(NULL, L"The driver was unable to lock the events buffer to cache/RAM\nThis could reduce performance.\n\nPress OK to continue.",
+					L"OmniMIDI - Warning", MB_OK | MB_ICONWARNING | MB_SYSTEMMODAL);
+			}
+			else PrintMessageToDebugLog("AllocateMemoryFunc", "Locked buffer to RAM.");
+
 			PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer allocated.");
 		}
 
-		// Set heads to 0
+		// Set heads to 0 and store buffer size
 		EVBuffer.WriteHead = 0;
 		EVBuffer.ReadHead = 0;
 		PrintMessageToDebugLog("AllocateMemoryFunc", "Set heads to 0.");

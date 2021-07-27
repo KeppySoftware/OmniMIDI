@@ -96,13 +96,13 @@ namespace OmniMIDIConfigurator
             else if (check > 1 && check < 128)
             {
                 WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wi;
-                WarningLabel.Text = "WARNING: You might experience lag when going below 128 bytes.";
+                WarningLabel.Text = "WARNING: You might experience lag or missed events when going below 128 bytes.";
                 ApplySettings.Enabled = true;
             }
             else if (check == 1)
             {
                 WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wi;
-                WarningLabel.Text = String.Format("The final size will be {0}.\n(({1} DWORDs * 4) / {2})\nGood luck.", SoundFontListExtension.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 4 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value);
+                WarningLabel.Text = String.Format("The final size will be {0}.\n(({1} DWORDs * 4) / {2})\nNot recommended.", SoundFontListExtension.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 4 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value);
                 ApplySettings.Enabled = true;
             }
             else if (check < 1)

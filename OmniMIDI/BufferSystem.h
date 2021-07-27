@@ -245,7 +245,7 @@ void __inline PBufData(void) {
 	if (dwParam1 & 0x80)
 		LastRunningStatus = (BYTE)dwParam1;
 
-	if (++EVBuffer.ReadHead >= EvBufferSize) EVBuffer.ReadHead = 0;
+	if (++EVBuffer.ReadHead >= EVBuffer.BufSize) EVBuffer.ReadHead = 0;
 
 	_PforBASSMIDI(LastRunningStatus, dwParam1);
 }
@@ -262,7 +262,7 @@ unsigned int __inline PSmallBufData(void)
 	{
 		EVBuffer.Buffer[HeadPos] = ~0;
 
-		if (++HeadPos >= EvBufferSize)
+		if (++HeadPos >= EVBuffer.BufSize)
 			HeadPos = 0;
 
 		EVBuffer.ReadHead = HeadPos;
@@ -286,7 +286,7 @@ unsigned int __inline PSmallBufData(void)
 DWORD __inline PlayBufferedData(void) {
 	if (ManagedSettings.IgnoreAllEvents) return 1;
 	
-	if (EvBufferSize >= SMALLBUFFER)
+	if (EVBuffer.BufSize >= SMALLBUFFER)
 	{
 		if (!BufferCheck()) return 1;
 
@@ -310,7 +310,7 @@ DWORD __inline PlayBufferedDataHyper(void) {
 DWORD __inline PlayBufferedDataChunk(void) {
 	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
 
-	if (EvBufferSize >= SMALLBUFFER)
+	if (EVBuffer.BufSize >= SMALLBUFFER)
 	{
 		ULONGLONG whe = EVBuffer.WriteHead;
 		do PBufData();
@@ -343,7 +343,7 @@ MMRESULT __inline ParseData(DWORD_PTR dwParam1) {
 	// LockForWriting(&EPThreadsL);
 
 	auto NextWriteHead = EVBuffer.WriteHead + 1;
-	if (NextWriteHead >= EvBufferSize) NextWriteHead = 0;
+	if (NextWriteHead >= EVBuffer.BufSize) NextWriteHead = 0;
 
 	if (NextWriteHead != EVBuffer.ReadHead)
 	{
@@ -358,10 +358,10 @@ MMRESULT __inline ParseData(DWORD_PTR dwParam1) {
 	}
 	else
 	{
-		if (NextWriteHead >= EvBufferSize)
+		if (NextWriteHead >= EVBuffer.BufSize)
 			NextWriteHead = EVBuffer.ReadHead; //guaranteed to be always in bounds
 
-		if(EvBufferSize >= SMALLBUFFER)
+		if(EVBuffer.BufSize >= SMALLBUFFER)
 			while (NextWriteHead == EVBuffer.ReadHead) _FWAIT;
 		else
 		{
@@ -390,7 +390,7 @@ MMRESULT __inline ParseDataHyper(DWORD_PTR dwParam1)
 	// LockForWriting(&EPThreadsL);
 
 	auto NextWriteHead = EVBuffer.WriteHead + 1;
-	if (NextWriteHead >= EvBufferSize) NextWriteHead = 0;
+	if (NextWriteHead >= EVBuffer.BufSize) NextWriteHead = 0;
 
 	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
 

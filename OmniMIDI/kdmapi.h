@@ -718,7 +718,7 @@ extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSi
 		return DebugResult("PrepareLongData", MMSYSERR_NOERROR, "The buffer is already prepared.");
 
 	// Lock the buffer
-	if (!VirtualLock(&IIMidiHdr->lpData, FLen))
+	if (!VirtualLock(IIMidiHdr->lpData, FLen))
 		// Unable to lock
 		return DebugResult("PrepareLongData", MMSYSERR_NOMEM, "VirtualLock failed to lock the buffer to the virtual address space. Not enough memory available.");
 	// Locked successfully
@@ -762,7 +762,7 @@ extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdr
 		return DebugResult("UnprepareLongData", MIDIERR_STILLPLAYING, "The buffer is still in queue.");
 
 	// Unlock the buffer
-	if (!VirtualUnlock(&IIMidiHdr->lpData, FLen))
+	if (!VirtualUnlock(IIMidiHdr->lpData, FLen))
 	{
 		DWORD e = GetLastError();
 
