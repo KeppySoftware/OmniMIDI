@@ -100,6 +100,12 @@
     <Compile Include="Donate.Designer.cs">
       <DependentUpon>Donate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\OM\Drv32Troubleshooter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OM\Drv32Troubleshooter.Designer.cs">
+      <DependentUpon>Drv32Troubleshooter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\Knob\KnobControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -301,6 +307,9 @@
     </Compile>
     <EmbeddedResource Include="Donate.resx">
       <DependentUpon>Donate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OM\Drv32Troubleshooter.resx">
+      <DependentUpon>Drv32Troubleshooter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Extensions\Knob\KnobControl.resx">
       <DependentUpon>KnobControl.cs</DependentUpon>
@@ -524,7 +533,7 @@
   <Target Name="Date" BeforeTargets="BeforeBuild">
     <WriteLinesToFile File="$(IntermediateOutputPath)gen.cs" Lines="static partial class CompileTime { public static long Ticks = $([System.DateTime]::UtcNow.Ticks) %3B }" Overwrite="true" />
     <ItemGroup>
-        <Compile Include="$(IntermediateOutputPath)gen.cs" />
+      <Compile Include="$(IntermediateOutputPath)gen.cs" />
     </ItemGroup>
-</Target>
+  </Target>
 </Project>

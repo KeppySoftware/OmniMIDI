@@ -85,7 +85,7 @@
     <Setting Name="DonationAlreadyShown" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="DonationDoNotShow" Type="System.Boolean" Scope="User">
+    <Setting Name="DoNotShowDonation" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="PreReleaseBranch" Type="System.Collections.Specialized.StringCollection" Scope="Application">

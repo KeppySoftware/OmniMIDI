@@ -30,7 +30,7 @@ namespace OmniMIDIConfigurator
         {
             Properties.Settings.Default.DonationShownWhen = DateTime.Now;
             Properties.Settings.Default.DonationAlreadyShown = true;
-            Properties.Settings.Default.DonationDoNotShow = true;
+            Properties.Settings.Default.DoNotShowDonation = true;
             Properties.Settings.Default.Save();
             Close();
         }

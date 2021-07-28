@@ -336,42 +336,6 @@ namespace OmniMIDIConfigurator
             Program.Watchdog.SetValue("currentsflist", 1, RegistryValueKind.DWord);
         }
 
-        public static bool CheckDriverStatusInReg(String WhichBit, RegistryKey WhichKey)
-        {
-            bool Registered = false;
-            for (int i = 0; i < 32; i++)
-            {
-                String iS = (i == 0) ? "" : i.ToString();
-
-                try
-                {
-                    if (WhichKey.GetValue(String.Format("midi{0}", iS), "wdmaud.drv").ToString() == "OmniMIDI.dll")
-                    {
-                        Registered = true;
-                        break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(String.Format("No MIDI driver values available.\n\nError:\n{0}", ex.ToString()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
-                    return false;
-                }
-            }
-
-            if (!Registered)
-            {
-                DialogResult RES = MessageBox.Show(
-                    String.Format("It looks like something unregistered the {0} version of the driver from the registry.\n\nPress Yes if you want the configurator to fix the issue.", WhichBit),
-                    String.Format("OmniMIDI ~ {0} driver not registered", WhichBit),
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (RES == DialogResult.Yes) 
-                    Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", "/register").WaitForExit();
-            }
-
-            return Registered;
-        }
-
         public static string ReturnLength(long length, bool apx)
         {
             try

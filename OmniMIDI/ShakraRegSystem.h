@@ -21,8 +21,13 @@
 #define FI		_T(__FILE__)			// File
 
 #define DERROR(y)				ShakraError(y, FU, FI, LI)
-#define DFERROR(x, y)			x.ThrowFatalError(y)
-#define DLOG(x, y)				x.Log(y, FU, FI, LI)
+#define DFERROR(y)				CrashMessage(y)
+#define DLOG(y)					ShakraError(y, FU, FI, LI)
+
+// Define the maximum midiX
+#define MIN_DEVICEID			1
+#define MAX_DEVICEID			10
+#define CLEANUP_DEVICEID		32
 
 // Copied from devpkey.h in the WinDDK
 DEFINE_DEVPROPKEY(DEVPKEY_Device_BusReportedDeviceDesc, 0x540b947e, 0x8b40, 0x45bc, 0xa8, 0xa2, 0x6a, 0x0b, 0x89, 0x4c, 0xbd, 0xa2, 4);	// DEVPROP_TYPE_STRING
@@ -38,18 +43,20 @@ typedef WINBASEAPI BOOL(WINAPI* fIW64P)(_In_ HANDLE, _Out_ PBOOL);
 
 const GUID DevGUID = GUID_DEVCLASS_MEDIA;
 const wchar_t DEVICE_NAME_MEDIA[] = L"MEDIA";
-const wchar_t DEVICE_DESCRIPTION[] = L"OmniMIDI for Windows NT";
-const wchar_t DRIVER_PROVIDER_NAME[] = L"Keppy's Software";
+const wchar_t DEVICE_DESCRIPTION[] = L"OmniMIDI for Windows NT\0";
+const wchar_t DRIVER_PROVIDER_NAME[] = L"Keppy's Software\0";
 const wchar_t DRIVER_CLASS_PROP_DRIVER_DESC[] = L"DriverDesc";
 const wchar_t DRIVER_CLASS_PROP_PROVIDER_NAME[] = L"ProviderName";
 const wchar_t DRIVER_CLASS_SUBKEY_DRIVERS[] = L"Drivers";
 const wchar_t DRIVER_CLASS_PROP_SUBCLASSES[] = L"SubClasses";
 const wchar_t DRIVER_CLASS_SUBCLASSES[] = L"midi";
-const wchar_t DRIVER_SUBCLASS_SUBKEYS[] = L"midi\\OmniMIDI.dll";
+const wchar_t DRIVER_SUBCLASS_SUBKEYS[] = L"midi\\OmniMIDI.dll\0";
 const wchar_t DRIVER_SUBCLASS_PROP_DRIVER[] = L"Driver";
 const wchar_t DRIVER_SUBCLASS_PROP_DESCRIPTION[] = L"Description";
 const wchar_t DRIVER_SUBCLASS_PROP_ALIAS[] = L"Alias";
-const wchar_t SHAKRA_DRIVER_NAME[] = L"OmniMIDI.dll";
+const wchar_t OMOLD_DRIVER_NAME[] = L"OmniMIDI.dll";
+const wchar_t SHAKRA_DRIVER_NAME[] = L"OmniMIDI.dll\0";
+const wchar_t WDMAUD_DRIVER_NAME[] = L"wdmaud.drv\0";
 
 static bool DriverBusy = false;
 
@@ -87,10 +94,8 @@ void ShakraError(wchar_t* Msg, wchar_t* Position, wchar_t* File, wchar_t* Line)
 }
 
 void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR CommandLine, DWORD CmdShow) {
-	// Check the argument sent by RunDLL32, and see what the heck it wants from us
-	bool Registration = (_stricmp(CommandLine, "RegisterDrv") == 0), UnregisterPass = false;
-
 	// Used for registration
+	LSTATUS DrvWOW64 = ERROR_SUCCESS, Drv32 = ERROR_SUCCESS;
 	HKEY DeviceRegKey, DriverSubKey, DriversSubKey, Drivers32Key, DriversWOW64Key;
 	HDEVINFO DeviceInfo;
 	SP_DEVINFO_DATA DeviceInfoData;
@@ -98,43 +103,21 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 	wchar_t szBuffer[4096];
 	DWORD dwSize, dwPropertyRegDataType, dummy;
 	DWORD configClass = CONFIGFLAG_MANUAL_INSTALL | CONFIGFLAG_NEEDS_FORCED_CONFIG;
+	DWORD sztype = REG_SZ;
 
 	// Drivers32 Shakra
-	wchar_t Buf[255];
+	wchar_t Buf32[255];
+	wchar_t Buf64[255];
 	wchar_t ShakraKey[255];
-	DWORD bufSize = sizeof(Buf);
-	DWORD shakraSize = sizeof(ShakraKey);
 	bool OnlyDrivers32 = true;
 
-	/*
-	if (_stricmp(CommandLine, "EnumDevs") == 0) {
-		AllocConsole();
-
-		owinmm = LoadLibraryW(L"winmm.dll");
-		MMmidiOutGetNumDevs = (MOGND)GetProcAddress(owinmm, "midiOutGetNumDevs");
-		MMmidiOutGetDevCapsW = (MOGDCW)GetProcAddress(owinmm, "midiOutGetDevCapsW");
-
-		char ch;
-		FILE* stream = nullptr;
-		MIDIOUTCAPSW CapsW;
-		DWORD Devs = MMmidiOutGetNumDevs();
-
-		::_wfreopen_s(&stream, L"CONOUT$", L"w", stdout);
-
-		for (DWORD i = 0; i < Devs; i++) {
-			if (MMmidiOutGetDevCapsW(i, &CapsW, sizeof(MIDIOUTCAPSW)) == MMSYSERR_NOERROR) {
-				fwprintf(stdout, L"%s%s", CapsW.szPname, i == Devs - 1 ? L"\0" : L"\n");
-			}
-		}
-
-		FreeLibrary(owinmm);
-		fclose(stream);
-		return;
-	}
-	*/
-
 	// We need to register, woohoo
-	if (_stricmp(CommandLine, "RegisterDrv") == 0 || _stricmp(CommandLine, "UnregisterDrv") == 0) {
+	if (_stricmp(CommandLine, "RegisterDrv") == 0 || _stricmp(CommandLine, "RegisterDrvS") == 0 ||
+		_stricmp(CommandLine, "UnregisterDrv") == 0 || _stricmp(CommandLine, "UnregisterDrvS") == 0) {
+		// Check the argument sent by RunDLL32, and see what the heck it wants from us
+		bool Registration = (_stricmp(CommandLine, "RegisterDrv") == 0 || _stricmp(CommandLine, "RegisterDrvS") == 0);
+		bool Silent = (_stricmp(CommandLine, "RegisterDrvS") == 0 || _stricmp(CommandLine, "UnregisterDrvS") == 0);
+
 		// If user is not an admin, abort.
 		if (!IsUserAnAdmin())
 		{
@@ -148,20 +131,6 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			DERROR(L"You can not register the driver using the 32-bit library under 64-bit Windows.\n\nPlease use the 64-bit library.");
 			return;
 		}
-
-		// Open Drivers32 key
-		if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &Drivers32Key, &dummy) != ERROR_SUCCESS) {
-			DERROR(L"RegCreateKeyEx failed to open the Drivers32 key, unable to (un)register the driver.");
-			return;
-		}
-
-#ifdef _WIN64
-		// Open Drivers32 for WOW64 key
-		if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS | KEY_WOW64_32KEY, NULL, &DriversWOW64Key, &dummy) != ERROR_SUCCESS) {
-			DERROR(L"RegCreateKeyEx failed to open the Drivers32 key from the WOW64 hive, unable to (un)register the driver.");
-			return;
-		}
-#endif
 
 		DeviceInfo = SetupDiGetClassDevs(&DevGUID, NULL, NULL, 0);
 
@@ -198,7 +167,6 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 					}
 					else
 					{
-						UnregisterPass = true;
 						OnlyDrivers32 = false;
 						break;
 					}
@@ -206,63 +174,22 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			}
 		}
 
-		// Normal check for 8.1 and lower
-		for (int MIDIEntry = 1; MIDIEntry < 32; MIDIEntry++)
-		{
-#ifdef _WIN64
-			int Step = 0;
-
-			if (Step > 1) break;
-#endif
-
-			ZeroMemory(Buf, sizeof(Buf));
-			ZeroMemory(ShakraKey, sizeof(ShakraKey));
-
-			swprintf_s(ShakraKey, MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
-
-#ifdef _WIN64
-			if (Step == 0)
-			{
-#endif
-				if (RegQueryValueExW(Drivers32Key, ShakraKey, 0, 0, reinterpret_cast<LPBYTE>(&Buf), &bufSize) == ERROR_SUCCESS)
-				{
-					if (_wcsicmp(Buf, DRIVER_SUBCLASS_SUBKEYS) == 0)
-					{
-						UnregisterPass = true;
-#ifdef _WIN64
-						Step++;
-						MIDIEntry = 1;
-#else
-						break;
-#endif
-					}
-				}
-				else continue;
-#ifdef _WIN64
-			}
-			else
-			{
-				if (RegQueryValueExW(DriversWOW64Key, ShakraKey, 0, 0, reinterpret_cast<LPBYTE>(&Buf), &bufSize) == ERROR_SUCCESS)
-				{
-					if (_wcsicmp(Buf, DRIVER_SUBCLASS_SUBKEYS) == 0)
-					{
-						UnregisterPass = true;
-						Step++;
-					}
-				}
-				else continue;
-			}
-#endif
-		}
-
-		if (!Registration && !UnregisterPass)
-		{
-			DERROR(L"The driver is not registered!");
-			return;
-		}
-
 		if (Registration)
 		{
+			// Open Drivers32 for WOW64 key
+			if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS | KEY_WOW64_32KEY, NULL, &DriversWOW64Key, &dummy) != ERROR_SUCCESS) {
+				DERROR(L"RegCreateKeyEx failed to open the Drivers32 key from the WOW64 hive, unable to (un)register the driver.");
+				return;
+			}
+
+#ifdef _WIN64
+			// Open Drivers32 key
+			if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &Drivers32Key, &dummy) != ERROR_SUCCESS) {
+				DERROR(L"RegCreateKeyEx failed to open the Drivers32 key, unable to (un)register the driver.");
+				return;
+			}
+#endif
+
 			if (!SetupDiCreateDeviceInfo(DeviceInfo, DEVICE_NAME_MEDIA, &DevGUID, DEVICE_DESCRIPTION, NULL, DICD_GENERATE_ID, &DeviceInfoData))
 			{
 				SetupDiDestroyDeviceInfoList(DeviceInfo);
@@ -289,7 +216,6 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			}
 
 			DeviceRegKey = SetupDiCreateDevRegKey(DeviceInfo, &DeviceInfoData, DICS_FLAG_GLOBAL, 0, DIREG_DRV, NULL, NULL);
-			SetupDiDestroyDeviceInfoList(DeviceInfo);
 
 			if (DeviceRegKey == INVALID_HANDLE_VALUE)
 			{
@@ -339,59 +265,177 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 				return;
 			}
 
-			for (int MIDIEntry = 1; MIDIEntry < 32; MIDIEntry++)
+			// Remove old values
+			for (int MIDIEntry = MIN_DEVICEID; MIDIEntry < CLEANUP_DEVICEID; MIDIEntry++)
 			{
-				LSTATUS Drv32 = ERROR_SUCCESS, DrvWOW64 = ERROR_SUCCESS;
+				DWORD BufSize = sizeof(Buf32);
 
-				ZeroMemory(Buf, bufSize);
-				ZeroMemory(ShakraKey, shakraSize);
+				ZeroMemory(Buf32, BufSize);
 
-				swprintf_s(ShakraKey, MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
+				ZeroMemory(ShakraKey, sizeof(ShakraKey));
+				swprintf_s(ShakraKey, (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
 
-				Drv32 = RegQueryValueExW(Drivers32Key, ShakraKey, 0, 0, reinterpret_cast<LPBYTE>(&Buf), &bufSize);
-#ifdef _WIN64
-				DrvWOW64 = RegQueryValueExW(DriversWOW64Key, ShakraKey, 0, 0, reinterpret_cast<LPBYTE>(&Buf), &bufSize);
-#endif
-
-				if (Drv32 != ERROR_SUCCESS || DrvWOW64 != ERROR_SUCCESS)
+				DrvWOW64 = RegQueryValueExW(DriversWOW64Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf32, &BufSize);
+				if (DrvWOW64 == ERROR_SUCCESS)
 				{
-					if (Drv32 != ERROR_SUCCESS)
-					{
-						if (RegSetValueEx(Drivers32Key, ShakraKey, NULL, REG_SZ, (LPBYTE)SHAKRA_DRIVER_NAME, sizeof(SHAKRA_DRIVER_NAME)) != ERROR_SUCCESS)
-						{
-							DERROR(L"RegSetValueEx failed to write the MIDI alias to Drivers32, unable to register the driver.");
-							return;
-						}
-					}
-
-#ifdef _WIN64
-					if (DrvWOW64 != ERROR_SUCCESS)
-					{
-						if (RegSetValueEx(DriversWOW64Key, ShakraKey, NULL, REG_SZ, (LPBYTE)SHAKRA_DRIVER_NAME, sizeof(SHAKRA_DRIVER_NAME)) != ERROR_SUCCESS)
-						{
-							DERROR(L"RegSetValueEx failed to write the MIDI alias to Drivers32 in the WOW64 hive, unable to register the driver.");
-							return;
-						}
-					}
-#endif
-
-					if (RegSetValueEx(DriverSubKey, DRIVER_SUBCLASS_PROP_ALIAS, NULL, REG_SZ, (LPBYTE)ShakraKey, shakraSize) != ERROR_SUCCESS)
-					{
-						DERROR(L"RegSetValueEx failed to write DRIVER_SUBCLASS_PROP_ALIAS, unable to register the driver.");
-						return;
-					}
-
-					break;
-				}
-				else
-				{
-					if (_wcsicmp(Buf, DRIVER_SUBCLASS_SUBKEYS) == 0)
-					{
-						DERROR(L"The driver has been already registered!");
-						return;
-					}
+					if (_wcsicmp(Buf32, SHAKRA_DRIVER_NAME) == 0 || _wcsicmp(Buf32, OMOLD_DRIVER_NAME) == 0)
+						RegDeleteValueW(DriversWOW64Key, ShakraKey);
 				}
 			}
+
+#ifdef _WIN64
+			for (int MIDIEntry = MIN_DEVICEID; MIDIEntry < CLEANUP_DEVICEID; MIDIEntry++)
+			{
+				DWORD BufSize = sizeof(Buf64);
+
+				ZeroMemory(Buf64, BufSize);
+
+				ZeroMemory(ShakraKey, sizeof(ShakraKey));
+				swprintf_s(ShakraKey, (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
+
+				Drv32 = RegQueryValueExW(Drivers32Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf64, &BufSize);
+				if (Drv32 == ERROR_SUCCESS)
+				{
+					if (_wcsicmp(Buf64, SHAKRA_DRIVER_NAME) == 0 || _wcsicmp(Buf64, OMOLD_DRIVER_NAME) == 0)
+						RegDeleteValueW(Drivers32Key, ShakraKey);
+				}
+			}
+#endif
+
+			bool Pass = false;
+			int FinalID = 0;
+			for (int MIDIEntry = MIN_DEVICEID; MIDIEntry < MAX_DEVICEID; MIDIEntry++)
+			{
+				DWORD B32S = sizeof(Buf32), B64S = sizeof(Buf64);
+
+				ZeroMemory(ShakraKey, sizeof(ShakraKey));
+				swprintf_s(ShakraKey, MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
+
+#ifndef _WIN64
+				if (!Pass) {
+					ZeroMemory(Buf32, B32S);
+
+					DrvWOW64 = RegQueryValueExW(DriversWOW64Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf32, &B32S);
+
+					if (DrvWOW64 == ERROR_SUCCESS)
+					{
+						// The driver is registered on the WOW64 system.
+						if (_wcsicmp(Buf32, SHAKRA_DRIVER_NAME) == 0)
+						{
+							DERROR(L"The driver has been already registered!");
+							Pass = true;
+							break;
+						}
+						// The value is already filled with something that isn't our driver. Leave it be.
+						else if (_wcsicmp(Buf32, WDMAUD_DRIVER_NAME) != 0)
+							continue;
+						// Old broken driver entry, let's replace it.
+						else if (_wcsicmp(Buf32, OMOLD_DRIVER_NAME) == 0);
+						// It's free real estate, let's replace it.
+						else;
+					}
+
+					continue;
+				}
+#else
+				if (!Pass) {
+					ZeroMemory(Buf32, B32S);
+					ZeroMemory(Buf64, B64S);
+
+					DrvWOW64 = RegQueryValueExW(DriversWOW64Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf32, &B32S);
+					Drv32 = RegQueryValueExW(Drivers32Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf64, &B64S);
+
+					if (DrvWOW64 == ERROR_SUCCESS)
+					{
+						// The driver is registered on the WOW64 system.
+						if (_wcsicmp(Buf32, SHAKRA_DRIVER_NAME) == 0)
+						{
+							// It's registered on the 64-bit system too. Let's go!
+							if (_wcsicmp(Buf64, SHAKRA_DRIVER_NAME) == 0) {
+								DERROR(L"The driver has been already registered!");
+								Pass = true;
+								break;
+							}
+							// Not supported, the midiX IDs need to match. Reset this ID to wdmaud.drv,
+							// and continue searching for a free slot.
+							else {
+								RegSetValueExW(DriversWOW64Key, ShakraKey, 0, REG_SZ, (LPBYTE)&WDMAUD_DRIVER_NAME, sizeof(WDMAUD_DRIVER_NAME));
+								continue;
+							}
+						}
+						// The value is already filled with something that isn't our driver. Leave it be.
+						else if (_wcsicmp(Buf32, WDMAUD_DRIVER_NAME) != 0)
+							continue;
+						// Old broken driver entry, let's replace it.
+						else if (_wcsicmp(Buf32, OMOLD_DRIVER_NAME) == 0);
+						// It's free real estate, let's replace it.
+						else;
+					}
+
+					if (Drv32 == ERROR_SUCCESS)
+					{
+						// The driver is registered on the 64-bit system too.
+						if (_wcsicmp(Buf64, SHAKRA_DRIVER_NAME) == 0)
+						{
+							DERROR(L"The driver has been already registered!");
+							Pass = true;
+							break;
+						}		
+						// The value is already filled with something that isn't our driver. Leave it be.
+						else if (_wcsicmp(Buf64, WDMAUD_DRIVER_NAME) != 0)
+							continue;
+						else {
+							// The 32-bit value is filled with something but the 64-bit one isn't.
+							// Let's continue searching for a free midiX slot.
+							RegSetValueExW(Drivers32Key, ShakraKey, 0, REG_SZ, (LPBYTE)&WDMAUD_DRIVER_NAME, sizeof(WDMAUD_DRIVER_NAME));
+							continue;
+						}
+					}
+
+					// DriversWOW64 is 32-bit, Drivers32 is 64-bit. It's confusing I know.
+					DrvWOW64 = RegSetValueExW(DriversWOW64Key, ShakraKey, 0, REG_SZ, (LPBYTE)&SHAKRA_DRIVER_NAME, sizeof(SHAKRA_DRIVER_NAME));
+					Drv32 = RegSetValueExW(Drivers32Key, ShakraKey, 0, REG_SZ, (LPBYTE)&SHAKRA_DRIVER_NAME, sizeof(SHAKRA_DRIVER_NAME));
+
+					if (DrvWOW64 == ERROR_SUCCESS && Drv32 == ERROR_SUCCESS) Pass = true;
+				}
+#endif
+
+				if (Pass)
+					FinalID = MIDIEntry;
+
+				break;
+			}
+
+			if (Pass) {
+				// Everything went fine, let's finish registering the device.
+				ZeroMemory(ShakraKey, sizeof(ShakraKey));
+				swprintf_s(ShakraKey, MIDI_REGISTRY_ENTRY_TEMPLATE, FinalID);
+
+				if (RegSetValueEx(DriversWOW64Key, ShakraKey, NULL, REG_SZ, (LPBYTE)SHAKRA_DRIVER_NAME, sizeof(SHAKRA_DRIVER_NAME)) != ERROR_SUCCESS)
+				{
+					DERROR(L"RegSetValueEx failed to write the MIDI alias to Drivers32 (WOW64), unable to register the driver.");
+					return;
+				}
+
+				if (RegSetValueExW(DriverSubKey, DRIVER_SUBCLASS_PROP_ALIAS, NULL, REG_SZ, (LPBYTE)ShakraKey, sizeof(ShakraKey)) != ERROR_SUCCESS)
+				{
+					DERROR(L"RegSetValueEx failed to write DRIVER_SUBCLASS_PROP_ALIAS32, unable to register the driver.");
+					return;
+				}
+			}
+			// Failed to register, let's delete the virtual device.
+			else 
+			{
+				MessageBox(HWND, L"No available MIDI entry for OmniMIDI to register!!!\nUninstall another user-mode MIDI driver then try again.\n\nPress OK to quit.", L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR);
+
+				SetupDiRemoveDevice(DeviceInfo, &DeviceInfoData);
+				RegDeleteValueW(DriversWOW64Key, ShakraKey);
+#ifdef _WIN64
+				RegDeleteValueW(Drivers32Key, ShakraKey);
+#endif
+			}
+
+			SetupDiDestroyDeviceInfoList(DeviceInfo);
 
 			RegCloseKey(Drivers32Key);
 #ifdef _WIN64
@@ -400,53 +444,88 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			RegCloseKey(DeviceRegKey);
 			RegCloseKey(DriversSubKey);
 
-			MessageBox(HWND, L"Driver successfully registered!", L"OmniMIDI - Success", MB_OK | MB_ICONINFORMATION);
+			if (!Silent && Pass) MessageBox(HWND, L"Driver successfully registered!", L"OmniMIDI - Success", MB_OK | MB_ICONINFORMATION);
 		}
 		else
 		{
+			bool ShowMsg = false;
+
+			// Open Drivers32 for WOW64 key
+			if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS | KEY_WOW64_32KEY, NULL, &DriversWOW64Key, &dummy) != ERROR_SUCCESS) {
+				DERROR(L"RegCreateKeyEx failed to open the Drivers32 key from the WOW64 hive, unable to (un)register the driver.");
+				return;
+			}
+
+#ifdef _WIN64
+			// Open Drivers32 key
+			if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Drivers32", 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &Drivers32Key, &dummy) != ERROR_SUCCESS) {
+				DERROR(L"RegCreateKeyEx failed to open the Drivers32 key, unable to (un)register the driver.");
+				return;
+			}
+#endif
+
 			if (!OnlyDrivers32)
 			{
 				if (!SetupDiRemoveDevice(DeviceInfo, &DeviceInfoData))
 				{
 					SetupDiDestroyDeviceInfoList(DeviceInfo);
-					DERROR(L"SetupDiRemoveDevice failed, unable to unregister the driver.");
-					return;
+
+					if (GetLastError() != ERROR_FILE_NOT_FOUND)
+					{
+						DERROR(L"SetupDiRemoveDevice failed, unable to unregister the driver.");
+						return;
+					}
+					else MessageBox(HWND, L"The virtual OmniMIDI device has been removed already.", L"OmniMIDI - Information", MB_OK | MB_ICONINFORMATION);
 				}
 			}
 
-			for (int MIDIEntry = 1; MIDIEntry < 32; MIDIEntry++)
+			// Remove old values
+			for (int MIDIEntry = MIN_DEVICEID; MIDIEntry < CLEANUP_DEVICEID; MIDIEntry++)
 			{
-				ZeroMemory(Buf, sizeof(Buf));
+				DWORD BufSize = sizeof(Buf32);
+
+				ZeroMemory(Buf32, BufSize);
+
 				ZeroMemory(ShakraKey, sizeof(ShakraKey));
+				swprintf_s(ShakraKey, (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
 
-				swprintf_s(ShakraKey, MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
-
-				if (RegQueryValueExW(Drivers32Key, ShakraKey, 0, 0, reinterpret_cast<LPBYTE>(&Buf), &bufSize) == ERROR_SUCCESS)
+				DrvWOW64 = RegQueryValueExW(DriversWOW64Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf32, &BufSize);
+				if (DrvWOW64 == ERROR_SUCCESS)
 				{
-					if (_wcsicmp(Buf, DRIVER_SUBCLASS_SUBKEYS) == 0)
-					{
-						RegDeleteValue(Drivers32Key, ShakraKey);
-					}
+					if (_wcsicmp(Buf32, SHAKRA_DRIVER_NAME) == 0 || _wcsicmp(Buf32, OMOLD_DRIVER_NAME) == 0)
+						RegDeleteValueW(DriversWOW64Key, ShakraKey);
 				}
-
-#ifdef _WIN64
-				if (RegQueryValueExW(DriversWOW64Key, ShakraKey, 0, 0, reinterpret_cast<LPBYTE>(&Buf), &bufSize) == ERROR_SUCCESS)
-				{
-					if (_wcsicmp(Buf, DRIVER_SUBCLASS_SUBKEYS) == 0)
-					{
-						RegDeleteValue(DriversWOW64Key, ShakraKey);
-					}
-				}
-#endif
 			}
 
-			RegCloseKey(Drivers32Key);
-#ifdef _WIN64
+			RegFlushKey(DriversWOW64Key);
 			RegCloseKey(DriversWOW64Key);
+
+#ifdef _WIN64
+			for (int MIDIEntry = MIN_DEVICEID; MIDIEntry < CLEANUP_DEVICEID; MIDIEntry++)
+			{
+				DWORD BufSize = sizeof(Buf64);
+
+				ZeroMemory(Buf64, BufSize);
+
+				ZeroMemory(ShakraKey, sizeof(ShakraKey));
+				swprintf_s(ShakraKey, (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
+
+				Drv32 = RegQueryValueExW(Drivers32Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf64, &BufSize);
+				if (Drv32 == ERROR_SUCCESS)
+				{
+					if (_wcsicmp(Buf64, SHAKRA_DRIVER_NAME) == 0 || _wcsicmp(Buf64, OMOLD_DRIVER_NAME) == 0)
+						RegDeleteValueW(Drivers32Key, ShakraKey);
+				}
+			}
+
+			RegFlushKey(Drivers32Key);
+			RegCloseKey(Drivers32Key);
 #endif
+
 			SetupDiDestroyDeviceInfoList(DeviceInfo);
 
-			MessageBox(HWND, L"Driver successfully unregistered!", L"OmniMIDI - Success", MB_OK | MB_ICONINFORMATION);
+			if (ShowMsg && !Silent)
+				MessageBox(HWND, L"Driver successfully unregistered!", L"OmniMIDI - Success", MB_OK | MB_ICONINFORMATION);
 		}
 
 		return;

@@ -262,12 +262,12 @@ namespace OmniMIDIConfigurator.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DonationDoNotShow {
+        public bool DoNotShowDonation {
             get {
-                return ((bool)(this["DonationDoNotShow"]));
+                return ((bool)(this["DoNotShowDonation"]));
             }
             set {
-                this["DonationDoNotShow"] = value;
+                this["DoNotShowDonation"] = value;
             }
         }
         

@@ -183,6 +183,8 @@ namespace OmniMIDIConfigurator
                 }
             }
 
+            new Drv32Troubleshooter().ShowDialog();
+
             if (Properties.Settings.Default.UpdateBranch == "choose" || 
                 (Properties.Settings.Default.UpdateBranch != Properties.Settings.Default.PreReleaseBranch[1] &&
                 Properties.Settings.Default.UpdateBranch != Properties.Settings.Default.StableBranch[1] &&
@@ -202,10 +204,6 @@ namespace OmniMIDIConfigurator
             OpenRequiredKey(ref Mapper, MPPath, false);
             OpenRequiredKey(ref Watchdog, WPath, false);
 
-            Functions.CheckDriverStatusInReg("x86", Functions.CLSID32);
-            if (Environment.Is64BitOperatingSystem)
-                Functions.CheckDriverStatusInReg("x64", Functions.CLSID64);
-
             bool dummy;
             BringToFrontMessage = WinAPI.RegisterWindowMessage("OmniMIDIConfiguratorToFront");
             m = new EventWaitHandle(false, EventResetMode.ManualReset, "OmniMIDIConfigurator", out dummy);
@@ -221,7 +219,7 @@ namespace OmniMIDIConfigurator
             // Donation dialog
             DateTime CD = DateTime.Now;
             Double D = (CD.Date - Properties.Settings.Default.DonationShownWhen).TotalDays;
-            if (D > 30 && !Properties.Settings.Default.DonationDoNotShow)
+            if (D > 30 && !Properties.Settings.Default.DoNotShowDonation)
                 new Donate().ShowDialog();
 
             Application.Run(new MainWindow(SoundFontsToAdd.ToArray()));
