@@ -182,9 +182,11 @@ namespace OmniMIDIConfigurator
 
                 ReverbV.Value = Functions.Between0And127(Convert.ToInt32(Program.SynthSettings.GetValue("Reverb", 64)));
                 ChorusV.Value = Functions.Between0And127(Convert.ToInt32(Program.SynthSettings.GetValue("Chorus", 64)));
-                EnableRCOverride.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("RCOverride", 0));
-                EnableRCOverride_CheckedChanged(null, null);
-
+                ReverbOverride.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("ReverbOverride", 0));
+                ChorusOverride.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("ChorusOverride", 0));
+                ReverbOverride_CheckedChanged(null, null);
+                ChorusOverride_CheckedChanged(null, null);
+ 
                 AllNotesIgnore.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreAllNotes", 0));
                 IgnoreNotes.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
                 AudioRampIn.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("AudioRampIn", 1));
@@ -286,7 +288,9 @@ namespace OmniMIDIConfigurator
 
             Program.SynthSettings.SetValue("Reverb", ReverbV.Value, RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("Chorus", ChorusV.Value, RegistryValueKind.DWord);
-            Program.SynthSettings.SetValue("RCOverride", Convert.ToInt32(EnableRCOverride.Checked), RegistryValueKind.DWord);
+
+            Program.SynthSettings.SetValue("ReverbOverride", Convert.ToInt32(ReverbOverride.Checked), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("ChorusOverride", Convert.ToInt32(ChorusOverride.Checked), RegistryValueKind.DWord);
 
             Program.SynthSettings.SetValue("IgnoreAllNotes", Convert.ToInt32(AllNotesIgnore.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("IgnoreNotesBetweenVel", Convert.ToInt32(IgnoreNotes.Checked), RegistryValueKind.DWord);
@@ -548,12 +552,16 @@ namespace OmniMIDIConfigurator
             SincConv.Enabled = SincInter.Checked;
         }
 
-        private void EnableRCOverride_CheckedChanged(object sender, EventArgs e)
+        private void ReverbOverride_CheckedChanged(object sender, EventArgs e)
         {
-            ReverbL.Enabled = EnableRCOverride.Checked;
-            ReverbV.Enabled = EnableRCOverride.Checked;
-            ChorusL.Enabled = EnableRCOverride.Checked;
-            ChorusV.Enabled = EnableRCOverride.Checked;
+            ReverbL.Enabled = ReverbOverride.Checked;
+            ReverbV.Enabled = ReverbOverride.Checked;
+        }
+
+        private void ChorusOverride_CheckedChanged(object sender, EventArgs e)
+        {
+            ChorusL.Enabled = ReverbOverride.Checked;
+            ChorusV.Enabled = ReverbOverride.Checked;
         }
 
         private void IgnoreNotes_CheckedChanged(object sender, EventArgs e)

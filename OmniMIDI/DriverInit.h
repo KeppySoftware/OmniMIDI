@@ -975,7 +975,7 @@ void PrepareVolumeKnob() {
 	ChVolumeStruct.fCurrent = 1.0f;
 	ChVolumeStruct.fTarget = SynthVolume;
 	ChVolumeStruct.fTime = 0.0f;
-	ChVolumeStruct.lCurve = 0;
+	ChVolumeStruct.lCurve = LogarithmVol;
 	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
 	CheckUp(FALSE, ERRORCODE, "Stream Volume FX Preparation", FALSE);
 }

@@ -32,6 +32,7 @@
             this.ReturnOK = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.VolValN = new System.Windows.Forms.NumericUpDown();
+            this.LogarithmVol = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.VolTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VolValN)).BeginInit();
             this.SuspendLayout();
@@ -88,12 +89,24 @@
             0});
             this.VolValN.ValueChanged += new System.EventHandler(this.ValueChanged);
             // 
+            // LogarithmVol
+            // 
+            this.LogarithmVol.AutoSize = true;
+            this.LogarithmVol.Location = new System.Drawing.Point(12, 80);
+            this.LogarithmVol.Name = "LogarithmVol";
+            this.LogarithmVol.Size = new System.Drawing.Size(142, 17);
+            this.LogarithmVol.TabIndex = 21;
+            this.LogarithmVol.Text = "Use logarithmic changes";
+            this.LogarithmVol.UseVisualStyleBackColor = true;
+            this.LogarithmVol.CheckedChanged += new System.EventHandler(this.LogarithmVol_CheckedChanged);
+            // 
             // PreciseControlVol
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(322, 111);
+            this.ClientSize = new System.Drawing.Size(318, 107);
             this.ControlBox = false;
+            this.Controls.Add(this.LogarithmVol);
             this.Controls.Add(this.VolValN);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ReturnOK);
@@ -119,5 +132,6 @@
         private System.Windows.Forms.Button ReturnOK;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown VolValN;
+        private System.Windows.Forms.CheckBox LogarithmVol;
     }
 }

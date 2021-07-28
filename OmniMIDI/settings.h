@@ -614,7 +614,8 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"ReduceBootUpDelay", NULL, &dwType, (LPBYTE)&ManagedSettings.ReduceBootUpDelay, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"XASamplesPerFrame", NULL, &dwType, (LPBYTE)&ManagedSettings.XASamplesPerFrame, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"XASPFSweepRate", NULL, &dwType, (LPBYTE)&ManagedSettings.XASPFSweepRate, &dwSize);
-
+			RegQueryValueEx(Configuration.Address, L"LogarithmVol", NULL, &dwType, (LPBYTE)&LogarithmVol, &dwSize);
+			
 			if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(Configuration.Address, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&TempNCWA, &dwSize);
 			else ManagedSettings.NotesCatcherWithAudio = TRUE;
 		
@@ -730,7 +731,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 
 		if (TempISR != ManagedSettings.IgnoreSysReset || SettingsManagedByClient) {
 			if (!SettingsManagedByClient) ManagedSettings.IgnoreSysReset = TempNOFF1;
-			BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
+			if (RT) BASS_ChannelFlags(OMStream, ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0, BASS_MIDI_NOSYSRESET);
 		}
 
 		if (TempSI != ManagedSettings.SincInter || TempSC != ManagedSettings.SincConv || SettingsManagedByClient) {
@@ -1000,19 +1001,29 @@ void MixerCheck() {
 }
 
 void RevbNChor() {
+	if (!ManagedSettings.EnableSFX)
+		return;
+	
 	try {
-		BOOL RCOverride = FALSE;
+		BOOL Reverb = FALSE;
+		BOOL Chorus = FALSE;
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
-		RegQueryValueEx(Configuration.Address, L"RCOverride", NULL, &dwType, (LPBYTE)&RCOverride, &dwSize);
-		RegQueryValueEx(Configuration.Address, L"Reverb", NULL, &dwType, (LPBYTE)&reverb, &dwSize);
-		RegQueryValueEx(Configuration.Address, L"Chorus", NULL, &dwType, (LPBYTE)&chorus, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ReverbOverride", NULL, &dwType, (LPBYTE)&Reverb, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ChorusOverride", NULL, &dwType, (LPBYTE)&Chorus, &dwSize);
 
-		if (RCOverride) {
-			for (int i = 0; i <= 15; ++i) {
+		if (Reverb) {
+			RegQueryValueEx(Configuration.Address, L"Reverb", NULL, &dwType, (LPBYTE)&reverb, &dwSize);
+
+			for (int i = 0; i <= 15; ++i)
 				BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_REVERB, reverb);
+		}
+
+		if (Chorus) {
+			RegQueryValueEx(Configuration.Address, L"Chorus", NULL, &dwType, (LPBYTE)&chorus, &dwSize);
+
+			for (int i = 0; i <= 15; ++i)
 				BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_CHORUS, chorus);
-			}
 		}
 	}
 	catch (...) {

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Win32;
+using System;
 using System.Windows.Forms;
 
 namespace OmniMIDIConfigurator
@@ -23,6 +17,13 @@ namespace OmniMIDIConfigurator
 
             VolValN.Value = CV;
             VolTrackBar.Value = CV;
+
+            LogarithmVol.Checked = Convert.ToBoolean((int)Program.SynthSettings.GetValue("LogarithmVol", 0));
+        }
+
+        private void LogarithmVol_CheckedChanged(object sender, EventArgs e)
+        {
+            Program.SynthSettings.SetValue("LogarithmVol", Convert.ToInt32(LogarithmVol.Checked), RegistryValueKind.DWord);
         }
 
         private void ValueChanged(object sender, EventArgs e)

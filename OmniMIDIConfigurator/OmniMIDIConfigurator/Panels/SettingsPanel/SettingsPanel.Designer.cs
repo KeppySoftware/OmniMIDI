@@ -39,7 +39,7 @@
             this.ReverbV = new System.Windows.Forms.NumericUpDown();
             this.ChorusL = new System.Windows.Forms.Label();
             this.ReverbL = new System.Windows.Forms.Label();
-            this.EnableRCOverride = new System.Windows.Forms.CheckBox();
+            this.ReverbOverride = new System.Windows.Forms.CheckBox();
             this.label14 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -122,6 +122,7 @@
             this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
             this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeEVBuf = new OmniMIDIConfigurator.LinkLabelEx();
+            this.ChorusOverride = new System.Windows.Forms.CheckBox();
             this.EnginesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChorusV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReverbV)).BeginInit();
@@ -143,6 +144,7 @@
             // 
             this.EnginesBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.EnginesBox.Controls.Add(this.ChorusOverride);
             this.EnginesBox.Controls.Add(this.NoSFGenLimits);
             this.EnginesBox.Controls.Add(this.LinDecVol);
             this.EnginesBox.Controls.Add(this.LinAttMod);
@@ -151,7 +153,7 @@
             this.EnginesBox.Controls.Add(this.ReverbV);
             this.EnginesBox.Controls.Add(this.ChorusL);
             this.EnginesBox.Controls.Add(this.ReverbL);
-            this.EnginesBox.Controls.Add(this.EnableRCOverride);
+            this.EnginesBox.Controls.Add(this.ReverbOverride);
             this.EnginesBox.Controls.Add(this.label14);
             this.EnginesBox.Controls.Add(this.label11);
             this.EnginesBox.Controls.Add(this.label10);
@@ -232,7 +234,7 @@
             // ChorusV
             // 
             this.ChorusV.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ChorusV.Location = new System.Drawing.Point(229, 446);
+            this.ChorusV.Location = new System.Drawing.Point(209, 446);
             this.ChorusV.Maximum = new decimal(new int[] {
             127,
             0,
@@ -250,7 +252,7 @@
             // ReverbV
             // 
             this.ReverbV.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ReverbV.Location = new System.Drawing.Point(86, 446);
+            this.ReverbV.Location = new System.Drawing.Point(209, 426);
             this.ReverbV.Maximum = new decimal(new int[] {
             127,
             0,
@@ -269,7 +271,7 @@
             // 
             this.ChorusL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ChorusL.AutoSize = true;
-            this.ChorusL.Location = new System.Drawing.Point(151, 448);
+            this.ChorusL.Location = new System.Drawing.Point(129, 447);
             this.ChorusL.Name = "ChorusL";
             this.ChorusL.Size = new System.Drawing.Size(79, 13);
             this.ChorusL.TabIndex = 48;
@@ -279,31 +281,30 @@
             // 
             this.ReverbL.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.ReverbL.AutoSize = true;
-            this.ReverbL.Location = new System.Drawing.Point(6, 448);
+            this.ReverbL.Location = new System.Drawing.Point(127, 428);
             this.ReverbL.Name = "ReverbL";
             this.ReverbL.Size = new System.Drawing.Size(81, 13);
             this.ReverbL.TabIndex = 47;
             this.ReverbL.Text = "Reverb (0-127):";
             // 
-            // EnableRCOverride
+            // ReverbOverride
             // 
-            this.EnableRCOverride.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.EnableRCOverride.AutoSize = true;
-            this.EnableRCOverride.Location = new System.Drawing.Point(9, 426);
-            this.EnableRCOverride.Name = "EnableRCOverride";
-            this.EnableRCOverride.Size = new System.Drawing.Size(478, 17);
-            this.EnableRCOverride.TabIndex = 13;
-            this.EnableRCOverride.Text = "Override reverb and chorus (Could affect the audio quality of the MIDI that is be" +
-    "ing played back)";
-            this.EnableRCOverride.UseVisualStyleBackColor = true;
-            this.EnableRCOverride.CheckedChanged += new System.EventHandler(this.EnableRCOverride_CheckedChanged);
+            this.ReverbOverride.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ReverbOverride.AutoSize = true;
+            this.ReverbOverride.Location = new System.Drawing.Point(9, 427);
+            this.ReverbOverride.Name = "ReverbOverride";
+            this.ReverbOverride.Size = new System.Drawing.Size(99, 17);
+            this.ReverbOverride.TabIndex = 13;
+            this.ReverbOverride.Text = "Override reverb";
+            this.ReverbOverride.UseVisualStyleBackColor = true;
+            this.ReverbOverride.CheckedChanged += new System.EventHandler(this.ReverbOverride_CheckedChanged);
             // 
             // label14
             // 
             this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(6, 410);
+            this.label14.Location = new System.Drawing.Point(6, 411);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(237, 13);
             this.label14.TabIndex = 0;
@@ -1336,6 +1337,18 @@
             this.ChangeEVBuf.Text = "Change size of the events buffer (EVBuffer)";
             this.ChangeEVBuf.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeEVBuf_LinkClicked);
             // 
+            // ChorusOverride
+            // 
+            this.ChorusOverride.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ChorusOverride.AutoSize = true;
+            this.ChorusOverride.Location = new System.Drawing.Point(9, 446);
+            this.ChorusOverride.Name = "ChorusOverride";
+            this.ChorusOverride.Size = new System.Drawing.Size(101, 17);
+            this.ChorusOverride.TabIndex = 64;
+            this.ChorusOverride.Text = "Override chorus";
+            this.ChorusOverride.UseVisualStyleBackColor = true;
+            this.ChorusOverride.CheckedChanged += new System.EventHandler(this.ChorusOverride_CheckedChanged);
+            // 
             // SettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1427,7 +1440,7 @@
         private System.Windows.Forms.NumericUpDown ReverbV;
         private System.Windows.Forms.Label ChorusL;
         private System.Windows.Forms.Label ReverbL;
-        private System.Windows.Forms.CheckBox EnableRCOverride;
+        private System.Windows.Forms.CheckBox ReverbOverride;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ContextMenu VolTrackBarMenu;
         private System.Windows.Forms.MenuItem FineTuneKnobIt;
@@ -1461,5 +1474,6 @@
         private LinkLabelEx MIDIFeedbackTool;
         private LinkLabelEx MinidumpsFolder;
         private System.Windows.Forms.Button Troubleshooter;
+        private System.Windows.Forms.CheckBox ChorusOverride;
     }
 }

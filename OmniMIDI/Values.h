@@ -108,6 +108,7 @@ BOOL ASIOInit = FALSE;
 
 // Stream
 BASS_INFO info;
+BOOL LogarithmVol = FALSE;
 FLOAT SynthVolume = 1.0;
 
 // Registry system
