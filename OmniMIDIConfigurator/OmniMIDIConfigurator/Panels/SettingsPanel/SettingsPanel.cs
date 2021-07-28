@@ -560,8 +560,8 @@ namespace OmniMIDIConfigurator
 
         private void ChorusOverride_CheckedChanged(object sender, EventArgs e)
         {
-            ChorusL.Enabled = ReverbOverride.Checked;
-            ChorusV.Enabled = ReverbOverride.Checked;
+            ChorusL.Enabled = ChorusOverride.Checked;
+            ChorusV.Enabled = ChorusOverride.Checked;
         }
 
         private void IgnoreNotes_CheckedChanged(object sender, EventArgs e)
