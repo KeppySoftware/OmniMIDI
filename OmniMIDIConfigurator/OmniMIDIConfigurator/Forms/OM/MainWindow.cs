@@ -289,12 +289,12 @@ namespace OmniMIDIConfigurator
 
         private void OMDRegister_Click(object sender, EventArgs e)
         {
-            Functions.DriverRegistry(false);
+            Functions.DriverRegistry(false, false);
         }
 
         private void OMDUnregister_Click(object sender, EventArgs e)
         {
-            Functions.DriverRegistry(true);
+            Functions.DriverRegistry(true, false);
         }
 
         private void RegTroubleshooter_Click(object sender, EventArgs e)

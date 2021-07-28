@@ -141,14 +141,12 @@ namespace OmniMIDIDriverRegister
         {
             if (!RestartAsAdminIfRequired()) return;
 
-            String SysDir = Environment.ExpandEnvironmentVariables(@"%windir%\System32");
-
             ProcessStartInfo SI = new ProcessStartInfo();
             SI.UseShellExecute = true;
             SI.Verb = "RunAs";
-            SI.FileName = String.Format("{0}\\rundll32.exe", SysDir);
-            SI.Arguments = String.Format("OmniMIDI.dll,DriverRegistration RegisterDrv{0}", IsSilent ? "S" : String.Empty);
 
+            SI.FileName = String.Format(@"{0}\{1}", Environment.GetFolderPath(Environment.SpecialFolder.System), "rundll32.exe");
+            SI.Arguments = String.Format("OmniMIDI.dll,DriverRegistration RegisterDrv{0}", IsSilent ? "S" : String.Empty);
             var P = Process.Start(SI);
             P.WaitForExit();
 
@@ -197,11 +195,7 @@ namespace OmniMIDIDriverRegister
             SI.UseShellExecute = true;
             SI.Verb = "RunAs";
 
-            if (Environment.Is64BitOperatingSystem)
-                SI.FileName = Environment.ExpandEnvironmentVariables(@"%windir%\Sysnative\rundll32.exe");
-            else
-                SI.FileName = Environment.ExpandEnvironmentVariables(@"%windir%\System32\rundll32.exe");
-
+            SI.FileName = String.Format(@"{0}\{1}", Environment.GetFolderPath(Environment.SpecialFolder.System), "rundll32.exe");
             SI.Arguments = String.Format("OmniMIDI.dll,DriverRegistration UnregisterDrv{0}", IsSilent ? "S" : String.Empty);
             var P = Process.Start(SI);
             P.WaitForExit();

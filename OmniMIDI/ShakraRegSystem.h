@@ -273,7 +273,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 				ZeroMemory(Buf32, BufSize);
 
 				ZeroMemory(ShakraKey, sizeof(ShakraKey));
-				swprintf_s(ShakraKey, (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
+				swprintf_s(ShakraKey, sizeof(ShakraKey), (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
 
 				DrvWOW64 = RegQueryValueExW(DriversWOW64Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf32, &BufSize);
 				if (DrvWOW64 == ERROR_SUCCESS)
@@ -291,7 +291,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 				ZeroMemory(Buf64, BufSize);
 
 				ZeroMemory(ShakraKey, sizeof(ShakraKey));
-				swprintf_s(ShakraKey, (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
+				swprintf_s(ShakraKey, sizeof(ShakraKey), (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
 
 				Drv32 = RegQueryValueExW(Drivers32Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf64, &BufSize);
 				if (Drv32 == ERROR_SUCCESS)
@@ -309,7 +309,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 				DWORD B32S = sizeof(Buf32), B64S = sizeof(Buf64);
 
 				ZeroMemory(ShakraKey, sizeof(ShakraKey));
-				swprintf_s(ShakraKey, MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
+				swprintf_s(ShakraKey, sizeof(ShakraKey), MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
 
 #ifndef _WIN64
 				if (!Pass) {
@@ -487,7 +487,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 				ZeroMemory(Buf32, BufSize);
 
 				ZeroMemory(ShakraKey, sizeof(ShakraKey));
-				swprintf_s(ShakraKey, (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
+				swprintf_s(ShakraKey, sizeof(ShakraKey), (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
 
 				DrvWOW64 = RegQueryValueExW(DriversWOW64Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf32, &BufSize);
 				if (DrvWOW64 == ERROR_SUCCESS)
@@ -508,7 +508,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 				ZeroMemory(Buf64, BufSize);
 
 				ZeroMemory(ShakraKey, sizeof(ShakraKey));
-				swprintf_s(ShakraKey, (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
+				swprintf_s(ShakraKey, sizeof(ShakraKey), (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
 
 				Drv32 = RegQueryValueExW(Drivers32Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf64, &BufSize);
 				if (Drv32 == ERROR_SUCCESS)

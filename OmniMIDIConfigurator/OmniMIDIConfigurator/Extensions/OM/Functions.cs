@@ -505,12 +505,23 @@ namespace OmniMIDIConfigurator
             return false;
         }
 
-        public static void DriverRegistry(Boolean Uninstall)
+        public static void DriverRegistry(Boolean Uninstall, Boolean Silent)
         {
             try
             {
-                Process Proc = Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", Uninstall ? "/unregisterv" : "/registerv");
+                string FinalDir = "";
+                string SysDir = "";
+
+                if (Environment.Is64BitOperatingSystem)
+                    SysDir = Environment.ExpandEnvironmentVariables(@"%windir%\Sysnative");
+                else
+                    SysDir = Environment.GetFolderPath(Environment.SpecialFolder.SystemX86);
+
+                FinalDir = String.Format(@"{0}\{1}", SysDir, @"OmniMIDI\OmniMIDIDriverRegister.exe");
+
+                Process Proc = Process.Start(FinalDir, Uninstall ? (Silent ? "/unregisterv" : "/unregister") : (Silent ? "/registerv" : "/register"));
                 Proc.WaitForExit();
+
                 MessageBox.Show("Please restart Windows to apply the changes.", "OmniMIDI", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

@@ -66,22 +66,16 @@ namespace OmniMIDIConfigurator
                 try
                 {
                     String Val = String.Format("midi{0}", i);
+                    String MIDIDev = Functions.CLSID32.GetValue(Val, "wdmaud.drv").ToString();
                     Devs32.Add(new Drv32Dev()
                     {
                         ID = Val,
-                        Library = Functions.CLSID32.GetValue(Val, "wdmaud.drv").ToString()
+                        Library = MIDIDev
                     });
+
+                    if (MIDIDev.Contains("OmniMIDI.dll")) Status32 = true;
                 }
                 catch { }
-            }
-
-            foreach (Drv32Dev Dev in Devs32)
-            {
-                if (Dev.Library.Equals("OmniMIDI.dll\0"))
-                {
-                    Status32 = true;
-                    break;
-                }
             }
 
             Drv32L.Items.Clear();
@@ -110,22 +104,16 @@ namespace OmniMIDIConfigurator
                     try
                     {
                         String Val = String.Format("midi{0}", i);
+                        String MIDIDev = Functions.CLSID64.GetValue(Val, "wdmaud.drv").ToString();
                         Devs64.Add(new Drv32Dev()
                         {
                             ID = Val,
-                            Library = Functions.CLSID64.GetValue(Val, "wdmaud.drv").ToString()
+                            Library = MIDIDev
                         });
+
+                        if (MIDIDev.Contains("OmniMIDI.dll")) Status64 = true;
                     }
                     catch { }
-                }
-
-                foreach (Drv32Dev Dev in Devs64)
-                {
-                    if (Dev.Library.Equals("OmniMIDI.dll\0"))
-                    {
-                        Status64 = true;
-                        break;
-                    }
                 }
 
                 Drv64L.Items.Clear();
@@ -147,8 +135,10 @@ namespace OmniMIDIConfigurator
             try
             {
                 bool Registered = false;
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", "/unregisterv").WaitForExit();
-                Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.SystemX86) + "\\OmniMIDI\\OmniMIDIDriverRegister.exe", "/register").WaitForExit();
+
+                Functions.DriverRegistry(true, true);
+                Functions.DriverRegistry(false, true);
+
                 Registered = CheckDevs();
                 FixBtn.Enabled = !Registered;
                 FixLabel.Text = String.Format("{0}", Registered ? Fixed : ToFix);
