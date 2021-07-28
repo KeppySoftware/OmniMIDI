@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.MWTab = new System.Windows.Forms.TabControl();
             this.ListsEdt = new System.Windows.Forms.TabPage();
-            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.Set = new System.Windows.Forms.TabPage();
             this.ExportPres = new System.Windows.Forms.Button();
             this.ImportPres = new System.Windows.Forms.Button();
@@ -41,7 +40,6 @@
             this.QILabel = new System.Windows.Forms.Label();
             this.RestoreDefault = new System.Windows.Forms.Button();
             this.ApplySettings = new System.Windows.Forms.Button();
-            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWSStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -91,6 +89,10 @@
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
+            this.menuItem9 = new System.Windows.Forms.MenuItem();
+            this.RegTroubleshooter = new System.Windows.Forms.MenuItem();
+            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
+            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWTab.SuspendLayout();
             this.ListsEdt.SuspendLayout();
             this.Set.SuspendLayout();
@@ -107,7 +109,7 @@
             this.MWTab.Location = new System.Drawing.Point(0, 0);
             this.MWTab.Name = "MWTab";
             this.MWTab.SelectedIndex = 0;
-            this.MWTab.Size = new System.Drawing.Size(715, 483);
+            this.MWTab.Size = new System.Drawing.Size(715, 462);
             this.MWTab.TabIndex = 0;
             this.MWTab.SelectedIndexChanged += new System.EventHandler(this.MWTab_SelectedIndexChanged);
             // 
@@ -117,20 +119,10 @@
             this.ListsEdt.Location = new System.Drawing.Point(4, 22);
             this.ListsEdt.Name = "ListsEdt";
             this.ListsEdt.Padding = new System.Windows.Forms.Padding(3);
-            this.ListsEdt.Size = new System.Drawing.Size(707, 457);
+            this.ListsEdt.Size = new System.Drawing.Size(707, 436);
             this.ListsEdt.TabIndex = 0;
             this.ListsEdt.Text = "Lists editor";
             this.ListsEdt.UseVisualStyleBackColor = true;
-            // 
-            // SFLEPanel
-            // 
-            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
-            this.SFLEPanel.Name = "SFLEPanel";
-            this.SFLEPanel.Size = new System.Drawing.Size(707, 457);
-            this.SFLEPanel.TabIndex = 0;
             // 
             // Set
             // 
@@ -228,22 +220,12 @@
             this.ApplySettings.Text = "Apply";
             this.ApplySettings.UseVisualStyleBackColor = true;
             // 
-            // SETPanel
-            // 
-            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SETPanel.Location = new System.Drawing.Point(0, 0);
-            this.SETPanel.Name = "SETPanel";
-            this.SETPanel.Size = new System.Drawing.Size(707, 425);
-            this.SETPanel.TabIndex = 1;
-            // 
             // MWSStrip
             // 
             this.MWSStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.VersionLabel});
-            this.MWSStrip.Location = new System.Drawing.Point(0, 480);
+            this.MWSStrip.Location = new System.Drawing.Point(0, 438);
             this.MWSStrip.Name = "MWSStrip";
             this.MWSStrip.Size = new System.Drawing.Size(713, 22);
             this.MWSStrip.SizingGrip = false;
@@ -350,7 +332,9 @@
             this.menuItem16.Index = 2;
             this.menuItem16.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.OMDRegister,
-            this.OMDUnregister});
+            this.OMDUnregister,
+            this.menuItem9,
+            this.RegTroubleshooter});
             this.menuItem16.Text = "OmniMIDI register tool";
             // 
             // OMDRegister
@@ -575,11 +559,42 @@
             // 
             this.CheckUpdates.DoWork += new System.ComponentModel.DoWorkEventHandler(this.CheckUpdates_DoWork);
             // 
+            // menuItem9
+            // 
+            this.menuItem9.Index = 2;
+            this.menuItem9.Text = "-";
+            // 
+            // RegTroubleshooter
+            // 
+            this.RegTroubleshooter.Index = 3;
+            this.RegTroubleshooter.Text = "Registration troubleshooter";
+            this.RegTroubleshooter.Click += new System.EventHandler(this.RegTroubleshooter_Click);
+            // 
+            // SFLEPanel
+            // 
+            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
+            this.SFLEPanel.Name = "SFLEPanel";
+            this.SFLEPanel.Size = new System.Drawing.Size(707, 436);
+            this.SFLEPanel.TabIndex = 0;
+            // 
+            // SETPanel
+            // 
+            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SETPanel.Location = new System.Drawing.Point(0, 0);
+            this.SETPanel.Name = "SETPanel";
+            this.SETPanel.Size = new System.Drawing.Size(707, 425);
+            this.SETPanel.TabIndex = 1;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(713, 502);
+            this.ClientSize = new System.Drawing.Size(713, 460);
             this.Controls.Add(this.MWSStrip);
             this.Controls.Add(this.MWTab);
             this.DoubleBuffered = true;
@@ -664,6 +679,8 @@
         private System.Windows.Forms.MenuItem DWCF;
         private System.Windows.Forms.MenuItem CUBBtn;
         private System.Windows.Forms.MenuItem menuItem6;
+        private System.Windows.Forms.MenuItem menuItem9;
+        private System.Windows.Forms.MenuItem RegTroubleshooter;
     }
 }
 

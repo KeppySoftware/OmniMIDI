@@ -20,5 +20,5 @@ EXPORTS
 	LoadCustomSoundFontsList
 	InitializeCallbackFeatures @ 51 NONAME
 	RunCallbackFunction @ 67 NONAME
-	int_NFM = NoFeedbackMode
+	NoFeedbackMode @ 44 NONAME
 	timeGetTime64

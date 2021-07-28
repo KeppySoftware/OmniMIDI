@@ -56,7 +56,7 @@ const wchar_t DRIVER_SUBCLASS_PROP_DESCRIPTION[] = L"Description";
 const wchar_t DRIVER_SUBCLASS_PROP_ALIAS[] = L"Alias";
 const wchar_t OMOLD_DRIVER_NAME[] = L"OmniMIDI.dll";
 const wchar_t SHAKRA_DRIVER_NAME[] = L"OmniMIDI.dll\0";
-const wchar_t WDMAUD_DRIVER_NAME[] = L"wdmaud.drv\0";
+const wchar_t WDMAUD_DRIVER_NAME[] = L"wdmaud.drv";
 
 static bool DriverBusy = false;
 

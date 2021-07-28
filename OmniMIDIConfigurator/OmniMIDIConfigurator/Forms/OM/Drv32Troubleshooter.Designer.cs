@@ -29,10 +29,11 @@ namespace OmniMIDIConfigurator
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Drv32Troubleshooter));
             this.Drv32L = new System.Windows.Forms.ListView();
             this.MD = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.DLL = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.label1 = new System.Windows.Forms.Label();
+            this.FixLabel = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.Drv64L = new System.Windows.Forms.ListView();
@@ -57,7 +58,7 @@ namespace OmniMIDIConfigurator
             this.Drv32L.HideSelection = false;
             this.Drv32L.Location = new System.Drawing.Point(5, 17);
             this.Drv32L.Name = "Drv32L";
-            this.Drv32L.Size = new System.Drawing.Size(184, 232);
+            this.Drv32L.Size = new System.Drawing.Size(210, 232);
             this.Drv32L.TabIndex = 0;
             this.Drv32L.UseCompatibleStateImageBehavior = false;
             this.Drv32L.View = System.Windows.Forms.View.Details;
@@ -65,29 +66,28 @@ namespace OmniMIDIConfigurator
             // MD
             // 
             this.MD.Text = "Device ID";
+            this.MD.Width = 70;
             // 
             // DLL
             // 
             this.DLL.Text = "Device library";
-            this.DLL.Width = 120;
+            this.DLL.Width = 135;
             // 
-            // label1
+            // FixLabel
             // 
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(394, 61);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "OmniMIDI has detected an issue with the registration of the driver,\r\nwhich might " +
-    "cause issues with the driver on some MIDI applications.\r\n\r\nThe configurator can " +
-    "fix those issues for you.";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.FixLabel.Location = new System.Drawing.Point(12, 9);
+            this.FixLabel.Name = "FixLabel";
+            this.FixLabel.Size = new System.Drawing.Size(447, 61);
+            this.FixLabel.TabIndex = 1;
+            this.FixLabel.Text = resources.GetString("FixLabel.Text");
+            this.FixLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.Drv32L);
             this.groupBox1.Location = new System.Drawing.Point(12, 75);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(194, 254);
+            this.groupBox1.Size = new System.Drawing.Size(220, 254);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Drivers32 (x86)";
@@ -95,9 +95,9 @@ namespace OmniMIDIConfigurator
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.Drv64L);
-            this.groupBox2.Location = new System.Drawing.Point(212, 75);
+            this.groupBox2.Location = new System.Drawing.Point(238, 75);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(194, 254);
+            this.groupBox2.Size = new System.Drawing.Size(220, 254);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Drivers32 (x64)";
@@ -115,7 +115,7 @@ namespace OmniMIDIConfigurator
             this.Drv64L.HideSelection = false;
             this.Drv64L.Location = new System.Drawing.Point(5, 17);
             this.Drv64L.Name = "Drv64L";
-            this.Drv64L.Size = new System.Drawing.Size(184, 232);
+            this.Drv64L.Size = new System.Drawing.Size(210, 232);
             this.Drv64L.TabIndex = 0;
             this.Drv64L.UseCompatibleStateImageBehavior = false;
             this.Drv64L.View = System.Windows.Forms.View.Details;
@@ -123,16 +123,17 @@ namespace OmniMIDIConfigurator
             // columnHeader1
             // 
             this.columnHeader1.Text = "Device ID";
+            this.columnHeader1.Width = 70;
             // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Device library";
-            this.columnHeader2.Width = 120;
+            this.columnHeader2.Width = 135;
             // 
             // CloseBtn
             // 
             this.CloseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseBtn.Location = new System.Drawing.Point(333, 342);
+            this.CloseBtn.Location = new System.Drawing.Point(384, 342);
             this.CloseBtn.Name = "CloseBtn";
             this.CloseBtn.Size = new System.Drawing.Size(75, 23);
             this.CloseBtn.TabIndex = 4;
@@ -143,7 +144,7 @@ namespace OmniMIDIConfigurator
             // FixBtn
             // 
             this.FixBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.FixBtn.Location = new System.Drawing.Point(252, 342);
+            this.FixBtn.Location = new System.Drawing.Point(303, 342);
             this.FixBtn.Name = "FixBtn";
             this.FixBtn.Size = new System.Drawing.Size(75, 23);
             this.FixBtn.TabIndex = 5;
@@ -155,13 +156,13 @@ namespace OmniMIDIConfigurator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(420, 377);
+            this.ClientSize = new System.Drawing.Size(471, 377);
             this.ControlBox = false;
             this.Controls.Add(this.FixBtn);
             this.Controls.Add(this.CloseBtn);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.FixLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "Drv32Troubleshooter";
             this.ShowIcon = false;
@@ -178,7 +179,7 @@ namespace OmniMIDIConfigurator
         private System.Windows.Forms.ListView Drv32L;
         private System.Windows.Forms.ColumnHeader MD;
         private System.Windows.Forms.ColumnHeader DLL;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label FixLabel;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ListView Drv64L;

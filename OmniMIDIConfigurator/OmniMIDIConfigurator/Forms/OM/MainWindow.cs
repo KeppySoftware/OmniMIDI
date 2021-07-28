@@ -297,6 +297,11 @@ namespace OmniMIDIConfigurator
             Functions.DriverRegistry(true);
         }
 
+        private void RegTroubleshooter_Click(object sender, EventArgs e)
+        {
+            new Drv32Troubleshooter(false).ShowDialog();
+        }
+
         private void OMAPCpl_Click(object sender, EventArgs e)
         {
             new OmniMapperCpl().ShowDialog();

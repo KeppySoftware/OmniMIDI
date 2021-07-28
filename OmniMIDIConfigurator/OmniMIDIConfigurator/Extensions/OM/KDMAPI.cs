@@ -17,7 +17,7 @@ namespace OmniMIDIConfigurator
         [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]
         public static extern void ResetKDMAPIStream();
 
-        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "int_NFM")]
+        [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall, EntryPoint = "#44")]
         public static extern void DisableFeedbackMode();
 
         [DllImport("OmniMIDI.dll", CallingConvention = CallingConvention.StdCall)]

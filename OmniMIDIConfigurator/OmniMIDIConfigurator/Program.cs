@@ -183,7 +183,7 @@ namespace OmniMIDIConfigurator
                 }
             }
 
-            new Drv32Troubleshooter().ShowDialog();
+            new Drv32Troubleshooter(true).ShowDialog();
 
             if (Properties.Settings.Default.UpdateBranch == "choose" || 
                 (Properties.Settings.Default.UpdateBranch != Properties.Settings.Default.PreReleaseBranch[1] &&
