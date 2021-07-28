@@ -312,18 +312,18 @@ NQST NtQuerySystemTime = 0;
 DDP DefDriverProcImp = 0;
 
 // Critical sections but handled by OmniMIDI functions because f**k Windows
-DWORD DummyPlayBufData() noexcept { return 0; };
-VOID DummyPrepareForBASSMIDI(DWORD, DWORD_PTR) noexcept { return; };
-MMRESULT DummyParseData(DWORD_PTR) noexcept { return MMSYSERR_NOERROR; };
+void DummyPlayBufData() noexcept { return; };
+void DummyPrepareForBASSMIDI(DWORD, DWORD_PTR) noexcept { return; };
+void DummyParseData(DWORD_PTR) noexcept { return; };
 BOOL WINAPI DummyBMSE(HSTREAM, DWORD, DWORD, DWORD) noexcept { return TRUE; };
 DWORD CALLBACK DummyProcData(void*, DWORD, void*) noexcept { return 0; };
 
 // Hyper switch
 BOOL HyperMode = 0;
-MMRESULT(*_PrsData)(DWORD_PTR dwParam1) = DummyParseData;
-VOID(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD_PTR dwParam1) = DummyPrepareForBASSMIDI;
-DWORD(*_PlayBufData)(void) = DummyPlayBufData;
-DWORD(*_PlayBufDataChk)(void) = DummyPlayBufData;
+void(*_PrsData)(DWORD_PTR dwParam1) = DummyParseData;
+void(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD_PTR dwParam1) = DummyPrepareForBASSMIDI;
+void(*_PlayBufData)(void) = DummyPlayBufData;
+void(*_PlayBufDataChk)(void) = DummyPlayBufData;
 BOOL(WINAPI* _BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = DummyBMSE;
 DWORD(CALLBACK* _ProcData)(void* buffer, DWORD length, void* user) = DummyProcData;
 // What does it do? It gets rid of the useless functions,

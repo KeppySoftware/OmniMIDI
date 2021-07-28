@@ -679,15 +679,14 @@ extern "C" BOOL KDMAPI SendCustomEvent(DWORD eventtype, DWORD chan, DWORD param)
 	return _BMSE(OMStream, chan, eventtype, param);
 }
 
-extern "C" MMRESULT KDMAPI SendDirectData(DWORD dwMsg) noexcept {
+extern "C" VOID KDMAPI SendDirectData(DWORD dwMsg) noexcept {
 	// Send it to the pointed ParseData function (Either ParseData or ParseDataHyper)
-	return _PrsData(dwMsg);
+	_PrsData(dwMsg);
 }
 
-extern "C" MMRESULT KDMAPI SendDirectDataNoBuf(DWORD dwMsg) noexcept {
+extern "C" VOID KDMAPI SendDirectDataNoBuf(DWORD dwMsg) noexcept {
 	// Send the data directly to BASSMIDI, bypassing the buffer altogether
 	_PforBASSMIDI(0, dwMsg);
-	return MMSYSERR_NOERROR;
 }
 
 extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {

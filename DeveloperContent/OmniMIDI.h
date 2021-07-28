@@ -2,6 +2,9 @@
 OmniMIDI, a fork of BASSMIDI Driver - Declarations
 
 Thank you Kode54 for allowing me to fork your awesome driver.
+
+KDMAPI_OMONLY = Used internally by OmniMIDI
+KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 */
 #pragma once
 
@@ -13,18 +16,30 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define KDMAPI WINAPI
 #endif
 
+// KDMAPI version
+#define CUR_MAJOR	4
+#define CUR_MINOR	1
+#define CUR_BUILD	0
+#define CUR_REV		0
+
 // Audio engines
 #define AUDTOWAV 0
-#define DSOUND_ENGINE 1
+#define DXAUDIO_ENGINE 1
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
-
-#define DEFAULT_SETTINGS { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 44100, 0, 30, WASAPI_ENGINE, 1, 0, 0, 75, 1, 1, 10000, 127, 500, 2, 0, 5, 0, 5 }
-#define DEFAULT_DEBUG { 0.0f, { 0 } }
+#define XAUDIO_ENGINE 4
+#define OLD_WASAPI 69420
 
 // Settings
 #define OM_SET						0x0
 #define OM_GET						0x1
+#define OM_MANAGE					0x2
+#define OM_LEAVE					0x3
+
+// DO NOT USE THOSE, THEY ARE USED INTERNALLY BY OMNIMIDI
+#define ON1I8F97TJ6S5SI07LDPJBSB	0xFFFFE
+#define INVC2MDUBR3YR8DWOF2L55WL	0xFFFFF
+// DO NOT USE THOSE, THEY ARE USED INTERNALLY BY OMNIMIDI
 
 #define OM_CAPFRAMERATE				0x10000
 #define OM_DEBUGMMODE				0x10001
@@ -62,73 +77,108 @@ Thank you Kode54 for allowing me to fork your awesome driver.
 #define OM_ENABLEDELAYNOTEOFF		0x10030
 #define OM_DELAYNOTEOFFVAL			0x10031
 
-// The settings struct, you can initialize it with the defaults value through by assigning DEFAULT_SETTINGS
-typedef struct
-{
-	BOOL CapFramerate;				// Cap input framerate
-	DWORD DebugMode;				// Debug console
-	BOOL DisableNotesFadeOut;		// Disable fade-out
-	BOOL DontMissNotes;				// Slow down instead of missing notes
+#define OM_CHANUPDLENGTH			0x10032
 
-	BOOL EnableSFX;					// Enable or disable FXs
-	BOOL FastHotkeys;				// Enable/Disable fast hotkeys
-	BOOL FullVelocityMode;			// Enable full velocity mode
-	BOOL IgnoreNotesBetweenVel;		// Ignore notes in between two velocity values
-	BOOL IgnoreAllEvents;			// Ignore all MIDI events
-	BOOL IgnoreSysEx;				// Ignore SysEx events
-	BOOL IgnoreSysReset;			// Ignore sysex messages
-	BOOL LimitTo88Keys;				// Limit to 88 keys
-	BOOL LiveChanges;				// Live changes
-	BOOL MT32Mode;					// Roland MT-32 mode
-	BOOL MonoRendering;				// Mono rendering (Instead of stereo by default)
-	BOOL NoBlacklistMessage;		// Disable blacklist message (DEPRECATED)
-	BOOL NoteOff1;					// Note cut INT
-	BOOL NotesCatcherWithAudio;		// For old-ass PCs
-	BOOL OverrideInstruments;		// Override channel instruments
-	BOOL PreloadSoundFonts;			// Soundfont preloading
-	BOOL SincInter;					// Sinc
-	BOOL SleepStates;				// Reduce CPU overhead
-	BOOL VolumeMonitor;				// Volume monitoring
-
-	DWORD AudioBitDepth;			// Floating point audio
-	DWORD AudioFrequency;			// Audio frequency
-	DWORD AudioOutputReg;			// Audio output (All devices except AudToWAV and ASIO)
-	DWORD BufferLength;				// Default
-	DWORD CurrentEngine;			// Current engine
-	DWORD DriverPriority;			// Process priority
-	BOOL Extra8Lists;				// Enable extra 8 SoundFont lists
-	DWORD MaxRenderingTime;			// CPU usage INT
-	DWORD MaxVelIgnore;				// Ignore notes in between two velocity values
-	DWORD MinVelIgnore;				// Ignore notes in between two velocity values
-	DWORD OutputVolume;				// Volume
-	DWORD TransposeValue;			// Pitch shift (127 = None)
-	DWORD MaxVoices;				// Voices limit
-	DWORD SincConv;					// Sinc
-
-	// Add more down here
-	// ------------------
-	BOOL OverrideNoteLength;		// Override note length
-	DWORD NoteLengthValue;			// Length of the note overridden
-	BOOL DelayNoteOff;				// Delay note off events
-	DWORD DelayNoteOffValue;		// Length of the delay
-} Settings;
+#define OM_UNLOCKCHANS				0x10033
 
 // The debug info struct, you can set the default values by assigning DEFAULT_DEBUG
 typedef struct
 {
-	FLOAT RenderingTime;			// Current BASS rendering time
-	DWORD ActiveVoices[16];			// Active voices for each channel
+	FLOAT RenderingTime = 0.0f;				// Current BASS rendering time
+	DWORD ActiveVoices[16] = { 0 };			// Active voices for each channel
 
-	// ASIO debug info
-	DOUBLE ASIOInputLatency;
-	DOUBLE ASIOOutputLatency;
+	// ASIO debug info (DO NOT USE)
+	DOUBLE ASIOInputLatency = 0.0f;
+	DOUBLE ASIOOutputLatency = 0.0f;
+
+	// Threads info
+	DOUBLE HealthThreadTime = 0.0;
+	DOUBLE ATThreadTime = 0.0;
+	DOUBLE EPThreadTime = 0.0;
+	DOUBLE CookedThreadTime = 0.0;
+
+	// SoundFonts list
+	DWORD CurrentSFList;
+
+	// Audio latency
+	DOUBLE AudioLatency = 0.0f;
+	DWORD AudioBufferSize = 0;
 
 	// Add more down here
 	// ------------------
 } DebugInfo;
 
+#ifdef KDMAPI_OMONLY
+// The settings struct, you can initialize it with the defaults value through by assigning DEFAULT_SETTINGS
+typedef struct
+{
+	BOOL CapFramerate = FALSE;				// Cap input framerate
+	BOOL DelayNoteOff = FALSE;				// Delay note off events
+	BOOL DisableCookedPlayer = FALSE;		// Disable CookedPlayer
+	BOOL DisableNotesFadeOut = FALSE;		// Disable fade-out
+	BOOL DontMissNotes = FALSE;				// Slow down instead of missing notes
+	BOOL EnableSFX = TRUE;					// Enable or disable FXs
+	BOOL Extra8Lists = FALSE;				// DEPRECATED
+	BOOL FastHotkeys = FALSE;				// Enable/Disable fast hotkeys
+	BOOL FullVelocityMode = FALSE;			// Enable full velocity mode
+	BOOL IgnoreAllEvents = FALSE;			// Ignore all MIDI events
+	BOOL IgnoreNotesBetweenVel = FALSE;		// Ignore notes in between two velocity values
+	BOOL IgnoreSysReset = FALSE;			// Ignore SysEx Reset events
+	BOOL LimitTo88Keys = FALSE;				// Limit to 88 keys
+	BOOL LiveChanges = FALSE;				// Live changes (DEPRECATED)
+	BOOL MT32Mode = FALSE;					// Roland MT-32 mode (DEPRECATED)
+	BOOL MonoRendering = FALSE;				// Mono rendering (Instead of stereo by default)
+	BOOL NoteOff1 = FALSE;					// Note cut INT
+	BOOL NotesCatcherWithAudio = FALSE;		// For old-ass PCs
+	BOOL OverrideInstruments = FALSE;		// Override channel instruments
+	BOOL OverrideNoteLength = FALSE;		// Override note length
+	BOOL PreloadSoundFonts = FALSE;			// Soundfont preloading
+	BOOL SincInter = FALSE;					// Sinc
+	BOOL VolumeMonitor = FALSE;				// Volume monitoring
+
+	DWORD AudioBitDepth = 0;				// Floating point audio
+	DWORD AudioFrequency = 48000;			// Audio frequency
+	DWORD AudioOutputReg = 0;				// Audio output (DEPRECATED)
+	DWORD BufferLength = 30;				// Default
+	DWORD ChannelUpdateLength = 0;			// Length of buffer in BASS_ChannelUpdate
+	DWORD CurrentEngine = WASAPI_ENGINE;	// Current engine
+	DWORD DebugMode = 0;					// Debug console
+	DWORD DelayNoteOffValue = 5;			// Length of the delay
+	DWORD DriverPriority = 0;				// Process priority
+	DWORD MaxRenderingTime = 75;			// CPU usage INT
+	DWORD MaxVelIgnore = 1;					// Ignore notes in between two velocity values
+	DWORD MaxVoices = 500;					// Voices limit
+	DWORD MinVelIgnore = 1;					// Ignore notes in between two velocity values
+	DWORD NoteLengthValue = 5;				// Length of the note overridden
+	DWORD OutputVolume = 10000;				// Volume
+	DWORD SincConv = 2;						// Sinc
+	DWORD TransposeValue = 127;				// Pitch shift (127 = None)
+
+	BOOL FollowDefaultAudioDevice = FALSE;	// Follow the default audio device whenever it's changed
+	BOOL ReduceBootUpDelay = FALSE;			// Reduce boot-up delay when using DirectSound
+
+	DWORD ConcertPitch = 8192;				// Concert pitch
+
+	BOOL WASAPIExclusive = FALSE;			// WASAPI Exclusive Mode
+	BOOL OldWASAPIMode = FALSE;				// Old WASAPI mode
+	BOOL WASAPIRAWMode = FALSE;				// WASAPI raw mode
+	BOOL WASAPIDoubleBuf = TRUE;			// WASAPI double buffer (for volume monitoring)
+
+	BOOL AudioRampIn = TRUE;				// Enables the audio ramp-in, to gracefully play new notes without audible clicks
+
+	DWORD XASamplesPerFrame = 88;			// Samples per frame (XA engine)
+	DWORD XASPFSweepRate = 15;				// SFP sweep rate (XA engine)
+
+	BOOL ASIODirectFeed = 0;				// Make ASIO inject itself into the BASS stream
+
+	BOOL LinAttMod = FALSE;					// Use a linear attack phase in SF2 modulation (pitch/filter) envelopes
+	BOOL LinDecVol = TRUE;					// Use linear decay and release phases in volume envelopes
+	BOOL NoSFGenLimits = FALSE;				// Do not limit SF2 generator values to emulate Creative/SoundBlaster hardware
+} Settings;
+#endif
+
 #ifndef KDMAPI_ONLYSTRUCTS
-// Return the KDMAPI version from OmniMIDI as the following output: Major.Minor.Build.Revision (eg. 1.30.0 Rev. 51).
+// Return the KDMAPI version from OmniMIDI as the following output: Major.Minor.Build Rev. Revision (eg. 1.30.0 Rev. 51).
 BOOL KDMAPI(ReturnKDMAPIVer)(LPDWORD Major, LPDWORD Minor, LPDWORD Build, LPDWORD Revision);
 
 // Checks if KDMAPI is available. You can ignore the output if you want, but you should give the user the choice between WinMM and KDMAPI.
@@ -144,25 +194,25 @@ BOOL KDMAPI(TerminateKDMAPIStream)();
 VOID KDMAPI(ResetKDMAPIStream)();
 
 // Send short messages through KDMAPI. (Like midiOutShortMsg)
-UINT KDMAPI(SendCustomEvent)(DWORD eventtype, DWORD chan, DWORD param);
+BOOL KDMAPI(SendCustomEvent)(DWORD eventtype, DWORD chan, DWORD param) noexcept;
 
 // Send short messages through KDMAPI. (Like midiOutShortMsg)
-UINT KDMAPI(SendDirectData)(DWORD dwMsg);
+VOID KDMAPI(SendDirectData)(DWORD dwMsg);
 
 // Send short messages through KDMAPI like SendDirectData, but bypasses the buffer. (Like midiOutShortMsg)
-UINT KDMAPI(SendDirectDataNoBuf)(DWORD dwMsg);
+VOID KDMAPI(SendDirectDataNoBuf)(DWORD dwMsg);
 
 // Send long messages through KDMAPI. (Like midiOutLongMsg)
-UINT KDMAPI(SendDirectLongData)(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(SendDirectLongData)(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize);
 
 // Send long messages through KDMAPI like SendDirectLongData, but bypasses the buffer. (Like midiOutLongMsg)
-UINT KDMAPI(SendDirectLongDataNoBuf)(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(SendDirectLongDataNoBuf)(LPSTR MidiHdrData, DWORD MidiHdrDataLen);
 
 // Prepares the long data, and locks its memory to prevent apps from writing to it.
-UINT KDMAPI(PrepareLongData)(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(PrepareLongData)(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize);
 
 // Unlocks the memory, and unprepares the long data.
-UINT KDMAPI(UnprepareLongData)(MIDIHDR* IIMidiHdr);
+UINT KDMAPI(UnprepareLongData)(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize);
 
 // Get or set the current settings for the driver.
 BOOL KDMAPI(DriverSettings)(DWORD Setting, DWORD Mode, LPVOID Value, UINT cbValue);
@@ -172,4 +222,10 @@ DebugInfo* KDMAPI(GetDriverDebugInfo)();
 
 // Load a custom sflist. (You can also load SF2 and SFZ files)
 VOID KDMAPI(LoadCustomSoundFontsList)(LPWSTR Directory);
+
+// timeGetTime, but 64-bit
+DWORD64 KDMAPI(timeGetTime64)();
+
+// modMessage
+MMRESULT KDMAPI(modMessage)(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2);
 #endif

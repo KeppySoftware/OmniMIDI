@@ -18,7 +18,7 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 
 // KDMAPI version
 #define CUR_MAJOR	4
-#define CUR_MINOR	0
+#define CUR_MINOR	1
 #define CUR_BUILD	0
 #define CUR_REV		0
 
@@ -194,13 +194,13 @@ BOOL KDMAPI(TerminateKDMAPIStream)();
 VOID KDMAPI(ResetKDMAPIStream)();
 
 // Send short messages through KDMAPI. (Like midiOutShortMsg)
-UINT KDMAPI(SendCustomEvent)(DWORD eventtype, DWORD chan, DWORD param) noexcept;
+BOOL KDMAPI(SendCustomEvent)(DWORD eventtype, DWORD chan, DWORD param) noexcept;
 
 // Send short messages through KDMAPI. (Like midiOutShortMsg)
-UINT KDMAPI(SendDirectData)(DWORD dwMsg);
+VOID KDMAPI(SendDirectData)(DWORD dwMsg);
 
 // Send short messages through KDMAPI like SendDirectData, but bypasses the buffer. (Like midiOutShortMsg)
-UINT KDMAPI(SendDirectDataNoBuf)(DWORD dwMsg);
+VOID KDMAPI(SendDirectDataNoBuf)(DWORD dwMsg);
 
 // Send long messages through KDMAPI. (Like midiOutLongMsg)
 UINT KDMAPI(SendDirectLongData)(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize);

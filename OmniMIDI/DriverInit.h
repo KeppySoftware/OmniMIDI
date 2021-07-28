@@ -250,7 +250,7 @@ void EventsProcesser(LPVOID lpV) {
 			SetNoteValuesFromSettings();
 
 			// Parse the notes until the audio thread is done
-			if (_PlayBufData()) _FWAIT;
+			_PlayBufData();
 		}
 	}
 	catch (...) {
@@ -269,7 +269,7 @@ void FastEventsProcesser(LPVOID lpV) {
 	try {
 		while (!stop_thread) {
 			// Parse the notes until the audio thread is done
-			if (_PlayBufData()) _FWAIT;
+			_PlayBufData();
 		}
 	}
 	catch (...) {

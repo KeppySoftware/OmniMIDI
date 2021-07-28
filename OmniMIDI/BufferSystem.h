@@ -250,13 +250,13 @@ void __inline PBufData(void) {
 	_PforBASSMIDI(LastRunningStatus, dwParam1);
 }
 
-unsigned int __inline PSmallBufData(void)
+void __inline PSmallBufData(void)
 {
 	auto HeadStart = EVBuffer.ReadHead;
 	auto HeadPos = HeadStart; //fast volatile
 	DWORD dwParam1 = EVBuffer.Buffer[HeadPos];
 
-	if (!~dwParam1) return 1;
+	if (!~dwParam1) return;
 
 	for (;;)
 	{
@@ -274,70 +274,68 @@ unsigned int __inline PSmallBufData(void)
 
 			_PforBASSMIDI(LastRunningStatus, dwParam1);
 		}
-		else return 0;
+		else return;
 
-		if (HeadPos == HeadStart) return 0;
+		if (HeadPos == HeadStart) return;
 
 		dwParam1 = EVBuffer.Buffer[HeadPos];
-		if (!~dwParam1) return 0;
+		if (!~dwParam1) return;
 	}
 }
 
-DWORD __inline PlayBufferedData(void) {
-	if (ManagedSettings.IgnoreAllEvents) return 1;
+void __inline PlayBufferedData(void) {
+	if (ManagedSettings.IgnoreAllEvents) {
+		_FWAIT;
+		return;
+	}
 	
 	if (EVBuffer.BufSize >= SMALLBUFFER)
 	{
-		if (!BufferCheck()) return 1;
+		if (!BufferCheck()) {
+			_FWAIT;
+			return;
+		}
 
 		do PBufData();
 		while (BufferCheck());
-
-		return 0;
 	}
-	else return PSmallBufData();
+	else PSmallBufData();
 }
 
-DWORD __inline PlayBufferedDataHyper(void) {
-	if (!BufferCheck()) return 1;
+void __inline PlayBufferedDataHyper(void) {
+	if (!BufferCheck()) {
+		_FWAIT;
+		return;
+	}
 
 	do PBufData();
 	while (EVBuffer.ReadHead != EVBuffer.WriteHead);
-
-	return 0;
 }
 
-DWORD __inline PlayBufferedDataChunk(void) {
-	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return 1;
+void __inline PlayBufferedDataChunk(void) {
+	if (ManagedSettings.IgnoreAllEvents || !BufferCheck()) return;
 
 	if (EVBuffer.BufSize >= SMALLBUFFER)
 	{
 		ULONGLONG whe = EVBuffer.WriteHead;
 		do PBufData();
 		while (EVBuffer.ReadHead != whe);
-
-		return 0;
 	}
-	else return PSmallBufData();
+	else PSmallBufData();
 }
 
-DWORD __inline PlayBufferedDataChunkHyper(void) {
-	if (!BufferCheck()) return 1;
+void __inline PlayBufferedDataChunkHyper(void) {
+	if (!BufferCheck()) return;
 
 	ULONGLONG whe = EVBuffer.WriteHead;
 	do PBufData();
 	while (EVBuffer.ReadHead != whe);
-
-	return 0;
 }
 
-MMRESULT __inline ParseData(DWORD_PTR dwParam1) {
+void __inline ParseData(DWORD_PTR dwParam1) {
 	// Some checks
-	if (CheckIfEventIsToIgnore(dwParam1))
-		return MMSYSERR_NOERROR;
-
-	// The buffer is not ready yet
-	if (!EVBuffer.Buffer) return DebugResult("ParseData", MIDIERR_NOTREADY, "The events buffer isn't ready yet!");
+	if (CheckIfEventIsToIgnore(dwParam1) || !EVBuffer.Buffer)
+		return;
 
 	// Prepare the event in the buffer
 	// LockForWriting(&EPThreadsL);
@@ -380,12 +378,9 @@ MMRESULT __inline ParseData(DWORD_PTR dwParam1) {
 	PrintEventToDebugLog(dwParam1);
 
 	// UnlockForWriting(&EPThreadsL);
-
-	// Go!
-	return MMSYSERR_NOERROR;
 }
 
-MMRESULT __inline ParseDataHyper(DWORD_PTR dwParam1)
+void __inline ParseDataHyper(DWORD_PTR dwParam1)
 {
 	// LockForWriting(&EPThreadsL);
 
@@ -398,7 +393,4 @@ MMRESULT __inline ParseDataHyper(DWORD_PTR dwParam1)
 		EVBuffer.WriteHead = NextWriteHead; //skip notes properly
 
 	// UnlockForWriting(&EPThreadsL);
-
-	// Go!
-	return MMSYSERR_NOERROR;
 }

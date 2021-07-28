@@ -348,7 +348,8 @@ extern "C" MMRESULT WINAPI modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUse
 	switch (uMsg) {
 	case MODM_DATA:
 		// Parse the data lol
-		return _PrsData(dwParam1);
+		_PrsData(dwParam1);
+		return MMSYSERR_NOERROR;
 	case MODM_LONGDATA:
 		// Pass it to a KDMAPI function
 		RetVal = SendDirectLongData((MIDIHDR*)dwParam1, dwParam2);

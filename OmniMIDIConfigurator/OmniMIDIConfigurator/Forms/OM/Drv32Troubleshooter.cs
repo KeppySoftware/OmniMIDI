@@ -37,7 +37,7 @@ namespace OmniMIDIConfigurator
                 {
                     Devs32.Add(new Drv32Dev()
                     {
-                        ID = String.Format("midi{0}", (i == 1) ? "" : i.ToString()),
+                        ID = String.Format("midi{0}", i),
                         Library = Functions.CLSID32.GetValue(String.Format("midi{0}", i), "wdmaud.drv").ToString()
                     });
                 }
@@ -68,7 +68,7 @@ namespace OmniMIDIConfigurator
                     {
                         Devs64.Add(new Drv32Dev()
                         {
-                            ID = String.Format("midi{0}", (i == 1) ? "" : i.ToString()),
+                            ID = String.Format("midi{0}", i),
                             Library = Functions.CLSID64.GetValue(String.Format("midi{0}", i), "wdmaud.drv").ToString()
                         });
                     }
