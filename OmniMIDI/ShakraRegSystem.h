@@ -14,14 +14,7 @@
 #endif
 #define DEFINE_DEVPROPKEY(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8, pid) EXTERN_C const DEVPROPKEY DECLSPEC_SELECTANY name = { { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }, pid }
 
-#define S2(x)	#x						// Convert to string
-#define S1(x)	S2(x)					// Convert to string
-#define FU		_T(__FUNCTION__)		// Function
-#define LI		_T(S1(__LINE__))		// Line
-#define FI		_T(__FILE__)			// File
-
 #define DERROR(y)				ShakraError(y, FU, FI, LI)
-#define DFERROR(y)				CrashMessage(y)
 #define DLOG(y)					ShakraError(y, FU, FI, LI)
 
 // Define the maximum midiX

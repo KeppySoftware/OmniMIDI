@@ -142,7 +142,7 @@ BOOL EnableMIDIFeedbackMode() {
 		PrintMessageToDebugLog("EnableMIDIFeedbackMode", "No device found, or the selected device was \"OmniMIDI\" itself, which is illegal.");
 	}
 	catch (...) {
-		CrashMessage(L"EnableMIDIFeedbackMode");
+		_THROWCRASH;
 	}
 }
 
@@ -179,7 +179,7 @@ BOOL DisableMIDIFeedbackMode() {
 		return TRUE;
 	}
 	catch (...) {
-		CrashMessage(L"DisableMIDIFeedbackMode");
+		_THROWCRASH;
 	}
 }
 
@@ -254,7 +254,7 @@ void EventsProcesser(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"EventsProcesserThread");
+		_THROWCRASH;
 	}
 
 	PrintMessageToDebugLog("EventsProcesser", "Closing notes catcher thread...");
@@ -273,7 +273,7 @@ void FastEventsProcesser(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"FastEventsProcesserThread");
+		_THROWCRASH;
 	}
 
 	PrintMessageToDebugLog("FastEventsProcesser", "Closing notes catcher thread...");
@@ -359,7 +359,7 @@ void AudioEngine(LPVOID lpParam) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"AudioEngineThread");
+		_THROWCRASH;
 	}
 
 	PrintMessageToDebugLog("AudioEngine", "Closing audio rendering thread...");
@@ -424,7 +424,7 @@ void FastAudioEngine(LPVOID lpParam) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"FastAudioEngineThread");
+		_THROWCRASH;
 	}
 
 	PrintMessageToDebugLog("FastAudioEngine", "Closing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
@@ -794,7 +794,7 @@ LONG BASSDetectID() {
 		return -1;
 	}
 	catch (...) {
-		CrashMessage(L"BASSDetectID");
+		_THROWCRASH;
 	}
 }
 
@@ -834,7 +834,7 @@ LONG WASAPIDetectID() {
 		return -1;
 	}
 	catch (...) {
-		CrashMessage(L"WASAPIDetectID");
+		_THROWCRASH;
 	}
 }
 
@@ -869,7 +869,7 @@ LONG ASIODetectID() {
 		return -1;
 	}
 	catch (...) {
-		CrashMessage(L"ASIODetectID");
+		_THROWCRASH;
 	}
 }
 

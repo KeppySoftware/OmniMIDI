@@ -861,7 +861,7 @@ Retry:
 		{
 			// It did. If the pipe value isn above the maximum instances, throw a crash
 			if (PipeVal > PIPE_UNLIMITED_INSTANCES)
-				CrashMessage(L"TooManyPipes");
+				_THROWCRASH;
 			else
 				PipeVal++;
 		}

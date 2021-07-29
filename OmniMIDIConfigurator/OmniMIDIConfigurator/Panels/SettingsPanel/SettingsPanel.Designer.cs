@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsPanel));
             this.EnginesBox = new System.Windows.Forms.GroupBox();
+            this.ChorusOverride = new System.Windows.Forms.CheckBox();
             this.NoSFGenLimits = new System.Windows.Forms.CheckBox();
             this.LinDecVol = new System.Windows.Forms.CheckBox();
             this.LinAttMod = new System.Windows.Forms.CheckBox();
@@ -99,7 +100,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.OverrideNoteLengthWA1 = new System.Windows.Forms.PictureBox();
             this.OverrideNoteLength = new System.Windows.Forms.CheckBox();
-            this.AllNotesIgnore = new System.Windows.Forms.CheckBox();
+            this.IgnoreAllEvents = new System.Windows.Forms.CheckBox();
             this.FullVelocityMode = new System.Windows.Forms.CheckBox();
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
             this.Requirements = new System.Windows.Forms.ToolTip(this.components);
@@ -122,7 +123,6 @@
             this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
             this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeEVBuf = new OmniMIDIConfigurator.LinkLabelEx();
-            this.ChorusOverride = new System.Windows.Forms.CheckBox();
             this.EnginesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ChorusV)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ReverbV)).BeginInit();
@@ -187,6 +187,18 @@
             this.EnginesBox.TabIndex = 0;
             this.EnginesBox.TabStop = false;
             this.EnginesBox.Text = "Audio engine settings";
+            // 
+            // ChorusOverride
+            // 
+            this.ChorusOverride.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.ChorusOverride.AutoSize = true;
+            this.ChorusOverride.Location = new System.Drawing.Point(9, 446);
+            this.ChorusOverride.Name = "ChorusOverride";
+            this.ChorusOverride.Size = new System.Drawing.Size(101, 17);
+            this.ChorusOverride.TabIndex = 64;
+            this.ChorusOverride.Text = "Override chorus";
+            this.ChorusOverride.UseVisualStyleBackColor = true;
+            this.ChorusOverride.CheckedChanged += new System.EventHandler(this.ChorusOverride_CheckedChanged);
             // 
             // NoSFGenLimits
             // 
@@ -1085,15 +1097,15 @@
             this.OverrideNoteLength.UseVisualStyleBackColor = true;
             this.OverrideNoteLength.CheckedChanged += new System.EventHandler(this.OverrideNoteLength_CheckedChanged);
             // 
-            // AllNotesIgnore
+            // IgnoreAllEvents
             // 
-            this.AllNotesIgnore.AutoSize = true;
-            this.AllNotesIgnore.Location = new System.Drawing.Point(9, 177);
-            this.AllNotesIgnore.Name = "AllNotesIgnore";
-            this.AllNotesIgnore.Size = new System.Drawing.Size(311, 17);
-            this.AllNotesIgnore.TabIndex = 27;
-            this.AllNotesIgnore.Text = "Ignore all MIDI events (For MIDI application developers only)";
-            this.AllNotesIgnore.UseVisualStyleBackColor = true;
+            this.IgnoreAllEvents.AutoSize = true;
+            this.IgnoreAllEvents.Location = new System.Drawing.Point(9, 177);
+            this.IgnoreAllEvents.Name = "IgnoreAllEvents";
+            this.IgnoreAllEvents.Size = new System.Drawing.Size(311, 17);
+            this.IgnoreAllEvents.TabIndex = 27;
+            this.IgnoreAllEvents.Text = "Ignore all MIDI events (For MIDI application developers only)";
+            this.IgnoreAllEvents.UseVisualStyleBackColor = true;
             // 
             // FullVelocityMode
             // 
@@ -1231,7 +1243,7 @@
             this.LegacySetDia.Controls.Add(this.label15);
             this.LegacySetDia.Controls.Add(this.LiveChangesTrigger);
             this.LegacySetDia.Controls.Add(this.ChangeEVBuf);
-            this.LegacySetDia.Controls.Add(this.AllNotesIgnore);
+            this.LegacySetDia.Controls.Add(this.IgnoreAllEvents);
             this.LegacySetDia.Controls.Add(this.FullVelocityMode);
             this.LegacySetDia.Location = new System.Drawing.Point(3, 857);
             this.LegacySetDia.Name = "LegacySetDia";
@@ -1337,18 +1349,6 @@
             this.ChangeEVBuf.Text = "Change size of the events buffer (EVBuffer)";
             this.ChangeEVBuf.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeEVBuf_LinkClicked);
             // 
-            // ChorusOverride
-            // 
-            this.ChorusOverride.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ChorusOverride.AutoSize = true;
-            this.ChorusOverride.Location = new System.Drawing.Point(9, 446);
-            this.ChorusOverride.Name = "ChorusOverride";
-            this.ChorusOverride.Size = new System.Drawing.Size(101, 17);
-            this.ChorusOverride.TabIndex = 64;
-            this.ChorusOverride.Text = "Override chorus";
-            this.ChorusOverride.UseVisualStyleBackColor = true;
-            this.ChorusOverride.CheckedChanged += new System.EventHandler(this.ChorusOverride_CheckedChanged);
-            // 
             // SettingsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1421,7 +1421,7 @@
         public System.Windows.Forms.CheckBox OverrideNoteLength;
         public System.Windows.Forms.CheckBox IgnoreNotes;
         public System.Windows.Forms.CheckBox FullVelocityMode;
-        public System.Windows.Forms.CheckBox AllNotesIgnore;
+        public System.Windows.Forms.CheckBox IgnoreAllEvents;
         public System.Windows.Forms.CheckBox Limit88;
         public System.Windows.Forms.NumericUpDown MaxCPU;
         internal System.Windows.Forms.Label RenderingTimeLabel;

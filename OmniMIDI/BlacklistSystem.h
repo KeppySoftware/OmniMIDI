@@ -80,7 +80,7 @@ DWORD BlackListSystem(){
 		return DEVICE_AVAILABLE;
 	}
 	catch (...) {
-		CrashMessage(L"BlacklistCheckUp");
+		_THROWCRASH;
 	}
 }
 
@@ -115,6 +115,6 @@ BOOL MIDIFeedbackWhitelist() {
 		return FALSE;
 	}
 	catch (...) {
-		CrashMessage(L"MIDIFeedbackWhitelistCheckup");
+		_THROWCRASH;
 	}
 }

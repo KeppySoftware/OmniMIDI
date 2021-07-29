@@ -187,7 +187,7 @@ namespace OmniMIDIConfigurator
                 ReverbOverride_CheckedChanged(null, null);
                 ChorusOverride_CheckedChanged(null, null);
  
-                AllNotesIgnore.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreAllNotes", 0));
+                IgnoreAllEvents.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreAllEvents", 0));
                 IgnoreNotes.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
                 AudioRampIn.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("AudioRampIn", 1));
                 LinAttMod.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("LinAttMod", 0));
@@ -292,7 +292,7 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("ReverbOverride", Convert.ToInt32(ReverbOverride.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("ChorusOverride", Convert.ToInt32(ChorusOverride.Checked), RegistryValueKind.DWord);
 
-            Program.SynthSettings.SetValue("IgnoreAllNotes", Convert.ToInt32(AllNotesIgnore.Checked), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("IgnoreAllEvents", Convert.ToInt32(IgnoreAllEvents.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("IgnoreNotesBetweenVel", Convert.ToInt32(IgnoreNotes.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("AudioRampIn", Convert.ToInt32(AudioRampIn.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("LinAttMod", Convert.ToInt32(LinAttMod.Checked), RegistryValueKind.DWord);
@@ -608,7 +608,7 @@ namespace OmniMIDIConfigurator
             SysResetIgnore.Enabled = !HMode.Checked;
             FullVelocityMode.Enabled = !HMode.Checked;
             Limit88.Enabled = !HMode.Checked;
-            AllNotesIgnore.Enabled = !HMode.Checked;
+            IgnoreAllEvents.Enabled = !HMode.Checked;
             MIDIFeedbackTool.Enabled = !HMode.Checked;
         }
 

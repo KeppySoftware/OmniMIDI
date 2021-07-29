@@ -337,7 +337,7 @@ void Supervisor(LPVOID lpV) {
 		// Load the BASS functions
 		if (!LoadBASSFunctions())
 			// If BASS is still unavailable, commit suicide
-			CrashMessage(L"NoBASSFound");
+			_THROWCRASH;
 
 		// Ok, everything's ready, do not open more debug pipes from now on
 		DriverInitStatus = TRUE;
@@ -347,7 +347,7 @@ void Supervisor(LPVOID lpV) {
 		EnableMIDIFeedbackMode();
 
 		if (!PrepareDriver())
-			CrashMessage(L"0xDEADDEAD");
+			_THROWCRASH;
 
 		// Check system
 		PrintMessageToDebugLog("StreamWatchdog", "Checking for settings changes or hotkeys...");
@@ -378,7 +378,7 @@ void Supervisor(LPVOID lpV) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"SettingsAndHealthThread");
+		_THROWCRASH;
 	}
 
 	CloseThreads(FALSE);
@@ -768,7 +768,7 @@ extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdr
 		// 0x9E == Buffer already unlocked
 		if (e != 0x9E)
 			// If that's not the error, then something wrong happened
-			CrashMessage(L"VirtualUnlock on long data");
+			_THROWCRASH;
 		else PrintMessageToDebugLog("UnprepareLongData", "The buffer is already unlocked.");
 	}
 	else PrintMessageToDebugLog("UnprepareLongData", "Buffer unlocked from virtual address space.");

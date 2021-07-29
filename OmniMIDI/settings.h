@@ -30,7 +30,7 @@ void OpenRegistryKey(RegKey &hKey, LPCWSTR hKeyDir, BOOL Mandatory) {
 		hKey.Status = RegOpenKeyEx(HKEY_CURRENT_USER, hKeyDir, 0, KEY_ALL_ACCESS, &hKey.Address);
 
 		// If the key failed to open, throw a crash (If needed)
-		if (hKey.Status != KEY_READY && Mandatory) CrashMessage(L"hKeyOpen");
+		if (hKey.Status != KEY_READY && Mandatory) _THROWCRASH;
 	}
 }
 
@@ -39,12 +39,12 @@ void CloseRegistryKey(RegKey &hKey) {
 		// Try to flush the key
 		LSTATUS Action = RegFlushKey(hKey.Address);
 		// If the key can't be flushed, throw a crash
-		if (Action != ERROR_SUCCESS) CrashMessage(L"hKeyFlush");
+		if (Action != ERROR_SUCCESS) _THROWCRASH;
 
 		// Try to close the key
 		Action = RegCloseKey(hKey.Address);
 		// If the key can't be closed, throw a crash
-		if (Action != ERROR_SUCCESS) CrashMessage(L"hKeyClose");
+		if (Action != ERROR_SUCCESS) _THROWCRASH;
 
 		// Everything is fine, mark the key as closed
 		hKey.Status = KEY_CLOSED;
@@ -62,7 +62,7 @@ BOOL CloseThread(Thread* thread) {
 		PrintMessageToDebugLog("CloseThread", "Cleaning up...");
 		if (thread->ThreadHandle)
 			if (!CloseHandle(thread->ThreadHandle))
-				CrashMessage(L"CloseThread");
+				_THROWCRASH;
 		thread->ThreadHandle = NULL;
 		thread->ThreadAddress = 0;
 
@@ -330,7 +330,7 @@ BOOL LoadBASSFunctions()
 		return TRUE;
 	}
 	catch (...) {
-		CrashMessage(L"BASSLibLoad");
+		_THROWCRASH;
 	}
 }
 
@@ -347,49 +347,49 @@ VOID UnloadBASSFunctions() {
 			PrintMessageToDebugLog("UnloadBASS", "Freeing BASS libraries...");
 
 			if (!BASS_PluginFree(bassflac))
-				CrashMessage(L"BASS_PluginFree to BASSFLAC");
+				_THROWCRASH;
 			bassflac = NULL;
 
 			if (!BASS_PluginFree(basswv))
-				CrashMessage(L"BASS_PluginFree to BASSWV");
+				_THROWCRASH;
 			basswv = NULL;
 
 			if (!BASS_PluginFree(bassopus))
-				CrashMessage(L"BASS_PluginFree to BASSOPUS");
+				_THROWCRASH;
 			bassopus = NULL;
 
 			if (!BASS.AppOwnDLL)
 			{
 				if (!FreeLibrary(BASS.Lib))
-					CrashMessage(L"FreeLibrary to BASS");
+					_THROWCRASH;
 			}
 			BASS.Lib = nullptr;
 
 			if (!BASSMIDI.AppOwnDLL)
 			{
 				if (!FreeLibrary(BASSMIDI.Lib))
-					CrashMessage(L"FreeLibrary to BASSMIDI");
+					_THROWCRASH;
 			}
 			BASSMIDI.Lib = nullptr;
 
 			if (!BASSENC.AppOwnDLL)
 			{
 				if (!FreeLibrary(BASSENC.Lib))
-					CrashMessage(L"FreeLibrary to BASSENC");
+					_THROWCRASH;
 			}
 			BASSENC.Lib = nullptr;
 
 			if (!BASSASIO.AppOwnDLL)
 			{
 				if (!FreeLibrary(BASSASIO.Lib))
-					CrashMessage(L"FreeLibrary to BASSASIO");
+					_THROWCRASH;
 			}
 			BASSASIO.Lib = nullptr;
 
 			if (!BASSWASAPI.AppOwnDLL)
 			{
 				if (!FreeLibrary(BASSWASAPI.Lib))
-					CrashMessage(L"FreeLibrary to BASSWASAPI");
+					_THROWCRASH;
 			}
 			BASSWASAPI.Lib = nullptr;
 
@@ -397,7 +397,7 @@ VOID UnloadBASSFunctions() {
 			{
 				if (BASS_VST.Lib)
 					if (!FreeLibrary(BASS_VST.Lib))
-						CrashMessage(L"FreeLibrary to BASS");
+						_THROWCRASH;
 			}
 			BASS_VST.Lib = nullptr;
 
@@ -408,7 +408,7 @@ VOID UnloadBASSFunctions() {
 		BASSLoadedToMemory = FALSE;
 	}
 	catch (...) {
-		CrashMessage(L"BASSLibUnload");
+		_THROWCRASH;
 	}
 }
 
@@ -430,7 +430,7 @@ void FreeUpMemory() {
 			PrintMessageToDebugLog("AllocateMemoryFunc", "Unlocked buffer from RAM.");
 
 		if (!VirtualFree(EVBuffer.Buffer, 0, MEM_RELEASE))
-			CrashMessage(L"EVBuffer VirtualFree");
+			_THROWCRASH;
 
 		EVBuffer.Buffer = NULL;
 		EVBuffer.BufSize = 0;
@@ -447,6 +447,7 @@ void AllocateMemory(BOOL restart) {
 
 		// Check how much RAM is available
 		ULONGLONG TempEvBufferSize = EvBufferSize;
+		SIZE_T MinSize = 0, MaxSize = 0;
 		MEMORYSTATUSEX status;
 		status.dwLength = sizeof(status);
 		GlobalMemoryStatusEx(&status);
@@ -502,34 +503,27 @@ void AllocateMemory(BOOL restart) {
 			TempEvBufferSize = EvBufferSize;
 		}
 
-		// Print the values to the log
-		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer size (in amount of DWORDs)", FALSE, TempEvBufferSize);
-		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer division ratio", TRUE, EvBufferMultRatio);
-		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer final size (in bytes, one DWORD is 4 bytes)", FALSE, EvBufferSize * 4);
-		PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "Total RAM available (in bytes)", FALSE, status.ullTotalPhys);
-
 		// Begin allocating the EVBuffer
 		if (EVBuffer.Buffer != NULL) PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer already allocated.");
 		else {
+			// Print the values to the log
+			PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer size (in amount of DWORDs)", FALSE, TempEvBufferSize);
+			PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer division ratio", TRUE, EvBufferMultRatio);
+			PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer final size (in bytes, one DWORD is 4 bytes)", FALSE, EvBufferSize * 4);
+			PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "Total RAM available (in bytes)", FALSE, status.ullTotalPhys);
+
 			PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating EV buffer...");
 			EVBuffer.BufSize = EvBufferSize;
 			EVBuffer.Buffer = (DWORD*)VirtualAlloc(NULL, EVBuffer.BufSize * sizeof(DWORD), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 			if (EVBuffer.Buffer == NULL) {
-				MessageBox(NULL, L"An error has occured while allocating the events buffer!\nIt will now default to 4096 bytes.\n\nThe EVBuffer settings have been reset.", L"OmniMIDI - Error allocating memory", MB_OK | MB_ICONEXCLAMATION | MB_SYSTEMMODAL);
-				ResetEVBufferSettings();
-				EVBuffer.BufSize = EvBufferSize;
-				EVBuffer.Buffer = (DWORD*)VirtualAlloc(NULL, EVBuffer.BufSize * sizeof(DWORD), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-				if (EVBuffer.Buffer == NULL) {
-					MessageBox(NULL, L"Fatal error while allocating the events buffer.\n\nPress OK to quit.", L"OmniMIDI - Fatal error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-					exit(ERROR_NOT_ENOUGH_MEMORY);
-				}
+				MessageBox(NULL, L"The driver failed to allocate the events buffer!\n\nNot enough memory, press OK to quit.", L"OmniMIDI - FATAL ERREOR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+				exit(ERROR_NOT_ENOUGH_MEMORY);
 			}
 
-			if (!VirtualLock(EVBuffer.Buffer, EVBuffer.BufSize * sizeof(DWORD))) {
-				MessageBox(NULL, L"The driver was unable to lock the events buffer to cache/RAM\nThis could reduce performance.\n\nPress OK to continue.",
-					L"OmniMIDI - Warning", MB_OK | MB_ICONWARNING | MB_SYSTEMMODAL);
-			}
-			else PrintMessageToDebugLog("AllocateMemoryFunc", "Locked buffer to RAM.");
+			if (!VirtualLock(EVBuffer.Buffer, EVBuffer.BufSize * sizeof(DWORD)))
+				PrintMessageToDebugLog("AllocateMemoryFunc", "VirtualLock failed to lock the events buffer to the CPU cache/RAM. This could reduce performance!");
+			else
+				PrintMessageToDebugLog("AllocateMemoryFunc", "VirtualLock successfully locked the events buffer to the CPU cache/RAM.");
 
 			PrintMessageToDebugLog("AllocateMemoryFunc", "EV buffer allocated.");
 		}
@@ -548,7 +542,7 @@ void AllocateMemory(BOOL restart) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"EVBufAlloc");
+		_THROWCRASH;
 	}
 }
 
@@ -761,7 +755,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		if (!RT) PrintMessageToDebugLog("LoadSettingsFuncs", "Settings loaded.");
 	}
 	catch (...) {
-		CrashMessage(L"LoadSettings");
+		_THROWCRASH;
 	}
 }
 
@@ -783,7 +777,7 @@ void LoadCustomInstruments() {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"LoadCustomInstruments");
+		_THROWCRASH;
 	}
 }
 
@@ -823,7 +817,7 @@ void SFDynamicLoaderCheck() {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"SFDynamicLoaderCheck");
+		_THROWCRASH;
 	}
 }
 
@@ -874,7 +868,7 @@ void CheckVolume(BOOL Closing) {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"VolumeMonitor");
+		_THROWCRASH;
 	}
 }
 
@@ -974,7 +968,7 @@ void SendDebugDataToPipe() {
 		FlushFileBuffers(hPipe);
 	}
 	catch (...) {
-		CrashMessage(L"DebugPipePush");
+		_THROWCRASH;
 	}
 }
 
@@ -996,7 +990,7 @@ void MixerCheck() {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"MixerCheck");
+		_THROWCRASH;
 	}
 }
 
@@ -1027,7 +1021,7 @@ void RevbNChor() {
 		}
 	}
 	catch (...) {
-		CrashMessage(L"ReverbAndChorusCheck");
+		_THROWCRASH;
 	}
 }
 
@@ -1037,7 +1031,7 @@ void ReloadSFList(DWORD whichsflist){
 			ResetSynth(FALSE, FALSE);
 	}
 	catch (...) {
-		CrashMessage(L"ReloadListCheck");
+		_THROWCRASH;
 	}
 }
 
@@ -1156,6 +1150,6 @@ void KeyShortcuts()
 		}
 	}
 	catch (...) {
-		CrashMessage(L"HotKeysCheck");
+		_THROWCRASH;
 	}
 }

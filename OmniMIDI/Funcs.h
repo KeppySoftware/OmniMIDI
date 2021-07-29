@@ -9,6 +9,13 @@ OmniMIDI funcs (this is a mess I know)
 #define _SWAIT NTSleep(5000)							// Slow wait
 #define _CFRWAIT NTSleep(16667)							// Cap framerate wait
 
+#define S2(x)		#x							// Convert to string
+#define S1(x)		S2(x)						// Convert to string
+#define FU			_T(__FUNCTION__)			// Function
+#define LI			_T(S1(__LINE__))			// Line
+#define FI			_T(__FILE__)				// File
+#define _THROWCRASH	CrashMessage(FU, FI, LI)	// Crash
+
 static BOOL InfoAlreadyGot = FALSE;
 
 // F**k Sleep() tbh
@@ -120,13 +127,11 @@ static VOID MakeMiniDump(LPEXCEPTION_POINTERS exc) {
 	return;
 }
 
-void CrashMessage(LPCWSTR part) {
+void CrashMessage(LPCWSTR pFU, LPCWSTR pFI, LPCWSTR pLI) {
 	WCHAR ErrorMessage[32768] = { 0 };
 	DWORD ErrorID = GetLastError();
 
-	fwprintf(DebugLog, L"(Error at \"%s\", Code 0x%08x) - Fatal error during the execution of the driver.", part, ErrorID);
-
-	swprintf(ErrorMessage, L"An error has been detected while executing the following function: %s\n", part);
+	swprintf(ErrorMessage, L"An unrecoverable error has occurred in the function \"%s\".\n\nSource file: %s\nGuru meditation called from: %s", pFU, pFI, pLI);
 
 	//Get the error message, if any.
 	if (ErrorID != 0) {
@@ -141,7 +146,7 @@ void CrashMessage(LPCWSTR part) {
 		{
 			swprintf(
 				ErrorMessage + wcslen(ErrorMessage),
-				L"\nError code: 0x%08X - %s\nPlease take a screenshot of this messagebox (ALT+PRINT), and create a GitHub issue.\n",
+				L"\n\nAdditional info:\nECODE 0x%08X - %s",
 				ErrorID, ERR
 			);
 
@@ -151,15 +156,17 @@ void CrashMessage(LPCWSTR part) {
 
 	swprintf(
 		ErrorMessage + wcslen(ErrorMessage),
-		L"\nClick OK to close the program."
+		L"\n\nClick OK to close the program."
 	);
 
-	MessageBoxW(NULL, ErrorMessage, L"OmniMIDI - Fatal execution error", MB_ICONERROR | MB_SYSTEMMODAL);
+	MessageBoxW(NULL, ErrorMessage, L"OmniMIDI - Guru meditation", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 
 	block_bassinit = TRUE;
 	stop_svthread = TRUE;
 
 	MakeMiniDump(nullptr);
 
+#ifndef _DEBUG
 	exit(ErrorID);
+#endif
 }
