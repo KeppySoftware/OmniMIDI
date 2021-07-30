@@ -8,18 +8,22 @@ void ResetSynth(BOOL SwitchingBufferMode, BOOL ModeReset) {
 		EVBuffer.ReadHead = 0;
 		EVBuffer.WriteHead = 0;
 		memset(EVBuffer.Buffer, 0, sizeof(EVBuffer.Buffer));
+		PrintMessageToDebugLog("ResetSynth", "EVBuffer has been reset.");
 	}
 
 	if (ModeReset) {
-		BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);
-		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-		BASS_MIDI_StreamEvent(OMStream, 9, MIDI_EVENT_DRUMS, 1);
+		// Wait for the heads to align, to avoid crashes
+		if (EVBuffer.ReadHead != EVBuffer.WriteHead) return;
+
+		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_XG);
+		PrintMessageToDebugLog("ResetSynth", "Sent SysEx to BASSMIDI.");
 	}
 	else {
 		for (int ch = 0; ch < 16; ch++) {
 			BASS_MIDI_StreamEvent(OMStream, ch, MIDI_EVENT_NOTESOFF, NULL);
 			BASS_MIDI_StreamEvent(OMStream, ch, MIDI_EVENT_SOUNDOFF, NULL);
 		}
+		PrintMessageToDebugLog("ResetSynth", "Sent NoteOFFs to all MIDI channels.");
 	}
 }
 
@@ -537,7 +541,8 @@ void AllocateMemory(BOOL restart) {
 			_PrsData = HyperMode ? ParseDataHyper : ParseData;
 			_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
 			_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
-			_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
+			_PlayBufDataChk = ManagedSettings.NotesCatcherWithAudio ? (HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk) : DummyPlayBufData;
+
 			_BMSE = BASS_MIDI_StreamEvent;
 		}
 	}
@@ -697,7 +702,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			_PrsData = HyperMode ? ParseDataHyper : ParseData;
 			_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
 			_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
-			_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
+			_PlayBufDataChk = ManagedSettings.NotesCatcherWithAudio ? (HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk) : DummyPlayBufData;
 
 			// Restart threads
 			if (RT) stop_thread = FALSE;

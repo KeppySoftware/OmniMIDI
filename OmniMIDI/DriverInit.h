@@ -4,6 +4,7 @@ OmniMIDI stream init
 #pragma once
 
 void SetNoteValuesFromSettings() {
+	if (HyperMode) return;
 
 	if (ManagedSettings.OverrideInstruments) {
 		for (int i = 0; i <= 15; ++i) {
@@ -247,8 +248,6 @@ void EventsProcesser(LPVOID lpV) {
 	PrintMessageToDebugLog("EventsProcesser", "Initializing notes catcher thread...");
 	try {
 		while (!stop_thread) {
-			SetNoteValuesFromSettings();
-
 			// Parse the notes until the audio thread is done
 			_PlayBufData();
 		}
@@ -262,25 +261,6 @@ void EventsProcesser(LPVOID lpV) {
 	TerminateThread(&EPThread, TRUE, 0);
 }
 
-void FastEventsProcesser(LPVOID lpV) {
-	DWORD TI = (DWORD)lpV;
-
-	PrintMessageToDebugLog("FastEventsProcesser", "Initializing notes catcher thread...");
-	try {
-		while (!stop_thread) {
-			// Parse the notes until the audio thread is done
-			_PlayBufData();
-		}
-	}
-	catch (...) {
-		_THROWCRASH;
-	}
-
-	PrintMessageToDebugLog("FastEventsProcesser", "Closing notes catcher thread...");
-	SetEvent(EPThreadDone);
-	TerminateThread(&EPThread, TRUE, 0);
-}
-
 void InitializeEventsProcesserThreads() {
 	if (ManagedSettings.NotesCatcherWithAudio) return;
 
@@ -288,7 +268,7 @@ void InitializeEventsProcesserThreads() {
 	if (!EPThread.ThreadHandle) {
 		if (ManagedSettings.CurrentEngine == ASIO_ENGINE && ManagedSettings.ASIODirectFeed) return;
 
-		EPThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastEventsProcesser : EventsProcesser), 0, 0, &EPThread.ThreadAddress);
+		EPThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)EventsProcesser, 0, 0, &EPThread.ThreadAddress);
 		SetThreadPriority(EPThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 		PrintMessageToDebugLog("InitializeEventsProcesserThreads", "Done!");
 	}
@@ -296,138 +276,66 @@ void InitializeEventsProcesserThreads() {
 
 void AudioEngine(LPVOID lpParam) {
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
-	try {
-		// Skip if ASIO isn't using the direct feed mode
-		if (ManagedSettings.CurrentEngine == ASIO_ENGINE && !ManagedSettings.ASIODirectFeed) return;
-		else if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
-			do {
-				// Check if HyperMode has been disabled
-				if (HyperMode) break;
-
+	// Skip if ASIO isn't using the direct feed mode
+	if (ManagedSettings.CurrentEngine == WASAPI_ENGINE ||
+		(ManagedSettings.CurrentEngine == ASIO_ENGINE && !ManagedSettings.ASIODirectFeed));
+	else {
+		try {
+			while (!stop_thread) {
 				// If the current engine is ".WAV mode", then use AudioRender()
 				switch (ManagedSettings.CurrentEngine) {
 				case XAUDIO_ENGINE:
-				{					
-					if (ManagedSettings.NotesCatcherWithAudio)
-					{
-						SetNoteValuesFromSettings();
-						_PlayBufDataChk();
-					}
+				{
+					_PlayBufDataChk();
 
 					DWORD len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
 					if (len != -1)
 						SndDrv->WriteFrame(SndBuf, len / sizeof(float));
 
-					break;
+					_FWAIT;
+					continue;
 				}
 				case ASIO_ENGINE:
 				{
-					SetNoteValuesFromSettings();
-					_PlayBufDataChk();
+					_PlayBufData();
 
-					break;
+					_FWAIT;
+					continue;
 				}
 				case AUDTOWAV:
 				{
 					// Parse some notes for the WAV mode
-					SetNoteValuesFromSettings();
 					_PlayBufDataChk();
 
 					QWORD len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
 					BASS_ChannelGetData(OMStream, SndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
 					BASS_Encode_Write(OMStream, SndBuf, len);
+
 					continue;
 				}
 				case OLD_WASAPI:
 				case DXAUDIO_ENGINE:
 				{
-					if (ManagedSettings.NotesCatcherWithAudio)
-					{
-						SetNoteValuesFromSettings();
-						_PlayBufDataChk();
-					}
-
+					_PlayBufDataChk();
 					BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
-					break;
+
+					_FWAIT;
+					continue;
 				}
 				default:
 					break;
 				}
 
-				_FWAIT;
-			} while (!stop_thread);
+				// If we're here, then something went wrong.
+				break;
+			}
 		}
-	}
-	catch (...) {
-		_THROWCRASH;
+		catch (...) {
+			_THROWCRASH;
+		}
 	}
 
 	PrintMessageToDebugLog("AudioEngine", "Closing audio rendering thread...");
-	SetEvent(ATThreadDone);
-	TerminateThread(&ATThread, TRUE, 0);
-}
-
-void FastAudioEngine(LPVOID lpParam) {
-	PrintMessageToDebugLog("AudioEngine", "Initializing fast audio rendering thread...");
-	try {
-		// Skip if ASIO isn't using the direct feed mode
-		if (ManagedSettings.CurrentEngine == ASIO_ENGINE && !ManagedSettings.ASIODirectFeed) return;
-		else if (ManagedSettings.CurrentEngine != WASAPI_ENGINE) {
-			do {
-				// Check if HyperMode has been disabled
-				if (!HyperMode) break;
-
-				// If the current engine is ".WAV mode", then use AudioRender()
-				switch (ManagedSettings.CurrentEngine) {
-				case XAUDIO_ENGINE:
-				{
-					if (ManagedSettings.NotesCatcherWithAudio)
-						_PlayBufDataChk();
-
-					DWORD len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
-					if (len != -1)
-						SndDrv->WriteFrame(SndBuf, len / sizeof(float));
-
-					break;
-				}
-				case ASIO_ENGINE:
-				{
-					_PlayBufDataChk();
-
-					break;
-				}
-				case AUDTOWAV:
-				{
-					// Parse some notes for the WAV mode
-					_PlayBufDataChk();
-
-					QWORD len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
-					BASS_ChannelGetData(OMStream, SndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
-					BASS_Encode_Write(OMStream, SndBuf, len);
-					continue;
-				}
-				case OLD_WASAPI:
-				case DXAUDIO_ENGINE:
-				{
-					if (ManagedSettings.NotesCatcherWithAudio)
-						_PlayBufDataChk();
-
-					BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
-					break;
-				}
-				default:
-					break;
-				}
-
-				_FWAIT;
-			} while (!stop_thread);
-		}
-	}
-	catch (...) {
-		_THROWCRASH;
-	}
-
-	PrintMessageToDebugLog("FastAudioEngine", "Closing audio rendering thread for DirectX Audio/WASAPI/.WAV mode...");
 	SetEvent(ATThreadDone);
 	TerminateThread(&ATThread, TRUE, 0);
 }
@@ -442,7 +350,6 @@ DWORD CALLBACK ProcData(void* buffer, DWORD length, void* user)
 DWORD CALLBACK ProcDataSameThread(void* buffer, DWORD length, void* user)
 {
 	// Process the events from the audio thread
-	SetNoteValuesFromSettings();
 	_PlayBufDataChk();
 
 	// Get the processed audio data, and send it to the engine
@@ -531,7 +438,7 @@ void CreateThreads() {
 		CloseThread(&ATThread);
 
 	// Recreate it from scratch, and give it a priority
-	ATThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)(HyperMode ? FastAudioEngine : AudioEngine), NULL, 0, &ATThread.ThreadAddress);
+	ATThread.ThreadHandle = (HANDLE)_beginthreadex(NULL, 0, (_beginthreadex_proc_type)AudioEngine, NULL, 0, &ATThread.ThreadAddress);
 	SetThreadPriority(ATThread.ThreadHandle, prioval[ManagedSettings.DriverPriority]);
 	
 	// Check if the debug thread is working
@@ -689,7 +596,7 @@ void SetUpStream() {
 void FreeUpStream() {
 	if (BASSLoadedToMemory) {
 		// Reset synth
-		ResetSynth(NULL, TRUE);
+		ResetSynth(FALSE, TRUE);
 
 		// Stop the stream and free it as well
 		FreeUpBASSWASAPI();
@@ -897,8 +804,8 @@ BOOL InitializeBASSLibrary()
 	BOOL init = BASS_Init(
 		NotDecodeMode ? AudioOutput : 0,
 		ManagedSettings.AudioFrequency, 
-		(NotDecodeMode ? ((ManagedSettings.ReduceBootUpDelay ? 0 : BASS_DEVICE_LATENCY) | BASS_DEVICE_CPSPEAKERS) : NULL) | flags,
-		GetActiveWindow(), 
+		NotDecodeMode ? (ManagedSettings.ReduceBootUpDelay ? 0 : BASS_DEVICE_LATENCY) | flags : NULL,
+		0, 
 		NULL);
 	DWORD BERR = BASS_ErrorGetCode();
 
@@ -1400,7 +1307,7 @@ BEGSWITCH:
 	_PrsData = HyperMode ? ParseDataHyper : ParseData;
 	_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
 	_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
-	_PlayBufDataChk = HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk;
+	_PlayBufDataChk = ManagedSettings.NotesCatcherWithAudio ? (HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk) : DummyPlayBufData;
 
 #if !defined(_M_ARM64)
 	// Apply LoudMax, if requested

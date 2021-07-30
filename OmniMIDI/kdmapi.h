@@ -314,15 +314,17 @@ BOOL StreamHealthCheck() {
 
 		return FALSE;
 	}
-	else { 
-		if (stop_thread || (!ATThread.ThreadHandle && ManagedSettings.CurrentEngine != WASAPI_ENGINE))
-		{
-			if (stop_thread) PrintMessageToDebugLog("StreamWatchdog", "Restarting threads...");
-			else PrintMessageToDebugLog("StreamWatchdog", "The audio thread is down! Recovering...");
 
-			if (ManagedSettings.CurrentEngine == ASIO_ENGINE && !ManagedSettings.ASIODirectFeed);
-			else CreateThreads();
-		}
+	if (stop_thread || !ATThread.ThreadHandle)
+	{
+		if (ManagedSettings.CurrentEngine == WASAPI_ENGINE ||
+			(ManagedSettings.CurrentEngine == ASIO_ENGINE && !ManagedSettings.ASIODirectFeed))
+			return TRUE;
+
+		if (stop_thread) PrintMessageToDebugLog("StreamWatchdog", "Restarting threads...");
+		else PrintMessageToDebugLog("StreamWatchdog", "The audio thread is down! Recovering...");
+
+		CreateThreads();
 	}
 
 	return TRUE;
@@ -363,14 +365,15 @@ void Supervisor(LPVOID lpV) {
 				KeyShortcuts();						// Check for keystrokes (ALT+1, INS, etc..)
 				SFDynamicLoaderCheck();				// Check current active voices, rendering time, etc..
 				MixerCheck();						// Send dB values to the mixer
+				SetNoteValuesFromSettings();		// Check if custom preset/bank or finetune are applied
 				RevbNChor();						// Check if custom reverb/chorus values are enabled
 				InitializeEventsProcesserThreads(); // Check if the user wants to parse the notes through a separate thread
 
 				// Check the current output volume
 				CheckVolume(FALSE);
 
-				// Assign ProcData
-				_ProcData = ManagedSettings.NotesCatcherWithAudio ? ProcDataSameThread : ProcData;
+				if (ManagedSettings.CurrentEngine == ASIO_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE)
+					_ProcData = ManagedSettings.NotesCatcherWithAudio ? ProcDataSameThread : ProcData;
 			}
 
 			// I SLEEP

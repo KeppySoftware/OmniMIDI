@@ -9,12 +9,13 @@ OmniMIDI funcs (this is a mess I know)
 #define _SWAIT NTSleep(5000)							// Slow wait
 #define _CFRWAIT NTSleep(16667)							// Cap framerate wait
 
-#define S2(x)		#x							// Convert to string
-#define S1(x)		S2(x)						// Convert to string
-#define FU			_T(__FUNCTION__)			// Function
-#define LI			_T(S1(__LINE__))			// Line
-#define FI			_T(__FILE__)				// File
-#define _THROWCRASH	CrashMessage(FU, FI, LI)	// Crash
+#define S2(x)		#x								// Convert to string
+#define S1(x)		S2(x)							// Convert to string
+#define FU			_T(__FUNCTION__)				// Function
+#define LI			_T(S1(__LINE__))				// Line
+#define FI			_T(__FILE__)					// File
+#define _THROWCRASH	ErrorMessage(FU, FI, LI, TRUE)	// Crash
+#define _THROWERROR	ErrorMessage(FU, FI, LI, FALSE)	// Error
 
 static BOOL InfoAlreadyGot = FALSE;
 
@@ -127,11 +128,12 @@ static VOID MakeMiniDump(LPEXCEPTION_POINTERS exc) {
 	return;
 }
 
-void CrashMessage(LPCWSTR pFU, LPCWSTR pFI, LPCWSTR pLI) {
+void ErrorMessage(LPCWSTR pFU, LPCWSTR pFI, LPCWSTR pLI, BOOL Fatal) {
 	WCHAR ErrorMessage[32768] = { 0 };
 	DWORD ErrorID = GetLastError();
 
-	swprintf(ErrorMessage, L"An unrecoverable error has occurred in the function \"%s\".\n\nSource file: %s\nGuru meditation called from: %s", pFU, pFI, pLI);
+	swprintf(ErrorMessage, L"An%serror has occurred in the function \"%s\".\n\nSource file: %s\nGuru meditation called from: %s",
+		Fatal ? L" unrecoverable " : L"", pFU, pFI, pLI);
 
 	//Get the error message, if any.
 	if (ErrorID != 0) {
@@ -154,19 +156,30 @@ void CrashMessage(LPCWSTR pFU, LPCWSTR pFI, LPCWSTR pLI) {
 		}
 	}
 
-	swprintf(
-		ErrorMessage + wcslen(ErrorMessage),
-		L"\n\nClick OK to close the program."
-	);
+	if (Fatal) {
+		swprintf(
+			ErrorMessage + wcslen(ErrorMessage),
+			L"\n\nClick OK to close the program."
+		);
+	}
+	else {
+		swprintf(
+			ErrorMessage + wcslen(ErrorMessage),
+			L"\n\nClick OK resume the execution of the program."
+		);
+	}
 
-	MessageBoxW(NULL, ErrorMessage, L"OmniMIDI - Guru meditation", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+	MessageBoxW(NULL, ErrorMessage, L"OmniMIDI - Guru meditation", MB_OK | Fatal ? MB_ICONERROR : MB_ICONWARNING | MB_SYSTEMMODAL);
 
 	block_bassinit = TRUE;
 	stop_svthread = TRUE;
 
-	MakeMiniDump(nullptr);
-
+	if (Fatal) {
+		MakeMiniDump(nullptr);
 #ifndef _DEBUG
-	exit(ErrorID);
+		exit(ErrorID);
 #endif
+	}
+
+
 }
