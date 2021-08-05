@@ -313,11 +313,11 @@ void AudioEngine(LPVOID lpParam) {
 
 					continue;
 				}
-				case OLD_WASAPI:
-				case DXAUDIO_ENGINE:
+				case BASS_OUTPUT:
+				// case DXAUDIO_ENGINE:
 				{
 					_PlayBufDataChk();
-					BASS_ChannelUpdate(OMStream, (ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ? ManagedSettings.ChannelUpdateLength : 0);
+					BASS_ChannelUpdate(OMStream, /*(ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ?*/ ManagedSettings.ChannelUpdateLength /*: 0*/);
 
 					_FWAIT;
 					continue;
@@ -494,7 +494,7 @@ BOOL InitializeStream(INT32 mixfreq) {
 	PrintMessageToDebugLog("InitializeStreamFunc", "Creating stream...");
 
 	// If the current audio engine is DS or WASAPI, then it's not a decoding channel, else it is
-	bool isdecode = !(ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == OLD_WASAPI);
+	// bool isdecode = !(ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == OLD_WASAPI);
 		
 	// If the stream is still active, free it up again
 	if (OMStream) {
@@ -507,7 +507,7 @@ BOOL InitializeStream(INT32 mixfreq) {
 
 	// Create the stream with 16 MIDI channels, and the various settings
 	OMStream = BASS_MIDI_StreamCreate(16,
-		(isdecode ? BASS_STREAM_DECODE : 0) | 
+		(ManagedSettings.CurrentEngine != BASS_OUTPUT ? BASS_STREAM_DECODE : 0) |
 		(ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0) |
 		(ManagedSettings.MonoRendering ? BASS_SAMPLE_MONO : 0) |
 		AudioRenderingType(TRUE, ManagedSettings.AudioBitDepth) | 
@@ -785,26 +785,26 @@ BOOL InitializeBASSLibrary()
 	if (HostSessionMode) return TRUE;
 
 	// If DS or WASAPI are selected, then the final stream will not be a decoding channel
-	BOOL NotDecodeMode = (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE || ManagedSettings.CurrentEngine == OLD_WASAPI);
+	BOOL NotDecodeMode = /*(ManagedSettings.CurrentEngine == DXAUDIO_ENGINE ||*/ ManagedSettings.CurrentEngine == BASS_OUTPUT /*)*/;
 	
 	// Stream flags
-	BOOL flags = BASS_DEVICE_STEREO | ((ManagedSettings.CurrentEngine == DXAUDIO_ENGINE) ? BASS_DEVICE_DSOUND : 0);
+	// const BOOL flags = BASS_DEVICE_STEREO | ((ManagedSettings.CurrentEngine == DXAUDIO_ENGINE) ? BASS_DEVICE_DSOUND : 0);
 	
 	// Output device
-	int AudioOutput = BASSDetectID();
+	const int OutputID = BASSDetectID();
 
 	PrintMessageToDebugLog("InitializeBASSLibraryFunc", "Initializing BASS...");
 
 	if (NotDecodeMode && ManagedSettings.FollowDefaultAudioDevice) {
 		// If the audio output is set to -1 (Default device),
 		// force BASS to follow Windows' default device whenever it's changed
-		BASS_SetConfig(BASS_CONFIG_DEV_DEFAULT, (AudioOutput <= 0) ? 1 : 0);
+		BASS_SetConfig(BASS_CONFIG_DEV_DEFAULT, (OutputID <= 0) ? 1 : 0);
 	}
-	
+
 	BOOL init = BASS_Init(
-		NotDecodeMode ? AudioOutput : 0,
+		NotDecodeMode ? OutputID : 0,
 		ManagedSettings.AudioFrequency, 
-		NotDecodeMode ? (ManagedSettings.ReduceBootUpDelay ? 0 : BASS_DEVICE_LATENCY) | flags : NULL,
+		NotDecodeMode ? (ManagedSettings.ReduceBootUpDelay ? 0 : BASS_DEVICE_LATENCY) | BASS_DEVICE_STEREO : NULL,
 		0, 
 		NULL);
 	DWORD BERR = BASS_ErrorGetCode();
@@ -985,8 +985,8 @@ BEGSWITCH:
 		break;
 	}
 
-	case OLD_WASAPI:
-	case DXAUDIO_ENGINE:
+	case BASS_OUTPUT:
+	// case DXAUDIO_ENGINE:
 	{
 		if (InitializeBASSLibrary()) {
 			// Final BASS initialization, set some settings
@@ -996,6 +996,8 @@ BEGSWITCH:
 
 			DWORD MinimumBuffer = 0;
 			DWORD FinalBuffer = 0;
+
+			/*
 			if (ManagedSettings.CurrentEngine == DXAUDIO_ENGINE) {
 				if (!ManagedSettings.ReduceBootUpDelay) {
 					PrintMessageToDebugLog("InitializeBASSOutput", "Getting buffer info...");
@@ -1011,6 +1013,7 @@ BEGSWITCH:
 				}
 				else FinalBuffer = ManagedSettings.BufferLength;
 			}
+			*/
 
 			// Store the latency for debug
 			ManagedDebugInfo.AudioLatency = (DOUBLE)FinalBuffer;
@@ -1033,19 +1036,6 @@ BEGSWITCH:
 				break;
 			}
 
-			if (ManagedSettings.CurrentEngine == OLD_WASAPI) {
-				PrintMessageToDebugLog("InitializeBASSOutput", "Disabling buffering, this should only be visible when using WASAPI...");
-
-				BOOL NoBufferCheck = BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_BUFFER, 0);
-				CheckUp(FALSE, ERRORCODE, "No Buffer Mode 1", TRUE);
-
-				if (NoBufferCheck)
-				{
-					BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_NOBUFFER, 1);
-					CheckUp(FALSE, ERRORCODE, "No Buffer Mode 2", TRUE);
-				}
-			}
-
 			// And finally, open the stream
 			PrintMessageToDebugLog("InitializeBASSOutput", "Starting stream...");
 			BASS_ChannelPlay(OMStream, FALSE);
@@ -1059,11 +1049,13 @@ BEGSWITCH:
 
 	case WASAPI_ENGINE:
 	{
+		/*
 		if (ManagedSettings.OldWASAPIMode)
 		{
 			ManagedSettings.CurrentEngine = OLD_WASAPI;
 			goto BEGSWITCH;
 		}
+		*/
 
 		if (InitializeBASSLibrary()) {
 			// Free UP WASAPI again, just to be sure
@@ -1108,12 +1100,12 @@ BEGSWITCH:
 			}
 			else 
 			{
-				// Return an error, and switch to DirectSound
-				ManagedSettings.CurrentEngine = DXAUDIO_ENGINE;
+				// Return an error, and switch to BASS' own WASAPI implementation
+				ManagedSettings.CurrentEngine = BASS_OUTPUT;
 				FreeUpBASSWASAPI();
 				FreeUpBASS();
 				PrintMessageToDebugLog("InitializeWASAPIFunc", "Can not initialize BASSWASAPI.");
-				MessageBox(NULL, L"An error has occurred while initializing WASAPI.\n\nPress OK to fallback to DirectSound.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
+				MessageBox(NULL, L"An error has occurred while initializing WASAPI.\n\nPress OK to fallback to BASS' default output engine.", L"OmniMIDI - Error", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 				goto BEGSWITCH;
 			}
 
@@ -1217,18 +1209,24 @@ BEGSWITCH:
 			if (BASS_ASIO_Init(DeviceToUse, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
 				CheckUp(TRUE, ERRORCODE, "ASIO Initialized", TRUE);
 
-				if (BASS_ASIO_CheckRate(ManagedSettings.AudioFrequency))
+				// Set the audio frequency
+				if (!ManagedSettings.LeaveASIODeviceFreq)
 				{
-					// Set the audio frequency
-					BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
-				}
-				else
-				{
-					MessageBox(NULL, L"The audio frequency you specified in the configurator is not supported by the device.\n\nPress OK to default to 48000Hz.", L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-					BASS_ASIO_SetRate(48000);
-				}
+					if (!BASS_ASIO_CheckRate(ManagedSettings.AudioFrequency) && !ManagedSettings.DisableASIOFreqWarn)
+					{
+						WCHAR Warn[255] = { 0 };
 
-				CheckUp(TRUE, ERRORCODE, "ASIO Device Frequency Set", TRUE);
+						swprintf(Warn,
+							L"The ASIO device reported %dHz as an unsupported frequency.\nYou might encounter audio glitches, crackling or other issues.\n\nPress OK to continue.",
+							ManagedSettings.AudioFrequency);
+
+						MessageBox(NULL, Warn, L"OmniMIDI - WARNING", MB_OK | MB_ICONWARNING | MB_SYSTEMMODAL);
+					}
+
+					BASS_ASIO_SetRate(ManagedSettings.AudioFrequency);
+					CheckUp(TRUE, ERRORCODE, "ASIO Device Frequency Set", !ManagedSettings.DisableASIOFreqWarn);
+				}
+				else BASS_ASIO_SetRate(0);
 
 				// Set the bit depth for the left channel (ASIO only supports 32-bit float, on Vista+)
 				BASS_ASIO_ChannelSetFormat(FALSE, 0, BASS_ASIO_FORMAT_FLOAT);

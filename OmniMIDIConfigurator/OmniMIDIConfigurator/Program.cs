@@ -204,6 +204,8 @@ namespace OmniMIDIConfigurator
             OpenRequiredKey(ref Mapper, MPPath, false);
             OpenRequiredKey(ref Watchdog, WPath, false);
 
+            CheckDumpFiles();
+
             bool dummy;
             BringToFrontMessage = WinAPI.RegisterWindowMessage("OmniMIDIConfiguratorToFront");
             m = new EventWaitHandle(false, EventResetMode.ManualReset, "OmniMIDIConfigurator", out dummy);
@@ -223,6 +225,36 @@ namespace OmniMIDIConfigurator
                 new Donate().ShowDialog();
 
             Application.Run(new MainWindow(SoundFontsToAdd.ToArray()));
+        }
+
+        private static void CheckDumpFiles()
+        {
+            String DirectoryDebug = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI\\dumpfiles\\";
+
+            if (Directory.GetFiles(DirectoryDebug, "*.mdmp").Length != 0)
+            {
+                DialogResult W = MessageBox.Show("OmniMIDI has found some minidumps that might have been created after some driver crashes.\n\n" +
+                    "Press Yes to open the minidumps folder, No to delete them, or Cancel to ignore.",
+                    "OmniMIDI - Minidumps found", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+
+                switch (W)
+                {
+                    case DialogResult.Yes:
+                        Process.Start("explorer.exe", DirectoryDebug);
+                        break;
+
+                    case DialogResult.No:
+                        DirectoryInfo DDI = new DirectoryInfo(DirectoryDebug);
+
+                        foreach (FileInfo DumpFile in DDI.GetFiles())
+                            DumpFile.Delete();
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
         }
 
         private static bool OpenRequiredKey(ref RegistryKey Key, String KeyPath, Boolean Silent)
@@ -327,7 +359,7 @@ namespace OmniMIDIConfigurator
 
         // Explicit names
         public const int AUDTOWAV = 0;
-        public const int DSOUND_ENGINE = 1;
+        public const int BASS_OUTPUT = 1;
         public const int ASIO_ENGINE = 2;
         public const int WASAPI_ENGINE = 3;
         public const int XA_ENGINE = 4;

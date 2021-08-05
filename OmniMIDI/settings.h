@@ -594,6 +594,8 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(MainKey.Address, L"DriverPriority", NULL, &dwType, (LPBYTE)&ManagedSettings.DriverPriority, &dwSize);
 
 			RegQueryValueEx(Configuration.Address, L"ASIODirectFeed", NULL, &dwType, (LPBYTE)&ManagedSettings.ASIODirectFeed, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"DisableASIOFreqWarn", NULL, &dwType, (LPBYTE)&ManagedSettings.DisableASIOFreqWarn, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"LeaveASIODeviceFreq", NULL, &dwType, (LPBYTE)&ManagedSettings.LeaveASIODeviceFreq, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"AudioBitDepth", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioBitDepth, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"AudioFrequency", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioFrequency, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"AudioOutput", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioOutputReg, &dwSize);
@@ -607,7 +609,6 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"MonoRendering", NULL, &dwType, (LPBYTE)&ManagedSettings.MonoRendering, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&ManagedSettings.VolumeMonitor, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"WASAPIExclusive", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIExclusive, &dwSize);
-			RegQueryValueEx(Configuration.Address, L"OldWASAPIMode", NULL, &dwType, (LPBYTE)&ManagedSettings.OldWASAPIMode, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"WASAPIRAWMode", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIRAWMode, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"WASAPIDoubleBuf", NULL, &dwType, (LPBYTE)&ManagedSettings.WASAPIDoubleBuf, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"ReduceBootUpDelay", NULL, &dwType, (LPBYTE)&ManagedSettings.ReduceBootUpDelay, &dwSize);
@@ -846,7 +847,9 @@ void CheckVolume(BOOL Closing) {
 					}
 
 					break;
-				case DXAUDIO_ENGINE:
+					
+				case BASS_OUTPUT:
+				// case DXAUDIO_ENGINE:
 					BASS_ChannelGetLevelEx(OMStream, levels, (ManagedSettings.MonoRendering ? 0.01f : 0.02f), (ManagedSettings.MonoRendering ? BASS_LEVEL_MONO : BASS_LEVEL_STEREO));
 					break;
 				case ASIO_ENGINE:

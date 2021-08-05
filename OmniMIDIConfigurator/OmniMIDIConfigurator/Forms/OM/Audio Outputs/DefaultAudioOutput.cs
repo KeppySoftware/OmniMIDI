@@ -15,7 +15,7 @@ namespace OmniMIDIConfigurator
     {
         List<AudioDevice> Devs = new List<AudioDevice>();
 
-        public DefaultAudioOutput(bool IsItWasapi)
+        public DefaultAudioOutput()
         {
             InitializeComponent();
 
@@ -36,14 +36,6 @@ namespace OmniMIDIConfigurator
                     Program.SynthSettings.SetValue("AudioOutput", "default", Microsoft.Win32.RegistryValueKind.String);
                     SelectedDevice = "default";
                 }
-
-                if (IsItWasapi)
-                {
-                    Text = String.Format(Text, "WASAPI");
-                    UseNewWASAPI.Visible = true;
-                    ReduceBootUpDelay.Enabled = false;
-                }
-                else Text = String.Format(Text, "DirectSound");
 
                 SwitchDefaultAudio.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("FollowDefaultAudioDevice", 0));
                 ReduceBootUpDelay.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("ReduceBootUpDelay", 0));
@@ -120,18 +112,6 @@ namespace OmniMIDIConfigurator
         {
             Close();
             Dispose();
-        }
-
-        private void UseNewWASAPI_Click(object sender, EventArgs e)
-        {
-            DialogResult RES = Program.ShowError(1, "Use new WASAPI", "Are you sure you want to switch to the new WASAPI engine?\n\nYou can switch back anytime.", null);
-
-            if (RES == DialogResult.Yes)
-            {
-                Program.SynthSettings.SetValue("OldWASAPIMode", "0", Microsoft.Win32.RegistryValueKind.DWord);
-                DialogResult = RES;
-                Close();
-            }
         }
     }
 

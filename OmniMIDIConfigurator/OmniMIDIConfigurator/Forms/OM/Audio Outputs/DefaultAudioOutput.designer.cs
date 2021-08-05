@@ -31,7 +31,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.Quit = new System.Windows.Forms.Button();
             this.SwitchDefaultAudio = new System.Windows.Forms.CheckBox();
-            this.UseNewWASAPI = new System.Windows.Forms.Button();
             this.ReduceBootUpDelay = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
@@ -75,26 +74,14 @@
             this.SwitchDefaultAudio.UseVisualStyleBackColor = true;
             this.SwitchDefaultAudio.CheckedChanged += new System.EventHandler(this.SwitchDefaultAudio_CheckedChanged);
             // 
-            // UseNewWASAPI
-            // 
-            this.UseNewWASAPI.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.UseNewWASAPI.Location = new System.Drawing.Point(224, 84);
-            this.UseNewWASAPI.Name = "UseNewWASAPI";
-            this.UseNewWASAPI.Size = new System.Drawing.Size(104, 23);
-            this.UseNewWASAPI.TabIndex = 5;
-            this.UseNewWASAPI.Text = "Use new WASAPI";
-            this.UseNewWASAPI.UseVisualStyleBackColor = true;
-            this.UseNewWASAPI.Visible = false;
-            this.UseNewWASAPI.Click += new System.EventHandler(this.UseNewWASAPI_Click);
-            // 
             // ReduceBootUpDelay
             // 
             this.ReduceBootUpDelay.AutoSize = true;
             this.ReduceBootUpDelay.Location = new System.Drawing.Point(11, 60);
             this.ReduceBootUpDelay.Name = "ReduceBootUpDelay";
-            this.ReduceBootUpDelay.Size = new System.Drawing.Size(403, 17);
+            this.ReduceBootUpDelay.Size = new System.Drawing.Size(319, 17);
             this.ReduceBootUpDelay.TabIndex = 6;
-            this.ReduceBootUpDelay.Text = "Reduce boot-up delay with DirectSound (Will disable automatic buffer detection)";
+            this.ReduceBootUpDelay.Text = "Reduce boot-up delay (Will disable automatic buffer detection)";
             this.ReduceBootUpDelay.UseVisualStyleBackColor = true;
             this.ReduceBootUpDelay.CheckedChanged += new System.EventHandler(this.ReduceBootUpDelay_CheckedChanged);
             // 
@@ -105,7 +92,6 @@
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(420, 118);
             this.Controls.Add(this.ReduceBootUpDelay);
-            this.Controls.Add(this.UseNewWASAPI);
             this.Controls.Add(this.SwitchDefaultAudio);
             this.Controls.Add(this.Quit);
             this.Controls.Add(this.label1);
@@ -117,7 +103,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Change default {0} output";
+            this.Text = "Change default BASS output";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,7 +115,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button Quit;
         private System.Windows.Forms.CheckBox SwitchDefaultAudio;
-        private System.Windows.Forms.Button UseNewWASAPI;
         private System.Windows.Forms.CheckBox ReduceBootUpDelay;
     }
 }

@@ -666,7 +666,7 @@
             this.AudioEngBox.FormattingEnabled = true;
             this.AudioEngBox.Items.AddRange(new object[] {
             "Audio to .WAV mode",
-            "Microsoft DirectSound 9.0L",
+            "BASS default output engine",
             "Audio Stream Input/Output",
             "Windows Audio Session API",
             "Microsoft XAudio 2.9"});

@@ -1,19 +1,20 @@
 ADJ ASIO|No issues.
-ASIO DirectX Full Duplex Driver|No issues, but OmniMIDI already supports DirectX Audio.
+ASIO DirectX Full Duplex Driver|No issues, but use Windows Audio Session API instead.
 ASIO POD HD|No issues.
 ASIO PreSonus FireStudio|No issues.
 ASIO2WASAPI|No issues, but OmniMIDI already supports WASAPI.
-ASIO4ALL|No issues, guaranteed to work.
+ASIO4ALL|No issues, the de-facto testing ground for OmniMIDI.
 Alpha ASIO|No issues.
 AudioBox ASIO Driver|No issues.
 Creative ASIO|No issues.
 DENON DJ ASIO Driver|No issues.
 E-MU ASIO|No issues.
-FL Studio ASIO|No issues.
-Focusrite USB 2.0 Audio Driver|No issues.
-BRAVO-X|No issues.
-Focusrite USB ASIO|No issues.
-Generic Low Latency ASIO Driver|No issues, useful for exclusive usage of an output.
+FL Studio ASIO|Generic WASAPI shared-mode wrapper. No issues, but it's recommended to use Windows Audio Session API instead.
+Focusrite USB 2.0 Audio Driver|No issues, but consider upgrading to a better Focusrite device.
+FlexASIO|No issues, but it's recommended to use Windows Audio Session API instead.
+BRAVO-X|No issues, guaranteed to work.
+Focusrite USB ASIO|No issues, guaranteed to work.
+Generic Low Latency ASIO Driver|No issues, guaranteed to work.
 JACK ASIO Driver|No issues, guaranteed to work.
 Komplete Audio 6|No issues, guaranteed to work.
 M Audio Delta ASIO|No issues.

@@ -32,7 +32,9 @@ namespace OmniMIDIConfigurator
         {
             try
             {
-                ASIODirectFeed.Checked = Convert.ToInt32(Program.SynthSettings.GetValue("ASIODirectFeed", 0)) == 1;
+                ASIODirectFeed.Checked = Convert.ToInt32(Program.SynthSettings.GetValue("ASIODirectFeed", 1)) == 1;
+                DisableASIOFreqWarn.Checked = Convert.ToInt32(Program.SynthSettings.GetValue("DisableASIOFreqWarn", 0)) == 1;
+                LeaveASIODeviceFreq.Checked = Convert.ToInt32(Program.SynthSettings.GetValue("LeaveASIODeviceFreq", 0)) == 1;
 
                 this.Text = "Probing ASIO devices, please wait...";
                 this.Enabled = false;
@@ -147,10 +149,14 @@ namespace OmniMIDIConfigurator
 
                 MaxThreads.Text = String.Format("ASIO is allowed to use a maximum of {0} threads.", Environment.ProcessorCount);
 
+                DisableASIOFreqWarn.Enabled = !LeaveASIODeviceFreq.Checked;
+
                 DevicesList.SelectedIndexChanged += new EventHandler(DevicesList_SelectedIndexChanged);
                 ASIODirectFeed.CheckedChanged += new EventHandler(ASIODirectFeed_CheckedChanged);
+                DisableASIOFreqWarn.CheckedChanged += new EventHandler(DisableASIOFreqWarn_CheckedChanged);
+                LeaveASIODeviceFreq.CheckedChanged += new EventHandler(LeaveASIODeviceFreq_CheckedChanged);
 
-                GetASIODeviceInfo();
+                GetASIODeviceInfo(); 
 
                 this.Text = "Change default ASIO output";
                 this.Enabled = true;
@@ -301,6 +307,20 @@ namespace OmniMIDIConfigurator
             Functions.SignalLiveChanges();
         }
 
+        private void DisableASIOFreqWarn_CheckedChanged(object sender, EventArgs e)
+        {
+            Program.SynthSettings.SetValue("DisableASIOFreqWarn", Convert.ToInt32(DisableASIOFreqWarn.Checked), RegistryValueKind.DWord);
+            Functions.SignalLiveChanges();
+        }
+
+        private void LeaveASIODeviceFreq_CheckedChanged(object sender, EventArgs e)
+        {
+            Program.SynthSettings.SetValue("LeaveASIODeviceFreq", Convert.ToInt32(LeaveASIODeviceFreq.Checked), RegistryValueKind.DWord);
+            DisableASIOFreqWarn.Enabled = !LeaveASIODeviceFreq.Checked;
+            Functions.SignalLiveChanges();
+            
+        }
+
         private void Quit_Click(object sender, EventArgs e)
         {
             Functions.SetDefaultDevice(AudioEngine.ASIO_ENGINE, ((ASIODevice)DevicesList.SelectedItem).Name);
@@ -357,7 +377,6 @@ namespace OmniMIDIConfigurator
                 return new[] { "NULL123" };
             }
         }
-
 
         private void LatencyWarning_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

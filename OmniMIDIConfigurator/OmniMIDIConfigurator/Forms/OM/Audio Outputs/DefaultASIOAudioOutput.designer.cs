@@ -49,21 +49,25 @@
             this.DeviceNameLab = new System.Windows.Forms.Label();
             this.ASIODirectFeed = new System.Windows.Forms.CheckBox();
             this.ButtonsDesc = new System.Windows.Forms.ToolTip(this.components);
-            this.LatencyWarning = new OmniMIDIConfigurator.LinkLabelEx();
-            this.ASIODevicesSupport = new OmniMIDIConfigurator.LinkLabelEx();
+            this.DisableASIOFreqWarn = new System.Windows.Forms.CheckBox();
+            this.LeaveASIODeviceFreq = new System.Windows.Forms.CheckBox();
             this.ChanSetBox = new System.Windows.Forms.GroupBox();
             this.RightCh = new System.Windows.Forms.ComboBox();
             this.LeftCh = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.LatencyWarning = new OmniMIDIConfigurator.LinkLabelEx();
+            this.ASIODevicesSupport = new OmniMIDIConfigurator.LinkLabelEx();
             this.InfoGroupBox.SuspendLayout();
             this.ChanSetBox.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // Quit
             // 
             this.Quit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Quit.Location = new System.Drawing.Point(432, 297);
+            this.Quit.Location = new System.Drawing.Point(432, 367);
             this.Quit.Name = "Quit";
             this.Quit.Size = new System.Drawing.Size(75, 23);
             this.Quit.TabIndex = 7;
@@ -75,7 +79,7 @@
             // 
             this.DefOut.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.DefOut.Location = new System.Drawing.Point(11, 280);
+            this.DefOut.Location = new System.Drawing.Point(11, 350);
             this.DefOut.Name = "DefOut";
             this.DefOut.Size = new System.Drawing.Size(339, 13);
             this.DefOut.TabIndex = 6;
@@ -104,7 +108,7 @@
             // DeviceCP
             // 
             this.DeviceCP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DeviceCP.Location = new System.Drawing.Point(277, 297);
+            this.DeviceCP.Location = new System.Drawing.Point(277, 367);
             this.DeviceCP.Name = "DeviceCP";
             this.DeviceCP.Size = new System.Drawing.Size(149, 23);
             this.DeviceCP.TabIndex = 8;
@@ -116,7 +120,7 @@
             // 
             this.MaxThreads.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MaxThreads.AutoSize = true;
-            this.MaxThreads.Location = new System.Drawing.Point(11, 302);
+            this.MaxThreads.Location = new System.Drawing.Point(11, 372);
             this.MaxThreads.Name = "MaxThreads";
             this.MaxThreads.Size = new System.Drawing.Size(230, 13);
             this.MaxThreads.TabIndex = 9;
@@ -155,7 +159,7 @@
             this.InfoGroupBox.Controls.Add(this.StatusLab);
             this.InfoGroupBox.Controls.Add(this.InputsLab);
             this.InfoGroupBox.Controls.Add(this.DeviceNameLab);
-            this.InfoGroupBox.Location = new System.Drawing.Point(10, 59);
+            this.InfoGroupBox.Location = new System.Drawing.Point(10, 39);
             this.InfoGroupBox.Name = "InfoGroupBox";
             this.InfoGroupBox.Size = new System.Drawing.Size(499, 129);
             this.InfoGroupBox.TabIndex = 13;
@@ -237,7 +241,7 @@
             // ASIODirectFeed
             // 
             this.ASIODirectFeed.AutoSize = true;
-            this.ASIODirectFeed.Location = new System.Drawing.Point(95, 38);
+            this.ASIODirectFeed.Location = new System.Drawing.Point(6, 19);
             this.ASIODirectFeed.Name = "ASIODirectFeed";
             this.ASIODirectFeed.Size = new System.Drawing.Size(301, 17);
             this.ASIODirectFeed.TabIndex = 14;
@@ -250,34 +254,27 @@
             this.ButtonsDesc.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.ButtonsDesc.ToolTipTitle = "Information";
             // 
-            // LatencyWarning
+            // DisableASIOFreqWarn
             // 
-            this.LatencyWarning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.LatencyWarning.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
-            this.LatencyWarning.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.LatencyWarning.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.LatencyWarning.Location = new System.Drawing.Point(371, 276);
-            this.LatencyWarning.Name = "LatencyWarning";
-            this.LatencyWarning.Size = new System.Drawing.Size(136, 19);
-            this.LatencyWarning.TabIndex = 15;
-            this.LatencyWarning.TabStop = true;
-            this.LatencyWarning.Text = "Read me! It\'s important!";
-            this.LatencyWarning.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.LatencyWarning.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LatencyWarning_LinkClicked);
+            this.DisableASIOFreqWarn.AutoSize = true;
+            this.DisableASIOFreqWarn.Location = new System.Drawing.Point(6, 38);
+            this.DisableASIOFreqWarn.Name = "DisableASIOFreqWarn";
+            this.DisableASIOFreqWarn.Size = new System.Drawing.Size(299, 17);
+            this.DisableASIOFreqWarn.TabIndex = 15;
+            this.DisableASIOFreqWarn.Text = "Suppress the unsupported output frequency warning/error";
+            this.ButtonsDesc.SetToolTip(this.DisableASIOFreqWarn, resources.GetString("DisableASIOFreqWarn.ToolTip"));
+            this.DisableASIOFreqWarn.UseVisualStyleBackColor = true;
             // 
-            // ASIODevicesSupport
+            // LeaveASIODeviceFreq
             // 
-            this.ASIODevicesSupport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ASIODevicesSupport.AutoSize = true;
-            this.ASIODevicesSupport.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ASIODevicesSupport.Location = new System.Drawing.Point(427, 8);
-            this.ASIODevicesSupport.Name = "ASIODevicesSupport";
-            this.ASIODevicesSupport.Size = new System.Drawing.Size(85, 26);
-            this.ASIODevicesSupport.TabIndex = 10;
-            this.ASIODevicesSupport.TabStop = true;
-            this.ASIODevicesSupport.Text = "List of supported\r\nASIO devices";
-            this.ASIODevicesSupport.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.ASIODevicesSupport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ASIODevicesSupport_LinkClicked);
+            this.LeaveASIODeviceFreq.AutoSize = true;
+            this.LeaveASIODeviceFreq.Location = new System.Drawing.Point(6, 57);
+            this.LeaveASIODeviceFreq.Name = "LeaveASIODeviceFreq";
+            this.LeaveASIODeviceFreq.Size = new System.Drawing.Size(354, 17);
+            this.LeaveASIODeviceFreq.TabIndex = 16;
+            this.LeaveASIODeviceFreq.Text = "Prevent OmniMIDI from changing the ASIO device\'s output frequency";
+            this.ButtonsDesc.SetToolTip(this.LeaveASIODeviceFreq, resources.GetString("LeaveASIODeviceFreq.ToolTip"));
+            this.LeaveASIODeviceFreq.UseVisualStyleBackColor = true;
             // 
             // ChanSetBox
             // 
@@ -285,7 +282,7 @@
             this.ChanSetBox.Controls.Add(this.LeftCh);
             this.ChanSetBox.Controls.Add(this.label3);
             this.ChanSetBox.Controls.Add(this.label2);
-            this.ChanSetBox.Location = new System.Drawing.Point(10, 192);
+            this.ChanSetBox.Location = new System.Drawing.Point(10, 172);
             this.ChanSetBox.Name = "ChanSetBox";
             this.ChanSetBox.Size = new System.Drawing.Size(499, 76);
             this.ChanSetBox.TabIndex = 16;
@@ -332,14 +329,55 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "Left channel (Input 0):";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.LeaveASIODeviceFreq);
+            this.groupBox1.Controls.Add(this.DisableASIOFreqWarn);
+            this.groupBox1.Controls.Add(this.ASIODirectFeed);
+            this.groupBox1.Location = new System.Drawing.Point(10, 254);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(499, 85);
+            this.groupBox1.TabIndex = 19;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Channel settings";
+            // 
+            // LatencyWarning
+            // 
+            this.LatencyWarning.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.LatencyWarning.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
+            this.LatencyWarning.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.LatencyWarning.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.LatencyWarning.Location = new System.Drawing.Point(371, 346);
+            this.LatencyWarning.Name = "LatencyWarning";
+            this.LatencyWarning.Size = new System.Drawing.Size(136, 19);
+            this.LatencyWarning.TabIndex = 15;
+            this.LatencyWarning.TabStop = true;
+            this.LatencyWarning.Text = "Read me! It\'s important!";
+            this.LatencyWarning.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.LatencyWarning.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LatencyWarning_LinkClicked);
+            // 
+            // ASIODevicesSupport
+            // 
+            this.ASIODevicesSupport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ASIODevicesSupport.AutoSize = true;
+            this.ASIODevicesSupport.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.ASIODevicesSupport.Location = new System.Drawing.Point(427, 8);
+            this.ASIODevicesSupport.Name = "ASIODevicesSupport";
+            this.ASIODevicesSupport.Size = new System.Drawing.Size(85, 26);
+            this.ASIODevicesSupport.TabIndex = 10;
+            this.ASIODevicesSupport.TabStop = true;
+            this.ASIODevicesSupport.Text = "List of supported\r\nASIO devices";
+            this.ASIODevicesSupport.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ASIODevicesSupport.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ASIODevicesSupport_LinkClicked);
+            // 
             // DefaultASIOAudioOutput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(518, 331);
+            this.ClientSize = new System.Drawing.Size(518, 401);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.ChanSetBox);
             this.Controls.Add(this.LatencyWarning);
-            this.Controls.Add(this.ASIODirectFeed);
             this.Controls.Add(this.InfoGroupBox);
             this.Controls.Add(this.ASIODevicesSupport);
             this.Controls.Add(this.MaxThreads);
@@ -361,6 +399,8 @@
             this.InfoGroupBox.PerformLayout();
             this.ChanSetBox.ResumeLayout(false);
             this.ChanSetBox.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -394,5 +434,8 @@
         private System.Windows.Forms.ComboBox LeftCh;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox DisableASIOFreqWarn;
+        private System.Windows.Forms.CheckBox LeaveASIODeviceFreq;
     }
 }

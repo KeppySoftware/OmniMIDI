@@ -412,7 +412,7 @@ namespace OmniMIDIConfigurator
                 case AudioEngine.WASAPI_ENGINE:
                     Program.SynthSettings.SetValue("WASAPIOutput", Device, RegistryValueKind.String);
                     break;
-                case AudioEngine.DSOUND_ENGINE:
+                case AudioEngine.BASS_OUTPUT:
                     Program.SynthSettings.SetValue("AudioOutput", Device, RegistryValueKind.String);
                     break;
                 case AudioEngine.ASIO_ENGINE:

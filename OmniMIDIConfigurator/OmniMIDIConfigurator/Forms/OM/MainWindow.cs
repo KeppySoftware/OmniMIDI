@@ -468,7 +468,7 @@ namespace OmniMIDIConfigurator
                 Program.ShowError(
                     4, 
                     "Error", 
-                    "An error has occured while interrogating GitHub for the latest release.\n" +
+                    "An error has occurred while interrogating GitHub for the latest release.\n" +
                     "This is not a serious error, it might mean that your IP has reached the maximum requests allowed to the GitHub servers.",
                     ex);
             }
@@ -486,30 +486,30 @@ namespace OmniMIDIConfigurator
 
         private void CheckUpdatesStartUp(object sender, EventArgs e)
         {
-            try { CheckUpdates.RunWorkerAsync(); } catch { }
-        }
-
-        private void CheckUpdates_DoWork(object sender, DoWorkEventArgs e)
-        {
-            this.Invoke((MethodInvoker)delegate
-            {
+            try {
                 SetDefaultCursor(sender, null);
 
                 VersionLabel.Click -= CheckUpdatesStartUp;
+                UpdateNow.Enabled = false;
                 VersionLabel.Image = Properties.Resources.ReloadIcon;
 
                 DriverInfo.Enabled = false;
                 CFUBtn.Enabled = false;
                 VersionLabel.Enabled = false;
-            });
 
+                CheckUpdates.RunWorkerAsync();
+            } catch { }
+        }
+
+        private void CheckUpdates_DoWork(object sender, DoWorkEventArgs e)
+        {
             switch (UpdateSystem.CheckForUpdatesMini().ToLowerInvariant())
             {
                 case "yes":
                     this.Invoke((MethodInvoker)delegate
                     {
                         VersionLabel.Click += CFUBtn_Click;
-                        VersionLabel.Image = Properties.Resources.dlready;
+                        UpdateNow.Enabled = true;
 
                         DriverInfo.Enabled = true;
                         CFUBtn.Enabled = true;
@@ -520,6 +520,7 @@ namespace OmniMIDIConfigurator
                     this.Invoke((MethodInvoker)delegate
                     {
                         VersionLabel.Click += CheckUpdatesStartUp;
+                        UpdateNow.Enabled = false;
                         VersionLabel.Image = Properties.Resources.ok;
 
                         DriverInfo.Enabled = true;
@@ -531,6 +532,7 @@ namespace OmniMIDIConfigurator
                     this.Invoke((MethodInvoker)delegate
                     {
                         VersionLabel.Click += CheckUpdatesStartUp;
+                        UpdateNow.Enabled = false;
                         VersionLabel.Image = Properties.Resources.dlerror;
 
                         DriverInfo.Enabled = true;
@@ -539,6 +541,17 @@ namespace OmniMIDIConfigurator
                     });
                     break;
             }
+        }
+
+        private bool UNFrame = false;
+        private void UpdateNow_Tick(object sender, EventArgs e)
+        {
+            UNFrame = !UNFrame;
+
+            if (UNFrame)
+                VersionLabel.Image = Properties.Resources.dlready;
+            else
+                VersionLabel.Image = Properties.Resources.dlreadye;
         }
     }
 }

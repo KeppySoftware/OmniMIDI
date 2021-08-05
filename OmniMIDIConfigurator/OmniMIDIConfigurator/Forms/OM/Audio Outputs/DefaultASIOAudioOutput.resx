@@ -125,4 +125,13 @@
 ASIO will handle everything by itself, making OmniMIDI only handle the incoming MIDI events without having
 to deal with rendering the audio as well.</value>
   </data>
+  <data name="DisableASIOFreqWarn.ToolTip" xml:space="preserve">
+    <value>Doing so will force OmniMIDI to use the frequency you selected in the synthesizer's settings.
+Be careful though, some devices might not like that and either quit the application or bgucheck the system.</value>
+  </data>
+  <data name="LeaveASIODeviceFreq.ToolTip" xml:space="preserve">
+    <value>Enabling this option will prevent OmniMIDI from specifying the output frequency of the ASIO device.
+BE CAREFUL because some devices won't output any audio if the ASIO host doesn't specify an output frequency,
+while some others might fair better and default to the current Windows' default output frequency.</value>
+  </data>
 </root>

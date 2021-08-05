@@ -46,14 +46,15 @@ BOOL GetFolderPath(const GUID FolderID, const int CSIDL, wchar_t* P, size_t PS) 
 		if (SHGetKnownFolderPath && FolderID != GUID_NULL) {
 #endif
 			PWSTR Dir;
+			LSTATUS SGKFP = SHGetKnownFolderPath(FolderID, 0, NULL, &Dir);
+			BOOL Success = SUCCEEDED(SGKFP);
 
-			if (SUCCEEDED(SHGetKnownFolderPath(FolderID, 0, NULL, &Dir))) {
+			if (Success)
 				swprintf_s(P, PS, L"%s", Dir);
-				CoTaskMemFree(Dir);
-				return TRUE;
-			}
 
 			CoTaskMemFree(Dir);
+
+			return Success;
 #ifdef XP
 		}
 		else {

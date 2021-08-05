@@ -24,11 +24,12 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 
 // Audio engines
 #define AUDTOWAV 0
-#define DXAUDIO_ENGINE 1
+#define BASS_OUTPUT 1
+// #define DXAUDIO_ENGINE 1
 #define ASIO_ENGINE 2
 #define WASAPI_ENGINE 3
 #define XAUDIO_ENGINE 4
-#define OLD_WASAPI 69420
+// #define OLD_WASAPI 69420
 
 // Settings
 #define OM_SET						0x0
@@ -160,7 +161,7 @@ typedef struct
 	DWORD ConcertPitch = 8192;				// Concert pitch
 
 	BOOL WASAPIExclusive = FALSE;			// WASAPI Exclusive Mode
-	BOOL OldWASAPIMode = FALSE;				// Old WASAPI mode
+	BOOL OldWASAPIMode = FALSE;				// Old WASAPI mode (Deprecated)
 	BOOL WASAPIRAWMode = FALSE;				// WASAPI raw mode
 	BOOL WASAPIDoubleBuf = TRUE;			// WASAPI double buffer (for volume monitoring)
 
@@ -169,11 +170,14 @@ typedef struct
 	DWORD XASamplesPerFrame = 88;			// Samples per frame (XA engine)
 	DWORD XASPFSweepRate = 15;				// SFP sweep rate (XA engine)
 
-	BOOL ASIODirectFeed = 0;				// Make ASIO inject itself into the BASS stream
+	BOOL ASIODirectFeed = TRUE;				// Make ASIO inject itself into the BASS stream
 
 	BOOL LinAttMod = FALSE;					// Use a linear attack phase in SF2 modulation (pitch/filter) envelopes
 	BOOL LinDecVol = TRUE;					// Use linear decay and release phases in volume envelopes
 	BOOL NoSFGenLimits = FALSE;				// Do not limit SF2 generator values to emulate Creative/SoundBlaster hardware
+
+	BOOL DisableASIOFreqWarn = FALSE;		// Disable warning when using an unsupported frequency with ASIO
+	BOOL LeaveASIODeviceFreq = FALSE;		// Don't make OmniMIDI change the device frequency to fit with the stream
 } Settings;
 #endif
 

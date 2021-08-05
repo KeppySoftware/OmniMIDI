@@ -494,6 +494,7 @@
     <Content Include="Resources\Icons\dlerror.png" />
     <Content Include="Resources\Icons\dlready.png" />
     <Content Include="Resources\Icons\BB.png" />
+    <None Include="Resources\Icons\dlreadye.png" />
     <Content Include="Resources\Icons\error.png" />
     <Content Include="Resources\Icons\infoicon.png" />
     <Content Include="Resources\Icons\Octocat.png" />
