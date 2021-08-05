@@ -231,6 +231,9 @@ namespace OmniMIDIConfigurator
         {
             String DirectoryDebug = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\OmniMIDI\\dumpfiles\\";
 
+            if (!Directory.Exists(DirectoryDebug)) 
+                return;
+
             if (Directory.GetFiles(DirectoryDebug, "*.mdmp").Length != 0)
             {
                 DialogResult W = MessageBox.Show("OmniMIDI has found some minidumps that might have been created after some driver crashes.\n\n" +
