@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace OmniMIDIConfigurator
 {
@@ -101,16 +103,17 @@ namespace OmniMIDIConfigurator
         [STAThread]
         static void Main(String[] Args)
         {
-            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
+            CreateSettingsBackup();
+
             List<String> SoundFontsToAdd = new List<String>();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             if (!Directory.Exists(Path.GetDirectoryName(Program.ListsPath[0])))
-            {
                 Directory.CreateDirectory(Path.GetDirectoryName(Program.ListsPath[0]));
-            }
+
+            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(UpdateSystem.UpdateFileVersion);
 
             foreach (String Arg in Args)
             {
@@ -185,7 +188,7 @@ namespace OmniMIDIConfigurator
 
             new Drv32Troubleshooter(true).ShowDialog();
 
-            if (Properties.Settings.Default.UpdateBranch == "choose" || 
+            if (Properties.Settings.Default.UpdateBranch == "choose" ||
                 (Properties.Settings.Default.UpdateBranch != Properties.Settings.Default.PreReleaseBranch[1] &&
                 Properties.Settings.Default.UpdateBranch != Properties.Settings.Default.StableBranch[1] &&
                 Properties.Settings.Default.UpdateBranch != Properties.Settings.Default.SlowBranch[1]))
@@ -225,6 +228,46 @@ namespace OmniMIDIConfigurator
                 new Donate().ShowDialog();
 
             Application.Run(new MainWindow(SoundFontsToAdd.ToArray()));
+        }
+
+        private static void CreateSettingsBackup()
+        {
+            string ConfiguratorBackup;
+
+            try
+            {
+                Configuration ConfiguratorSettings = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+                ConfiguratorBackup = ConfiguratorSettings.FilePath + ".bak";
+                ConfiguratorSettings.SaveAs(ConfiguratorBackup, ConfigurationSaveMode.Full, true);
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                MessageBox.Show("An error has occurred while loading the configurator's settings.\n\nPress OK to restore a previous " +
+                    "backup of the settings (if available) and restart the configurator.",
+                    "OmniMIDI - Configurator error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                ConfiguratorBackup = ex.Filename + ".bak";
+
+                if (File.Exists(ex.Filename))
+                {
+                    File.Delete(ex.Filename);
+
+                    if (!string.IsNullOrEmpty(ConfiguratorBackup) && File.Exists(ConfiguratorBackup))
+                        File.Copy(ConfiguratorBackup, ex.Filename, true);
+                }
+                else
+                {
+                    // Something went terribly wrong, the file is so corrupted that there's no filename!!!
+                    // Let's delete all the settings.
+
+                    String LocalAppdata = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+
+                    Directory.Delete(String.Format("{0}\\{1}", LocalAppdata, "Keppy's_Software"), true);
+                }
+
+                Application.Restart();
+                Environment.Exit(0);
+            }
         }
 
         private static void CheckDumpFiles()
