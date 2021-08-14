@@ -818,8 +818,7 @@ BOOL DisableBuiltInHandler(LPCSTR Stage) {
 	if (ExceptionHandler != nullptr) {
 		PrintMessageToDebugLog(Stage, "Removing OmniMIDICrashHandler...");
 		if (!RemoveVectoredExceptionHandler(ExceptionHandler)) {
-			CrashMessage(L"DIsableBuiltInHandlerFail");
-			return FALSE;
+			throw;
 		}
 	}
 #endif

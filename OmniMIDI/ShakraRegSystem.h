@@ -54,7 +54,7 @@ const wchar_t WDMAUD_DRIVER_NAME[] = L"wdmaud.drv";
 static bool DriverBusy = false;
 
 // MIDI REG
-const wchar_t MIDI_REGISTRY_ENTRY_TEMPLATE[] = L"midi%d";
+const wchar_t MIDI_REGISTRY_ENTRY_TEMPLATE[] = L"midi%d\0";
 
 static const int ShaBufSize = 2048;
 static const int ShaSZBufSize = sizeof(wchar_t) * ShaBufSize;
@@ -104,6 +104,9 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 	wchar_t ShakraKey[255];
 	bool OnlyDrivers32 = true;
 
+	// What's the first MIDIx slot available? We'll check later.
+	bool MIDISlots[9] = { true, true, true, true, true, true, true, true, true };
+
 	// We need to register, woohoo
 	if (_stricmp(CommandLine, "RegisterDrv") == 0 || _stricmp(CommandLine, "RegisterDrvS") == 0 ||
 		_stricmp(CommandLine, "UnregisterDrv") == 0 || _stricmp(CommandLine, "UnregisterDrvS") == 0) {
@@ -142,29 +145,85 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			if (!SetupDiEnumDeviceInfo(DeviceInfo, DeviceIndex, &DeviceInfoData))
 				break;
 
-			if (SetupDiGetDeviceRegistryProperty(
-				DeviceInfo,
-				&DeviceInfoData,
-				SPDRP_DEVICEDESC,
-				&dwPropertyRegDataType,
-				(BYTE*)szBuffer,
-				sizeof(szBuffer),
-				&dwSize))
+			// NEW MIDI SLOT DETECTION FROM OMNIMIDI 15.x+
+
+			// Open the PnP settings of the device index
+			HKEY DevCheckKey = SetupDiOpenDevRegKey(DeviceInfo, &DeviceInfoData, DICS_FLAG_GLOBAL, NULL, DIREG_DRV, KEY_READ);
+			TCHAR achKey[255];
+			DWORD cbName = 255;
+
+			// ---------------------------------------
+			// I know this code looks like a mess but
+			// it's literally the only way to prevent
+			// Microsoft from messing around with the
+			// MIDI slots.					    - kep
+			// ---------------------------------------
+
+			// Open the Drivers subkey
+			if (!RegOpenKeyExW(DevCheckKey, L"Drivers", NULL, KEY_READ, &DevCheckKey))
 			{
-				if (_wcsicmp(szBuffer, DEVICE_DESCRIPTION) == 0)
+				// Open the midi subkey
+				if (!RegOpenKeyExW(DevCheckKey, L"midi", NULL, KEY_READ, &DevCheckKey))
 				{
-					if (Registration)
+					// Get the first subkey inside the "midi" key (it's always one only)
+					if (!RegEnumKeyEx(DevCheckKey, 0, achKey, &cbName, NULL, NULL, NULL, NULL))
 					{
-						DERROR(L"The driver is already registered!");
-						return;
+						// Open the subkey you got, and check the Alias
+						if (!RegOpenKeyExW(DevCheckKey, achKey, NULL, KEY_READ, &DevCheckKey))
+						{
+							// Loop until you find the Alias
+							for (int MIDIEntry = MIN_DEVICEID; MIDIEntry < CLEANUP_DEVICEID; MIDIEntry++)
+							{
+								DWORD BufSize = sizeof(Buf32);
+
+								ZeroMemory(ShakraKey, sizeof(ShakraKey));
+								swprintf_s(ShakraKey, sizeof(ShakraKey), (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
+
+								ZeroMemory(Buf32, sizeof(Buf32));
+								if (!RegQueryValueExW(DevCheckKey, L"Driver", 0, &sztype, (LPBYTE)&Buf32, &BufSize))
+								{
+									// If Alias has been found and it's equal midiX, mark the slot as busy.
+									if (_wcsicmp(Buf32, SHAKRA_DRIVER_NAME) == 0)
+									{
+										if (Registration)
+										{
+											DERROR(L"The driver is already registered!");
+											RegCloseKey(DevCheckKey);
+											return;
+										}
+										else {
+											OnlyDrivers32 = false;
+											break;
+										}
+									}
+								}
+
+								ZeroMemory(Buf32, sizeof(Buf32));
+								if (!RegQueryValueExW(DevCheckKey, L"Alias", 0, &sztype, (LPBYTE)&Buf32, &BufSize))
+								{
+									// Check if Alias has been found and it's equal midiX
+									if (_wcsicmp(Buf32, ShakraKey) == 0)
+									{
+										// It's a match, mark the slot as occupied
+										MIDISlots[MIDIEntry] = false;
+										break;
+									}
+								}
+							}
+
+							// Nothing found? Let's continue until we run out of devices.
+						}
+
 					}
-					else
-					{
-						OnlyDrivers32 = false;
-						break;
-					}
+
 				}
 			}
+
+			// Close the key
+			RegCloseKey(DevCheckKey);
+
+			if (!OnlyDrivers32)
+				break;
 		}
 
 		if (Registration)
@@ -183,6 +242,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			}
 #endif
 
+			// Create the info for the device
 			if (!SetupDiCreateDeviceInfo(DeviceInfo, DEVICE_NAME_MEDIA, &DevGUID, DEVICE_DESCRIPTION, NULL, DICD_GENERATE_ID, &DeviceInfoData))
 			{
 				SetupDiDestroyDeviceInfoList(DeviceInfo);
@@ -190,12 +250,14 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 				return;
 			}
 
+			// Register the info you created to the PnP system
 			if (!SetupDiRegisterDeviceInfo(DeviceInfo, &DeviceInfoData, NULL, NULL, NULL, NULL)) {
 				SetupDiDestroyDeviceInfoList(DeviceInfo);
 				DERROR(L"SetupDiRegisterDeviceInfo failed, unable to register the driver.");
 				return;
 			}
 
+			// Populate the device settings
 			if (!SetupDiSetDeviceRegistryProperty(DeviceInfo, &DeviceInfoData, SPDRP_CONFIGFLAGS, (BYTE*)&configClass, sizeof(configClass))) {
 				SetupDiDestroyDeviceInfoList(DeviceInfo);
 				DERROR(L"SetupDiSetDeviceRegistryProperty failed, unable to register the driver.");
@@ -299,6 +361,9 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			int FinalID = 0;
 			for (int MIDIEntry = MIN_DEVICEID; MIDIEntry < MAX_DEVICEID; MIDIEntry++)
 			{
+				// If the slot isn't available, quit.
+				if (!MIDISlots[MIDIEntry]) continue;
+
 				DWORD B32S = sizeof(Buf32), B64S = sizeof(Buf64);
 
 				ZeroMemory(ShakraKey, sizeof(ShakraKey));
@@ -319,9 +384,6 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 							Pass = true;
 							break;
 						}
-						// The value is already filled with something that isn't our driver. Leave it be.
-						else if (_wcsicmp(Buf32, WDMAUD_DRIVER_NAME) != 0)
-							continue;
 						// Old broken driver entry, let's replace it.
 						else if (_wcsicmp(Buf32, OMOLD_DRIVER_NAME) == 0);
 						// It's free real estate, let's replace it.
@@ -356,9 +418,6 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 								continue;
 							}
 						}
-						// The value is already filled with something that isn't our driver. Leave it be.
-						else if (_wcsicmp(Buf32, WDMAUD_DRIVER_NAME) != 0)
-							continue;
 						// Old broken driver entry, let's replace it.
 						else if (_wcsicmp(Buf32, OMOLD_DRIVER_NAME) == 0);
 						// It's free real estate, let's replace it.
@@ -373,10 +432,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 							DERROR(L"The driver has been already registered!");
 							Pass = true;
 							break;
-						}		
-						// The value is already filled with something that isn't our driver. Leave it be.
-						else if (_wcsicmp(Buf64, WDMAUD_DRIVER_NAME) != 0)
-							continue;
+						}
 						else {
 							// The 32-bit value is filled with something but the 64-bit one isn't.
 							// Let's continue searching for a free midiX slot.
@@ -419,6 +475,13 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			// Failed to register, let's delete the virtual device.
 			else 
 			{
+				ZeroMemory(Buf32, sizeof(Buf32));
+				swprintf_s(Buf32, sizeof(Buf32),
+					L"No MIDI slots available for OmniMIDI to register properly!\nDown below you can find a list of which slots are available at the moment.\n\nPress OK to quit.\n\nmidi1 free: %s\nmidi2 free: %s\nmidi3 free: %s\nmidi4 free: %s\nmidi5 free: %s\nmidi6 free: %s\nmidi7 free: %s\nmidi8 free: %s\nmidi9 free: %s", 
+					MIDISlots[0] ? "true" : "false", MIDISlots[1] ? "true" : "false", MIDISlots[2] ? "true" : "false", MIDISlots[3] ? "true" : "false",
+					MIDISlots[4] ? "true" : "false", MIDISlots[5] ? "true" : "false", MIDISlots[6] ? "true" : "false", MIDISlots[7] ? "true" : "false", 
+					MIDISlots[8] ? "true" : "false");
+
 				MessageBox(HWND, L"No available MIDI entry for OmniMIDI to register!!!\nUninstall another user-mode MIDI driver then try again.\n\nPress OK to quit.", L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR);
 
 				SetupDiRemoveDevice(DeviceInfo, &DeviceInfoData);
@@ -461,14 +524,14 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			{
 				if (!SetupDiRemoveDevice(DeviceInfo, &DeviceInfoData))
 				{
-					SetupDiDestroyDeviceInfoList(DeviceInfo);
-
 					if (GetLastError() != ERROR_FILE_NOT_FOUND)
 					{
 						DERROR(L"SetupDiRemoveDevice failed, unable to unregister the driver.");
 						return;
 					}
 					else MessageBox(HWND, L"The virtual OmniMIDI device has been removed already.", L"OmniMIDI - Information", MB_OK | MB_ICONINFORMATION);
+				
+					SetupDiDestroyDeviceInfoList(DeviceInfo);
 				}
 			}
 

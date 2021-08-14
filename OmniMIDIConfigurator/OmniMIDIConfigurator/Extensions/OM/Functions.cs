@@ -521,8 +521,6 @@ namespace OmniMIDIConfigurator
 
                 Process Proc = Process.Start(FinalDir, Uninstall ? (Silent ? "/unregisterv" : "/unregister") : (Silent ? "/registerv" : "/register"));
                 Proc.WaitForExit();
-
-                MessageBox.Show("Please restart Windows to apply the changes.", "OmniMIDI", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
