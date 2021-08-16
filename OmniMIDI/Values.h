@@ -355,3 +355,4 @@ MOSM MMmidiOutShortMsg = DummymidiOutShortMsg;
 MOLM MMmidiOutLongMsg = DummymidiOutLongMsg;
 MOGND MMmidiOutGetNumDevs = 0;
 MOGDCW MMmidiOutGetDevCapsW = 0;
+UINT TimerResolution = 1;

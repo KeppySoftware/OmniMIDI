@@ -20,6 +20,43 @@ void SetNoteValuesFromSettings() {
 	}
 }
 
+void TightenTimings() {
+	TIMECAPS TC;
+	
+	if (timeGetDevCaps(&TC, sizeof(TC)) != TIMERR_NOERROR)
+		PrintMessageToDebugLog("TightenTimings", "timeGetDevCaps failed! Timings might not be as tight as requested.");
+
+	TimerResolution = min(max(TC.wPeriodMin, 1), TC.wPeriodMax);
+
+	if (timeBeginPeriod(TimerResolution) == TIMERR_NOERROR) {
+		PrintMessageToDebugLog("TightenTimings", "timeBeginPeriod set.");
+		PrintStreamValueToDebugLog("TightenTimings", "New resolution (ms)", TimerResolution);
+	}
+	else PrintMessageToDebugLog("TightenTimings", "timeBeginPeriod failed! Timings might not be as tight as requested.");
+
+	if (NT_SUCCESS(NtQueryTimerResolution(&Min, &Max, &Org))) {
+		PrintMessageToDebugLog("TightenTimings", "Queried NtQueryTimerResolution.");
+		if (NT_SUCCESS(NtSetTimerResolution(Max, true, &Org))) {
+			PrintMessageToDebugLog("TightenTimings", "Timings tightened through NtSetTimerResolution");
+			PrintStreamValueToDebugLog("TightenTimings", "New resolution (ns)", Max);
+		}
+		else PrintMessageToDebugLog("TightenTimings", "NtSetTimerResolution failed! Timings might not be as tight as requested.");
+	}
+	else PrintMessageToDebugLog("TightenTimings", "NtQueryTimerResolution failed! Timings might not be as tight as requested.");
+}
+
+void ResetTimings() {
+	if (Org) {
+		if (NT_SUCCESS(NtSetTimerResolution(Org, true, &Dummy))) {
+			PrintMessageToDebugLog("ResetTimings", "Timings reset to normal through NtSetTimerResolution.");
+		}
+		else PrintMessageToDebugLog("ResetTimings", "NtSetTimerResolution failed?!");
+	}
+
+	if (timeEndPeriod(1)) PrintMessageToDebugLog("ResetTimings", "timeEndPeriod failed?!");
+	else PrintMessageToDebugLog("ResetTimings", "timeEndPeriod called with previous value sent to timeBeginPeriod.");
+}
+
 BOOL EnableMIDIFeedbackMode() {
 	try {
 		// Initialize feedback device info
@@ -176,6 +213,8 @@ BOOL DisableMIDIFeedbackMode() {
 			if (!FreeLibrary(owinmm))
 				throw;
 		}
+		
+		owinmm = NULL;
 
 		return TRUE;
 	}

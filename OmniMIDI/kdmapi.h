@@ -336,6 +336,9 @@ void Supervisor(LPVOID lpV) {
 		PrintMessageToDebugLog("StreamWatchdog", "Checking if app is allowed to use RTSS OSD...");
 		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
 
+		// Tighten timings for pog playback
+		TightenTimings();
+
 		// Load the BASS functions
 		if (!LoadBASSFunctions())
 			// If BASS is still unavailable, commit suicide
@@ -409,6 +412,8 @@ void Supervisor(LPVOID lpV) {
 
 	DisableMIDIFeedbackMode();
 
+	ResetTimings();
+
 	SetEvent(OMReady);
 
 	// Close the thread
@@ -431,16 +436,6 @@ BOOL DoStartClient() {
 
 		if (!LiveChanges)
 			LiveChanges = CreateEvent(NULL, TRUE, FALSE, L"OMLiveChanges");
-
-		if (NT_SUCCESS(NtQueryTimerResolution(&Min, &Max, &Org))) {
-			PrintMessageToDebugLog("StartDriver", "Queried NtQueryTimerResolution.");
-			if (NT_SUCCESS(NtSetTimerResolution(Max, true, &Org))) {
-				PrintMessageToDebugLog("StartDriver", "Timings tightened through NtSetTimerResolution");
-				PrintStreamValueToDebugLog("StartDriver", "New resolution (ns)", Max);
-			}
-			else PrintMessageToDebugLog("StartDriver", "NtSetTimerResolution failed. Timings will not be tightened.");
-		}
-		else PrintMessageToDebugLog("StartDriver", "NtQueryTimerResolution failed. Timings will not be tightened.");
 
 		// Create the main thread
 		PrintMessageToDebugLog("StartDriver", "Starting main watchdog thread...");
@@ -501,10 +496,6 @@ BOOL DoStopClient() {
 			CloseHandle(LiveChanges);
 			LiveChanges = NULL;
 		}
-
-		if (Org)
-			if (NT_SUCCESS(NtSetTimerResolution(Org, true, &Dummy)))
-				PrintMessageToDebugLog("StopDriver", "Timings reset to normal through NtSetTimerResolution");
 
 		// Boopers
 		DriverInitStatus = FALSE;

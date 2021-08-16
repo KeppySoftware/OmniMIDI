@@ -13,7 +13,7 @@ void ResetSynth(BOOL SwitchingBufferMode, BOOL ModeReset) {
 
 	if (ModeReset) {
 		// Wait for the heads to align, to avoid crashes
-		if (EVBuffer.ReadHead != EVBuffer.WriteHead) return;
+		if (!BufferCheck()) return;
 
 		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_XG);
 		PrintMessageToDebugLog("ResetSynth", "Sent SysEx to BASSMIDI.");

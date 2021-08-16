@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -138,6 +139,8 @@ namespace OmniMIDIConfigurator
 
                 Functions.DriverRegistry(true, true);
                 Functions.DriverRegistry(false, true);
+
+                Thread.Sleep(1000);
 
                 Registered = CheckDevs();
                 FixBtn.Enabled = !Registered;
