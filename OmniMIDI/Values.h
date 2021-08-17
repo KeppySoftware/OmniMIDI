@@ -103,6 +103,10 @@ BOOL KDMAPIEnabled = FALSE;
 BOOL IsKDMAPIViaWinMM = FALSE;
 BOOL HostSessionMode = FALSE;
 
+// DLL hell
+BOOL AppLibWarning = FALSE;
+BOOL LastChoice = TRUE;
+
 // Check if init
 BOOL ASIOInit = FALSE;
 

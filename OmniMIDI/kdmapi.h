@@ -298,7 +298,7 @@ BOOL StreamHealthCheck() {
 		EnableMIDIFeedbackMode();
 
 		// It did, reload the settings and reallocate the memory for the buffer
-		CloseThreads(FALSE);
+		CloseThreads();
 
 		LoadSettings(TRUE, FALSE);
 
@@ -331,88 +331,113 @@ BOOL StreamHealthCheck() {
 }
 
 void Supervisor(LPVOID lpV) {
+	// Load the BASS functions
 	try {
-		// Parse the app name, and start the debug pipe to the debug window
-		PrintMessageToDebugLog("StreamWatchdog", "Checking if app is allowed to use RTSS OSD...");
-		if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
+		if (LoadBASSFunctions()) {
+			// Parse the app name, and start the debug pipe to the debug window
+			PrintMessageToDebugLog("StreamWatchdog", "Checking if app is allowed to use RTSS OSD...");
+			if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
 
-		// Tighten timings for pog playback
-		TightenTimings();
+			if (!ATThreadDone)
+				ATThreadDone = CreateEvent(NULL, TRUE, FALSE, L"ATThreadDone");
 
-		// Load the BASS functions
-		if (!LoadBASSFunctions())
-			// If BASS is still unavailable, commit suicide
-			_THROWCRASH;
+			if (!EPThreadDone)
+				EPThreadDone = CreateEvent(NULL, TRUE, FALSE, L"EPThreadDone");
 
-		// Ok, everything's ready, do not open more debug pipes from now on
-		DriverInitStatus = TRUE;
-		AlreadyStartedOnce = TRUE;
-		bass_initialized = TRUE;
+			if (!LiveChanges)
+				LiveChanges = CreateEvent(NULL, TRUE, FALSE, L"OMLiveChanges");
 
-		EnableMIDIFeedbackMode();
+			// Tighten timings for pog playback
+			TightenTimings();
 
-		if (!PrepareDriver())
-			_THROWCRASH;
+			// Ok, everything's ready, do not open more debug pipes from now on
+			DriverInitStatus = TRUE;
+			AlreadyStartedOnce = TRUE;
+			bass_initialized = TRUE;
 
-		// Check system
-		PrintMessageToDebugLog("StreamWatchdog", "Checking for settings changes or hotkeys...");
+			EnableMIDIFeedbackMode();
 
-		while (!stop_svthread) {
-			// Check if the threads and streams are still alive
-			if (StreamHealthCheck());
-			{
-				// It's alive, do registry stuff
+			if (!PrepareDriver())
+				_THROWCRASH;
 
-				LoadSettings(FALSE, TRUE);			// Load real-time settings
-				LoadCustomInstruments();			// Load custom instrument values from the registry
-				KeyShortcuts();						// Check for keystrokes (ALT+1, INS, etc..)
-				SFDynamicLoaderCheck();				// Check current active voices, rendering time, etc..
-				MixerCheck();						// Send dB values to the mixer
-				SetNoteValuesFromSettings();		// Check if custom preset/bank or finetune are applied
-				RevbNChor();						// Check if custom reverb/chorus values are enabled
-				InitializeEventsProcesserThreads(); // Check if the user wants to parse the notes through a separate thread
+			// Check system
+			PrintMessageToDebugLog("StreamWatchdog", "Checking for settings changes or hotkeys...");
 
-				// Check the current output volume
-				CheckVolume(FALSE);
+			while (!stop_svthread) {
+				// Check if the threads and streams are still alive
+				if (StreamHealthCheck());
+				{
+					// It's alive, do registry stuff
 
-				if (ManagedSettings.CurrentEngine == ASIO_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE)
-					_ProcData = ManagedSettings.NotesCatcherWithAudio ? ProcDataSameThread : ProcData;
+					LoadSettings(FALSE, TRUE);			// Load real-time settings
+					LoadCustomInstruments();			// Load custom instrument values from the registry
+					KeyShortcuts();						// Check for keystrokes (ALT+1, INS, etc..)
+					SFDynamicLoaderCheck();				// Check current active voices, rendering time, etc..
+					MixerCheck();						// Send dB values to the mixer
+					SetNoteValuesFromSettings();		// Check if custom preset/bank or finetune are applied
+					RevbNChor();						// Check if custom reverb/chorus values are enabled
+					InitializeEventsProcesserThreads(); // Check if the user wants to parse the notes through a separate thread
+
+					// Check the current output volume
+					CheckVolume(FALSE);
+
+					if (ManagedSettings.CurrentEngine == ASIO_ENGINE || ManagedSettings.CurrentEngine == WASAPI_ENGINE)
+						_ProcData = ManagedSettings.NotesCatcherWithAudio ? ProcDataSameThread : ProcData;
+				}
+
+				// I SLEEP
+				Sleep(50);
 			}
 
-			// I SLEEP
-			Sleep(50);
+			CloseThreads();
+
+			if (ATThreadDone)
+			{
+				CloseHandle(ATThreadDone);
+				ATThreadDone = NULL;
+			}
+
+			if (EPThreadDone)
+			{
+				CloseHandle(EPThreadDone);
+				EPThreadDone = NULL;
+			}
+
+			if (LiveChanges)
+			{
+				CloseHandle(LiveChanges);
+				LiveChanges = NULL;
+			}
+
+			// Unload BASS functions
+			FreeFonts();
+			FreeUpStream();
+			UnloadBASSFunctions();
+
+			// Free memory
+			FreeUpMemory();
+
+			// Close registry keys
+			PrintMessageToDebugLog("StreamWatchdog", "Closing registry keys...");
+			CloseRegistryKey(MainKey);
+			PrintMessageToDebugLog("StreamWatchdog", "Closed MainKey...");
+			CloseRegistryKey(Configuration);
+			PrintMessageToDebugLog("StreamWatchdog", "Closed Configuration...");
+			CloseRegistryKey(Channels);
+			PrintMessageToDebugLog("StreamWatchdog", "Closed Channels...");
+			CloseRegistryKey(ChanOverride);
+			PrintMessageToDebugLog("StreamWatchdog", "Closed ChanOverride...");
+			CloseRegistryKey(SFDynamicLoader);
+			PrintMessageToDebugLog("StreamWatchdog", "Closed SFDynamicLoader...");
+
+			DisableMIDIFeedbackMode();
+
+			ResetTimings();
 		}
 	}
 	catch (...) {
 		_THROWCRASH;
 	}
-
-	CloseThreads(FALSE);
-
-	// Unload BASS functions
-	FreeFonts();
-	FreeUpStream();
-	UnloadBASSFunctions();
-
-	// Free memory
-	FreeUpMemory();
-
-	// Close registry keys
-	PrintMessageToDebugLog("StreamWatchdog", "Closing registry keys...");
-	CloseRegistryKey(MainKey);
-	PrintMessageToDebugLog("StreamWatchdog", "Closed MainKey...");
-	CloseRegistryKey(Configuration);
-	PrintMessageToDebugLog("StreamWatchdog", "Closed Configuration...");
-	CloseRegistryKey(Channels);
-	PrintMessageToDebugLog("StreamWatchdog", "Closed Channels...");
-	CloseRegistryKey(ChanOverride);
-	PrintMessageToDebugLog("StreamWatchdog", "Closed ChanOverride...");
-	CloseRegistryKey(SFDynamicLoader);
-	PrintMessageToDebugLog("StreamWatchdog", "Closed SFDynamicLoader...");
-
-	DisableMIDIFeedbackMode();
-
-	ResetTimings();
 
 	SetEvent(OMReady);
 
@@ -428,15 +453,6 @@ BOOL DoStartClient() {
 		if (!OMReady)
 			OMReady = CreateEvent(NULL, TRUE, FALSE, L"OMReady");
 
-		if (!ATThreadDone)
-			ATThreadDone = CreateEvent(NULL, TRUE, FALSE, L"ATThreadDone");
-
-		if (!EPThreadDone)
-			EPThreadDone = CreateEvent(NULL, TRUE, FALSE, L"EPThreadDone");
-
-		if (!LiveChanges)
-			LiveChanges = CreateEvent(NULL, TRUE, FALSE, L"OMLiveChanges");
-
 		// Create the main thread
 		PrintMessageToDebugLog("StartDriver", "Starting main watchdog thread...");
 		CheckIfThreadClosed(&HealthThread);
@@ -450,6 +466,12 @@ BOOL DoStartClient() {
 		if (WaitForSingleObject(OMReady, INFINITE) == WAIT_OBJECT_0)
 			ResetEvent(OMReady);
 
+		if (!DriverInitStatus)
+		{
+			PrintMessageToDebugLog("StartDriver", "The driver has encountered an error and refused to start.");
+			return FALSE;
+		}
+
 		PrintMessageToDebugLog("StartDriver", "Driver initialized.");
 		return TRUE;
 	}
@@ -462,15 +484,14 @@ BOOL DoStopClient() {
 	{
 		PrintMessageToDebugLog("StopDriver", "Terminating driver...");
 
-		// Close the threads and free up the allocated memory
-		PrintMessageToDebugLog("StopDriver", "Freeing memory...");
-		CloseThreads(TRUE);
-
 		bass_initialized = FALSE;
+		stop_svthread = TRUE;
 
 		PrintMessageToDebugLog("StartDriver", "Waiting for the threads to go offline..");
 		if (WaitForSingleObject(OMReady, INFINITE) == WAIT_OBJECT_0)
 			ResetEvent(OMReady);
+
+		stop_svthread = FALSE;
 
 		PrintMessageToDebugLog("StopDriver", "Deleting handles...");
 		if (OMReady)
@@ -478,24 +499,6 @@ BOOL DoStopClient() {
 			CloseHandle(OMReady);
 			OMReady = NULL;
 		}		
-
-		if (ATThreadDone)
-		{
-			CloseHandle(ATThreadDone);
-			ATThreadDone = NULL;
-		}
-
-		if (EPThreadDone)
-		{
-			CloseHandle(EPThreadDone);
-			EPThreadDone = NULL;
-		}
-
-		if (LiveChanges)
-		{
-			CloseHandle(LiveChanges);
-			LiveChanges = NULL;
-		}
 
 		// Boopers
 		DriverInitStatus = FALSE;
@@ -537,17 +540,17 @@ extern "C" BOOL KDMAPI IsKDMAPIAvailable() {
 
 extern "C" BOOL KDMAPI InitializeKDMAPIStream() {
 	if (!AlreadyInitializedViaKDMAPI && !bass_initialized) {
+		// Enable the debug log
+		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
+		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
+		if (ManagedSettings.DebugMode) CreateConsole();
+
 		PrintMessageToDebugLog("KDMAPI_IKS", "The app requested the driver to initialize its audio stream.");
 
 		// The client manually called a KDMAPI init call, KDMAPI is available no matter what
 		AlreadyInitializedViaKDMAPI = TRUE;
 		KDMAPIEnabled = TRUE;
 		EnableBuiltInHandler("KDMAPI_IKS");
-
-		// Enable the debug log, if the process isn't banned
-		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", FALSE);
-		RegQueryValueEx(Configuration.Address, L"DebugMode", NULL, &dwType, (LPBYTE)&ManagedSettings.DebugMode, &dwSize);
-		if (ManagedSettings.DebugMode) CreateConsole();
 
 		// Start the driver's engine
 		if (!DoStartClient()) {
@@ -564,6 +567,8 @@ extern "C" BOOL KDMAPI InitializeKDMAPIStream() {
 }
 
 extern "C" BOOL KDMAPI TerminateKDMAPIStream() {
+	BOOL ret = FALSE;
+
 	// If the driver is already initialized, close it
 	if (AlreadyInitializedViaKDMAPI && bass_initialized) {
 		// Prevent BASS from reinitializing itself
@@ -579,16 +584,19 @@ extern "C" BOOL KDMAPI TerminateKDMAPIStream() {
 		// OK now it's fine
 		block_bassinit = FALSE;
 
-		return TRUE;
+		ret = TRUE;
 	}
 	else {
 		if (!AlreadyInitializedViaKDMAPI && bass_initialized)
 			PrintMessageToDebugLog("KDMAPI_TKS", "You cannot call TerminateKDMAPIStream if OmniMIDI has been initialized through WinMM.");
 		else
 			PrintMessageToDebugLog("KDMAPI_TKS", "TerminateKDMAPIStream called, even though the driver is already sleeping.");
+
+		ret = FALSE;
 	}
 
-	return FALSE;
+	CloseConsole();
+	return ret;
 }
 
 extern "C" BOOL KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM) {

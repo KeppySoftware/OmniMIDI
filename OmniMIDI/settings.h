@@ -78,7 +78,7 @@ BOOL CloseThread(Thread* thread) {
 	return FALSE;
 }
 
-void DLLLoadError(LPWSTR DLL, int ErrCode, BOOL Mandatory) {
+void DLLLoadError(LPWSTR DLL, int ErrCode) {
 	TCHAR Error[NTFS_MAX_PATH] = { 0 };
 
 	// Print to log
@@ -90,7 +90,6 @@ void DLLLoadError(LPWSTR DLL, int ErrCode, BOOL Mandatory) {
 	// Show error message
 	swprintf_s(Error, L"An error has occurred while loading the following library: %s\n\nClick OK to close the program.", DLL);
 	MessageBoxW(NULL, Error, L"OmniMIDI - DLL load error", MB_ICONERROR | MB_SYSTEMMODAL | MB_OK);
-	if (Mandatory) exit(ErrCode);
 }
 
 long long TimeNow() {
@@ -165,7 +164,7 @@ bool LoadSoundfontStartup() {
 	return FALSE;
 }
 
-void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory, BOOL Opt) {
+BOOL LoadDriverModule(OMLib* Target, wchar_t* RequestedLib) {
 	HMODULE Temp = NULL;
 	wchar_t SysDir[MAX_PATH] = { 0 };
 	wchar_t DLLPath[MAX_PATH] = { 0 };
@@ -182,34 +181,63 @@ void LoadDriverModule(OMLib* Target, wchar_t* RequestedLib, BOOL Mandatory, BOOL
 		// It is, sigh
 		if (Target->Lib != NULL)
 		{
-			PrintLoadedDLLToDebugLog(RequestedLib, "OmniMIDI will use the app's own library. This could cause issues...");
-			Target->AppOwnDLL = TRUE;
-			return;
+			PrintLoadedDLLToDebugLog(RequestedLib, "Non OM-library detected in memory! What do?");
+
+			if (!AppLibWarning) {
+				AppLibWarning = TRUE;
+				
+				switch (MessageBox(NULL, L"OmniMIDI has detected that the current app uses the BASS libraries for its audio output, which will conflict with the driver's own versions of them.\n\nAre you sure you want to continue?\nDoing so might lead to weird errors and/or crashes.",
+					L"OmniMIDI - Possible DLL hell detected", MB_ICONWARNING | MB_YESNO | MB_SYSTEMMODAL)) {
+				case IDYES:
+					PrintLoadedDLLToDebugLog(RequestedLib, "The user forced OmniMIDI to use the library. This could cause issues...");
+					Target->AppOwnDLL = TRUE;
+					return TRUE;
+				default:
+				case IDNO:
+					PrintLoadedDLLToDebugLog(RequestedLib, "The user made the right choice, and avoided a possible DLL hell...");
+					LastChoice = FALSE;
+					Target->Lib = nullptr;
+					return FALSE;
+				}
+			}
+			else {
+				if (!LastChoice) 
+					Target->Lib = nullptr;
+
+				return LastChoice;
+			}
 		}
 		else Target->AppOwnDLL = FALSE;	
 
 		if (GetFolderPath(FOLDERID_System, NULL, SysDir, sizeof(SysDir))) {
-			swprintf_s(DLLPath, MAX_PATH, Opt ? L"%s\\OmniMIDI\\opt\\%s\0" : L"%s\\OmniMIDI\\%s\0", SysDir, RequestedLib);
+			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s\0", SysDir, RequestedLib);
 
 			if (FindFirstFile(DLLPath, &FD) == INVALID_HANDLE_VALUE)
 			{
 				PrintLoadedDLLToDebugLog(RequestedLib, "OmniMIDI couldn't find the required library!!!");
-				DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
+				DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND);
+				return FALSE;
 			}
 			else {
 				if (!(Target->Lib = LoadLibrary(DLLPath))) {
 					PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested library. It's either missing or requires some missing dependencies.");
-					DLLLoadError(DLLPath, ERROR_BAD_FORMAT, Mandatory);
+					DLLLoadError(DLLPath, ERROR_BAD_FORMAT);
+					return FALSE;
 				}
 				else PrintLoadedDLLToDebugLog(RequestedLib, "The library is now in memory.");
 			}
 		}
-		else DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
+		else {
+			DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND);
+			return FALSE;
+		}
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The library is already in memory. The HMODULE will be a pointer to that address.");
+
+	return TRUE;
 }
 
-void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
+void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib) {
 	wchar_t SysDir[MAX_PATH] = { 0 };
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
@@ -220,19 +248,17 @@ void LoadPluginModule(HPLUGIN* Target, wchar_t* RequestedLib, BOOL Mandatory) {
 			swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s", SysDir, RequestedLib);
 
 			(*Target) = BASS_PluginLoad((char*)&DLLPath, BASS_UNICODE);
-			if (BASS_ErrorGetCode() != 0) {
-				if (Mandatory) DLLLoadError(DLLPath, ERROR_BAD_FORMAT, Mandatory);
-				else PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested plugin. It's either missing, requires some missing dependencies or isn't supported by this version of BASS.");
-			}
-			else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is now in memory.");
+			if (BASS_ErrorGetCode() != 0)
+				PrintLoadedDLLToDebugLog(DLLPath, "Failed to load requested plugin. It's either missing, requires some missing dependencies or isn't supported by this version of BASS.");
+			else 
+				PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is now in memory.");
 		}
-		else DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND, Mandatory);
+		else DLLLoadError(DLLPath, ERROR_PATH_NOT_FOUND);
 	}
 	else PrintLoadedDLLToDebugLog(RequestedLib, "The plugin is already in memory. The HPLUGIN will be a pointer to that address.");
 }
 
-BOOL LoadBASSFunctions()
-{
+BOOL LoadBASSFunctions() {
 	try {
 		if (!BASSLoadedToMemory) {
 			PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
@@ -240,11 +266,11 @@ BOOL LoadBASSFunctions()
 			// Load modules
 			// RegQueryValueEx(Configuration.Address, L"FastLibs", NULL, &dwType, (LPBYTE)&ManagedSettings.FastLibs, &dwSize);
 
-			LoadDriverModule(&BASS, L"bass.dll", TRUE, FALSE);
-			LoadDriverModule(&BASSMIDI, L"bassmidi.dll", TRUE, FALSE);
-			LoadDriverModule(&BASSASIO, L"bassasio.dll", TRUE, FALSE);
-			LoadDriverModule(&BASSWASAPI, L"basswasapi.dll", TRUE, FALSE);
-			LoadDriverModule(&BASSENC, L"bassenc.dll", TRUE, FALSE);
+			if (!LoadDriverModule(&BASS, L"bass.dll")) return FALSE;
+			if (!LoadDriverModule(&BASSMIDI, L"bassmidi.dll")) return FALSE;
+			if (!LoadDriverModule(&BASSASIO, L"bassasio.dll")) return FALSE;
+			if (!LoadDriverModule(&BASSWASAPI, L"basswasapi.dll")) return FALSE;
+			if (!LoadDriverModule(&BASSENC, L"bassenc.dll")) return FALSE;
 
 			PrintMessageToDebugLog("ImportBASS", "DLLs loaded into memory. Importing functions...");
 
@@ -320,9 +346,9 @@ BOOL LoadBASSFunctions()
 			_BMSE = BASS_MIDI_StreamEvent;
 
 			// Load plugins
-			LoadPluginModule(&bassflac, L"bassflac.dll", TRUE);
-			LoadPluginModule(&basswv, L"basswv.dll", FALSE);
-			LoadPluginModule(&bassopus, L"bassopus.dll", FALSE);
+			LoadPluginModule(&bassflac, L"bassflac.dll");
+			LoadPluginModule(&basswv, L"basswv.dll");
+			LoadPluginModule(&bassopus, L"bassopus.dll");
 
 			PrintMessageToDebugLog("ImportBASS", "Function pointers loaded into memory.");
 		}
@@ -350,16 +376,19 @@ VOID UnloadBASSFunctions() {
 
 			PrintMessageToDebugLog("UnloadBASS", "Freeing BASS libraries...");
 
-			if (!BASS_PluginFree(bassflac))
-				_THROWCRASH;
+			if (bassflac)
+				if (!BASS_PluginFree(bassflac))
+					CheckUp(FALSE, ERRORCODE, "BASSFLAC Free", TRUE);
 			bassflac = NULL;
 
-			if (!BASS_PluginFree(basswv))
-				_THROWCRASH;
+			if (basswv)
+				if (!BASS_PluginFree(basswv))
+					CheckUp(FALSE, ERRORCODE, "BASSWV Free", TRUE);
 			basswv = NULL;
 
-			if (!BASS_PluginFree(bassopus))
-				_THROWCRASH;
+			if (bassopus)
+				if (!BASS_PluginFree(bassopus))
+					CheckUp(FALSE, ERRORCODE, "BASSOPUS Free", TRUE);
 			bassopus = NULL;
 
 			if (!BASS.AppOwnDLL)

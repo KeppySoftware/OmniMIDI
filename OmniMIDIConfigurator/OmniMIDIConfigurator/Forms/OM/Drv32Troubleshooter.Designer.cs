@@ -168,6 +168,7 @@ namespace OmniMIDIConfigurator
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "OmniMIDI Registration Troubleshooter";
+            this.Load += new System.EventHandler(this.Drv32Troubleshooter_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);

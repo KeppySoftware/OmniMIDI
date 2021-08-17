@@ -364,95 +364,12 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 				// If the slot isn't available, quit.
 				if (!MIDISlots[MIDIEntry]) continue;
 
-				DWORD B32S = sizeof(Buf32), B64S = sizeof(Buf64);
-
-				ZeroMemory(ShakraKey, sizeof(ShakraKey));
-				swprintf_s(ShakraKey, sizeof(ShakraKey), MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
-
-#ifndef _WIN64
-				if (!Pass) {
-					ZeroMemory(Buf32, B32S);
-
-					DrvWOW64 = RegQueryValueExW(DriversWOW64Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf32, &B32S);
-
-					if (DrvWOW64 == ERROR_SUCCESS)
-					{
-						// The driver is registered on the WOW64 system.
-						if (_wcsicmp(Buf32, SHAKRA_DRIVER_NAME) == 0)
-						{
-							DERROR(L"The driver has been already registered!");
-							Pass = true;
-							break;
-						}
-						// Old broken driver entry, let's replace it.
-						else if (_wcsicmp(Buf32, OMOLD_DRIVER_NAME) == 0);
-						// It's free real estate, let's replace it.
-						else;
-					}
-
-					continue;
-				}
-#else
-				if (!Pass) {
-					ZeroMemory(Buf32, B32S);
-					ZeroMemory(Buf64, B64S);
-
-					DrvWOW64 = RegQueryValueExW(DriversWOW64Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf32, &B32S);
-					Drv32 = RegQueryValueExW(Drivers32Key, ShakraKey, 0, &sztype, (LPBYTE)&Buf64, &B64S);
-
-					if (DrvWOW64 == ERROR_SUCCESS)
-					{
-						// The driver is registered on the WOW64 system.
-						if (_wcsicmp(Buf32, SHAKRA_DRIVER_NAME) == 0)
-						{
-							// It's registered on the 64-bit system too. Let's go!
-							if (_wcsicmp(Buf64, SHAKRA_DRIVER_NAME) == 0) {
-								DERROR(L"The driver has been already registered!");
-								Pass = true;
-								break;
-							}
-							// Not supported, the midiX IDs need to match. Reset this ID to wdmaud.drv,
-							// and continue searching for a free slot.
-							else {
-								RegSetValueExW(DriversWOW64Key, ShakraKey, 0, REG_SZ, (LPBYTE)&WDMAUD_DRIVER_NAME, sizeof(WDMAUD_DRIVER_NAME));
-								continue;
-							}
-						}
-						// Old broken driver entry, let's replace it.
-						else if (_wcsicmp(Buf32, OMOLD_DRIVER_NAME) == 0);
-						// It's free real estate, let's replace it.
-						else;
-					}
-
-					if (Drv32 == ERROR_SUCCESS)
-					{
-						// The driver is registered on the 64-bit system too.
-						if (_wcsicmp(Buf64, SHAKRA_DRIVER_NAME) == 0)
-						{
-							DERROR(L"The driver has been already registered!");
-							Pass = true;
-							break;
-						}
-						else {
-							// The 32-bit value is filled with something but the 64-bit one isn't.
-							// Let's continue searching for a free midiX slot.
-							RegSetValueExW(Drivers32Key, ShakraKey, 0, REG_SZ, (LPBYTE)&WDMAUD_DRIVER_NAME, sizeof(WDMAUD_DRIVER_NAME));
-							continue;
-						}
-					}
-
-					// DriversWOW64 is 32-bit, Drivers32 is 64-bit. It's confusing I know.
-					DrvWOW64 = RegSetValueExW(DriversWOW64Key, ShakraKey, 0, REG_SZ, (LPBYTE)&SHAKRA_DRIVER_NAME, sizeof(SHAKRA_DRIVER_NAME));
-					Drv32 = RegSetValueExW(Drivers32Key, ShakraKey, 0, REG_SZ, (LPBYTE)&SHAKRA_DRIVER_NAME, sizeof(SHAKRA_DRIVER_NAME));
-
-					if (DrvWOW64 == ERROR_SUCCESS && Drv32 == ERROR_SUCCESS) Pass = true;
-				}
-#endif
-
-				if (Pass)
+				// Slot is empty! Register.
+				else {
+					Pass = TRUE;
 					FinalID = MIDIEntry;
-
-				break;
+					break;
+				}
 			}
 
 			if (Pass) {
@@ -462,9 +379,17 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 
 				if (RegSetValueEx(DriversWOW64Key, ShakraKey, NULL, REG_SZ, (LPBYTE)SHAKRA_DRIVER_NAME, sizeof(SHAKRA_DRIVER_NAME)) != ERROR_SUCCESS)
 				{
-					DERROR(L"RegSetValueEx failed to write the MIDI alias to Drivers32 (WOW64), unable to register the driver.");
+					DERROR(L"RegSetValueEx failed to write the MIDI alias to Drivers32 (x86), unable to register the driver.");
 					return;
 				}
+
+#ifdef _WIN64
+				if (RegSetValueEx(Drivers32Key, ShakraKey, NULL, REG_SZ, (LPBYTE)SHAKRA_DRIVER_NAME, sizeof(SHAKRA_DRIVER_NAME)) != ERROR_SUCCESS)
+				{
+					DERROR(L"RegSetValueEx failed to write the MIDI alias to Drivers32 (x64), unable to register the driver.");
+					return;
+				}
+#endif
 
 				if (RegSetValueExW(DriverSubKey, DRIVER_SUBCLASS_PROP_ALIAS, NULL, REG_SZ, (LPBYTE)ShakraKey, sizeof(ShakraKey)) != ERROR_SUCCESS)
 				{
@@ -475,14 +400,17 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			// Failed to register, let's delete the virtual device.
 			else 
 			{
+				wchar_t F[] = L"Free";
+				wchar_t O[] = L"Occupied";
+
 				ZeroMemory(Buf32, sizeof(Buf32));
 				swprintf_s(Buf32, sizeof(Buf32),
 					L"No MIDI slots available for OmniMIDI to register properly!\nDown below you can find a list of which slots are available at the moment.\n\nPress OK to quit.\n\nmidi1 free: %s\nmidi2 free: %s\nmidi3 free: %s\nmidi4 free: %s\nmidi5 free: %s\nmidi6 free: %s\nmidi7 free: %s\nmidi8 free: %s\nmidi9 free: %s", 
-					MIDISlots[0] ? "true" : "false", MIDISlots[1] ? "true" : "false", MIDISlots[2] ? "true" : "false", MIDISlots[3] ? "true" : "false",
-					MIDISlots[4] ? "true" : "false", MIDISlots[5] ? "true" : "false", MIDISlots[6] ? "true" : "false", MIDISlots[7] ? "true" : "false", 
-					MIDISlots[8] ? "true" : "false");
+					MIDISlots[0] ? F : O, MIDISlots[1] ? F : O, MIDISlots[2] ? F : O, MIDISlots[3] ? F : O,
+					MIDISlots[4] ? F : O, MIDISlots[5] ? F : O, MIDISlots[6] ? F : O, MIDISlots[7] ? F : O, 
+					MIDISlots[8] ? F : O);
 
-				MessageBox(HWND, L"No available MIDI entry for OmniMIDI to register!!!\nUninstall another user-mode MIDI driver then try again.\n\nPress OK to quit.", L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR);
+				MessageBox(HWND, Buf32, L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR);
 
 				SetupDiRemoveDevice(DeviceInfo, &DeviceInfoData);
 				RegDeleteValueW(DriversWOW64Key, ShakraKey);

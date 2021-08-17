@@ -241,6 +241,7 @@ DWORD WINAPI DebugParser(Thread* DPThread) {
 void TerminateThread(Thread* thread, BOOL T, DWORD excode) {
 	CloseHandle(thread->ThreadHandle);
 	thread->ThreadHandle = NULL;
+	thread->ThreadAddress = 0;
 	if (T) _endthreadex(excode);
 }
 
@@ -431,7 +432,7 @@ BOOL CheckIfThreadClosed(Thread* thread) {
 	return result;
 }
 
-void CloseThreads(BOOL MainClose) {
+void CloseThreads() {
 	stop_thread = TRUE;
 
 	// Wait for each thread to close, and free their handles
@@ -447,25 +448,13 @@ void CloseThreads(BOOL MainClose) {
 	else
 		PrintMessageToDebugLog("CloseThreadsFunc", "Events processer thread is already closed.");
 
-	if (MainClose)
-	{
-		stop_svthread = TRUE;
-
-		// Close main as well
-		PrintMessageToDebugLog("CloseThreadsFunc", "Closing main thread...");
-		if (!CloseThread(&HealthThread))
-			PrintMessageToDebugLog("CloseThreadsFunc", "Main thread is already closed.");
-
-		stop_svthread = FALSE;
-	}
-
 	PrintMessageToDebugLog("CloseThreadsFunc", "Threads closed.");
 	stop_thread = FALSE;
 }
 
 void CreateThreads() {
 	PrintMessageToDebugLog("CreateThreadsFunc", "Closing existing threads, if they're open...");
-	CloseThreads(FALSE);
+	CloseThreads();
 
 	PrintMessageToDebugLog("CreateThreadsFunc", "Creating threads...");
 
@@ -512,11 +501,7 @@ void InitializeBASSVST() {
 	// If the DLL exists, begin the loading process
 	if (PathFileExists(LoudMax)) {
 		// Initialize BASS_VST
-		LoadDriverModule(&BASS_VST, L"bass_vst.dll", FALSE, FALSE);
-
-		// If BASS_VST has been loaded succesfully, load the functions too
-		if (BASS_VST.Lib)
-		{
+		if (LoadDriverModule(&BASS_VST, L"bass_vst.dll")) {
 			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ChannelSetDSP);
 			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ChannelFree);
 			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ChannelCreate);

@@ -126,6 +126,7 @@ namespace OmniMIDIConfigurator
             {
                 Devs64 = new List<Drv32Dev>();
                 Drv64L.Enabled = false;
+                Status64 = true;
             }
 
             return (Status32 == true && Status64 == true);
@@ -152,6 +153,11 @@ namespace OmniMIDIConfigurator
         private void CloseBtn_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void Drv32Troubleshooter_Load(object sender, EventArgs e)
+        {
+
         }
     }
 

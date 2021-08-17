@@ -32,13 +32,16 @@ DWORD BlackListSystem(){
 	wchar_t TempString[NTFS_MAX_PATH] = { 0 };
 
 	// Start the system
-	GetFolderPath(FOLDERID_SystemX86, CSIDL_SYSTEMX86, SysDir32, sizeof(SysDir32));
-	GetFolderPath(FOLDERID_Profile, CSIDL_PROFILE, UserProfile, sizeof(UserProfile));
+	if (!GetFolderPath(FOLDERID_SystemX86, CSIDL_SYSTEMX86, SysDir32, sizeof(SysDir32)))
+		return DEVICE_UNAVAILABLE;
+	
+	if (!GetFolderPath(FOLDERID_Profile, CSIDL_PROFILE, UserProfile, sizeof(UserProfile))) 
+		return DEVICE_UNAVAILABLE;
 
 	DBLDir.append(SysDir32);
-	DBLDir.append(_T("\\OmniMIDI\\OmniMIDI.dbl"));
+	DBLDir.append(_T("\\OmniMIDI\\OmniMIDI.dbl\0"));
 	UBLDir.append(UserProfile);
-	UBLDir.append(_T("\\OmniMIDI\\blacklist\\OmniMIDI.blacklist"));
+	UBLDir.append(_T("\\OmniMIDI\\blacklist\\OmniMIDI.blacklist\0"));
 
 	try {
 		if (PathFileExistsW(DBLDir.c_str())) {

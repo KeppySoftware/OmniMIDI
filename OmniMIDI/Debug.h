@@ -52,14 +52,18 @@ bool GetVersionInfo(
 }
 
 void CreateConsole() {
-	if (!IntroAlreadyShown) {
+	// Open the debug output's file
+	if (ManagedSettings.DebugMode)
+	{
+		if (DebugLog)
+			return;
+
 		TCHAR MainLibrary[MAX_PATH] = { 0 };
 		TCHAR DebugDir[MAX_PATH] = { 0 };
 
 		// Get user profile's path
-		if (!GetFolderPath(FOLDERID_Profile, CSIDL_PROFILE, DebugDir, sizeof(DebugDir))) {
+		if (!GetFolderPath(FOLDERID_Profile, CSIDL_PROFILE, DebugDir, sizeof(DebugDir)))
 			return;
-		}
 
 		// Get the debug info first
 		GetAppName();
@@ -81,34 +85,33 @@ void CreateConsole() {
 		int major, minor, build, revision;
 		GetVersionInfo(MainLibrary, major, minor, build, revision);
 
-		// Open the debug output's file
-		if (ManagedSettings.DebugMode)
+		std::lock_guard<std::mutex> lock(DebugMutex);
+
+		DebugLog = _wfopen(DebugDir, L"a+");
+
+		// Begin writing to it
+		if (!IntroAlreadyShown)
 		{
-			DebugLog = _wfopen(DebugDir, L"a+");
-
-			std::lock_guard<std::mutex> lock(DebugMutex);
-
-			// Begin writing to it
 			fprintf(DebugLog, "=======================================\n");
 			fprintf(DebugLog, "OmniMIDI %d.%d.%d ", major, minor, build);
 			if (revision) fprintf(DebugLog, "CR%d ", revision);
 			fprintf(DebugLog, "(KDMAPI %d.%d.%d, Revision %d)\n", CUR_MAJOR, CUR_MINOR, CUR_BUILD, CUR_REV);
-			fprintf(DebugLog, "%d threads available to the ASIO engine\n", std::thread::hardware_concurrency());
-			fprintf(DebugLog, "Copyright(C) 2013 - KaleidonKep99\n\n");
+			fprintf(DebugLog, "Copyright(C) 2021 - Keppy's Software\n\n");
 			IntroAlreadyShown = TRUE;
 		}
 	}
 }
 
-inline bool DebugFileExists(const std::string& name) {
-	// Check if the debug file exists
-	if (FILE *file = fopen(name.c_str(), "r")) {
-		// It does, close it and return true
-		fclose(file);
-		return true;
-	}
+void CloseConsole() {
+	if (ManagedSettings.DebugMode)
+	{
+		std::lock_guard<std::mutex> lock(DebugMutex);
 
-	return false;
+		if (!DebugLog) {
+			fclose(DebugLog);
+			DebugLog = NULL;
+		}
+	}
 }
 
 void PrintCurrentTime() {

@@ -310,6 +310,8 @@ static BOOL FontLoader(LPWSTR in_path) {
 						CurrentSF->DestinationBankLSB 
 					};
 
+
+
 					if (ManagedSettings.PreloadSoundFonts && CurrentSF->Preload) {
 						PrintSoundFontToDebugLog(CurrentSF->Path, "Preloading SoundFont...");
 #if defined(_M_IX86)

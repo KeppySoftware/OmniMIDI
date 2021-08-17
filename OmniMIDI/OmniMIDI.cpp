@@ -45,6 +45,7 @@ typedef long NTSTATUS;
 #include <vector>
 #include <Dbghelp.h>
 #include <assert.h>
+#include <strsafe.h>
 #include "Resource.h"
 #include "OmniMIDI.h"
 #include "sound_out.h"
@@ -656,23 +657,23 @@ extern "C" MMRESULT WINAPI modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUse
 			// Prevent the app from calling MODM_CLOSE again...
 			PreventInit = TRUE;
 
-			// Prevent BASS from reinitializing itself
-			block_bassinit = TRUE;
+			if (DriverInitStatus) {
+				// Prevent BASS from reinitializing itself
+				block_bassinit = TRUE;
 
-			PrintMessageToDebugLog("MODM_CLOSE", "The app requested the driver to terminate its audio stream.");
-			ResetSynth(TRUE, TRUE);
+				PrintMessageToDebugLog("MODM_CLOSE", "The app requested the driver to terminate its audio stream.");
+				ResetSynth(TRUE, TRUE);
 
-			if (bass_initialized) {
 				PrintMessageToDebugLog("MODM_CLOSE", "Terminating driver...");
 				KillOldCookedPlayer();
 				DoStopClient();
 				DisableBuiltInHandler("MODM_CLOSE");
+
+				// OK now it's fine
+				block_bassinit = FALSE;
+
+				DoCallback(MOM_CLOSE, 0, 0);
 			}
-
-			// OK now it's fine
-			block_bassinit = FALSE;
-
-			DoCallback(MOM_CLOSE, 0, 0);
 
 			PrintMessageToDebugLog("MODM_CLOSE", "Everything is fine.");
 		}

@@ -20,7 +20,7 @@ KDMAPI_ONLYSTRUCTS = Used by MIDI apps who want to use the KDMAPI functions
 #define CUR_MAJOR	4
 #define CUR_MINOR	1
 #define CUR_BUILD	0
-#define CUR_REV		0
+#define CUR_REV		5
 
 // Audio engines
 #define AUDTOWAV 0

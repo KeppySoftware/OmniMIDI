@@ -50,9 +50,9 @@ BOOL GetFolderPath(const GUID FolderID, const int CSIDL, wchar_t* P, size_t PS) 
 			BOOL Success = SUCCEEDED(SGKFP);
 
 			if (Success)
-				swprintf_s(P, PS, L"%s", Dir);
+				StringCchPrintfW(P, PS, L"%ws", Dir);
 
-			CoTaskMemFree(Dir);
+			CoTaskMemFree((LPVOID)Dir);
 
 			return Success;
 #ifdef XP
