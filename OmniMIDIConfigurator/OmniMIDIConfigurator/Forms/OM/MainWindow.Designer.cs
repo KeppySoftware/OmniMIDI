@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.MWTab = new System.Windows.Forms.TabControl();
             this.ListsEdt = new System.Windows.Forms.TabPage();
+            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.Set = new System.Windows.Forms.TabPage();
             this.ExportPres = new System.Windows.Forms.Button();
             this.ImportPres = new System.Windows.Forms.Button();
@@ -40,6 +41,7 @@
             this.QILabel = new System.Windows.Forms.Label();
             this.RestoreDefault = new System.Windows.Forms.Button();
             this.ApplySettings = new System.Windows.Forms.Button();
+            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWSStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.VersionLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -92,8 +94,6 @@
             this.KDMAPIDoc = new System.Windows.Forms.MenuItem();
             this.CheckUpdates = new System.ComponentModel.BackgroundWorker();
             this.UpdateNow = new System.Windows.Forms.Timer(this.components);
-            this.SFLEPanel = new OmniMIDIConfigurator.BufferedPanel();
-            this.SETPanel = new OmniMIDIConfigurator.BufferedPanel();
             this.MWTab.SuspendLayout();
             this.ListsEdt.SuspendLayout();
             this.Set.SuspendLayout();
@@ -110,20 +110,30 @@
             this.MWTab.Location = new System.Drawing.Point(0, 0);
             this.MWTab.Name = "MWTab";
             this.MWTab.SelectedIndex = 0;
-            this.MWTab.Size = new System.Drawing.Size(715, 462);
+            this.MWTab.Size = new System.Drawing.Size(834, 534);
             this.MWTab.TabIndex = 0;
             this.MWTab.SelectedIndexChanged += new System.EventHandler(this.MWTab_SelectedIndexChanged);
             // 
             // ListsEdt
             // 
             this.ListsEdt.Controls.Add(this.SFLEPanel);
-            this.ListsEdt.Location = new System.Drawing.Point(4, 22);
+            this.ListsEdt.Location = new System.Drawing.Point(4, 24);
             this.ListsEdt.Name = "ListsEdt";
             this.ListsEdt.Padding = new System.Windows.Forms.Padding(3);
-            this.ListsEdt.Size = new System.Drawing.Size(707, 436);
+            this.ListsEdt.Size = new System.Drawing.Size(826, 506);
             this.ListsEdt.TabIndex = 0;
             this.ListsEdt.Text = "Lists editor";
             this.ListsEdt.UseVisualStyleBackColor = true;
+            // 
+            // SFLEPanel
+            // 
+            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
+            this.SFLEPanel.Name = "SFLEPanel";
+            this.SFLEPanel.Size = new System.Drawing.Size(825, 502);
+            this.SFLEPanel.TabIndex = 0;
             // 
             // Set
             // 
@@ -135,10 +145,10 @@
             this.Set.Controls.Add(this.RestoreDefault);
             this.Set.Controls.Add(this.ApplySettings);
             this.Set.Controls.Add(this.SETPanel);
-            this.Set.Location = new System.Drawing.Point(4, 22);
+            this.Set.Location = new System.Drawing.Point(4, 24);
             this.Set.Name = "Set";
             this.Set.Padding = new System.Windows.Forms.Padding(3);
-            this.Set.Size = new System.Drawing.Size(707, 436);
+            this.Set.Size = new System.Drawing.Size(826, 505);
             this.Set.TabIndex = 1;
             this.Set.Text = "Settings";
             this.Set.UseVisualStyleBackColor = true;
@@ -146,9 +156,9 @@
             // ExportPres
             // 
             this.ExportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ExportPres.Location = new System.Drawing.Point(268, 410);
+            this.ExportPres.Location = new System.Drawing.Point(313, 473);
             this.ExportPres.Name = "ExportPres";
-            this.ExportPres.Size = new System.Drawing.Size(45, 23);
+            this.ExportPres.Size = new System.Drawing.Size(52, 27);
             this.ExportPres.TabIndex = 6;
             this.ExportPres.Text = "Export";
             this.ExportPres.UseVisualStyleBackColor = true;
@@ -157,9 +167,9 @@
             // ImportPres
             // 
             this.ImportPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ImportPres.Location = new System.Drawing.Point(221, 410);
+            this.ImportPres.Location = new System.Drawing.Point(258, 473);
             this.ImportPres.Name = "ImportPres";
-            this.ImportPres.Size = new System.Drawing.Size(45, 23);
+            this.ImportPres.Size = new System.Drawing.Size(52, 27);
             this.ImportPres.TabIndex = 5;
             this.ImportPres.Text = "Import";
             this.ImportPres.UseVisualStyleBackColor = true;
@@ -170,9 +180,9 @@
             this.SeparatorPres.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.SeparatorPres.Enabled = false;
             this.SeparatorPres.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SeparatorPres.Location = new System.Drawing.Point(207, 409);
+            this.SeparatorPres.Location = new System.Drawing.Point(241, 472);
             this.SeparatorPres.Name = "SeparatorPres";
-            this.SeparatorPres.Size = new System.Drawing.Size(10, 23);
+            this.SeparatorPres.Size = new System.Drawing.Size(12, 27);
             this.SeparatorPres.TabIndex = 50;
             this.SeparatorPres.Text = "|";
             // 
@@ -185,9 +195,9 @@
             "Audio engine settings",
             "Synthesizer settings",
             "Debug & legacy set."});
-            this.QICombo.Location = new System.Drawing.Point(76, 411);
+            this.QICombo.Location = new System.Drawing.Point(89, 474);
             this.QICombo.Name = "QICombo";
-            this.QICombo.Size = new System.Drawing.Size(130, 21);
+            this.QICombo.Size = new System.Drawing.Size(151, 23);
             this.QICombo.TabIndex = 4;
             this.QICombo.SelectedIndexChanged += new System.EventHandler(this.QICombo_SelectedIndexChanged);
             // 
@@ -195,18 +205,18 @@
             // 
             this.QILabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.QILabel.AutoSize = true;
-            this.QILabel.Location = new System.Drawing.Point(6, 415);
+            this.QILabel.Location = new System.Drawing.Point(7, 479);
             this.QILabel.Name = "QILabel";
-            this.QILabel.Size = new System.Drawing.Size(66, 13);
+            this.QILabel.Size = new System.Drawing.Size(73, 15);
             this.QILabel.TabIndex = 4;
             this.QILabel.Text = "Quick index:";
             // 
             // RestoreDefault
             // 
             this.RestoreDefault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.RestoreDefault.Location = new System.Drawing.Point(527, 410);
+            this.RestoreDefault.Location = new System.Drawing.Point(615, 473);
             this.RestoreDefault.Name = "RestoreDefault";
-            this.RestoreDefault.Size = new System.Drawing.Size(95, 23);
+            this.RestoreDefault.Size = new System.Drawing.Size(111, 27);
             this.RestoreDefault.TabIndex = 3;
             this.RestoreDefault.Text = "Restore default";
             this.RestoreDefault.UseVisualStyleBackColor = true;
@@ -214,21 +224,32 @@
             // ApplySettings
             // 
             this.ApplySettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ApplySettings.Location = new System.Drawing.Point(628, 410);
+            this.ApplySettings.Location = new System.Drawing.Point(733, 473);
             this.ApplySettings.Name = "ApplySettings";
-            this.ApplySettings.Size = new System.Drawing.Size(75, 23);
+            this.ApplySettings.Size = new System.Drawing.Size(87, 27);
             this.ApplySettings.TabIndex = 2;
             this.ApplySettings.Text = "Apply";
             this.ApplySettings.UseVisualStyleBackColor = true;
+            // 
+            // SETPanel
+            // 
+            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SETPanel.Location = new System.Drawing.Point(0, 0);
+            this.SETPanel.Name = "SETPanel";
+            this.SETPanel.Size = new System.Drawing.Size(825, 468);
+            this.SETPanel.TabIndex = 1;
             // 
             // MWSStrip
             // 
             this.MWSStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.VersionLabel});
-            this.MWSStrip.Location = new System.Drawing.Point(0, 459);
+            this.MWSStrip.Location = new System.Drawing.Point(0, 533);
             this.MWSStrip.Name = "MWSStrip";
-            this.MWSStrip.Size = new System.Drawing.Size(713, 22);
+            this.MWSStrip.Padding = new System.Windows.Forms.Padding(1, 0, 16, 0);
+            this.MWSStrip.Size = new System.Drawing.Size(832, 22);
             this.MWSStrip.SizingGrip = false;
             this.MWSStrip.TabIndex = 1;
             this.MWSStrip.Text = "statusStrip1";
@@ -236,7 +257,7 @@
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(601, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(687, 17);
             this.toolStripStatusLabel1.Spring = true;
             this.toolStripStatusLabel1.Text = " ";
             // 
@@ -576,36 +597,17 @@
             this.UpdateNow.Interval = 500;
             this.UpdateNow.Tick += new System.EventHandler(this.UpdateNow_Tick);
             // 
-            // SFLEPanel
-            // 
-            this.SFLEPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SFLEPanel.Location = new System.Drawing.Point(0, 0);
-            this.SFLEPanel.Name = "SFLEPanel";
-            this.SFLEPanel.Size = new System.Drawing.Size(707, 436);
-            this.SFLEPanel.TabIndex = 0;
-            // 
-            // SETPanel
-            // 
-            this.SETPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SETPanel.Location = new System.Drawing.Point(0, 0);
-            this.SETPanel.Name = "SETPanel";
-            this.SETPanel.Size = new System.Drawing.Size(707, 406);
-            this.SETPanel.TabIndex = 1;
-            // 
             // MainWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(713, 481);
+            this.ClientSize = new System.Drawing.Size(832, 555);
             this.Controls.Add(this.MWSStrip);
             this.Controls.Add(this.MWTab);
             this.DoubleBuffered = true;
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(720, 520);
+            this.MinimumSize = new System.Drawing.Size(837, 594);
             this.Name = "MainWindow";
             this.Text = "OmniMIDI ~ Configurator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);

@@ -50,9 +50,9 @@ namespace OmniMIDIConfigurator
             // BlackListDef
             // 
             this.BlackListDef.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.BlackListDef.Location = new System.Drawing.Point(12, 5);
+            this.BlackListDef.Location = new System.Drawing.Point(12, 6);
             this.BlackListDef.Name = "BlackListDef";
-            this.BlackListDef.Size = new System.Drawing.Size(514, 67);
+            this.BlackListDef.Size = new System.Drawing.Size(514, 81);
             this.BlackListDef.TabIndex = 26;
             this.BlackListDef.Text = resources.GetString("BlackListDef.Text");
             this.BlackListDef.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -67,11 +67,11 @@ namespace OmniMIDIConfigurator
             this.ProgramsBlackList.FormattingEnabled = true;
             this.ProgramsBlackList.HorizontalScrollbar = true;
             this.ProgramsBlackList.IntegralHeight = false;
-            this.ProgramsBlackList.Location = new System.Drawing.Point(9, 86);
+            this.ProgramsBlackList.Location = new System.Drawing.Point(9, 95);
             this.ProgramsBlackList.Margin = new System.Windows.Forms.Padding(0);
             this.ProgramsBlackList.Name = "ProgramsBlackList";
             this.ProgramsBlackList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.ProgramsBlackList.Size = new System.Drawing.Size(677, 328);
+            this.ProgramsBlackList.Size = new System.Drawing.Size(677, 332);
             this.ProgramsBlackList.TabIndex = 21;
             this.ProgramsBlackList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ProgramsBlackList_KeyDown);
             // 
@@ -87,7 +87,7 @@ namespace OmniMIDIConfigurator
             // 
             this.EDBLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.EDBLi.BackColor = System.Drawing.Color.Transparent;
-            this.EDBLi.Location = new System.Drawing.Point(550, 20);
+            this.EDBLi.Location = new System.Drawing.Point(550, 29);
             this.EDBLi.Name = "EDBLi";
             this.EDBLi.Size = new System.Drawing.Size(134, 23);
             this.EDBLi.TabIndex = 32;
@@ -99,7 +99,7 @@ namespace OmniMIDIConfigurator
             // 
             this.UDBLi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.UDBLi.BackColor = System.Drawing.Color.Transparent;
-            this.UDBLi.Location = new System.Drawing.Point(550, 42);
+            this.UDBLi.Location = new System.Drawing.Point(550, 51);
             this.UDBLi.Name = "UDBLi";
             this.UDBLi.Size = new System.Drawing.Size(134, 23);
             this.UDBLi.TabIndex = 33;
@@ -157,11 +157,12 @@ namespace OmniMIDIConfigurator
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(695, 423);
+            this.ClientSize = new System.Drawing.Size(695, 437);
             this.Controls.Add(this.UDBLi);
             this.Controls.Add(this.EDBLi);
             this.Controls.Add(this.BlackListDef);
             this.Controls.Add(this.ProgramsBlackList);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Menu = this.mainMenu1;
             this.Name = "BlacklistSystem";

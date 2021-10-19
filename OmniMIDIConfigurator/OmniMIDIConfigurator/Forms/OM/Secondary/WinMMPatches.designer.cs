@@ -35,15 +35,15 @@
             this.label1 = new System.Windows.Forms.Label();
             this.WMMW = new System.Windows.Forms.Button();
             this.BMPatch = new System.Windows.Forms.GroupBox();
+            this.AArch64BM = new System.Windows.Forms.Button();
+            this.AMD64BM = new System.Windows.Forms.Button();
+            this.i386BM = new System.Windows.Forms.Button();
             this.WMMD = new System.Windows.Forms.Button();
             this.DAWPatch = new System.Windows.Forms.GroupBox();
-            this.WinMMWRPDesc = new System.Windows.Forms.Label();
-            this.i386BM = new System.Windows.Forms.Button();
-            this.AMD64BM = new System.Windows.Forms.Button();
-            this.AArch64BM = new System.Windows.Forms.Button();
-            this.i386DAW = new System.Windows.Forms.Button();
-            this.AMD64DAW = new System.Windows.Forms.Button();
             this.AArch64DAW = new System.Windows.Forms.Button();
+            this.AMD64DAW = new System.Windows.Forms.Button();
+            this.i386DAW = new System.Windows.Forms.Button();
+            this.WinMMWRPDesc = new System.Windows.Forms.Label();
             this.BMPatch.SuspendLayout();
             this.DAWPatch.SuspendLayout();
             this.SuspendLayout();
@@ -51,7 +51,7 @@
             // OKClose
             // 
             this.OKClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKClose.Location = new System.Drawing.Point(253, 208);
+            this.OKClose.Location = new System.Drawing.Point(253, 231);
             this.OKClose.Name = "OKClose";
             this.OKClose.Size = new System.Drawing.Size(67, 23);
             this.OKClose.TabIndex = 5;
@@ -62,7 +62,7 @@
             // UnpatchApp
             // 
             this.UnpatchApp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.UnpatchApp.Location = new System.Drawing.Point(12, 208);
+            this.UnpatchApp.Location = new System.Drawing.Point(12, 231);
             this.UnpatchApp.Name = "UnpatchApp";
             this.UnpatchApp.Size = new System.Drawing.Size(187, 23);
             this.UnpatchApp.TabIndex = 4;
@@ -74,11 +74,11 @@
             // 
             this.PatchStatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.PatchStatusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PatchStatusLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PatchStatusLabel.ForeColor = System.Drawing.Color.Gray;
-            this.PatchStatusLabel.Location = new System.Drawing.Point(52, 185);
+            this.PatchStatusLabel.Location = new System.Drawing.Point(52, 208);
             this.PatchStatusLabel.Name = "PatchStatusLabel";
-            this.PatchStatusLabel.Size = new System.Drawing.Size(268, 13);
+            this.PatchStatusLabel.Size = new System.Drawing.Size(268, 16);
             this.PatchStatusLabel.TabIndex = 7;
             this.PatchStatusLabel.Text = "Waiting...";
             // 
@@ -87,9 +87,9 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 185);
+            this.label1.Location = new System.Drawing.Point(12, 208);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(40, 13);
+            this.label1.Size = new System.Drawing.Size(42, 15);
             this.label1.TabIndex = 6;
             this.label1.Text = "Status:";
             // 
@@ -114,13 +114,52 @@
             this.BMPatch.Controls.Add(this.AMD64BM);
             this.BMPatch.Controls.Add(this.i386BM);
             this.BMPatch.Controls.Add(this.WMMW);
-            this.BMPatch.Location = new System.Drawing.Point(12, 84);
+            this.BMPatch.Location = new System.Drawing.Point(12, 107);
             this.BMPatch.Name = "BMPatch";
             this.BMPatch.Size = new System.Drawing.Size(308, 45);
             this.BMPatch.TabIndex = 8;
             this.BMPatch.TabStop = false;
             this.BMPatch.Text = "Standard performance improvement patch (BM)";
             this.BMPatch.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.BMPatch_HelpRequested);
+            // 
+            // AArch64BM
+            // 
+            this.AArch64BM.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.AArch64BM.Location = new System.Drawing.Point(204, 15);
+            this.AArch64BM.Name = "AArch64BM";
+            this.AArch64BM.Size = new System.Drawing.Size(99, 24);
+            this.AArch64BM.TabIndex = 5;
+            this.AArch64BM.Text = "ARM64 (AA64)";
+            this.AArch64BM.UseVisualStyleBackColor = true;
+            this.AArch64BM.Visible = false;
+            this.AArch64BM.Click += new System.EventHandler(this.AArch64BM_Click);
+            // 
+            // AMD64BM
+            // 
+            this.AMD64BM.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.AMD64BM.Location = new System.Drawing.Point(104, 15);
+            this.AMD64BM.Name = "AMD64BM";
+            this.AMD64BM.Size = new System.Drawing.Size(100, 24);
+            this.AMD64BM.TabIndex = 4;
+            this.AMD64BM.Text = "x64 (AMD64)";
+            this.AMD64BM.UseVisualStyleBackColor = true;
+            this.AMD64BM.Visible = false;
+            this.AMD64BM.Click += new System.EventHandler(this.AMD64BM_Click);
+            // 
+            // i386BM
+            // 
+            this.i386BM.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.i386BM.Location = new System.Drawing.Point(5, 15);
+            this.i386BM.Name = "i386BM";
+            this.i386BM.Size = new System.Drawing.Size(99, 24);
+            this.i386BM.TabIndex = 3;
+            this.i386BM.Text = "x86 (i386)";
+            this.i386BM.UseVisualStyleBackColor = true;
+            this.i386BM.Visible = false;
+            this.i386BM.Click += new System.EventHandler(this.i386BM_Click);
             // 
             // WMMD
             // 
@@ -143,87 +182,13 @@
             this.DAWPatch.Controls.Add(this.AMD64DAW);
             this.DAWPatch.Controls.Add(this.i386DAW);
             this.DAWPatch.Controls.Add(this.WMMD);
-            this.DAWPatch.Location = new System.Drawing.Point(12, 132);
+            this.DAWPatch.Location = new System.Drawing.Point(12, 155);
             this.DAWPatch.Name = "DAWPatch";
             this.DAWPatch.Size = new System.Drawing.Size(308, 45);
             this.DAWPatch.TabIndex = 9;
             this.DAWPatch.TabStop = false;
             this.DAWPatch.Text = "Special DAW patch for multi-device usage (DAW)";
             this.DAWPatch.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.DAWPatch_HelpRequested);
-            // 
-            // WinMMWRPDesc
-            // 
-            this.WinMMWRPDesc.Location = new System.Drawing.Point(12, 9);
-            this.WinMMWRPDesc.Name = "WinMMWRPDesc";
-            this.WinMMWRPDesc.Size = new System.Drawing.Size(298, 68);
-            this.WinMMWRPDesc.TabIndex = 10;
-            this.WinMMWRPDesc.Text = resources.GetString("WinMMWRPDesc.Text");
-            this.WinMMWRPDesc.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // i386BM
-            // 
-            this.i386BM.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.i386BM.Location = new System.Drawing.Point(5, 15);
-            this.i386BM.Name = "i386BM";
-            this.i386BM.Size = new System.Drawing.Size(99, 24);
-            this.i386BM.TabIndex = 3;
-            this.i386BM.Text = "x86 (i386)";
-            this.i386BM.UseVisualStyleBackColor = true;
-            this.i386BM.Visible = false;
-            this.i386BM.Click += new System.EventHandler(this.i386BM_Click);
-            // 
-            // AMD64BM
-            // 
-            this.AMD64BM.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.AMD64BM.Location = new System.Drawing.Point(104, 15);
-            this.AMD64BM.Name = "AMD64BM";
-            this.AMD64BM.Size = new System.Drawing.Size(100, 24);
-            this.AMD64BM.TabIndex = 4;
-            this.AMD64BM.Text = "x64 (AMD64)";
-            this.AMD64BM.UseVisualStyleBackColor = true;
-            this.AMD64BM.Visible = false;
-            this.AMD64BM.Click += new System.EventHandler(this.AMD64BM_Click);
-            // 
-            // AArch64BM
-            // 
-            this.AArch64BM.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.AArch64BM.Location = new System.Drawing.Point(204, 15);
-            this.AArch64BM.Name = "AArch64BM";
-            this.AArch64BM.Size = new System.Drawing.Size(99, 24);
-            this.AArch64BM.TabIndex = 5;
-            this.AArch64BM.Text = "ARM64 (AA64)";
-            this.AArch64BM.UseVisualStyleBackColor = true;
-            this.AArch64BM.Visible = false;
-            this.AArch64BM.Click += new System.EventHandler(this.AArch64BM_Click);
-            // 
-            // i386DAW
-            // 
-            this.i386DAW.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.i386DAW.Location = new System.Drawing.Point(5, 15);
-            this.i386DAW.Name = "i386DAW";
-            this.i386DAW.Size = new System.Drawing.Size(99, 24);
-            this.i386DAW.TabIndex = 6;
-            this.i386DAW.Text = "x86 (i386)";
-            this.i386DAW.UseVisualStyleBackColor = true;
-            this.i386DAW.Visible = false;
-            this.i386DAW.Click += new System.EventHandler(this.i386DAW_Click);
-            // 
-            // AMD64DAW
-            // 
-            this.AMD64DAW.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.AMD64DAW.Location = new System.Drawing.Point(104, 15);
-            this.AMD64DAW.Name = "AMD64DAW";
-            this.AMD64DAW.Size = new System.Drawing.Size(100, 24);
-            this.AMD64DAW.TabIndex = 6;
-            this.AMD64DAW.Text = "x64 (AMD64)";
-            this.AMD64DAW.UseVisualStyleBackColor = true;
-            this.AMD64DAW.Visible = false;
-            this.AMD64DAW.Click += new System.EventHandler(this.AMD64DAW_Click);
             // 
             // AArch64DAW
             // 
@@ -238,13 +203,48 @@
             this.AArch64DAW.Visible = false;
             this.AArch64DAW.Click += new System.EventHandler(this.AArch64DAW_Click);
             // 
+            // AMD64DAW
+            // 
+            this.AMD64DAW.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.AMD64DAW.Location = new System.Drawing.Point(104, 15);
+            this.AMD64DAW.Name = "AMD64DAW";
+            this.AMD64DAW.Size = new System.Drawing.Size(100, 24);
+            this.AMD64DAW.TabIndex = 6;
+            this.AMD64DAW.Text = "x64 (AMD64)";
+            this.AMD64DAW.UseVisualStyleBackColor = true;
+            this.AMD64DAW.Visible = false;
+            this.AMD64DAW.Click += new System.EventHandler(this.AMD64DAW_Click);
+            // 
+            // i386DAW
+            // 
+            this.i386DAW.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.i386DAW.Location = new System.Drawing.Point(5, 15);
+            this.i386DAW.Name = "i386DAW";
+            this.i386DAW.Size = new System.Drawing.Size(99, 24);
+            this.i386DAW.TabIndex = 6;
+            this.i386DAW.Text = "x86 (i386)";
+            this.i386DAW.UseVisualStyleBackColor = true;
+            this.i386DAW.Visible = false;
+            this.i386DAW.Click += new System.EventHandler(this.i386DAW_Click);
+            // 
+            // WinMMWRPDesc
+            // 
+            this.WinMMWRPDesc.Location = new System.Drawing.Point(12, 9);
+            this.WinMMWRPDesc.Name = "WinMMWRPDesc";
+            this.WinMMWRPDesc.Size = new System.Drawing.Size(308, 95);
+            this.WinMMWRPDesc.TabIndex = 10;
+            this.WinMMWRPDesc.Text = resources.GetString("WinMMWRPDesc.Text");
+            this.WinMMWRPDesc.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // WinMMPatches
             // 
             this.AcceptButton = this.OKClose;
             this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(332, 243);
+            this.ClientSize = new System.Drawing.Size(332, 266);
             this.Controls.Add(this.WinMMWRPDesc);
             this.Controls.Add(this.DAWPatch);
             this.Controls.Add(this.BMPatch);
@@ -252,6 +252,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.UnpatchApp);
             this.Controls.Add(this.OKClose);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.HelpButton = true;
             this.MaximizeBox = false;

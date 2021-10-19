@@ -228,7 +228,7 @@ void CookedPlayerSystem(CookedPlayer* Player)
 				_PrsData(evt->dwEvent);
 				break;
 			case MEVT_LONGMSG:
-				BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, evt->dwParms, evt->dwEvent & 0xFFFFFF);
+				_BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, evt->dwParms, evt->dwEvent & 0xFFFFFF);
 				break;
 			case MEVT_TEMPO:
 				Player->Tempo = evt->dwEvent & 0xFFFFFF;
@@ -375,7 +375,6 @@ void Supervisor(LPVOID lpV) {
 					SFDynamicLoaderCheck();				// Check current active voices, rendering time, etc..
 					MixerCheck();						// Send dB values to the mixer
 					SetNoteValuesFromSettings();		// Check if custom preset/bank or finetune are applied
-					RevbNChor();						// Check if custom reverb/chorus values are enabled
 					InitializeEventsProcesserThreads(); // Check if the user wants to parse the notes through a separate thread
 
 					// Check the current output volume
@@ -389,6 +388,7 @@ void Supervisor(LPVOID lpV) {
 				Sleep(50);
 			}
 
+			UnsetBufferPointers();
 			CloseThreads();
 
 			if (ATThreadDone)
@@ -641,7 +641,7 @@ extern "C" BOOL KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DW
 			OMCookedPlayer->Tempo = 500000;
 			OMCookedPlayer->TimeDiv = 384;
 			OMCookedPlayer->TempoMulti = ((OMCookedPlayer->Tempo * 10) / OMCookedPlayer->TimeDiv);
-			PrintStreamValueToDebugLog("ICF", "TempoMulti", OMCookedPlayer->TempoMulti);
+			PrintVarToDebugLog("ICF", "TempoMulti", &OMCookedPlayer->TempoMulti, PRINT_UINT32);
 
 			PrintMessageToDebugLog("ICF", "CookedPlayer struct prepared.");
 
@@ -725,7 +725,7 @@ extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSi
 	// Locked successfully
 	else PrintMessageToDebugLog("PrepareLongData", "Buffer locked to virtual address space.");
 
-	PrintStreamValueToDebugLog("PrepareLongData", "IIMidiHdr Address", (DWORD)IIMidiHdr);
+	PrintVarToDebugLog("PrepareLongData", "IIMidiHdr Address", &IIMidiHdr, PRINT_UINT64);
 
 	// Mark the buffer as prepared, and say that everything is hunky-dory
 	PrintMessageToDebugLog("PrepareLongData", "Marking as prepared...");
@@ -775,7 +775,7 @@ extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdr
 	}
 	else PrintMessageToDebugLog("UnprepareLongData", "Buffer unlocked from virtual address space.");
 
-	PrintStreamValueToDebugLog("UnprepareLongData", "IIMidiHdr Address", (DWORD)IIMidiHdr);
+	PrintVarToDebugLog("UnprepareLongData", "IIMidiHdr Address", &IIMidiHdr, PRINT_UINT64);
 
 	// Mark the buffer as unprepared
 	PrintMessageToDebugLog("UnprepareLongData", "Marking as unprepared...");
@@ -816,7 +816,7 @@ extern "C" MMRESULT KDMAPI SendDirectLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHd
 	IIMidiHdr->dwFlags |= MHDR_INQUEUE;
 
 	// Do the stuff with it
-	BOOL res = SendLongToBASSMIDI(IIMidiHdr);
+	SendLongToBASSMIDI(IIMidiHdr);
 
 	// Mark the buffer as done
 	IIMidiHdr->dwFlags &= ~MHDR_INQUEUE;
@@ -840,21 +840,7 @@ extern "C" MMRESULT KDMAPI SendDirectLongDataNoBuf(LPSTR MidiHdrData, DWORD Midi
 	mhdr.dwBufferLength = MidiHdrDataLen;
 	mhdr.dwBytesRecorded = MidiHdrDataLen;
 
-	BOOL res = SendLongToBASSMIDI(&mhdr);
-
-	// Tell the app that the buffer has failed to be played
-	if (!res) {
-		char Msg[NTFS_MAX_PATH] = { 0 };
-
-		sprintf(Msg, "The long buffer (MIDIHDR) sent to OmniMIDI wasn't able to be recognized.\n\nUnrecognized sequence: ");
-
-		for (int i = 0; i < MidiHdrDataLen; i++)
-			sprintf(Msg + strlen(Msg), "%02X", (BYTE)(MidiHdrData[i]));
-
-		sprintf(Msg + strlen(Msg), "\n");
-
-		return DebugResult("SendDirectLongDataNoBuf", MMSYSERR_INVALPARAM, Msg);
-	}
+	SendLongToBASSMIDI(&mhdr);
 
 	return MMSYSERR_NOERROR;
 }

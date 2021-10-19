@@ -20,7 +20,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '14.6.9.0'
+#define Version '14.6.10.0'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -309,6 +309,21 @@ begin
   bSuccess := RegQueryStringValue(HKLM, 'Software\Microsoft\NET Framework Setup\NDP\v4\Full', 'TargetVersion', installVer);
   if (True = bSuccess) and (installVer = '4.0.0') then begin
     Result := False;
+  end;
+end;
+
+function CheckOBSVer(): boolean;
+var
+  Major, Minor, Rev, Build: Word;
+  OBSPath: String;
+  bSuccess: Boolean;
+begin
+  bSuccess := RegQueryStringValue(HKLM, 'Software\OBSKeyIDK', 'Path', OBSPath);
+  if (True = bSuccess) then begin
+    // Or 32-bit, idk we're in 2021, who streams with 32-bit PCs...
+    GetVersionComponents(OBSPath + '\bin\64bit', Major, Minor, Rev, Build);
+    
+    // Do the check here idk
   end;
 end;
 

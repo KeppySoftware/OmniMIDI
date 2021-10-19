@@ -4,10 +4,9 @@ OmniMIDI funcs (this is a mess I know)
 #pragma once
 
 // Predefined sleep values, useful for redundancy
-#define _FWAIT NTSleep(1)								// Fast wait
-#define _WAIT NTSleep(100)								// Normal wait
-#define _SWAIT NTSleep(5000)							// Slow wait
-#define _CFRWAIT NTSleep(16667)							// Cap framerate wait
+#define _FWAIT NTSleep(-1)							// Fast wait
+#define _WAIT NTSleep(-100)							// Normal wait
+#define _SWAIT NTSleep(-5000)						// Slow wait
 
 #define S2(x)		#x								// Convert to string
 #define S1(x)		S2(x)							// Convert to string
@@ -20,9 +19,8 @@ OmniMIDI funcs (this is a mess I know)
 static BOOL InfoAlreadyGot = FALSE;
 
 // F**k Sleep() tbh
-void NTSleep(__int64 usec) {
-	__int64 neg = (usec * -1);
-	NtDelayExecution(FALSE, &neg);
+void _inline NTSleep(__int64 usec) {
+	NtDelayExecution(FALSE, &usec);
 }
 
 void GetAppName() {
@@ -69,6 +67,12 @@ BOOL GetFolderPath(const GUID FolderID, const int CSIDL, wchar_t* P, size_t PS) 
 #endif
 
 	return FALSE;
+}
+
+float RoundFloat(float var)
+{
+	float value = (int)(var * 10 + .5);
+	return (float)value / 10;
 }
 
 static VOID MakeMiniDump(LPEXCEPTION_POINTERS exc) {

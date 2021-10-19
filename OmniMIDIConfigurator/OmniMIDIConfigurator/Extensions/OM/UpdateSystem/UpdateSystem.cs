@@ -22,7 +22,7 @@ namespace OmniMIDIConfigurator
         // public static string UpdateFile = Properties.Settings.Default.ProjectLink + "/releases/download/{0}/OmniMIDIUpdate.exe";
         public static string SetupFile = Properties.Settings.Default.ProjectLink + "/releases/download/{0}/OmniMIDISetup.exe";
         public static string UpdatePage = Properties.Settings.Default.ProjectLink + "/releases/tag/{0}";
-        public static string UpdateFileVersion = String.Format("{0}\\OmniMIDI\\OmniMIDI.dll", Environment.GetFolderPath(Environment.SpecialFolder.System));
+        public static string UpdateFileVersion = String.Format("{0}\\OmniMIDI.dll", Environment.GetFolderPath(Environment.SpecialFolder.System));
 
         public const int NORMAL = 0x0;
         public const int USERFOLDER_PATH = 0x1;

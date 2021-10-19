@@ -178,6 +178,28 @@ typedef struct
 
 	BOOL DisableASIOFreqWarn = FALSE;		// Disable warning when using an unsupported frequency with ASIO
 	BOOL LeaveASIODeviceFreq = FALSE;		// Don't make OmniMIDI change the device frequency to fit with the stream
+
+	BOOL ReverbOverride = FALSE;			// Reverb override
+	DWORD ReverbInGain = 96000;				// Reverb input gain
+	DWORD ReverbMix = 96000;				// Reverb mix level
+	DWORD ReverbTime = 1000;				// Reverb time
+	DWORD ReverbHighFreqRTRatio = 1;		// Reverb high frequency reverb time ratio
+
+	BOOL ChorusOverride = FALSE;			// Chorus override
+	DWORD ChorusWetDryMix = 50;				// Chorus wet dry mix
+	DWORD ChorusDepth = 10;					// Chorus depth
+	DWORD ChorusFeedback = 125;				// Chorus feedback
+	DWORD ChorusFrequency = 1100;			// Chorus frequency
+	BOOL ChorusSineMode = 1;				// Chorus sine mode
+	DWORD ChorusDelay = 16;					// Chorus delay
+	DWORD ChorusPhase = 3;					// Chorus phase
+
+	BOOL EchoOverride = FALSE;				// Echo override
+	DWORD EchoWetDryMix = 50;				// Echo wet dry mix
+	DWORD EchoFeedback = 50;				// Echo feedback
+	DWORD EchoLeftDelay = 500;				// Echo left delay (ms)
+	DWORD EchoRightDelay = 500;				// Echo right delay (ms)
+	BOOL EchoPanDelay = FALSE;				// Echo pan delay
 } Settings;
 #endif
 

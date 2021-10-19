@@ -124,24 +124,24 @@ void __inline SendToBASSMIDI(DWORD dwParam1) {
 
 	switch (GETCMD(dwParam1)) {
 	case MIDI_NOTEON:
-		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, dwParam1 >> 8);
+		_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, dwParam1 >> 8);
 		return;
 	case MIDI_NOTEOFF:
-		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8));
+		_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8));
 		return;
 	case MIDI_POLYAFTER:
-		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_KEYPRES, dwParam1 >> 8);
+		_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_KEYPRES, dwParam1 >> 8);
 		return;
 	case MIDI_PROGCHAN:
-		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_PROGRAM, (BYTE)(dwParam1 >> 8));
+		_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_PROGRAM, (BYTE)(dwParam1 >> 8));
 		return;
 	case MIDI_CHANAFTER:
-		BASS_MIDI_StreamEvent(OMStream, dwParam1 & 0xF, MIDI_EVENT_CHANPRES, (BYTE)(dwParam1 >> 8));
+		_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_CHANPRES, (BYTE)(dwParam1 >> 8));
 		return;
 	default:
 		if (!(dwParam1 - 0x80 & 0xC0))
 		{
-			BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
+			_BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
 			return;
 		}
 
@@ -159,12 +159,14 @@ void __inline SendToBASSMIDI(DWORD dwParam1) {
 			}
 		}
 
-		BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+		_BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
 		return;
 	}
 }
 
-void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD_PTR dwParam1) {
+void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
+	BASS_MIDI_EVENT Evs[2];
+
 	if (!(dwParam1 & 0x80))
 		dwParam1 = dwParam1 << 8 | LastRunningStatus;
 
@@ -174,67 +176,46 @@ void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD_PTR dwParam1) {
 	SendShortMIDIFeedback(dwParam1);
 
 	if (ManagedSettings.OverrideNoteLength || ManagedSettings.DelayNoteOff) {
-		if (((dwParam1& 0xF0) == 0x90 && ((dwParam1 >> 16) & 0xFF))) {
-			BASS_MIDI_EVENT e[2] = { 0, 0 };
+		if (((dwParam1 & 0xF0) == MIDI_NOTEON && ((dwParam1 >> 16) & 0xFF))) {
 
-			e[0].event = MIDI_EVENT_NOTE;
-			e[0].param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), LOBYTE(HIWORD(dwParam1)));
-			e[0].chan = dwParam1 & 0xF;
-			e[0].pos = 0;
-			e[0].tick = 0;
+			Evs[0] = { MIDI_EVENT_NOTE, dwParam1 >> 8, dwParam1 & 0xF, 0, 0 };
 
 			if (ManagedSettings.OverrideNoteLength)
-			{
-				e[1].event = MIDI_EVENT_NOTE;
-				e[1].param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), 0);
-				e[1].chan = dwParam1 & 0xF;
-				e[1].pos = BASS_ChannelSeconds2Bytes(OMStream, ((double)ManagedSettings.NoteLengthValue / 1000.0) + (ManagedSettings.DelayNoteOff ? ((double)ManagedSettings.DelayNoteOffValue / 1000.0) : 0));
-				e[1].tick = 0;
-			}
+				Evs[1] = { MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8), dwParam1 & 0xF, FNoteLengthValue, 0 };
 
-			BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME, &e, ManagedSettings.OverrideNoteLength ? 2 : 1);
+			BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME | BASS_MIDI_EVENTS_CANCEL, &Evs, ManagedSettings.OverrideNoteLength ? 2 : 1);
+
 			return;
 		}
-		else if ((dwParam1 & 0xF0) == 0x80) {
+		else if ((dwParam1 & 0xF0) == MIDI_NOTEOFF) {
 			if (!ManagedSettings.OverrideNoteLength && ManagedSettings.DelayNoteOff) {
-				BASS_MIDI_EVENT e;
+				Evs[0] = { MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8), dwParam1 & 0xF, FDelayNoteOff, 0 };
 
-				e.event = MIDI_EVENT_NOTE;
-				e.param = MAKEWORD(HIBYTE(LOWORD(dwParam1)), 0);
-				e.chan = dwParam1 & 0xF;
-				e.pos = BASS_ChannelSeconds2Bytes(OMStream, ((double)ManagedSettings.DelayNoteOffValue / 1000.0));
-				e.tick = 0;
-
-				BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME, &e, 1);
-				return;
+				BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME | BASS_MIDI_EVENTS_CANCEL, &Evs, 1);
 			}
-			else return;
+
+			return;
 		}
 	}
 
 	SendToBASSMIDI(dwParam1);
 }
 
-void __inline PrepareForBASSMIDIHyper(DWORD LastRunningStatus, DWORD_PTR dwParam1) {
+void __inline PrepareForBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
 	if (!(dwParam1 & 0x80))
 		dwParam1 = dwParam1 << 8 | LastRunningStatus;
 
 	SendToBASSMIDI(dwParam1);
 }
 
-BOOL __inline SendLongToBASSMIDI(LPMIDIHDR IIMidiHdr) {
+void __inline SendLongToBASSMIDI(LPMIDIHDR IIMidiHdr) {
 	// If dwBytesRecorded is 0, use dwBufferLength instead
 	// Thank you MSDN for not telling me about it, 
 	// and thanks to Windows Media Player for doing this...
 	DWORD FLen = IIMidiHdr->dwBytesRecorded < 1 ? IIMidiHdr->dwBufferLength : IIMidiHdr->dwBytesRecorded;
 
-	// The buffer doesn't exist or isn't ready
-	if (!IIMidiHdr || !(IIMidiHdr->dwFlags & MHDR_PREPARED)) return FALSE;
-
-	const int rec = (BASS_MIDI_StreamEvents(OMStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, FLen) != -1);
-	PrintLongMessageToDebugLog(rec, IIMidiHdr);
-
-	return rec;
+	_BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, IIMidiHdr->lpData, FLen);
+	PrintLongMessageToDebugLog(IIMidiHdr);
 }
 
 // PBufData and PBufDataHyper have been merged,
@@ -284,13 +265,10 @@ void __inline PSmallBufData(void)
 }
 
 void __inline PlayBufferedData(void) {
-	if (ManagedSettings.IgnoreAllEvents) {
-		_FWAIT;
+	if (ManagedSettings.IgnoreAllEvents)
 		return;
-	}
 	
-	if (EVBuffer.BufSize >= SMALLBUFFER)
-	{
+	if (EVBuffer.BufSize >= SMALLBUFFER) {
 		if (!BufferCheck()) {
 			_FWAIT;
 			return;
@@ -384,7 +362,7 @@ void __inline ParseDataHyper(DWORD_PTR dwParam1)
 {
 	// LockForWriting(&EPThreadsL);
 
-	auto NextWriteHead = EVBuffer.WriteHead + 1;
+	ULONGLONG NextWriteHead = EVBuffer.WriteHead + 1;
 	if (NextWriteHead >= EVBuffer.BufSize) NextWriteHead = 0;
 
 	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;

@@ -95,11 +95,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Donate.cs">
+    <Compile Include="Forms\OM\Donate.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Donate.Designer.cs">
+    <Compile Include="Forms\OM\Donate.Designer.cs">
       <DependentUpon>Donate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OM\Secondary\DSPSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OM\Secondary\DSPSettings.Designer.cs">
+      <DependentUpon>DSPSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\OM\Drv32Troubleshooter.cs">
       <SubType>Form</SubType>
@@ -306,8 +312,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Donate.resx">
+    <EmbeddedResource Include="Forms\OM\Donate.resx">
       <DependentUpon>Donate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OM\Secondary\DSPSettings.resx">
+      <DependentUpon>DSPSettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\OM\Drv32Troubleshooter.resx">
       <DependentUpon>Drv32Troubleshooter.cs</DependentUpon>

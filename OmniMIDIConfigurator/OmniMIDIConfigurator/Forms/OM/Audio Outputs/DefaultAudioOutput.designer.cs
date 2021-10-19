@@ -38,26 +38,26 @@
             // 
             this.DevicesList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.DevicesList.FormattingEnabled = true;
-            this.DevicesList.Location = new System.Drawing.Point(94, 11);
+            this.DevicesList.Location = new System.Drawing.Point(110, 13);
             this.DevicesList.Name = "DevicesList";
-            this.DevicesList.Size = new System.Drawing.Size(315, 21);
+            this.DevicesList.Size = new System.Drawing.Size(367, 23);
             this.DevicesList.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 14);
+            this.label1.Location = new System.Drawing.Point(13, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 13);
+            this.label1.Size = new System.Drawing.Size(89, 15);
             this.label1.TabIndex = 1;
             this.label1.Text = "Current output:";
             // 
             // Quit
             // 
             this.Quit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Quit.Location = new System.Drawing.Point(334, 84);
+            this.Quit.Location = new System.Drawing.Point(390, 97);
             this.Quit.Name = "Quit";
-            this.Quit.Size = new System.Drawing.Size(75, 23);
+            this.Quit.Size = new System.Drawing.Size(87, 27);
             this.Quit.TabIndex = 3;
             this.Quit.Text = "OK";
             this.Quit.UseVisualStyleBackColor = true;
@@ -66,9 +66,9 @@
             // SwitchDefaultAudio
             // 
             this.SwitchDefaultAudio.AutoSize = true;
-            this.SwitchDefaultAudio.Location = new System.Drawing.Point(11, 41);
+            this.SwitchDefaultAudio.Location = new System.Drawing.Point(13, 47);
             this.SwitchDefaultAudio.Name = "SwitchDefaultAudio";
-            this.SwitchDefaultAudio.Size = new System.Drawing.Size(221, 17);
+            this.SwitchDefaultAudio.Size = new System.Drawing.Size(246, 19);
             this.SwitchDefaultAudio.TabIndex = 4;
             this.SwitchDefaultAudio.Text = "Switch default audio device automatically";
             this.SwitchDefaultAudio.UseVisualStyleBackColor = true;
@@ -77,9 +77,9 @@
             // ReduceBootUpDelay
             // 
             this.ReduceBootUpDelay.AutoSize = true;
-            this.ReduceBootUpDelay.Location = new System.Drawing.Point(11, 60);
+            this.ReduceBootUpDelay.Location = new System.Drawing.Point(13, 69);
             this.ReduceBootUpDelay.Name = "ReduceBootUpDelay";
-            this.ReduceBootUpDelay.Size = new System.Drawing.Size(319, 17);
+            this.ReduceBootUpDelay.Size = new System.Drawing.Size(359, 19);
             this.ReduceBootUpDelay.TabIndex = 6;
             this.ReduceBootUpDelay.Text = "Reduce boot-up delay (Will disable automatic buffer detection)";
             this.ReduceBootUpDelay.UseVisualStyleBackColor = true;
@@ -87,15 +87,16 @@
             // 
             // DefaultAudioOutput
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(420, 118);
+            this.ClientSize = new System.Drawing.Size(490, 136);
             this.Controls.Add(this.ReduceBootUpDelay);
             this.Controls.Add(this.SwitchDefaultAudio);
             this.Controls.Add(this.Quit);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.DevicesList);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

@@ -178,8 +178,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 							// We've found the path! Parse it.
 							memset(TempSF.Path, 0, sizeof(TempSF.Path));
 							wcsncpy(TempSF.Path, TempLine.substr(TempLine.find(L"= ") + 2).c_str(), NTFS_MAX_PATH);
-
-							PrintSoundFontToDebugLog(TempSF.Path, "Loaded SF path to SoundFontList struct.");
+							PrintVarToDebugLog("NewSFLoader", "sf.path", &TempSF.Path, PRINT_WCHAR);
 						}
 
 						continue;
@@ -189,7 +188,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 						if (AlreadyInitialized) {
 							// We've found the enable state! Crush it!
 							TempSF.EnableState = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-							PrintStreamValueToDebugLog("NewSFLoader", "sf.enabled", TempSF.EnableState);
+							PrintVarToDebugLog("NewSFLoader", "sf.enabled", &TempSF.EnableState, PRINT_BOOL);
 						}
 
 						continue;
@@ -199,7 +198,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 						if (AlreadyInitialized) {
 							// We've found the preload state! Bop it!
 							TempSF.Preload = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-							PrintStreamValueToDebugLog("NewSFLoader", "sf.preload", TempSF.Preload);
+							PrintVarToDebugLog("NewSFLoader", "sf.preload", &TempSF.Preload, PRINT_BOOL);
 						}
 
 						continue;
@@ -209,7 +208,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 						if (AlreadyInitialized) {
 							// We've found the source preset! Take it!
 							TempSF.SourcePreset = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-							PrintStreamValueToDebugLog("NewSFLoader", "sf.srcp", TempSF.SourcePreset);
+							PrintVarToDebugLog("NewSFLoader", "sf.srcp", &TempSF.SourcePreset, PRINT_INT32);
 						}
 
 						continue;
@@ -219,7 +218,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 						if (AlreadyInitialized) {
 							// We've found the source bank! Read it!
 							TempSF.SourceBank = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-							PrintStreamValueToDebugLog("NewSFLoader", "sf.srcb", TempSF.SourceBank);
+							PrintVarToDebugLog("NewSFLoader", "sf.srcb", &TempSF.SourceBank, PRINT_INT32);
 						}
 
 						continue;
@@ -230,7 +229,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 						{
 							// We've found the destination preset! Munch it!
 							TempSF.DestinationPreset = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-							PrintStreamValueToDebugLog("NewSFLoader", "sf.desp", TempSF.DestinationPreset);
+							PrintVarToDebugLog("NewSFLoader", "sf.desp", &TempSF.DestinationPreset, PRINT_INT32);
 						}
 
 						continue;
@@ -241,7 +240,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 						{
 							// We've found the destination bank! Look at it!
 							TempSF.DestinationBank = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-							PrintStreamValueToDebugLog("NewSFLoader", "sf.desb", TempSF.DestinationBank);
+							PrintVarToDebugLog("NewSFLoader", "sf.desb", &TempSF.DestinationBank, PRINT_INT32);
 						}
 
 						continue;
@@ -252,7 +251,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 						{
 							// We've found the destination bank! Look at it!
 							TempSF.DestinationBankLSB = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-							PrintStreamValueToDebugLog("NewSFLoader", "sf.desblsb", TempSF.DestinationBank);
+							PrintVarToDebugLog("NewSFLoader", "sf.desblsb", &TempSF.DestinationBankLSB, PRINT_INT32);
 						}
 
 						continue;
@@ -263,7 +262,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 						{
 							// We've found the destination bank! I'm out of sentences to use...
 							TempSF.XGBankMode = wcstol(TempLine.substr(TempLine.find(L"= ") + 2).c_str(), &end, 0);
-							PrintStreamValueToDebugLog("NewSFLoader", "sf.xgdrums", TempSF.XGBankMode);
+							PrintVarToDebugLog("NewSFLoader", "sf.xgdrums", &TempSF.XGBankMode, PRINT_BOOL);
 						}
 
 						continue;

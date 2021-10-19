@@ -73,6 +73,7 @@ namespace OmniMIDIConfigurator
             int AE = AudioEngBox.SelectedIndex;
             bool NOAtWASIOXAE = (AE != AudioEngine.AUDTOWAV && AE != AudioEngine.ASIO_ENGINE && AE != AudioEngine.XA_ENGINE);
             bool NoASIOXAE = (AE != AudioEngine.ASIO_ENGINE && AE != AudioEngine.XA_ENGINE);
+            bool NoASIOWAE = (AE != AudioEngine.ASIO_ENGINE && AE != AudioEngine.WASAPI_ENGINE);
             bool NoASIOWAXAE = (AE != AudioEngine.ASIO_ENGINE && AE != AudioEngine.WASAPI_ENGINE && AE != AudioEngine.XA_ENGINE);
             bool NoAtW = (AE != AudioEngine.AUDTOWAV);
             bool NoASIOE = (AE != AudioEngine.ASIO_ENGINE);
@@ -125,7 +126,7 @@ namespace OmniMIDIConfigurator
             }
 
             AudioBitDepthLabel.Enabled = NoASIOWAXAE ? true : false;
-            AudioBitDepth.Enabled = NoASIOWAXAE ? true : false;
+            AudioBitDepth.Enabled = NoASIOWAE ? true : false;
             BufferText.Enabled = NOAtWASIOXAE ? true : false;
             DrvHzLabel.Enabled = true;
             Frequency.Enabled = true;
@@ -180,13 +181,6 @@ namespace OmniMIDIConfigurator
                 HMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("HyperPlayback", 0));
                 OldBuff.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("NotesCatcherWithAudio", 0));
 
-                ReverbV.Value = Functions.Between0And127(Convert.ToInt32(Program.SynthSettings.GetValue("Reverb", 64)));
-                ChorusV.Value = Functions.Between0And127(Convert.ToInt32(Program.SynthSettings.GetValue("Chorus", 64)));
-                ReverbOverride.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("ReverbOverride", 0));
-                ChorusOverride.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("ChorusOverride", 0));
-                ReverbOverride_CheckedChanged(null, null);
-                ChorusOverride_CheckedChanged(null, null);
- 
                 IgnoreAllEvents.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreAllEvents", 0));
                 IgnoreNotes.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("IgnoreNotesBetweenVel", 0));
                 AudioRampIn.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("AudioRampIn", 1));
@@ -286,12 +280,6 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("KDMAPIEnabled", Convert.ToInt32(KSDAPIBox.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("HyperPlayback", Convert.ToInt32(HMode.Checked), RegistryValueKind.DWord);
 
-            Program.SynthSettings.SetValue("Reverb", ReverbV.Value, RegistryValueKind.DWord);
-            Program.SynthSettings.SetValue("Chorus", ChorusV.Value, RegistryValueKind.DWord);
-
-            Program.SynthSettings.SetValue("ReverbOverride", Convert.ToInt32(ReverbOverride.Checked), RegistryValueKind.DWord);
-            Program.SynthSettings.SetValue("ChorusOverride", Convert.ToInt32(ChorusOverride.Checked), RegistryValueKind.DWord);
-
             Program.SynthSettings.SetValue("IgnoreAllEvents", Convert.ToInt32(IgnoreAllEvents.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("IgnoreNotesBetweenVel", Convert.ToInt32(IgnoreNotes.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("AudioRampIn", Convert.ToInt32(AudioRampIn.Checked), RegistryValueKind.DWord);
@@ -385,6 +373,11 @@ namespace OmniMIDIConfigurator
             Functions.OpenAdvancedAudioSettings("spatial", "This function requires Windows 10 Creators Update or newer.");
         }
 
+        private void DSPSettingsBox_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            new DSPSettings().ShowDialog();
+        }
+
         private void ChangeEVBuf_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             new EVBufferManager().ShowDialog();
@@ -456,32 +449,38 @@ namespace OmniMIDIConfigurator
 
         private void ChangeDefaultOutput_Click(object sender, EventArgs e)
         {
-
-            switch (AudioEngBox.SelectedIndex)
+            try
             {
-                case AudioEngine.AUDTOWAV:
-                    new OutputWAVDir().ShowDialog(this);
-                    break;
+                switch (AudioEngBox.SelectedIndex)
+                {
+                    case AudioEngine.AUDTOWAV:
+                        new OutputWAVDir().ShowDialog(this);
+                        break;
 
-                case AudioEngine.BASS_OUTPUT:
-                    new DefaultAudioOutput().ShowDialog(this);
-                    break;
+                    case AudioEngine.BASS_OUTPUT:
+                        new DefaultAudioOutput().ShowDialog(this);
+                        break;
 
-                case AudioEngine.WASAPI_ENGINE:
-                    new DefaultWASAPIAudioOutput().ShowDialog();
-                    break;
+                    case AudioEngine.WASAPI_ENGINE:
+                        new DefaultWASAPIAudioOutput().ShowDialog();
+                        break;
 
-                case AudioEngine.ASIO_ENGINE:
-                    new DefaultASIOAudioOutput(Control.ModifierKeys == Keys.Shift).ShowDialog();
-                    OldBuff.Enabled = !Convert.ToBoolean(Convert.ToInt32(Program.SynthSettings.GetValue("ASIODirectFeed", "0")));
-                    break;
+                    case AudioEngine.ASIO_ENGINE:
+                        new DefaultASIOAudioOutput(Control.ModifierKeys == Keys.Shift).ShowDialog();
+                        OldBuff.Enabled = !Convert.ToBoolean(Convert.ToInt32(Program.SynthSettings.GetValue("ASIODirectFeed", "0")));
+                        break;
 
-                case AudioEngine.XA_ENGINE:
-                    new XAOutputSettings().ShowDialog();
-                    break;
+                    case AudioEngine.XA_ENGINE:
+                        new XAOutputSettings().ShowDialog();
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to load the dialog.\nBASS is probably unable to start, or it's missing.\n\nError:\n" + ex.ToString(), "Oh no! OmniMIDI encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -546,18 +545,6 @@ namespace OmniMIDIConfigurator
         {
             SincConvLab.Enabled = SincInter.Checked;
             SincConv.Enabled = SincInter.Checked;
-        }
-
-        private void ReverbOverride_CheckedChanged(object sender, EventArgs e)
-        {
-            ReverbL.Enabled = ReverbOverride.Checked;
-            ReverbV.Enabled = ReverbOverride.Checked;
-        }
-
-        private void ChorusOverride_CheckedChanged(object sender, EventArgs e)
-        {
-            ChorusL.Enabled = ChorusOverride.Checked;
-            ChorusV.Enabled = ChorusOverride.Checked;
         }
 
         private void IgnoreNotes_CheckedChanged(object sender, EventArgs e)

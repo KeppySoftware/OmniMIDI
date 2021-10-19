@@ -13,7 +13,7 @@ namespace OmniMIDIConfigurator
     {
         private ToolTip DynamicToolTip = new ToolTip();
         private RegistryKey WVerKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion", false);
-        private FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\OmniMIDI.dll");
+        private FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI.dll");
         private FileVersionInfo BASS = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\bass.dll");
         private FileVersionInfo BASSMIDI = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\bassmidi.dll");
         // private FileVersionInfo OBASS = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\opt\\bass.dll");

@@ -162,14 +162,29 @@ TCHAR AppNameW[MAX_PATH] = { 0 };		// debug info
 HANDLE hPipe = INVALID_HANDLE_VALUE;		// debug info
 
 // Main values
-BASS_FX_VOLUME_PARAM ChVolumeStruct;	// Volume
-HFX ChVolume;						// Volume
-DWORD RestartValue = 0;				// For AudToWAV
-BOOL UnlimitedChannels = 0;			// For KDMAPI
+DWORD RestartValue = 0;							// For AudToWAV
+BOOL UnlimitedChannels = 0;						// For KDMAPI
+
+// Delay options
+DWORD FNoteLengthValue = 0.0;
+DWORD FDelayNoteOff = 0.0;
+
+// Volume
+HFX ChVolume;
+BASS_FX_VOLUME_PARAM ChVolumeStruct;
+
+// Effects
+HFX ChReverb = NULL;
+HFX ChChorus = NULL;
+HFX ChEcho = NULL;
+BASS_DX8_REVERB ChReverbStruct;
+BASS_DX8_CHORUS ChChorusStruct;
+BASS_DX8_ECHO ChEchoStruct;
 
 // XA Engine
 static sound_out* SndDrv = 0;
-static float* SndBuf = 0;
+static float* FSndBuf = 0;
+static short* ISndBuf = 0;
 int SamplesPerFrame = ManagedSettings.XASamplesPerFrame * 2;
 
 // Settings and debug
@@ -303,33 +318,27 @@ DWORD pitchshiftchan[16];
 #define NT_SUCCESS(StatCode) ((NTSTATUS)(StatCode) == 0)
 #define NTAPI __stdcall
 // these functions have identical prototypes
-typedef NTSTATUS(NTAPI* NSTR)(IN ULONG, IN BOOLEAN, OUT PULONG);
-typedef NTSTATUS(NTAPI* NQTR)(OUT PULONG, OUT PULONG, OUT PULONG);
-typedef NTSTATUS(NTAPI* NDE)(BOOLEAN, INT64*);
-typedef NTSTATUS(NTAPI* NQST)(QWORD*);
 typedef NTSTATUS(NTAPI* DDP)(DWORD, HANDLE, UINT, LONG, LONG);
 
 static ULONG Min, Max, Org, Dummy;
-NSTR NtSetTimerResolution = 0;
-NQTR NtQueryTimerResolution = 0;
-NDE NtDelayExecution = 0;
-NQST NtQuerySystemTime = 0;
 DDP DefDriverProcImp = 0;
 
 // Critical sections but handled by OmniMIDI functions because f**k Windows
 void DummyPlayBufData() noexcept { return; };
-void DummyPrepareForBASSMIDI(DWORD, DWORD_PTR) noexcept { return; };
+void DummyPrepareForBASSMIDI(DWORD, DWORD) noexcept { return; };
 void DummyParseData(DWORD_PTR) noexcept { return; };
 BOOL WINAPI DummyBMSE(HSTREAM, DWORD, DWORD, DWORD) noexcept { return TRUE; };
+DWORD WINAPI DummyBMSEs(HSTREAM, DWORD, const void*, DWORD) noexcept { return 0; };
 DWORD CALLBACK DummyProcData(void*, DWORD, void*) noexcept { return 0; };
 
 // Hyper switch
 BOOL HyperMode = 0;
 void(*_PrsData)(DWORD_PTR dwParam1) = DummyParseData;
-void(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD_PTR dwParam1) = DummyPrepareForBASSMIDI;
+void(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD dwParam1) = DummyPrepareForBASSMIDI;
 void(*_PlayBufData)(void) = DummyPlayBufData;
 void(*_PlayBufDataChk)(void) = DummyPlayBufData;
-BOOL(WINAPI* _BMSE)(HSTREAM handle, DWORD chan, DWORD event, DWORD param) = DummyBMSE;
+BOOL(WINAPI* _BMSE)(HSTREAM, DWORD, DWORD, DWORD) = DummyBMSE;
+DWORD(WINAPI* _BMSEs)(HSTREAM, DWORD, const void*, DWORD) = DummyBMSEs;
 DWORD(CALLBACK* _ProcData)(void* buffer, DWORD length, void* user) = DummyProcData;
 // What does it do? It gets rid of the useless functions,
 // and passes the events without checking for anything

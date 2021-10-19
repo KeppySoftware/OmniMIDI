@@ -35,9 +35,9 @@
             // OKBtn
             // 
             this.OKBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKBtn.Location = new System.Drawing.Point(497, 426);
+            this.OKBtn.Location = new System.Drawing.Point(580, 492);
             this.OKBtn.Name = "OKBtn";
-            this.OKBtn.Size = new System.Drawing.Size(75, 23);
+            this.OKBtn.Size = new System.Drawing.Size(87, 27);
             this.OKBtn.TabIndex = 0;
             this.OKBtn.Text = "OK";
             this.OKBtn.UseVisualStyleBackColor = true;
@@ -50,20 +50,21 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.TextContainer.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.TextContainer.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TextContainer.Location = new System.Drawing.Point(12, 12);
+            this.TextContainer.Location = new System.Drawing.Point(14, 14);
             this.TextContainer.Name = "TextContainer";
             this.TextContainer.ReadOnly = true;
-            this.TextContainer.Size = new System.Drawing.Size(560, 408);
+            this.TextContainer.Size = new System.Drawing.Size(653, 471);
             this.TextContainer.TabIndex = 1;
             this.TextContainer.Text = "A";
             // 
             // TextReader
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 461);
+            this.ClientSize = new System.Drawing.Size(681, 532);
             this.Controls.Add(this.TextContainer);
             this.Controls.Add(this.OKBtn);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MinimizeBox = false;
             this.Name = "TextReader";

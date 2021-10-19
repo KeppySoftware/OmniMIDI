@@ -41,18 +41,18 @@
             this.DTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.DTxt.Location = new System.Drawing.Point(12, 9);
+            this.DTxt.Location = new System.Drawing.Point(14, 10);
             this.DTxt.Name = "DTxt";
-            this.DTxt.Size = new System.Drawing.Size(310, 166);
+            this.DTxt.Size = new System.Drawing.Size(362, 192);
             this.DTxt.TabIndex = 0;
             this.DTxt.Text = resources.GetString("DTxt.Text");
             // 
             // ShowMeNext
             // 
             this.ShowMeNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.ShowMeNext.Location = new System.Drawing.Point(15, 178);
+            this.ShowMeNext.Location = new System.Drawing.Point(17, 205);
             this.ShowMeNext.Name = "ShowMeNext";
-            this.ShowMeNext.Size = new System.Drawing.Size(150, 23);
+            this.ShowMeNext.Size = new System.Drawing.Size(175, 27);
             this.ShowMeNext.TabIndex = 5;
             this.ShowMeNext.Text = "Remind me next month";
             this.ShowMeNext.UseVisualStyleBackColor = true;
@@ -61,9 +61,9 @@
             // DontShowAnymore
             // 
             this.DontShowAnymore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DontShowAnymore.Location = new System.Drawing.Point(15, 205);
+            this.DontShowAnymore.Location = new System.Drawing.Point(17, 237);
             this.DontShowAnymore.Name = "DontShowAnymore";
-            this.DontShowAnymore.Size = new System.Drawing.Size(150, 23);
+            this.DontShowAnymore.Size = new System.Drawing.Size(175, 27);
             this.DontShowAnymore.TabIndex = 4;
             this.DontShowAnymore.Text = "Never show this again";
             this.DontShowAnymore.UseVisualStyleBackColor = true;
@@ -73,9 +73,9 @@
             // 
             this.DonateBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DonateBtn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.DonateBtn.Location = new System.Drawing.Point(170, 178);
+            this.DonateBtn.Location = new System.Drawing.Point(198, 205);
             this.DonateBtn.Name = "DonateBtn";
-            this.DonateBtn.Size = new System.Drawing.Size(152, 50);
+            this.DonateBtn.Size = new System.Drawing.Size(177, 58);
             this.DonateBtn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.DonateBtn.TabIndex = 3;
             this.DonateBtn.TabStop = false;
@@ -83,14 +83,15 @@
             // 
             // Donate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(334, 240);
+            this.ClientSize = new System.Drawing.Size(385, 272);
             this.ControlBox = false;
             this.Controls.Add(this.ShowMeNext);
             this.Controls.Add(this.DontShowAnymore);
             this.Controls.Add(this.DonateBtn);
             this.Controls.Add(this.DTxt);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Donate";

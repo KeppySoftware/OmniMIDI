@@ -8,14 +8,14 @@ void SetNoteValuesFromSettings() {
 
 	if (ManagedSettings.OverrideInstruments) {
 		for (int i = 0; i <= 15; ++i) {
-			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_BANK, cbank[i]);
-			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_PROGRAM, cpreset[i]);
+			_BMSE(OMStream, i, MIDI_EVENT_BANK, cbank[i]);
+			_BMSE(OMStream, i, MIDI_EVENT_PROGRAM, cpreset[i]);
 		}
 	}
 
 	for (int i = 0; i <= 15; ++i) {
 		if (pitchshiftchan[i]) {
-			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_FINETUNE, ManagedSettings.ConcertPitch);
+			_BMSE(OMStream, i, MIDI_EVENT_FINETUNE, ManagedSettings.ConcertPitch);
 		}
 	}
 }
@@ -28,17 +28,15 @@ void TightenTimings() {
 
 	TimerResolution = min(max(TC.wPeriodMin, 1), TC.wPeriodMax);
 
-	if (timeBeginPeriod(TimerResolution) == TIMERR_NOERROR) {
-		PrintMessageToDebugLog("TightenTimings", "timeBeginPeriod set.");
-		PrintStreamValueToDebugLog("TightenTimings", "New resolution (ms)", TimerResolution);
-	}
-	else PrintMessageToDebugLog("TightenTimings", "timeBeginPeriod failed! Timings might not be as tight as requested.");
+	if (timeBeginPeriod(TimerResolution) == TIMERR_NOERROR)
+		PrintVarToDebugLog("TightenTimings", "timeBeginPeriod set! New resolution (ms)", &TimerResolution, PRINT_UINT32);
+	else 
+		PrintMessageToDebugLog("TightenTimings", "timeBeginPeriod failed! Timings might not be as tight as requested.");
 
 	if (NT_SUCCESS(NtQueryTimerResolution(&Min, &Max, &Org))) {
 		PrintMessageToDebugLog("TightenTimings", "Queried NtQueryTimerResolution.");
 		if (NT_SUCCESS(NtSetTimerResolution(Max, true, &Org))) {
-			PrintMessageToDebugLog("TightenTimings", "Timings tightened through NtSetTimerResolution");
-			PrintStreamValueToDebugLog("TightenTimings", "New resolution (ns)", Max);
+			PrintVarToDebugLog("TightenTimings", "Timings tightened through NtSetTimerResolution! New resolution (ms)", &Max, PRINT_UINT32);
 		}
 		else PrintMessageToDebugLog("TightenTimings", "NtSetTimerResolution failed! Timings might not be as tight as requested.");
 	}
@@ -263,8 +261,7 @@ void DebugPipe(LPVOID lpV) {
 		*/
 
 		// Wait for someone to connect to the pipe
-		while (ConnectNamedPipe(hPipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED) /* && DPThread.ThreadHandle */)
-		{
+		while (ConnectNamedPipe(hPipe, NULL) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED) /* && DPThread.ThreadHandle */) {
 			// Parse debug data
 			ParseDebugData();
 
@@ -315,6 +312,8 @@ void InitializeEventsProcesserThreads() {
 }
 
 void AudioEngine(LPVOID lpParam) {
+	DWORD dlen = 0;
+
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	// Skip if ASIO isn't using the direct feed mode
 	if (ManagedSettings.CurrentEngine == WASAPI_ENGINE ||
@@ -327,11 +326,10 @@ void AudioEngine(LPVOID lpParam) {
 				case XAUDIO_ENGINE:
 				{
 					_PlayBufDataChk();
-
-					DWORD len = BASS_ChannelGetData(OMStream, SndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
-					if (len != -1)
-						SndDrv->WriteFrame(SndBuf, len / sizeof(float));
-
+					
+					dlen = BASS_ChannelGetData(OMStream, FSndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
+					if (dlen != -1) SndDrv->WriteFrame(FSndBuf, dlen / sizeof(float));
+					
 					_FWAIT;
 					continue;
 				}
@@ -347,9 +345,9 @@ void AudioEngine(LPVOID lpParam) {
 					// Parse some notes for the WAV mode
 					_PlayBufDataChk();
 
-					QWORD len = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
-					BASS_ChannelGetData(OMStream, SndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | len);
-					BASS_Encode_Write(OMStream, SndBuf, len);
+					QWORD qlen = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
+					BASS_ChannelGetData(OMStream, FSndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | qlen);
+					BASS_Encode_Write(OMStream, FSndBuf, qlen);
 
 					continue;
 				}
@@ -553,9 +551,39 @@ BOOL InitializeStream(INT32 mixfreq) {
 }
 
 void FreeUpBASS() {
+	// Remove effects
+	if (ChVolume)
+	{
+		BASS_ChannelRemoveFX(OMStream, ChVolume);
+		ChVolume = NULL;
+		PrintMessageToDebugLog("FreeUpBASSFunc", "Removed ChVolume from OMStream.");
+	}
+
+	if (ChReverb)
+	{
+		BASS_ChannelRemoveFX(OMStream, ChReverb);
+		ChReverb = NULL;
+		PrintMessageToDebugLog("FreeUpBASSFunc", "Removed ChReverb from OMStream.");
+	}
+
+	if (ChChorus)
+	{
+		BASS_ChannelRemoveFX(OMStream, ChChorus);
+		ChChorus = NULL;
+		PrintMessageToDebugLog("FreeUpBASSFunc", "Removed ChChorus from OMStream.");
+	}
+
+	if (ChEcho)
+	{
+		BASS_ChannelRemoveFX(OMStream, ChEcho);
+		ChEcho = NULL;
+		PrintMessageToDebugLog("FreeUpBASSFunc", "Removed ChEcho from OMStream.");
+	}
+
 	// Deinitialize the BASS stream, then the output and free the library, since we need to restart it
 	BASS_StreamFree(OMStream);
 	PrintMessageToDebugLog("FreeUpBASSFunc", "BASS stream freed.");
+
 	//BASS_PluginFree(0);
 	//PrintMessageToDebugLog("FreeUpBASSFunc", "Plug-ins freed.");
 	if (!HostSessionMode) {
@@ -612,8 +640,8 @@ void SetUpStream() {
 	// Initialize the MIDI channels
 	PrintMessageToDebugLog("SetUpStreamFunc", "Preparing MIDI channels...");
 	BASS_ChannelSetAttribute(OMStream, BASS_ATTRIB_MIDI_CHANS, 16);
-	BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
-	BASS_MIDI_StreamEvent(OMStream, 9, MIDI_EVENT_DRUMS, 1);
+	_BMSE(OMStream, 0, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+	_BMSE(OMStream, 9, MIDI_EVENT_DRUMS, 1);
 	PrintMessageToDebugLog("SetUpStreamFunc", "MIDI channels are now ready to receive events.");
 }
 
@@ -633,9 +661,14 @@ void FreeUpStream() {
 			SndDrv = 0;
 		}
 
-		if (SndBuf) {
-			delete[] SndBuf;
-			SndBuf = 0;
+		if (ISndBuf) {
+			delete[] ISndBuf;
+			ISndBuf = 0;
+		}
+
+		if (FSndBuf) {
+			delete[] FSndBuf;
+			FSndBuf = 0;
 		}
 	}
 
@@ -835,7 +868,7 @@ BOOL InitializeBASSLibrary()
 
 	if (!init && BERR == BASS_ERROR_ALREADY) {
 		PrintMessageToDebugLog("InitializeBASSLibraryFunc", "BASS reported an error!");
-		PrintStreamValueToDebugLog("InitializeBASSLibraryFunc", "BERR", BERR);
+		PrintVarToDebugLog("InitializeBASSLibraryFunc", "BERR", &BERR, PRINT_INT32);
 
 		if (HostSessionMode != TRUE) 
 			HostSessionMode = TRUE;
@@ -898,17 +931,6 @@ BOOL ApplyStreamSettings() {
 		CheckUp(FALSE, ERRORCODE, "Stream Attributes 8", TRUE);
 	}
 	return TRUE;
-}
-
-void PrepareVolumeKnob() {
-	// Enable the volume knob in the configurator
-	ChVolume = BASS_ChannelSetFX(OMStream, BASS_FX_VOLUME, 1);
-	ChVolumeStruct.fCurrent = 1.0f;
-	ChVolumeStruct.fTarget = SynthVolume;
-	ChVolumeStruct.fTime = 0.0f;
-	ChVolumeStruct.lCurve = LogarithmVol;
-	BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-	CheckUp(FALSE, ERRORCODE, "Stream Volume FX Preparation", FALSE);
 }
 
 BOOL InitializeBASS(BOOL restart) {
@@ -988,7 +1010,7 @@ BEGSWITCH:
 				// Error handling
 				CheckUp(FALSE, ERRORCODE, "Encoder No-Auto", TRUE);
 				// Create buffer
-				SndBuf = new float[BASS_ChannelSeconds2Bytes(OMStream, 0.016) / 4];
+				FSndBuf = new float[BASS_ChannelSeconds2Bytes(OMStream, 0.016) / 4];
 				break;
 			case IDNO:
 				// Otherwise, open the configurator
@@ -1143,6 +1165,7 @@ BEGSWITCH:
 	// Oh no it's back!
 	case XAUDIO_ENGINE:
 	{
+		const char* XATmp;
 		char XAMsgStr[512] = { 0 };
 		FreeUpXA();
 
@@ -1157,8 +1180,16 @@ BEGSWITCH:
 			PrintMessageToDebugLog("InitializeXAFunc", "Allocationg XAudio2 struct...");
 			SndDrv = CreateXAudio2Stream();
 
-			PrintMessageToDebugLog("InitializeXAFunc", "Opening XAudio2 device...");
-			const char* XATmp = SndDrv->OpenStream(NULL, ManagedSettings.AudioFrequency, ManagedSettings.MonoRendering ? 1 : 2, true, SamplesPerFrame, ManagedSettings.XASPFSweepRate);
+			if (SndDrv->IsLoaded()) {
+				PrintMessageToDebugLog("InitializeXAFunc", "Opening XAudio2 device...");
+				XATmp = 
+					SndDrv->OpenStream(
+						NULL, 
+						ManagedSettings.AudioFrequency,
+						ManagedSettings.MonoRendering ? 1 : 2, 
+						SamplesPerFrame,
+						ManagedSettings.XASPFSweepRate);
+			}
 
 			if (XATmp != NULL) {
 				ManagedSettings.CurrentEngine = WASAPI_ENGINE;
@@ -1177,7 +1208,7 @@ BEGSWITCH:
 			PrintMessageToDebugLog("InitializeWASAPIFunc", "Stored latency information.");
 
 			// Prepare audio buffer
-			SndBuf = new float[SamplesPerFrame];
+			FSndBuf = new float[SamplesPerFrame];
 
 			InitializationCompleted = TRUE;
 		}
@@ -1319,9 +1350,6 @@ BEGSWITCH:
 
 	if (!ApplyStreamSettings()) return FALSE;
 
-	// Enable the volume knob in the configurator
-	if (ManagedSettings.CurrentEngine != AUDTOWAV) PrepareVolumeKnob();
-
 	// Allocate EVBuffer
 	AllocateMemory(restart);
 
@@ -1334,6 +1362,7 @@ BEGSWITCH:
 #if !defined(_M_ARM64)
 	// Apply LoudMax, if requested
 	InitializeBASSVST();
+	InitializeOrUpdateEffects();
 #endif
 
 	return InitializationCompleted;

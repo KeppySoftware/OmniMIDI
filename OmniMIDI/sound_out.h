@@ -6,7 +6,9 @@ class sound_out
 public:
 	virtual ~sound_out() {}
 
-	virtual const char* OpenStream(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames) = 0;
+	virtual bool IsLoaded() = 0;
+
+	virtual const char* OpenStream(void* hwnd, unsigned sample_rate, unsigned short nch, unsigned max_samples_per_frame, unsigned num_frames) = 0;
 	
 	virtual const char* WriteFrame(void* buffer, unsigned num_samples) = 0;
 };

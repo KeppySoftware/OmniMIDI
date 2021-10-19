@@ -39,7 +39,7 @@
             this.InfoMessage.AutoSize = true;
             this.InfoMessage.Location = new System.Drawing.Point(12, 9);
             this.InfoMessage.Name = "InfoMessage";
-            this.InfoMessage.Size = new System.Drawing.Size(281, 26);
+            this.InfoMessage.Size = new System.Drawing.Size(316, 30);
             this.InfoMessage.TabIndex = 0;
             this.InfoMessage.Text = "Select the list you want to add the following SoundFont to.\r\nSoundFont: {0}";
             // 
@@ -60,7 +60,7 @@
             "List 8"});
             this.ListSel.Location = new System.Drawing.Point(15, 50);
             this.ListSel.Name = "ListSel";
-            this.ListSel.Size = new System.Drawing.Size(354, 21);
+            this.ListSel.Size = new System.Drawing.Size(354, 23);
             this.ListSel.TabIndex = 1;
             // 
             // AddToList
@@ -97,6 +97,7 @@
             this.Controls.Add(this.AddToList);
             this.Controls.Add(this.ListSel);
             this.Controls.Add(this.InfoMessage);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

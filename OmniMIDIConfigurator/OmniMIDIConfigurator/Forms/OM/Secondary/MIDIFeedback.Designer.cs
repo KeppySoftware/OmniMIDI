@@ -46,9 +46,9 @@ namespace OmniMIDIConfigurator
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(14, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(373, 52);
+            this.label1.Size = new System.Drawing.Size(435, 60);
             this.label1.TabIndex = 0;
             this.label1.Text = resources.GetString("label1.Text");
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -56,9 +56,9 @@ namespace OmniMIDIConfigurator
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 68);
+            this.label2.Location = new System.Drawing.Point(10, 78);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(93, 13);
+            this.label2.Size = new System.Drawing.Size(97, 15);
             this.label2.TabIndex = 1;
             this.label2.Text = "Feedback device:";
             // 
@@ -68,17 +68,17 @@ namespace OmniMIDIConfigurator
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MIDIOutDevs.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MIDIOutDevs.FormattingEnabled = true;
-            this.MIDIOutDevs.Location = new System.Drawing.Point(12, 84);
+            this.MIDIOutDevs.Location = new System.Drawing.Point(14, 97);
             this.MIDIOutDevs.Name = "MIDIOutDevs";
-            this.MIDIOutDevs.Size = new System.Drawing.Size(373, 21);
+            this.MIDIOutDevs.Size = new System.Drawing.Size(434, 23);
             this.MIDIOutDevs.TabIndex = 2;
             // 
             // OKBtn
             // 
             this.OKBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKBtn.Location = new System.Drawing.Point(314, 364);
+            this.OKBtn.Location = new System.Drawing.Point(366, 420);
             this.OKBtn.Name = "OKBtn";
-            this.OKBtn.Size = new System.Drawing.Size(75, 23);
+            this.OKBtn.Size = new System.Drawing.Size(87, 27);
             this.OKBtn.TabIndex = 3;
             this.OKBtn.Text = "OK";
             this.OKBtn.UseVisualStyleBackColor = true;
@@ -87,9 +87,9 @@ namespace OmniMIDIConfigurator
             // EnableFeedback
             // 
             this.EnableFeedback.AutoSize = true;
-            this.EnableFeedback.Location = new System.Drawing.Point(12, 111);
+            this.EnableFeedback.Location = new System.Drawing.Point(14, 128);
             this.EnableFeedback.Name = "EnableFeedback";
-            this.EnableFeedback.Size = new System.Drawing.Size(136, 17);
+            this.EnableFeedback.Size = new System.Drawing.Size(146, 19);
             this.EnableFeedback.TabIndex = 4;
             this.EnableFeedback.Text = "Enable feedback mode";
             this.EnableFeedback.UseVisualStyleBackColor = true;
@@ -104,28 +104,28 @@ namespace OmniMIDIConfigurator
             this.FeedbackWhitelist.FormattingEnabled = true;
             this.FeedbackWhitelist.HorizontalScrollbar = true;
             this.FeedbackWhitelist.IntegralHeight = false;
-            this.FeedbackWhitelist.Location = new System.Drawing.Point(9, 156);
+            this.FeedbackWhitelist.Location = new System.Drawing.Point(10, 180);
             this.FeedbackWhitelist.Margin = new System.Windows.Forms.Padding(0);
             this.FeedbackWhitelist.Name = "FeedbackWhitelist";
             this.FeedbackWhitelist.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.FeedbackWhitelist.Size = new System.Drawing.Size(379, 201);
+            this.FeedbackWhitelist.Size = new System.Drawing.Size(442, 232);
             this.FeedbackWhitelist.TabIndex = 22;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 140);
+            this.label3.Location = new System.Drawing.Point(10, 162);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(127, 13);
+            this.label3.Size = new System.Drawing.Size(141, 15);
             this.label3.TabIndex = 23;
             this.label3.Text = "Feedback mode whitelist:";
             // 
             // AddBtn
             // 
             this.AddBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.AddBtn.Location = new System.Drawing.Point(8, 364);
+            this.AddBtn.Location = new System.Drawing.Point(9, 420);
             this.AddBtn.Name = "AddBtn";
-            this.AddBtn.Size = new System.Drawing.Size(63, 23);
+            this.AddBtn.Size = new System.Drawing.Size(73, 27);
             this.AddBtn.TabIndex = 24;
             this.AddBtn.Text = "Add";
             this.AddBtn.UseVisualStyleBackColor = true;
@@ -134,9 +134,9 @@ namespace OmniMIDIConfigurator
             // RmvBtn
             // 
             this.RmvBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.RmvBtn.Location = new System.Drawing.Point(77, 364);
+            this.RmvBtn.Location = new System.Drawing.Point(90, 420);
             this.RmvBtn.Name = "RmvBtn";
-            this.RmvBtn.Size = new System.Drawing.Size(63, 23);
+            this.RmvBtn.Size = new System.Drawing.Size(73, 27);
             this.RmvBtn.TabIndex = 25;
             this.RmvBtn.Text = "Remove";
             this.RmvBtn.UseVisualStyleBackColor = true;
@@ -148,9 +148,9 @@ namespace OmniMIDIConfigurator
             // 
             // MIDIFeedback
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(397, 395);
+            this.ClientSize = new System.Drawing.Size(463, 456);
             this.ControlBox = false;
             this.Controls.Add(this.RmvBtn);
             this.Controls.Add(this.AddBtn);
@@ -161,6 +161,7 @@ namespace OmniMIDIConfigurator
             this.Controls.Add(this.MIDIOutDevs);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "MIDIFeedback";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

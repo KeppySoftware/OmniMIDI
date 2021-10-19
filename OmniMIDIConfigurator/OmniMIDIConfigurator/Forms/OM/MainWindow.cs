@@ -150,7 +150,7 @@ namespace OmniMIDIConfigurator
             Menu = OMMenu;
 
             // Set updater
-            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\OmniMIDI.dll");
+            FileVersionInfo Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI.dll");
 
             // PR check
             if (Driver.FilePrivatePart != 0)

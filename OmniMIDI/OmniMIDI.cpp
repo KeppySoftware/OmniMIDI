@@ -46,12 +46,14 @@ typedef long NTSTATUS;
 #include <Dbghelp.h>
 #include <assert.h>
 #include <strsafe.h>
+#include "NTDLLDummy.h"
 #include "Resource.h"
 #include "OmniMIDI.h"
 #include "sound_out.h"
 
 // BASS headers
 #include <bass.h>
+#include <bass_fx.h>
 #include <bassmidi.h>
 #include <bassenc.h>
 #include <bassasio.h>
@@ -90,28 +92,14 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 
 		hinst = hModule;
 		BASS_MIDI_StreamEvent = DummyBMSE;
+		BASS_MIDI_StreamEvents = DummyBMSEs;
 
-		if (!NtDelayExecution || !NtQuerySystemTime || !NtQueryTimerResolution || !NtSetTimerResolution) {
-			NtDelayExecution = (NDE)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtDelayExecution");
-			NtQuerySystemTime = (NQST)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtQuerySystemTime");
-			NtQueryTimerResolution = (NQTR)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtQueryTimerResolution");
-			NtSetTimerResolution = (NSTR)GetProcAddress(GetModuleHandleW(L"ntdll"), "NtSetTimerResolution");
-
-			if (!NtDelayExecution || !NtQuerySystemTime || !NtQueryTimerResolution || !NtSetTimerResolution) {
-				OutputDebugStringA("Failed to parse NT functions from NTDLL! OmniMIDI will not load.");
-				return FALSE;
-			}
-
-			if (!NT_SUCCESS(NtQuerySystemTime(&TickStart))) {
-				OutputDebugStringA("Failed to parse starting tick through NtQuerySystemTime! OmniMIDI will not load.");
-				return FALSE;
-			}
-
-			// Loaded!
-			return TRUE;
+		if (!NT_SUCCESS(NtQuerySystemTime(&TickStart))) {
+			OutputDebugStringA("Failed to parse starting tick through NtQuerySystemTime! OmniMIDI will not load.");
+			return FALSE;
 		}
 
-		break;
+		return TRUE;
 	}
 	case DLL_PROCESS_DETACH:
 	{
@@ -452,9 +440,9 @@ extern "C" MMRESULT WINAPI modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUse
 			else if (MPropFlags & MIDIPROP_SET) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "CookedPlayer's tempo set to received value.");
 				OMCookedPlayer->Tempo = MPropTempo->dwTempo;
-				PrintStreamValueToDebugLog("MODM_PROPERTIES", "Received Tempo", OMCookedPlayer->Tempo);
+				PrintVarToDebugLog("MODM_PROPERTIES", "Received Tempo", &OMCookedPlayer->Tempo, PRINT_UINT32);
 				OMCookedPlayer->TempoMulti = ((OMCookedPlayer->Tempo * 10) / OMCookedPlayer->TimeDiv);
-				PrintStreamValueToDebugLog("MODM_PROPERTIES", "New TempoMulti", OMCookedPlayer->TempoMulti);
+				PrintVarToDebugLog("MODM_PROPERTIES", "New TempoMulti", &OMCookedPlayer->TempoMulti, PRINT_UINT32); 
 			}
 			else if (MPropFlags & MIDIPROP_GET) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "CookedPlayer's tempo sent to MIDI application.");
@@ -469,9 +457,9 @@ extern "C" MMRESULT WINAPI modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUse
 			else if (MPropFlags & MIDIPROP_SET) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "CookedPlayer's time division set to received value.");
 				OMCookedPlayer->TimeDiv = MPropTimeDiv->dwTimeDiv;
-				PrintStreamValueToDebugLog("MODM_PROPERTIES", "Received TimeDiv", OMCookedPlayer->TimeDiv);
+				PrintVarToDebugLog("MODM_PROPERTIES", "Received TimeDiv", &OMCookedPlayer->TimeDiv, PRINT_UINT32);
 				OMCookedPlayer->TempoMulti = ((OMCookedPlayer->Tempo * 10) / OMCookedPlayer->TimeDiv);
-				PrintStreamValueToDebugLog("MODM_PROPERTIES", "New TempoMulti", OMCookedPlayer->TempoMulti);
+				PrintVarToDebugLog("MODM_PROPERTIES", "New TempoMulti", &OMCookedPlayer->TempoMulti, PRINT_UINT32);
 			}
 			else if (MPropFlags & MIDIPROP_GET) {
 				PrintMessageToDebugLog("MODM_PROPERTIES", "CookedPlayer's time division sent to MIDI application.");

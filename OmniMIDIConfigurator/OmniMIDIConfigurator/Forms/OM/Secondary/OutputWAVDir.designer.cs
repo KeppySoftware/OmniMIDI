@@ -40,7 +40,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 13);
+            this.label1.Size = new System.Drawing.Size(100, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Current directory:";
             // 
@@ -49,7 +49,7 @@
             this.DefaultDir.Enabled = false;
             this.DefaultDir.Location = new System.Drawing.Point(12, 25);
             this.DefaultDir.Name = "DefaultDir";
-            this.DefaultDir.Size = new System.Drawing.Size(461, 20);
+            this.DefaultDir.Size = new System.Drawing.Size(461, 23);
             this.DefaultDir.TabIndex = 1;
             // 
             // NewDir
@@ -57,7 +57,7 @@
             this.NewDir.Enabled = false;
             this.NewDir.Location = new System.Drawing.Point(12, 76);
             this.NewDir.Name = "NewDir";
-            this.NewDir.Size = new System.Drawing.Size(380, 20);
+            this.NewDir.Size = new System.Drawing.Size(380, 23);
             this.NewDir.TabIndex = 3;
             // 
             // label2
@@ -65,7 +65,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 60);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(75, 13);
+            this.label2.Size = new System.Drawing.Size(84, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "New directory:";
             // 
@@ -85,7 +85,7 @@
             this.BrowseButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
             this.BrowseButton.Location = new System.Drawing.Point(398, 75);
             this.BrowseButton.Name = "BrowseButton";
-            this.BrowseButton.Size = new System.Drawing.Size(75, 22);
+            this.BrowseButton.Size = new System.Drawing.Size(75, 25);
             this.BrowseButton.TabIndex = 5;
             this.BrowseButton.Text = "Browse...";
             this.BrowseButton.UseVisualStyleBackColor = true;
@@ -104,6 +104,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.DefaultDir);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

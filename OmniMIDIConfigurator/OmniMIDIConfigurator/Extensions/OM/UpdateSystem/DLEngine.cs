@@ -154,6 +154,7 @@ namespace OmniMIDIConfigurator.Forms
                             DialogResult = DialogResult.OK;
                             Application.ExitThread();
                         }
+                        else Close();
                     }
                     catch (Exception ex)
                     {

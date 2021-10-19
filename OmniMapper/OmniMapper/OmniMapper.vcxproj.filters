@@ -24,6 +24,9 @@
     <ClInclude Include="BlackListSystem.h">
       <Filter>File di intestazione</Filter>
     </ClInclude>
+    <ClInclude Include="OmniMIDI.h">
+      <Filter>File di intestazione</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="OmniMapper.def">

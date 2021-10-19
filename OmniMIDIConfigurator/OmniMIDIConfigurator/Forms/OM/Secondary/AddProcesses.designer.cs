@@ -39,9 +39,9 @@
             // OKDone
             // 
             this.OKDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKDone.Location = new System.Drawing.Point(314, 371);
+            this.OKDone.Location = new System.Drawing.Point(366, 428);
             this.OKDone.Name = "OKDone";
-            this.OKDone.Size = new System.Drawing.Size(137, 23);
+            this.OKDone.Size = new System.Drawing.Size(160, 27);
             this.OKDone.TabIndex = 0;
             this.OKDone.Text = "Add these processes";
             this.OKDone.UseVisualStyleBackColor = true;
@@ -54,18 +54,19 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RunningProcessesList.FormattingEnabled = true;
             this.RunningProcessesList.IntegralHeight = false;
-            this.RunningProcessesList.Location = new System.Drawing.Point(12, 12);
+            this.RunningProcessesList.ItemHeight = 15;
+            this.RunningProcessesList.Location = new System.Drawing.Point(14, 14);
             this.RunningProcessesList.Name = "RunningProcessesList";
             this.RunningProcessesList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.RunningProcessesList.Size = new System.Drawing.Size(439, 349);
+            this.RunningProcessesList.Size = new System.Drawing.Size(511, 402);
             this.RunningProcessesList.TabIndex = 1;
             // 
             // Cancel
             // 
             this.Cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Cancel.Location = new System.Drawing.Point(243, 371);
+            this.Cancel.Location = new System.Drawing.Point(283, 428);
             this.Cancel.Name = "Cancel";
-            this.Cancel.Size = new System.Drawing.Size(65, 23);
+            this.Cancel.Size = new System.Drawing.Size(76, 27);
             this.Cancel.TabIndex = 2;
             this.Cancel.Text = "Cancel";
             this.Cancel.UseVisualStyleBackColor = true;
@@ -75,9 +76,9 @@
             // 
             this.RefreshList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.RefreshList.Image = global::OmniMIDIConfigurator.Properties.Resources.ReloadIcon;
-            this.RefreshList.Location = new System.Drawing.Point(12, 371);
+            this.RefreshList.Location = new System.Drawing.Point(14, 428);
             this.RefreshList.Name = "RefreshList";
-            this.RefreshList.Size = new System.Drawing.Size(23, 23);
+            this.RefreshList.Size = new System.Drawing.Size(27, 27);
             this.RefreshList.TabIndex = 3;
             this.RefreshList.TabStop = false;
             this.RefreshList.Click += new System.EventHandler(this.RefreshList_Click);
@@ -86,24 +87,25 @@
             // 
             this.RefrLab.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.RefrLab.AutoSize = true;
-            this.RefrLab.Location = new System.Drawing.Point(41, 376);
+            this.RefrLab.Location = new System.Drawing.Point(48, 434);
             this.RefrLab.Name = "RefrLab";
-            this.RefrLab.Size = new System.Drawing.Size(67, 13);
+            this.RefrLab.Size = new System.Drawing.Size(72, 15);
             this.RefrLab.TabIndex = 4;
             this.RefrLab.Text = "Refreshing...";
             this.RefrLab.Visible = false;
             // 
             // AddProcesses
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(463, 406);
+            this.ClientSize = new System.Drawing.Size(540, 468);
             this.ControlBox = false;
             this.Controls.Add(this.RefrLab);
             this.Controls.Add(this.RefreshList);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.RunningProcessesList);
             this.Controls.Add(this.OKDone);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

@@ -89,7 +89,6 @@ namespace OmniMIDIConfigurator
             {
                 MessageBox.Show("Unable to load the dialog.\nBASS is probably unable to start, or it's missing.\n\nError:\n" + ex.ToString(), "Oh no! OmniMIDI encountered an error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
-                Dispose();
             }
         }
 

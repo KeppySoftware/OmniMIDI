@@ -67,9 +67,9 @@
             // Quit
             // 
             this.Quit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.Quit.Location = new System.Drawing.Point(432, 367);
+            this.Quit.Location = new System.Drawing.Point(504, 423);
             this.Quit.Name = "Quit";
-            this.Quit.Size = new System.Drawing.Size(75, 23);
+            this.Quit.Size = new System.Drawing.Size(87, 27);
             this.Quit.TabIndex = 7;
             this.Quit.Text = "Apply";
             this.Quit.UseVisualStyleBackColor = true;
@@ -79,18 +79,18 @@
             // 
             this.DefOut.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.DefOut.Location = new System.Drawing.Point(11, 350);
+            this.DefOut.Location = new System.Drawing.Point(13, 404);
             this.DefOut.Name = "DefOut";
-            this.DefOut.Size = new System.Drawing.Size(339, 13);
+            this.DefOut.Size = new System.Drawing.Size(395, 15);
             this.DefOut.TabIndex = 6;
             this.DefOut.Text = "Default ASIO output: Loading...";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 14);
+            this.label1.Location = new System.Drawing.Point(12, 16);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 13);
+            this.label1.Size = new System.Drawing.Size(89, 15);
             this.label1.TabIndex = 5;
             this.label1.Text = "Current output:";
             // 
@@ -100,17 +100,17 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DevicesList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.DevicesList.FormattingEnabled = true;
-            this.DevicesList.Location = new System.Drawing.Point(95, 11);
+            this.DevicesList.Location = new System.Drawing.Point(111, 13);
             this.DevicesList.Name = "DevicesList";
-            this.DevicesList.Size = new System.Drawing.Size(326, 21);
+            this.DevicesList.Size = new System.Drawing.Size(380, 23);
             this.DevicesList.TabIndex = 4;
             // 
             // DeviceCP
             // 
             this.DeviceCP.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.DeviceCP.Location = new System.Drawing.Point(277, 367);
+            this.DeviceCP.Location = new System.Drawing.Point(323, 423);
             this.DeviceCP.Name = "DeviceCP";
-            this.DeviceCP.Size = new System.Drawing.Size(149, 23);
+            this.DeviceCP.Size = new System.Drawing.Size(174, 27);
             this.DeviceCP.TabIndex = 8;
             this.DeviceCP.Text = "Open device\'s control panel";
             this.DeviceCP.UseVisualStyleBackColor = true;
@@ -120,18 +120,18 @@
             // 
             this.MaxThreads.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.MaxThreads.AutoSize = true;
-            this.MaxThreads.Location = new System.Drawing.Point(11, 372);
+            this.MaxThreads.Location = new System.Drawing.Point(13, 429);
             this.MaxThreads.Name = "MaxThreads";
-            this.MaxThreads.Size = new System.Drawing.Size(230, 13);
+            this.MaxThreads.Size = new System.Drawing.Size(258, 15);
             this.MaxThreads.TabIndex = 9;
             this.MaxThreads.Text = "ASIO is allowed to use a maximum of 0 threads.";
             // 
             // StatusLab
             // 
             this.StatusLab.AutoSize = true;
-            this.StatusLab.Location = new System.Drawing.Point(6, 91);
+            this.StatusLab.Location = new System.Drawing.Point(7, 105);
             this.StatusLab.Name = "StatusLab";
-            this.StatusLab.Size = new System.Drawing.Size(40, 13);
+            this.StatusLab.Size = new System.Drawing.Size(42, 15);
             this.StatusLab.TabIndex = 11;
             this.StatusLab.Text = "Status:";
             // 
@@ -139,9 +139,9 @@
             // 
             this.Status.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.Status.Location = new System.Drawing.Point(43, 91);
+            this.Status.Location = new System.Drawing.Point(50, 105);
             this.Status.Name = "Status";
-            this.Status.Size = new System.Drawing.Size(442, 26);
+            this.Status.Size = new System.Drawing.Size(516, 30);
             this.Status.TabIndex = 12;
             this.Status.Text = "Loading...";
             // 
@@ -159,9 +159,9 @@
             this.InfoGroupBox.Controls.Add(this.StatusLab);
             this.InfoGroupBox.Controls.Add(this.InputsLab);
             this.InfoGroupBox.Controls.Add(this.DeviceNameLab);
-            this.InfoGroupBox.Location = new System.Drawing.Point(10, 39);
+            this.InfoGroupBox.Location = new System.Drawing.Point(12, 45);
             this.InfoGroupBox.Name = "InfoGroupBox";
-            this.InfoGroupBox.Size = new System.Drawing.Size(499, 129);
+            this.InfoGroupBox.Size = new System.Drawing.Size(582, 149);
             this.InfoGroupBox.TabIndex = 13;
             this.InfoGroupBox.TabStop = false;
             this.InfoGroupBox.Text = "ASIO output info";
@@ -169,81 +169,81 @@
             // BufferInfo
             // 
             this.BufferInfo.AutoSize = true;
-            this.BufferInfo.Location = new System.Drawing.Point(62, 73);
+            this.BufferInfo.Location = new System.Drawing.Point(72, 84);
             this.BufferInfo.Name = "BufferInfo";
-            this.BufferInfo.Size = new System.Drawing.Size(54, 13);
+            this.BufferInfo.Size = new System.Drawing.Size(59, 15);
             this.BufferInfo.TabIndex = 16;
             this.BufferInfo.Text = "Loading...";
             // 
             // Outputs
             // 
             this.Outputs.AutoSize = true;
-            this.Outputs.Location = new System.Drawing.Point(51, 55);
+            this.Outputs.Location = new System.Drawing.Point(59, 63);
             this.Outputs.Name = "Outputs";
-            this.Outputs.Size = new System.Drawing.Size(54, 13);
+            this.Outputs.Size = new System.Drawing.Size(59, 15);
             this.Outputs.TabIndex = 15;
             this.Outputs.Text = "Loading...";
             // 
             // Inputs
             // 
             this.Inputs.AutoSize = true;
-            this.Inputs.Location = new System.Drawing.Point(43, 37);
+            this.Inputs.Location = new System.Drawing.Point(50, 43);
             this.Inputs.Name = "Inputs";
-            this.Inputs.Size = new System.Drawing.Size(54, 13);
+            this.Inputs.Size = new System.Drawing.Size(59, 15);
             this.Inputs.TabIndex = 14;
             this.Inputs.Text = "Loading...";
             // 
             // DeviceName
             // 
             this.DeviceName.AutoSize = true;
-            this.DeviceName.Location = new System.Drawing.Point(77, 19);
+            this.DeviceName.Location = new System.Drawing.Point(90, 22);
             this.DeviceName.Name = "DeviceName";
-            this.DeviceName.Size = new System.Drawing.Size(54, 13);
+            this.DeviceName.Size = new System.Drawing.Size(59, 15);
             this.DeviceName.TabIndex = 13;
             this.DeviceName.Text = "Loading...";
             // 
             // BufferInfoLab
             // 
             this.BufferInfoLab.AutoSize = true;
-            this.BufferInfoLab.Location = new System.Drawing.Point(6, 73);
+            this.BufferInfoLab.Location = new System.Drawing.Point(7, 84);
             this.BufferInfoLab.Name = "BufferInfoLab";
-            this.BufferInfoLab.Size = new System.Drawing.Size(58, 13);
+            this.BufferInfoLab.Size = new System.Drawing.Size(66, 15);
             this.BufferInfoLab.TabIndex = 3;
             this.BufferInfoLab.Text = "Buffer info:";
             // 
             // OutputsLab
             // 
             this.OutputsLab.AutoSize = true;
-            this.OutputsLab.Location = new System.Drawing.Point(6, 55);
+            this.OutputsLab.Location = new System.Drawing.Point(7, 63);
             this.OutputsLab.Name = "OutputsLab";
-            this.OutputsLab.Size = new System.Drawing.Size(47, 13);
+            this.OutputsLab.Size = new System.Drawing.Size(53, 15);
             this.OutputsLab.TabIndex = 2;
             this.OutputsLab.Text = "Outputs:";
             // 
             // InputsLab
             // 
             this.InputsLab.AutoSize = true;
-            this.InputsLab.Location = new System.Drawing.Point(6, 37);
+            this.InputsLab.Location = new System.Drawing.Point(7, 43);
             this.InputsLab.Name = "InputsLab";
-            this.InputsLab.Size = new System.Drawing.Size(39, 13);
+            this.InputsLab.Size = new System.Drawing.Size(43, 15);
             this.InputsLab.TabIndex = 1;
             this.InputsLab.Text = "Inputs:";
             // 
             // DeviceNameLab
             // 
             this.DeviceNameLab.AutoSize = true;
-            this.DeviceNameLab.Location = new System.Drawing.Point(6, 19);
+            this.DeviceNameLab.Location = new System.Drawing.Point(7, 22);
             this.DeviceNameLab.Name = "DeviceNameLab";
-            this.DeviceNameLab.Size = new System.Drawing.Size(73, 13);
+            this.DeviceNameLab.Size = new System.Drawing.Size(78, 15);
             this.DeviceNameLab.TabIndex = 0;
             this.DeviceNameLab.Text = "Device name:";
             // 
             // ASIODirectFeed
             // 
             this.ASIODirectFeed.AutoSize = true;
-            this.ASIODirectFeed.Location = new System.Drawing.Point(6, 19);
+            this.ASIODirectFeed.Location = new System.Drawing.Point(7, 22);
             this.ASIODirectFeed.Name = "ASIODirectFeed";
-            this.ASIODirectFeed.Size = new System.Drawing.Size(301, 17);
+            this.ASIODirectFeed.Size = new System.Drawing.Size(337, 19);
             this.ASIODirectFeed.TabIndex = 14;
             this.ASIODirectFeed.Text = "Make ASIO feed itself off of the audio stream automatically";
             this.ButtonsDesc.SetToolTip(this.ASIODirectFeed, resources.GetString("ASIODirectFeed.ToolTip"));
@@ -257,9 +257,9 @@
             // DisableASIOFreqWarn
             // 
             this.DisableASIOFreqWarn.AutoSize = true;
-            this.DisableASIOFreqWarn.Location = new System.Drawing.Point(6, 38);
+            this.DisableASIOFreqWarn.Location = new System.Drawing.Point(7, 44);
             this.DisableASIOFreqWarn.Name = "DisableASIOFreqWarn";
-            this.DisableASIOFreqWarn.Size = new System.Drawing.Size(299, 17);
+            this.DisableASIOFreqWarn.Size = new System.Drawing.Size(335, 19);
             this.DisableASIOFreqWarn.TabIndex = 15;
             this.DisableASIOFreqWarn.Text = "Suppress the unsupported output frequency warning/error";
             this.ButtonsDesc.SetToolTip(this.DisableASIOFreqWarn, resources.GetString("DisableASIOFreqWarn.ToolTip"));
@@ -268,9 +268,9 @@
             // LeaveASIODeviceFreq
             // 
             this.LeaveASIODeviceFreq.AutoSize = true;
-            this.LeaveASIODeviceFreq.Location = new System.Drawing.Point(6, 57);
+            this.LeaveASIODeviceFreq.Location = new System.Drawing.Point(7, 66);
             this.LeaveASIODeviceFreq.Name = "LeaveASIODeviceFreq";
-            this.LeaveASIODeviceFreq.Size = new System.Drawing.Size(354, 17);
+            this.LeaveASIODeviceFreq.Size = new System.Drawing.Size(395, 19);
             this.LeaveASIODeviceFreq.TabIndex = 16;
             this.LeaveASIODeviceFreq.Text = "Prevent OmniMIDI from changing the ASIO device\'s output frequency";
             this.ButtonsDesc.SetToolTip(this.LeaveASIODeviceFreq, resources.GetString("LeaveASIODeviceFreq.ToolTip"));
@@ -282,9 +282,9 @@
             this.ChanSetBox.Controls.Add(this.LeftCh);
             this.ChanSetBox.Controls.Add(this.label3);
             this.ChanSetBox.Controls.Add(this.label2);
-            this.ChanSetBox.Location = new System.Drawing.Point(10, 172);
+            this.ChanSetBox.Location = new System.Drawing.Point(12, 198);
             this.ChanSetBox.Name = "ChanSetBox";
-            this.ChanSetBox.Size = new System.Drawing.Size(499, 76);
+            this.ChanSetBox.Size = new System.Drawing.Size(582, 88);
             this.ChanSetBox.TabIndex = 16;
             this.ChanSetBox.TabStop = false;
             this.ChanSetBox.Text = "Channel settings";
@@ -295,9 +295,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RightCh.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.RightCh.FormattingEnabled = true;
-            this.RightCh.Location = new System.Drawing.Point(161, 42);
+            this.RightCh.Location = new System.Drawing.Point(188, 48);
             this.RightCh.Name = "RightCh";
-            this.RightCh.Size = new System.Drawing.Size(326, 21);
+            this.RightCh.Size = new System.Drawing.Size(380, 23);
             this.RightCh.TabIndex = 18;
             // 
             // LeftCh
@@ -306,26 +306,26 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LeftCh.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.LeftCh.FormattingEnabled = true;
-            this.LeftCh.Location = new System.Drawing.Point(161, 19);
+            this.LeftCh.Location = new System.Drawing.Point(188, 22);
             this.LeftCh.Name = "LeftCh";
-            this.LeftCh.Size = new System.Drawing.Size(326, 21);
+            this.LeftCh.Size = new System.Drawing.Size(380, 23);
             this.LeftCh.TabIndex = 17;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 45);
+            this.label3.Location = new System.Drawing.Point(7, 52);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(118, 13);
+            this.label3.Size = new System.Drawing.Size(131, 15);
             this.label3.TabIndex = 1;
             this.label3.Text = "Right channel (Input 1):";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 22);
+            this.label2.Location = new System.Drawing.Point(7, 25);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(111, 13);
+            this.label2.Size = new System.Drawing.Size(123, 15);
             this.label2.TabIndex = 0;
             this.label2.Text = "Left channel (Input 0):";
             // 
@@ -334,9 +334,9 @@
             this.groupBox1.Controls.Add(this.LeaveASIODeviceFreq);
             this.groupBox1.Controls.Add(this.DisableASIOFreqWarn);
             this.groupBox1.Controls.Add(this.ASIODirectFeed);
-            this.groupBox1.Location = new System.Drawing.Point(10, 254);
+            this.groupBox1.Location = new System.Drawing.Point(12, 293);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(499, 85);
+            this.groupBox1.Size = new System.Drawing.Size(582, 98);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Channel settings";
@@ -347,9 +347,9 @@
             this.LatencyWarning.Image = global::OmniMIDIConfigurator.Properties.Resources.wi;
             this.LatencyWarning.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.LatencyWarning.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.LatencyWarning.Location = new System.Drawing.Point(371, 346);
+            this.LatencyWarning.Location = new System.Drawing.Point(433, 399);
             this.LatencyWarning.Name = "LatencyWarning";
-            this.LatencyWarning.Size = new System.Drawing.Size(136, 19);
+            this.LatencyWarning.Size = new System.Drawing.Size(159, 22);
             this.LatencyWarning.TabIndex = 15;
             this.LatencyWarning.TabStop = true;
             this.LatencyWarning.Text = "Read me! It\'s important!";
@@ -361,9 +361,9 @@
             this.ASIODevicesSupport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ASIODevicesSupport.AutoSize = true;
             this.ASIODevicesSupport.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.ASIODevicesSupport.Location = new System.Drawing.Point(427, 8);
+            this.ASIODevicesSupport.Location = new System.Drawing.Point(498, 9);
             this.ASIODevicesSupport.Name = "ASIODevicesSupport";
-            this.ASIODevicesSupport.Size = new System.Drawing.Size(85, 26);
+            this.ASIODevicesSupport.Size = new System.Drawing.Size(96, 30);
             this.ASIODevicesSupport.TabIndex = 10;
             this.ASIODevicesSupport.TabStop = true;
             this.ASIODevicesSupport.Text = "List of supported\r\nASIO devices";
@@ -372,9 +372,9 @@
             // 
             // DefaultASIOAudioOutput
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(518, 401);
+            this.ClientSize = new System.Drawing.Size(604, 463);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.ChanSetBox);
             this.Controls.Add(this.LatencyWarning);
@@ -386,6 +386,7 @@
             this.Controls.Add(this.DefOut);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.DevicesList);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

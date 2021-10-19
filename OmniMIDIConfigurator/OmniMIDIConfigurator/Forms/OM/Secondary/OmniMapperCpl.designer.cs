@@ -47,9 +47,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 10);
+            this.label1.Location = new System.Drawing.Point(10, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(116, 13);
+            this.label1.Size = new System.Drawing.Size(129, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Map mapper to device:";
             // 
@@ -59,18 +59,18 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.MIDIOutList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.MIDIOutList.FormattingEnabled = true;
-            this.MIDIOutList.Location = new System.Drawing.Point(12, 28);
+            this.MIDIOutList.Location = new System.Drawing.Point(14, 32);
             this.MIDIOutList.Name = "MIDIOutList";
-            this.MIDIOutList.Size = new System.Drawing.Size(399, 21);
+            this.MIDIOutList.Size = new System.Drawing.Size(465, 23);
             this.MIDIOutList.TabIndex = 3;
             this.MIDIOutList.SelectedIndexChanged += new System.EventHandler(this.MIDIOutList_SelectedIndexChanged);
             // 
             // ApplyBtn
             // 
             this.ApplyBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.ApplyBtn.Location = new System.Drawing.Point(337, 134);
+            this.ApplyBtn.Location = new System.Drawing.Point(393, 155);
             this.ApplyBtn.Name = "ApplyBtn";
-            this.ApplyBtn.Size = new System.Drawing.Size(75, 23);
+            this.ApplyBtn.Size = new System.Drawing.Size(87, 27);
             this.ApplyBtn.TabIndex = 4;
             this.ApplyBtn.Text = "Apply";
             this.ApplyBtn.UseVisualStyleBackColor = true;
@@ -79,79 +79,79 @@
             // PFLabel
             // 
             this.PFLabel.AutoSize = true;
-            this.PFLabel.Location = new System.Drawing.Point(9, 67);
+            this.PFLabel.Location = new System.Drawing.Point(10, 77);
             this.PFLabel.Name = "PFLabel";
-            this.PFLabel.Size = new System.Drawing.Size(104, 13);
+            this.PFLabel.Size = new System.Drawing.Size(119, 15);
             this.PFLabel.TabIndex = 5;
             this.PFLabel.Text = "Supported platforms:";
             // 
             // Pi386
             // 
-            this.Pi386.Location = new System.Drawing.Point(12, 85);
+            this.Pi386.Location = new System.Drawing.Point(14, 98);
             this.Pi386.Name = "Pi386";
-            this.Pi386.Size = new System.Drawing.Size(16, 16);
+            this.Pi386.Size = new System.Drawing.Size(19, 18);
             this.Pi386.TabIndex = 6;
             this.Pi386.TabStop = false;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(30, 87);
+            this.label2.Location = new System.Drawing.Point(35, 100);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(53, 13);
+            this.label2.Size = new System.Drawing.Size(57, 15);
             this.label2.TabIndex = 7;
             this.label2.Text = "x86 (i386)";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(30, 109);
+            this.label3.Location = new System.Drawing.Point(35, 126);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(69, 13);
+            this.label3.Size = new System.Drawing.Size(75, 15);
             this.label3.TabIndex = 9;
             this.label3.Text = "x64 (AMD64)";
             // 
             // PAMD64
             // 
-            this.PAMD64.Location = new System.Drawing.Point(12, 107);
+            this.PAMD64.Location = new System.Drawing.Point(14, 123);
             this.PAMD64.Name = "PAMD64";
-            this.PAMD64.Size = new System.Drawing.Size(16, 16);
+            this.PAMD64.Size = new System.Drawing.Size(19, 18);
             this.PAMD64.TabIndex = 8;
             this.PAMD64.TabStop = false;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(30, 131);
+            this.label4.Location = new System.Drawing.Point(35, 151);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(93, 13);
+            this.label4.Size = new System.Drawing.Size(101, 15);
             this.label4.TabIndex = 11;
             this.label4.Text = "ARM64 (AArch64)";
             // 
             // PAarch64
             // 
-            this.PAarch64.Location = new System.Drawing.Point(12, 129);
+            this.PAarch64.Location = new System.Drawing.Point(14, 149);
             this.PAarch64.Name = "PAarch64";
-            this.PAarch64.Size = new System.Drawing.Size(16, 16);
+            this.PAarch64.Size = new System.Drawing.Size(19, 18);
             this.PAarch64.TabIndex = 10;
             this.PAarch64.TabStop = false;
             // 
             // CancelBtn
             // 
             this.CancelBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelBtn.Location = new System.Drawing.Point(256, 134);
+            this.CancelBtn.Location = new System.Drawing.Point(299, 155);
             this.CancelBtn.Name = "CancelBtn";
-            this.CancelBtn.Size = new System.Drawing.Size(75, 23);
+            this.CancelBtn.Size = new System.Drawing.Size(87, 27);
             this.CancelBtn.TabIndex = 12;
             this.CancelBtn.Text = "Cancel";
             this.CancelBtn.UseVisualStyleBackColor = true;
             // 
             // OmniMapperCpl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.CancelBtn;
-            this.ClientSize = new System.Drawing.Size(423, 168);
+            this.ClientSize = new System.Drawing.Size(493, 194);
             this.Controls.Add(this.CancelBtn);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.PAarch64);
@@ -163,6 +163,7 @@
             this.Controls.Add(this.ApplyBtn);
             this.Controls.Add(this.MIDIOutList);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

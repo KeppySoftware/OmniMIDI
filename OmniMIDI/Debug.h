@@ -2,6 +2,14 @@
 OmniMIDI debug functions
 */
 
+#define PRINT_INT32 0
+#define PRINT_UINT32 1
+#define PRINT_INT64 2
+#define PRINT_UINT64 3
+#define PRINT_FLOAT 4
+#define PRINT_BOOL 5
+#define PRINT_WCHAR 6
+
 #define CurrentError(Message, Error, Text) case Error: sprintf_s(Message, NTFS_MAX_PATH, "Error %s:\n%s", #Error, #Text); break
 #define DefError(Message, Error, Text) sprintf_s(Message, NTFS_MAX_PATH, "Error %s:\n%s", #Error, #Text); break
 #define arre(wat) case wat: sprintf(MessageBuf + strlen(MessageBuf), "\nCode: %s", #wat); break
@@ -310,20 +318,83 @@ void PrintBoolToDebugLog(LPCSTR Stage, BOOL Status) {
 	}
 }
 
-void PrintStreamValueToDebugLog(LPCSTR Stage, LPCSTR ValueName, DWORD Value) {
+void PrintVarToDebugLog(LPCSTR Stage, LPCSTR ValueName, void* Var, int Type) {
 	if (ManagedSettings.DebugMode) {
-		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
+		char* AMsg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
+		wchar_t* WMsg = (wchar_t*)malloc(sizeof(wchar_t) * NTFS_MAX_PATH);
 
 		// Debug log is busy now
 		std::lock_guard<std::mutex> lock(DebugMutex);
 
 		// Print to log
 		PrintCurrentTime();
-		sprintf(Msg, "Stage <<%s>> | %s: %d (HEX: %08X)\n", Stage, ValueName, Value, Value);
-		fprintf(DebugLog, Msg);
-		OutputDebugStringA(Msg);
+		switch (Type) {
+		case PRINT_INT32:
+		{
+			int I32Var = *(long*)Var;
+			sprintf(AMsg, "Stage <<%s>> | %s: %i (HEX: %08X, 32-bit integer)\n", Stage, ValueName, I32Var, I32Var);
+			fprintf(DebugLog, AMsg);
+			OutputDebugStringA(AMsg);
+			break;
+		}
+		case PRINT_UINT32:
+		{			
+			int U32Var = *(unsigned long*)Var;
+			sprintf(AMsg, "Stage <<%s>> | %s: %u (HEX: %08X, 32-bit unsigned integer)\n", Stage, ValueName, U32Var, U32Var);
+			fprintf(DebugLog, AMsg);
+			OutputDebugStringA(AMsg);
+			break;
+		}
+		case PRINT_INT64:
+		{
+			int I64Var = *(long long*)Var;
+			sprintf(AMsg, "Stage <<%s>> | %s: %i (HEX: %016X, 64-bit integer)\n", Stage, ValueName, I64Var, I64Var);
+			fprintf(DebugLog, AMsg);
+			OutputDebugStringA(AMsg);
+			break;
+		}
+		case PRINT_UINT64:
+		{			
+			int U64Var = *(unsigned long long*)Var;
+			sprintf(AMsg, "Stage <<%s>> | %s: %u (HEX: %016X, 64-bit unsigned integer)\n", Stage, ValueName, U64Var, U64Var);
+			fprintf(DebugLog, AMsg);
+			OutputDebugStringA(AMsg);
+			break;
+		}
+		case PRINT_FLOAT:
+		{
+			float FVar = *(float*)Var;
+			sprintf(AMsg, "Stage <<%s>> | %s: %f (float)\n", Stage, ValueName, *(float*)Var);
+			fprintf(DebugLog, AMsg);
+			OutputDebugStringA(AMsg);
+			break;
+		}
+		case PRINT_BOOL:
+		{			
+			BOOL BVar = *(BOOL*)Var;
+			sprintf(AMsg, "Stage <<%s>> | %s: %s (bool)\n", Stage, ValueName, BVar ? "true" : "false");
+			fprintf(DebugLog, AMsg);
+			OutputDebugStringA(AMsg);
+			break;
+		}
+		case PRINT_WCHAR:
+		{
+			swprintf(WMsg, L"Stage <<%S>> | %S: %s (wchar_t)\n", Stage, ValueName, (wchar_t*)Var);
+			fwprintf(DebugLog, WMsg);
+			OutputDebugStringW(WMsg);
+			break;
+		}
+		default:
+		{
+			sprintf(AMsg, "Stage <<%s>> | %s: unrecognized type! (Address of the unrecognized value: %08X)\n", Stage, ValueName, Var);
+			fprintf(DebugLog, AMsg);
+			OutputDebugStringA(AMsg);
+			break;
+		}
+		}
 
-		free(Msg);
+		free(AMsg);
+		free(WMsg);
 
 		// Flush buffer
 		fflush(DebugLog);
@@ -519,7 +590,7 @@ void PrintEventToDebugLog(DWORD dwParam) {
 	}
 }
 
-void PrintLongMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
+void PrintLongMessageToDebugLog(MIDIHDR* IIMidiHdr) {
 	if (ManagedSettings.DebugMode) {
 		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
 
@@ -528,7 +599,7 @@ void PrintLongMessageToDebugLog(BOOL IsRecognized, MIDIHDR* IIMidiHdr) {
 
 		// Print to log
 		PrintCurrentTime();
-		sprintf(Msg, "Stage <<%s>> | %s long message: ", (IsRecognized ? "ParsedLongMsg" : "UnknownLongMsg"), (IsRecognized ? "Parsed" : "Unknown"));
+		sprintf(Msg, "Stage <<SendLongToBASSMIDI>> | Long message: ");
 
 		for (int i = 0; i < IIMidiHdr->dwBytesRecorded; i++)
 			sprintf(Msg + strlen(Msg), "%02X", (BYTE)(IIMidiHdr->lpData[i]));

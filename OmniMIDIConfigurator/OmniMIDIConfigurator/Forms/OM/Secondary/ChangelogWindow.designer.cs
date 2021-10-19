@@ -44,19 +44,19 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ChangelogBrowser.IsWebBrowserContextMenuEnabled = false;
-            this.ChangelogBrowser.Location = new System.Drawing.Point(0, 47);
-            this.ChangelogBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.ChangelogBrowser.Location = new System.Drawing.Point(0, 54);
+            this.ChangelogBrowser.MinimumSize = new System.Drawing.Size(23, 23);
             this.ChangelogBrowser.Name = "ChangelogBrowser";
             this.ChangelogBrowser.ScriptErrorsSuppressed = true;
-            this.ChangelogBrowser.Size = new System.Drawing.Size(708, 391);
+            this.ChangelogBrowser.Size = new System.Drawing.Size(826, 451);
             this.ChangelogBrowser.TabIndex = 0;
             this.ChangelogBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.ChangelogBrowser_DocumentCompleted);
             // 
             // VersionLabel
             // 
-            this.VersionLabel.Location = new System.Drawing.Point(308, 17);
+            this.VersionLabel.Location = new System.Drawing.Point(359, 20);
             this.VersionLabel.Name = "VersionLabel";
-            this.VersionLabel.Size = new System.Drawing.Size(199, 13);
+            this.VersionLabel.Size = new System.Drawing.Size(232, 15);
             this.VersionLabel.TabIndex = 1;
             this.VersionLabel.Text = "Changelog for version 0.0.0.0";
             this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -65,18 +65,18 @@
             // 
             this.OkBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.OkBtn.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.OkBtn.Location = new System.Drawing.Point(621, 12);
+            this.OkBtn.Location = new System.Drawing.Point(724, 14);
             this.OkBtn.Name = "OkBtn";
-            this.OkBtn.Size = new System.Drawing.Size(75, 23);
+            this.OkBtn.Size = new System.Drawing.Size(87, 27);
             this.OkBtn.TabIndex = 2;
             this.OkBtn.Text = "OK";
             this.OkBtn.UseVisualStyleBackColor = true;
             // 
             // UpdateBtn
             // 
-            this.UpdateBtn.Location = new System.Drawing.Point(509, 12);
+            this.UpdateBtn.Location = new System.Drawing.Point(594, 14);
             this.UpdateBtn.Name = "UpdateBtn";
-            this.UpdateBtn.Size = new System.Drawing.Size(108, 23);
+            this.UpdateBtn.Size = new System.Drawing.Size(126, 27);
             this.UpdateBtn.TabIndex = 3;
             this.UpdateBtn.Text = "Check for updates";
             this.UpdateBtn.UseVisualStyleBackColor = true;
@@ -85,9 +85,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 17);
+            this.label1.Location = new System.Drawing.Point(14, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(132, 13);
+            this.label1.Size = new System.Drawing.Size(146, 15);
             this.label1.TabIndex = 4;
             this.label1.Text = "Get changelog for version:";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -96,25 +96,26 @@
             // 
             this.ReleasesList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ReleasesList.FormattingEnabled = true;
-            this.ReleasesList.Location = new System.Drawing.Point(150, 14);
+            this.ReleasesList.Location = new System.Drawing.Point(175, 16);
             this.ReleasesList.Name = "ReleasesList";
-            this.ReleasesList.Size = new System.Drawing.Size(82, 21);
+            this.ReleasesList.Size = new System.Drawing.Size(95, 23);
             this.ReleasesList.TabIndex = 5;
             this.ReleasesList.SelectedIndexChanged += new System.EventHandler(this.ReleasesList_SelectedIndexChanged);
             // 
             // ChangelogWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.CancelButton = this.OkBtn;
-            this.ClientSize = new System.Drawing.Size(708, 438);
+            this.ClientSize = new System.Drawing.Size(826, 505);
             this.Controls.Add(this.ReleasesList);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.UpdateBtn);
             this.Controls.Add(this.OkBtn);
             this.Controls.Add(this.VersionLabel);
             this.Controls.Add(this.ChangelogBrowser);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;

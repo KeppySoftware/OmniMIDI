@@ -3,8 +3,152 @@ OmniMIDI settings loading system
 */
 #pragma once
 
+void SetBufferPointers() {
+	_PrsData = HyperMode ? ParseDataHyper : ParseData;
+	_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
+	_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
+	_PlayBufDataChk = ManagedSettings.NotesCatcherWithAudio ? (HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk) : DummyPlayBufData;
+	_BMSE = BASS_MIDI_StreamEvent;
+	_BMSEs = BASS_MIDI_StreamEvents;
+}
+
+void UnsetBufferPointers() {
+	_PrsData = DummyParseData;
+	_PforBASSMIDI = DummyPrepareForBASSMIDI;
+	_PlayBufData = DummyPlayBufData;
+	_PlayBufDataChk = DummyPlayBufData;
+	_BMSE = DummyBMSE;
+	_BMSEs = DummyBMSEs;
+}
+
+void InitializeOrUpdateEffects() {
+	if (!ChVolume && ManagedSettings.CurrentEngine != AUDTOWAV)
+	{
+		ChVolume = BASS_ChannelSetFX(OMStream, BASS_FX_VOLUME, 1);
+		CheckUp(FALSE, ERRORCODE, "Stream Volume FX Apply", FALSE);
+		PrintMessageToDebugLog("InitializeOrUpdateEffects", "Applied volume HFX to OMStream.");
+	}
+
+	if (ManagedSettings.CurrentEngine != AUDTOWAV) {
+		ChVolumeStruct.fCurrent = 1.0f;
+		ChVolumeStruct.fTarget = SynthVolume;
+		ChVolumeStruct.fTime = 0.0f;
+		ChVolumeStruct.lCurve = 0;
+		BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
+		CheckUp(FALSE, ERRORCODE, "Stream Volume FX Set", FALSE);
+		PrintMessageToDebugLog("InitializeOrUpdateEffects", "Applied volume settings.");
+	}
+
+	if (ManagedSettings.ReverbOverride) {
+		if (!ChReverb)
+		{
+			ChReverb = BASS_ChannelSetFX(OMStream, BASS_FX_DX8_REVERB, 2);
+			CheckUp(FALSE, ERRORCODE, "Stream Reverb FX Apply", FALSE);
+			PrintMessageToDebugLog("InitializeOrUpdateEffects", "Applied reverb HFX to OMStream.");
+		}
+
+		if (ChReverb) {
+			ChReverbStruct.fInGain = RoundFloat(((float)ManagedSettings.ReverbInGain / 1000.0f) - 96.0f);
+			ChReverbStruct.fReverbMix = RoundFloat(((float)ManagedSettings.ReverbMix / 1000.0f) - 96.0f);
+			ChReverbStruct.fReverbTime = RoundFloat((float)ManagedSettings.ReverbTime / 1000.0f);
+			ChReverbStruct.fHighFreqRTRatio = RoundFloat((float)ManagedSettings.ReverbHighFreqRTRatio / 1000.0f);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Rev fInGain", &ChReverbStruct.fInGain, PRINT_FLOAT);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Rev fReverbMix", &ChReverbStruct.fReverbMix, PRINT_FLOAT);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Rev fReverbTime", &ChReverbStruct.fReverbTime, PRINT_FLOAT);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Rev fHighFreqRTRatio", &ChReverbStruct.fHighFreqRTRatio, PRINT_FLOAT);
+
+			BASS_FXSetParameters(ChReverb, &ChReverbStruct);
+			CheckUp(FALSE, ERRORCODE, "Stream Reverb FX Apply", FALSE);
+			PrintMessageToDebugLog("InitializeOrUpdateEffects", "Applied reverb settings.");
+		}
+	}
+	else {
+		if (ChReverb)
+		{
+			BASS_ChannelRemoveFX(OMStream, ChReverb);
+			CheckUp(FALSE, ERRORCODE, "Stream Reverb FX Remove", FALSE);
+			ChReverb = NULL;
+			PrintMessageToDebugLog("InitializeOrUpdateEffects", "Removed reverb HFX from OMStream.");
+		}
+	}
+
+	if (ManagedSettings.ChorusOverride) {
+		if (!ChChorus)
+		{
+			ChChorus = BASS_ChannelSetFX(OMStream, BASS_FX_DX8_CHORUS, 3);
+			CheckUp(FALSE, ERRORCODE, "Stream Chorus FX Apply", FALSE);
+			PrintMessageToDebugLog("InitializeOrUpdateEffects", "Applied chorus HFX to OMStream.");
+		}
+
+		if (ChChorus) {
+			ChChorusStruct.fWetDryMix = RoundFloat((float)ManagedSettings.ChorusWetDryMix);
+			ChChorusStruct.fDepth = RoundFloat((float)ManagedSettings.ChorusDepth);
+			ChChorusStruct.fFeedback = RoundFloat((float)(ManagedSettings.ChorusFeedback) - 100.0f);
+			ChChorusStruct.fFrequency = RoundFloat((float)(ManagedSettings.ChorusFrequency) / 1000.0f);
+			ChChorusStruct.lWaveform = ManagedSettings.ChorusSineMode;
+			ChChorusStruct.lPhase = ManagedSettings.ChorusPhase;
+			ChChorusStruct.fDelay = RoundFloat(ManagedSettings.ChorusDelay);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Cho fWetDryMix", &ChChorusStruct.fWetDryMix, PRINT_FLOAT);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Cho fDepth", &ChChorusStruct.fDepth, PRINT_FLOAT);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Cho fFeedback", &ChChorusStruct.fFeedback, PRINT_FLOAT);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Cho fFrequency", &ChChorusStruct.fFrequency, PRINT_FLOAT);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Cho lSineMode", &ChChorusStruct.lWaveform, PRINT_BOOL);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Cho lPhase", &ChChorusStruct.lPhase, PRINT_UINT32);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Cho fDelay", &ChChorusStruct.fDelay, PRINT_FLOAT);
+
+			BASS_FXSetParameters(ChChorus, &ChChorusStruct);
+			CheckUp(FALSE, ERRORCODE, "Stream Chorus FX Apply", FALSE);
+			PrintMessageToDebugLog("InitializeOrUpdateEffects", "Applied chorus settings.");
+		}
+	}
+	else {
+		if (ChChorus)
+		{
+			BASS_ChannelRemoveFX(OMStream, ChChorus);
+			CheckUp(FALSE, ERRORCODE, "Stream Chorus FX Remove", FALSE);
+			ChChorus = NULL;
+			PrintMessageToDebugLog("InitializeOrUpdateEffects", "Removed chorus HFX from OMStream.");
+		}
+	}
+
+	if (ManagedSettings.EchoOverride) {
+		if (!ChEcho)
+		{
+			ChEcho = BASS_ChannelSetFX(OMStream, BASS_FX_DX8_ECHO, 4);
+			CheckUp(FALSE, ERRORCODE, "Stream Echo FX Apply", FALSE);
+			PrintMessageToDebugLog("InitializeOrUpdateEffects", "Applied echo HFX to OMStream.");
+		}
+
+		if (ChEcho) {
+			ChEchoStruct.fWetDryMix = RoundFloat((float)ManagedSettings.EchoWetDryMix);
+			ChEchoStruct.fFeedback = RoundFloat((float)ManagedSettings.EchoFeedback);
+			ChEchoStruct.fLeftDelay = RoundFloat((float)ManagedSettings.EchoLeftDelay);
+			ChEchoStruct.fRightDelay = RoundFloat((float)ManagedSettings.EchoRightDelay);
+			ChEchoStruct.lPanDelay = ManagedSettings.EchoPanDelay;
+			PrintVarToDebugLog("LoadSettingsFuncs", "Ech fWetDryMix", &ChEchoStruct.fWetDryMix, PRINT_FLOAT);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Ech fFeedback", &ChEchoStruct.fFeedback, PRINT_FLOAT);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Ech fLeftDelay", &ChEchoStruct.fLeftDelay, PRINT_FLOAT);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Ech fRightDelay", &ChEchoStruct.fRightDelay, PRINT_FLOAT);
+			PrintVarToDebugLog("LoadSettingsFuncs", "Ech lPanDelay", &ChEchoStruct.lPanDelay, PRINT_BOOL);
+
+			BASS_FXSetParameters(ChEcho, &ChEchoStruct);
+			CheckUp(FALSE, ERRORCODE, "Stream Echo FX Apply", FALSE);
+			PrintMessageToDebugLog("InitializeOrUpdateEffects", "Applied echo settings.");
+		}
+	}
+	else {
+		if (ChEcho)
+		{
+			BASS_ChannelRemoveFX(OMStream, ChEcho);
+			CheckUp(FALSE, ERRORCODE, "Stream Echo FX Remove", FALSE);
+			ChEcho = NULL;
+			PrintMessageToDebugLog("InitializeOrUpdateEffects", "Removed echo HFX from OMStream.");
+		}
+	}
+}
+
 void ResetSynth(BOOL SwitchingBufferMode, BOOL ModeReset) {
-	if (SwitchingBufferMode) {	
+	if (SwitchingBufferMode) {
 		EVBuffer.ReadHead = 0;
 		EVBuffer.WriteHead = 0;
 		memset(EVBuffer.Buffer, 0, sizeof(EVBuffer.Buffer));
@@ -13,15 +157,15 @@ void ResetSynth(BOOL SwitchingBufferMode, BOOL ModeReset) {
 
 	if (ModeReset) {
 		// Wait for the heads to align, to avoid crashes
-		if (!BufferCheck()) return;
-
+		UnsetBufferPointers();
 		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_XG);
 		PrintMessageToDebugLog("ResetSynth", "Sent SysEx to BASSMIDI.");
+		SetBufferPointers();
 	}
 	else {
 		for (int ch = 0; ch < 16; ch++) {
-			BASS_MIDI_StreamEvent(OMStream, ch, MIDI_EVENT_NOTESOFF, NULL);
-			BASS_MIDI_StreamEvent(OMStream, ch, MIDI_EVENT_SOUNDOFF, NULL);
+			_BMSE(OMStream, ch, MIDI_EVENT_NOTESOFF, NULL);
+			_BMSE(OMStream, ch, MIDI_EVENT_SOUNDOFF, NULL);
 		}
 		PrintMessageToDebugLog("ResetSynth", "Sent NoteOFFs to all MIDI channels.");
 	}
@@ -108,6 +252,8 @@ BOOL LoadSoundfont(int whichsf) {
 	memset(ListToLoad, 0, sizeof(ListToLoad));
 
 	if (GetFolderPath(V ? FOLDERID_RoamingAppData : FOLDERID_Profile, V ? CSIDL_APPDATA : CSIDL_PROFILE, ListToLoad, sizeof(ListToLoad))) {
+		UnsetBufferPointers();
+
 		PrintMessageToDebugLog("LoadSoundFontFunc", "Loading soundfont list...");
 
 		if (V) swprintf_s(ListToLoad + wcslen(ListToLoad), NTFS_MAX_PATH, CSFFileTemplate);
@@ -126,6 +272,8 @@ BOOL LoadSoundfont(int whichsf) {
 			ManagedDebugInfo.CurrentSFList = CurrentList;
 			PrintMessageToDebugLog("LoadSoundFontFunc", "Done!");
 		}
+
+		SetBufferPointers();
 	}
 
 	return RET;
@@ -342,8 +490,10 @@ BOOL LoadBASSFunctions() {
 			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamGetEvent);
 			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamLoadSamples);
 			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamSetFonts);
+			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamGetChannel);
 
 			_BMSE = BASS_MIDI_StreamEvent;
+			_BMSEs = BASS_MIDI_StreamEvents;
 
 			// Load plugins
 			LoadPluginModule(&bassflac, L"bassflac.dll");
@@ -373,6 +523,7 @@ VOID UnloadBASSFunctions() {
 			_PlayBufData = DummyPlayBufData;
 			_PlayBufDataChk = DummyPlayBufData;
 			_BMSE = DummyBMSE;
+			_BMSEs = DummyBMSEs;
 
 			PrintMessageToDebugLog("UnloadBASS", "Freeing BASS libraries...");
 
@@ -518,15 +669,9 @@ void AllocateMemory(BOOL restart) {
 		if (restart) {
 			if (EvBufferSize != EVBuffer.BufSize) {
 				// Set them to dummy temporarily to avoid problems
-				_PrsData = DummyParseData;
-				_PforBASSMIDI = DummyPrepareForBASSMIDI;
-				_PlayBufData = DummyPlayBufData;
-				_PlayBufDataChk = DummyPlayBufData;
-				_BMSE = DummyBMSE;
-
+				UnsetBufferPointers();
 				FreeUpMemory();
 			}
-
 			else return;
 		}
 
@@ -566,14 +711,8 @@ void AllocateMemory(BOOL restart) {
 		EVBuffer.ReadHead = 0;
 		PrintMessageToDebugLog("AllocateMemoryFunc", "Set heads to 0.");
 
-		if (restart) {
-			_PrsData = HyperMode ? ParseDataHyper : ParseData;
-			_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
-			_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
-			_PlayBufDataChk = ManagedSettings.NotesCatcherWithAudio ? (HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk) : DummyPlayBufData;
-
-			_BMSE = BASS_MIDI_StreamEvent;
-		}
+		if (restart)
+			SetBufferPointers();
 	}
 	catch (...) {
 		_THROWCRASH;
@@ -584,6 +723,8 @@ void LoadSettings(BOOL Restart, BOOL RT)
 {	
 	// Initialize the temp values
 	DWORD
+		TempNLV = ManagedSettings.NoteLengthValue,
+		TempDNOV = ManagedSettings.DelayNoteOffValue,
 		TempSC = ManagedSettings.SincConv,
 		TempOV = ManagedSettings.OutputVolume,
 		TempHP = HyperMode,
@@ -597,6 +738,35 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		TempSI = ManagedSettings.SincInter,
 		TempDNFO = ManagedSettings.DisableNotesFadeOut,
 		TempDMN = ManagedSettings.DontMissNotes;
+
+	// OM 15.x+ backport
+	DWORD
+		TempRO = ManagedSettings.ReverbOverride,
+		TempRIG = ManagedSettings.ReverbInGain,
+		TempRM = ManagedSettings.ReverbMix,
+		TempRT = ManagedSettings.ReverbTime,
+		TempHFRTR = ManagedSettings.ReverbHighFreqRTRatio;
+
+	DWORD
+		TempCO = ManagedSettings.ChorusOverride,
+		TempCWDM = ManagedSettings.ChorusWetDryMix,
+		TempCDp = ManagedSettings.ChorusDepth,
+		TempCFb = ManagedSettings.ChorusFeedback,
+		TempCFr = ManagedSettings.ChorusFrequency,
+		TempCDl = ManagedSettings.ChorusDelay,
+		TempCPh = ManagedSettings.ChorusPhase;
+
+	DWORD
+		TempEO = ManagedSettings.EchoOverride,
+		TempEWDM = ManagedSettings.EchoWetDryMix,
+		TempEFb = ManagedSettings.EchoFeedback,
+		TempELD = ManagedSettings.EchoLeftDelay,
+		TempERD = ManagedSettings.EchoRightDelay;
+
+	BOOL
+		TempCSM = ManagedSettings.ChorusSineMode,
+		TempEPD = ManagedSettings.EchoPanDelay;
+
 
 	DWORD64
 		TEvBufferSize = EvBufferSize,
@@ -644,7 +814,10 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"XASamplesPerFrame", NULL, &dwType, (LPBYTE)&ManagedSettings.XASamplesPerFrame, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"XASPFSweepRate", NULL, &dwType, (LPBYTE)&ManagedSettings.XASPFSweepRate, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"LogarithmVol", NULL, &dwType, (LPBYTE)&LogarithmVol, &dwSize);
-			
+			RegQueryValueEx(Configuration.Address, L"LinAttMod", NULL, &dwType, (LPBYTE)&ManagedSettings.LinAttMod, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"LinDecVol", NULL, &dwType, (LPBYTE)&ManagedSettings.LinDecVol, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"NoSFGenLimits", NULL, &dwType, (LPBYTE)&ManagedSettings.NoSFGenLimits, &dwSize);
+
 			if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(Configuration.Address, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&TempNCWA, &dwSize);
 			else ManagedSettings.NotesCatcherWithAudio = TRUE;
 		
@@ -681,15 +854,42 @@ void LoadSettings(BOOL Restart, BOOL RT)
 		RegQueryValueEx(Configuration.Address, L"CPitchValue", NULL, &dwType, (LPBYTE)&ManagedSettings.ConcertPitch, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"VolumeMonitor", NULL, &dwType, (LPBYTE)&ManagedSettings.VolumeMonitor, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"AudioRampIn", NULL, &dwType, (LPBYTE)&ManagedSettings.AudioRampIn, &dwSize);
-		RegQueryValueEx(Configuration.Address, L"LinAttMod", NULL, &dwType, (LPBYTE)&ManagedSettings.LinAttMod, &dwSize);
-		RegQueryValueEx(Configuration.Address, L"LinDecVol", NULL, &dwType, (LPBYTE)&ManagedSettings.LinDecVol, &dwSize);
-		RegQueryValueEx(Configuration.Address, L"NoSFGenLimits", NULL, &dwType, (LPBYTE)&ManagedSettings.NoSFGenLimits, &dwSize);
+
+		// OM15.x+ backport
+		RegQueryValueEx(Configuration.Address, L"ReverbOverride", NULL, &dwType, (LPBYTE)&TempRO, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ReverbInGain", NULL, &dwType, (LPBYTE)&TempRIG, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ReverbMix", NULL, &dwType, (LPBYTE)&TempRM, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ReverbTime", NULL, &dwType, (LPBYTE)&TempRT, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ReverbHighFreqRTRatio", NULL, &dwType, (LPBYTE)&TempHFRTR, &dwSize);
+
+		RegQueryValueEx(Configuration.Address, L"ChorusOverride", NULL, &dwType, (LPBYTE)&TempCO, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ChorusWetDryMix", NULL, &dwType, (LPBYTE)&TempCWDM, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ChorusDepth", NULL, &dwType, (LPBYTE)&TempCDp, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ChorusFeedback", NULL, &dwType, (LPBYTE)&TempCFb, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ChorusFrequency", NULL, &dwType, (LPBYTE)&TempCFr, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ChorusSineMode", NULL, &dwType, (LPBYTE)&TempCSM, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ChorusDelay", NULL, &dwType, (LPBYTE)&TempCDl, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"ChorusPhase", NULL, &dwType, (LPBYTE)&TempCPh, &dwSize);
+
+		RegQueryValueEx(Configuration.Address, L"EchoOverride", NULL, &dwType, (LPBYTE)&TempEO, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"EchoWetDryMix", NULL, &dwType, (LPBYTE)&TempEWDM, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"EchoFeedback", NULL, &dwType, (LPBYTE)&TempEFb, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"EchoLeftDelay", NULL, &dwType, (LPBYTE)&TempELD, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"EchoRightDelay", NULL, &dwType, (LPBYTE)&TempERD/*EM*/, &dwSize);
+		RegQueryValueEx(Configuration.Address, L"EchoPanDelay", NULL, &dwType, (LPBYTE)&TempEPD, &dwSize);
+
 		
 		// Stuff that works so don't bother
 		if (!Between(ManagedSettings.MinVelIgnore, 1, 127)) { ManagedSettings.MinVelIgnore = 1; }
 		if (!Between(ManagedSettings.MaxVelIgnore, 1, 127)) { ManagedSettings.MaxVelIgnore = 1; }
 
 		TSpeedHack = (double)RSH / 100000000.0;
+
+		if (TempNLV != ManagedSettings.NoteLengthValue)
+			FNoteLengthValue = BASS_ChannelSeconds2Bytes(OMStream, ((double)ManagedSettings.NoteLengthValue / 1000.0) + (ManagedSettings.DelayNoteOff ? ((double)ManagedSettings.DelayNoteOffValue / 1000.0) : 0));
+
+		if (TempDNFO != ManagedSettings.DelayNoteOffValue)
+			FDelayNoteOff = BASS_ChannelSeconds2Bytes(OMStream, ((double)ManagedSettings.DelayNoteOffValue / 1000.0));
 
 		if (TSpeedHack != SpeedHack) {
 			if (NT_SUCCESS(NtQuerySystemTime(&TickStart))) {
@@ -700,17 +900,79 @@ void LoadSettings(BOOL Restart, BOOL RT)
 
 		// Volume
 		if (TempOV != ManagedSettings.OutputVolume || SettingsManagedByClient) {
-			if (!SettingsManagedByClient) ManagedSettings.OutputVolume = TempOV;
-			SynthVolume = (float)ManagedSettings.OutputVolume / 10000.0f;
-
-			if (RT) {
-				ChVolumeStruct.fCurrent = 1.0f;
-				ChVolumeStruct.fTarget = SynthVolume;
-				ChVolumeStruct.fTime = 0.0f;
-				ChVolumeStruct.lCurve = 0;
-				BASS_FXSetParameters(ChVolume, &ChVolumeStruct);
-				CheckUp(FALSE, ERRORCODE, "Stream Volume FX Set", FALSE);
+			if (!SettingsManagedByClient) {
+				ManagedSettings.OutputVolume = TempOV;
+				SynthVolume = ManagedSettings.OutputVolume != 0 ? ((float)ManagedSettings.OutputVolume / 10000.0f) : 0.0f;
 			}
+
+			if (RT || Restart)
+				InitializeOrUpdateEffects();
+		}
+
+		// Effects backported from OM15.x+
+		if (TempRO != ManagedSettings.ReverbOverride || 
+			TempRIG != ManagedSettings.ReverbInGain ||
+			TempRM != ManagedSettings.ReverbMix ||
+			TempRT != ManagedSettings.ReverbTime ||
+			TempHFRTR != ManagedSettings.ReverbHighFreqRTRatio ||
+			SettingsManagedByClient)
+		{
+			if (!SettingsManagedByClient) {
+				ManagedSettings.ReverbOverride = TempRO;
+				ManagedSettings.ReverbInGain = TempRIG;
+				ManagedSettings.ReverbMix = TempRM;
+				ManagedSettings.ReverbTime = TempRT;
+				ManagedSettings.ReverbHighFreqRTRatio = TempHFRTR;
+			}
+
+			if (RT || Restart)
+				InitializeOrUpdateEffects();
+		}
+
+		if (TempCO != ManagedSettings.ChorusOverride ||
+			TempCWDM != ManagedSettings.ChorusWetDryMix ||
+			TempCDp != ManagedSettings.ChorusDepth ||
+			TempCFb != ManagedSettings.ChorusFeedback ||
+			TempCFr != ManagedSettings.ChorusFrequency ||
+			TempCDl != ManagedSettings.ChorusDelay ||
+			TempCPh != ManagedSettings.ChorusPhase ||
+			TempCSM != ManagedSettings.ChorusSineMode ||
+			SettingsManagedByClient)
+		{
+			if (!SettingsManagedByClient) {
+				ManagedSettings.ChorusOverride = TempCO;
+				ManagedSettings.ChorusWetDryMix = TempCWDM;
+				ManagedSettings.ChorusDepth = TempCDp;
+				ManagedSettings.ChorusFeedback = TempCFb;
+				ManagedSettings.ChorusFrequency = TempCFr;
+				ManagedSettings.ChorusDelay = TempCDl;
+				ManagedSettings.ChorusPhase = TempCPh;
+				ManagedSettings.ChorusSineMode = TempCSM;
+			}
+
+			if (RT || Restart)
+				InitializeOrUpdateEffects();
+		}
+
+		if (TempEO != ManagedSettings.EchoOverride ||
+			TempEWDM != ManagedSettings.EchoWetDryMix ||
+			TempEFb != ManagedSettings.EchoFeedback ||
+			TempELD != ManagedSettings.EchoLeftDelay ||
+			TempERD != ManagedSettings.EchoRightDelay ||
+			TempEPD != ManagedSettings.EchoPanDelay ||
+			SettingsManagedByClient)
+		{
+			if (!SettingsManagedByClient) {
+				ManagedSettings.EchoOverride = TempEO;
+				ManagedSettings.EchoWetDryMix = TempEWDM;
+				ManagedSettings.EchoFeedback = TempEFb;
+				ManagedSettings.EchoLeftDelay = TempELD;
+				ManagedSettings.EchoRightDelay = TempERD;
+				ManagedSettings.EchoPanDelay = TempEPD;
+			}
+
+			if (RT || Restart)
+				InitializeOrUpdateEffects();
 		}
 
 		// Check if the value is different from the temporary one
@@ -729,10 +991,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			if (RT) stop_thread = TRUE;
 
 			// Check if "Hyper-playback" mode has been enabled
-			_PrsData = HyperMode ? ParseDataHyper : ParseData;
-			_PforBASSMIDI = HyperMode ? PrepareForBASSMIDIHyper : PrepareForBASSMIDI;
-			_PlayBufData = HyperMode ? PlayBufferedDataHyper : PlayBufferedData;
-			_PlayBufDataChk = ManagedSettings.NotesCatcherWithAudio ? (HyperMode ? PlayBufferedDataChunkHyper : PlayBufferedDataChunk) : DummyPlayBufData;
+			SetBufferPointers();
 
 			// Restart threads
 			if (RT) stop_thread = FALSE;
@@ -818,7 +1077,6 @@ void LoadCustomInstruments() {
 
 int AudioRenderingType(BOOLEAN IsItStreamCreation, INT RegistryVal) {
 	switch (ManagedSettings.CurrentEngine) {
-	case XAUDIO_ENGINE:
 	case ASIO_ENGINE:
 	case WASAPI_ENGINE:
 		return IsItStreamCreation ? BASS_SAMPLE_FLOAT : BASS_DATA_FLOAT;
@@ -826,9 +1084,9 @@ int AudioRenderingType(BOOLEAN IsItStreamCreation, INT RegistryVal) {
 		if (RegistryVal == 0)
 			return IsItStreamCreation ? BASS_SAMPLE_FLOAT : BASS_DATA_FLOAT;
 		else if (RegistryVal == 1)
-			return 0;
+			return IsItStreamCreation ? 0 : BASS_DATA_FIXED;
 		else
-			return IsItStreamCreation ? BASS_SAMPLE_8BITS : 0;
+			return IsItStreamCreation ? BASS_SAMPLE_8BITS : BASS_DATA_FIXED;
 	}
 }
 
@@ -1023,38 +1281,7 @@ void MixerCheck() {
 			RegQueryValueEx(Channels.Address, TempCh, NULL, &dwType, (LPBYTE)&cvalues[i], &dwSize);
 			RegQueryValueEx(Channels.Address, TempPs, NULL, &dwType, (LPBYTE)&pitchshiftchan[i], &dwSize);
 
-			BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_MIXLEVEL, cvalues[i]);
-		}
-	}
-	catch (...) {
-		_THROWCRASH;
-	}
-}
-
-void RevbNChor() {
-	if (!ManagedSettings.EnableSFX)
-		return;
-	
-	try {
-		BOOL Reverb = FALSE;
-		BOOL Chorus = FALSE;
-		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
-
-		RegQueryValueEx(Configuration.Address, L"ReverbOverride", NULL, &dwType, (LPBYTE)&Reverb, &dwSize);
-		RegQueryValueEx(Configuration.Address, L"ChorusOverride", NULL, &dwType, (LPBYTE)&Chorus, &dwSize);
-
-		if (Reverb) {
-			RegQueryValueEx(Configuration.Address, L"Reverb", NULL, &dwType, (LPBYTE)&reverb, &dwSize);
-
-			for (int i = 0; i <= 15; ++i)
-				BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_REVERB, reverb);
-		}
-
-		if (Chorus) {
-			RegQueryValueEx(Configuration.Address, L"Chorus", NULL, &dwType, (LPBYTE)&chorus, &dwSize);
-
-			for (int i = 0; i <= 15; ++i)
-				BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_CHORUS, chorus);
+			_BMSE(OMStream, i, MIDI_EVENT_MIXLEVEL, cvalues[i]);
 		}
 	}
 	catch (...) {

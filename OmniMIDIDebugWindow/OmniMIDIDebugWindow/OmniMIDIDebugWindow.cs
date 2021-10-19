@@ -116,7 +116,7 @@ namespace OmniMIDIDebugWindow
         {
             try
             {
-                Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI\\OmniMIDI.dll"); // Gets OmniMIDI version
+                Driver = FileVersionInfo.GetVersionInfo(Environment.SystemDirectory + "\\OmniMIDI.dll"); // Gets OmniMIDI version
                 Text += String.Format(" (v{0})", Driver.FileVersion);
                 VersionLabel.Text = String.Format("{0}", ParseEgg());
                 GetWindowsInfoData();                   // Get info about your Windows installation

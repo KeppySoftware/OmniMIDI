@@ -133,7 +133,7 @@ public:
 #ifndef _M_ARM64
 		// If on x86/x64, load the library and its function using LoadLibrary/GetProcAddress
 		
-		PWSTR SysDir = NULL;
+		wchar_t SysDir[MAX_PATH] = { 0 };
 		wchar_t DLLPath[MAX_PATH] = { 0 };
 		WIN32_FIND_DATA FD = { 0 };
 
@@ -144,28 +144,24 @@ public:
 				// Try to get XAudio2_9_win7 from OmniMIDI's folder
 				if (GetFolderPath(FOLDERID_System, CSIDL_SYSTEM, SysDir, sizeof(SysDir))) {
 					swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s\0", SysDir, L"XAudio2_9_win7.dll");
-					CoTaskMemFree(SysDir);
 
 					// Found it?
 					if (FindFirstFile(DLLPath, &FD) != INVALID_HANDLE_VALUE)
 					{
 						// Yes, load it
-						if (!(XALib = LoadLibrary(DLLPath)))
-							return;
+						XALib = LoadLibrary(DLLPath);
+
+						// If it failed, return.
+						if (!XALib) return;
 					}
 				}
-				else {
-					// Something went wrong, SHGetKnownFolderPath failed
-					CoTaskMemFree(SysDir);
-					return;
-				}
+				// Something went wrong, GetFolderPath failed
+				else return;
 			}
-		}
 
-		if (!XA2Create) {
 			XA2Create = (XA2C)GetProcAddress(XALib, "XAudio2Create");
 
-			if (NULL == XA2Create)
+			if (!XA2Create)
 				return;
 		}
 #endif
@@ -191,6 +187,7 @@ public:
 		{
 			FreeLibrary(XALib);
 			XALib = nullptr;
+			XA2Create = NULL;
 		}
 #endif
 	}
@@ -200,7 +197,9 @@ public:
 		device_changed = true;
 	}
 
-	virtual const char* OpenStream(void* hwnd, unsigned sample_rate, unsigned short nch, bool floating_point, unsigned max_samples_per_frame, unsigned num_frames)
+	virtual bool IsLoaded() { return this->loaded; }
+
+	virtual const char* OpenStream(void* hwnd, unsigned sample_rate, unsigned short nch, unsigned max_samples_per_frame, unsigned num_frames)
 	{
 		if (!this->loaded)
 			return "XAudio2 failed to load";
@@ -210,7 +209,7 @@ public:
 		this->nch = nch;
 		this->max_samples_per_frame = max_samples_per_frame;
 		this->num_frames = num_frames;
-		bytes_per_sample = floating_point ? 4 : 2;
+		bytes_per_sample = 4;
 
 #ifdef HAVE_KS_HEADERS
 		WAVEFORMATEXTENSIBLE wfx;
@@ -226,12 +225,12 @@ public:
 		wfx.dwChannelMask = nch == 2 ? KSAUDIO_SPEAKER_STEREO : KSAUDIO_SPEAKER_MONO;
 #else
 		WAVEFORMATEX wfx;
-		wfx.wFormatTag = floating_point ? WAVE_FORMAT_IEEE_FLOAT : WAVE_FORMAT_PCM;
+		wfx.wFormatTag = WAVE_FORMAT_IEEE_FLOAT;
 		wfx.nChannels = nch; //1;
 		wfx.nSamplesPerSec = sample_rate;
 		wfx.nBlockAlign = bytes_per_sample * nch; //2;
 		wfx.nAvgBytesPerSec = wfx.nSamplesPerSec * wfx.nBlockAlign;
-		wfx.wBitsPerSample = floating_point ? 32 : 16;
+		wfx.wBitsPerSample = 32;
 		wfx.cbSize = 0;
 #endif
 #ifndef _M_ARM64
@@ -305,7 +304,7 @@ public:
 		{
 			if (!--reopen_count)
 			{
-				const char* err = OpenStream(hwnd, sample_rate, nch, bytes_per_sample == 4, max_samples_per_frame, num_frames);
+				const char* err = OpenStream(hwnd, sample_rate, nch, max_samples_per_frame, num_frames);
 				if (err)
 				{
 					reopen_count = 60 * 5;
@@ -316,8 +315,7 @@ public:
 		}
 
 		for (;;) {
-			sVoice->GetState(&vState);
-			assert(vState.BuffersQueued <= num_frames);
+			sVoice->GetState(&vState, XAUDIO2_VOICE_NOSAMPLESPLAYED);
 			if (vState.BuffersQueued < num_frames) {
 				if (vState.BuffersQueued == 0) {
 					// buffers ran dry
@@ -325,19 +323,8 @@ public:
 				// there is at least one free buffer
 				break;
 			}
-			else {
-				// wait for one buffer to finish playing
-				const DWORD timeout_ms = (max_samples_per_frame / nch) * num_frames * 1000 / sample_rate;
-				if (WaitForSingleObject(notify.hBufferEndEvent, timeout_ms) == WAIT_TIMEOUT)
-				{
-					// buffer has stalled, likely by the whole XAudio2 system failing, so we should tear it down and attempt to reopen it
-					close();
-					reopen_count = 5;
-
-					return 0;
-				}
-			}
 		}
+
 		samples_in_buffer[buffer_write_cursor] = num_samples / nch;
 		XAUDIO2_BUFFER buf = { 0 };
 		unsigned num_bytes = num_samples * bytes_per_sample;

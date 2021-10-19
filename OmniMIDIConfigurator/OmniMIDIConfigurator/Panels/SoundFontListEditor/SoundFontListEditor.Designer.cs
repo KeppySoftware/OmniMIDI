@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "Mama mia",
             "127",
             "127",
@@ -63,6 +63,7 @@
             this.LisCM = new System.Windows.Forms.ContextMenu();
             this.OSF = new System.Windows.Forms.MenuItem();
             this.OSFd = new System.Windows.Forms.MenuItem();
+            this.EBPV = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.CSFs = new System.Windows.Forms.MenuItem();
             this.PSFs = new System.Windows.Forms.MenuItem();
@@ -84,7 +85,6 @@
             this.PreloadSF = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SFSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.EBPV = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // SFlg
@@ -96,9 +96,9 @@
             this.SFlg.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.SFlg.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.SFlg.ForeColor = System.Drawing.Color.Transparent;
-            this.SFlg.Location = new System.Drawing.Point(620, 5);
+            this.SFlg.Location = new System.Drawing.Point(723, 6);
             this.SFlg.Name = "SFlg";
-            this.SFlg.Size = new System.Drawing.Size(24, 24);
+            this.SFlg.Size = new System.Drawing.Size(28, 28);
             this.SFlg.TabIndex = 4;
             this.SFlg.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.SFlg.UseVisualStyleBackColor = false;
@@ -110,7 +110,7 @@
             this.Separator.AutoSize = true;
             this.Separator.Enabled = false;
             this.Separator.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Separator.Location = new System.Drawing.Point(170, 4);
+            this.Separator.Location = new System.Drawing.Point(198, 5);
             this.Separator.Name = "Separator";
             this.Separator.Size = new System.Drawing.Size(14, 20);
             this.Separator.TabIndex = 31;
@@ -125,9 +125,9 @@
             this.EL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.EL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.EL.ForeColor = System.Drawing.Color.Transparent;
-            this.EL.Location = new System.Drawing.Point(649, 349);
+            this.EL.Location = new System.Drawing.Point(757, 403);
             this.EL.Name = "EL";
-            this.EL.Size = new System.Drawing.Size(24, 30);
+            this.EL.Size = new System.Drawing.Size(28, 35);
             this.EL.TabIndex = 14;
             this.EL.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.EL.UseVisualStyleBackColor = false;
@@ -143,9 +143,9 @@
             this.LoadToApp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.LoadToApp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.LoadToApp.ForeColor = System.Drawing.Color.Transparent;
-            this.LoadToApp.Location = new System.Drawing.Point(649, 94);
+            this.LoadToApp.Location = new System.Drawing.Point(757, 108);
             this.LoadToApp.Name = "LoadToApp";
-            this.LoadToApp.Size = new System.Drawing.Size(24, 24);
+            this.LoadToApp.Size = new System.Drawing.Size(28, 28);
             this.LoadToApp.TabIndex = 10;
             this.LoadToApp.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.LoadToApp.UseVisualStyleBackColor = false;
@@ -161,9 +161,9 @@
             this.IEL.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.IEL.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.IEL.ForeColor = System.Drawing.Color.Transparent;
-            this.IEL.Location = new System.Drawing.Point(649, 320);
+            this.IEL.Location = new System.Drawing.Point(757, 369);
             this.IEL.Name = "IEL";
-            this.IEL.Size = new System.Drawing.Size(24, 30);
+            this.IEL.Size = new System.Drawing.Size(28, 35);
             this.IEL.TabIndex = 13;
             this.IEL.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.IEL.UseVisualStyleBackColor = false;
@@ -173,9 +173,9 @@
             // BankPresetOverride
             // 
             this.BankPresetOverride.AutoSize = true;
-            this.BankPresetOverride.Location = new System.Drawing.Point(184, 9);
+            this.BankPresetOverride.Location = new System.Drawing.Point(215, 10);
             this.BankPresetOverride.Name = "BankPresetOverride";
-            this.BankPresetOverride.Size = new System.Drawing.Size(355, 17);
+            this.BankPresetOverride.Size = new System.Drawing.Size(401, 19);
             this.BankPresetOverride.TabIndex = 2;
             this.BankPresetOverride.Text = "Import specific bank/preset from SoundFont file and assign it manually";
             this.BankPresetOverride.UseVisualStyleBackColor = true;
@@ -197,18 +197,18 @@
             "List 6",
             "List 7",
             "List 8"});
-            this.SelectedListBox.Location = new System.Drawing.Point(95, 6);
+            this.SelectedListBox.Location = new System.Drawing.Point(111, 7);
             this.SelectedListBox.Name = "SelectedListBox";
-            this.SelectedListBox.Size = new System.Drawing.Size(74, 21);
+            this.SelectedListBox.Size = new System.Drawing.Size(86, 23);
             this.SelectedListBox.TabIndex = 1;
             this.SelectedListBox.SelectedIndexChanged += new System.EventHandler(this.SelectedListBox_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 10);
+            this.label1.Location = new System.Drawing.Point(5, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 13);
+            this.label1.Size = new System.Drawing.Size(96, 15);
             this.label1.TabIndex = 17;
             this.label1.Text = "Select list to edit:";
             // 
@@ -218,9 +218,9 @@
             this.ListOverride.AutoSize = true;
             this.ListOverride.BackColor = System.Drawing.Color.Transparent;
             this.ListOverride.Enabled = false;
-            this.ListOverride.Location = new System.Drawing.Point(1, 439);
+            this.ListOverride.Location = new System.Drawing.Point(1, 507);
             this.ListOverride.Name = "ListOverride";
-            this.ListOverride.Size = new System.Drawing.Size(414, 13);
+            this.ListOverride.Size = new System.Drawing.Size(471, 15);
             this.ListOverride.TabIndex = 30;
             this.ListOverride.Text = "The last SoundFont will override the ones above it (loading order is from top to " +
     "bottom).";
@@ -234,9 +234,9 @@
             this.CLi.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CLi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.CLi.ForeColor = System.Drawing.Color.Transparent;
-            this.CLi.Location = new System.Drawing.Point(649, 5);
+            this.CLi.Location = new System.Drawing.Point(757, 6);
             this.CLi.Name = "CLi";
-            this.CLi.Size = new System.Drawing.Size(24, 24);
+            this.CLi.Size = new System.Drawing.Size(28, 28);
             this.CLi.TabIndex = 5;
             this.CLi.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.CLi.UseVisualStyleBackColor = false;
@@ -252,9 +252,9 @@
             this.MvD.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MvD.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MvD.ForeColor = System.Drawing.Color.Transparent;
-            this.MvD.Location = new System.Drawing.Point(649, 178);
+            this.MvD.Location = new System.Drawing.Point(757, 205);
             this.MvD.Name = "MvD";
-            this.MvD.Size = new System.Drawing.Size(24, 24);
+            this.MvD.Size = new System.Drawing.Size(28, 28);
             this.MvD.TabIndex = 9;
             this.MvD.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.MvD.UseVisualStyleBackColor = false;
@@ -270,9 +270,9 @@
             this.MvU.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.MvU.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MvU.ForeColor = System.Drawing.Color.Transparent;
-            this.MvU.Location = new System.Drawing.Point(649, 155);
+            this.MvU.Location = new System.Drawing.Point(757, 179);
             this.MvU.Name = "MvU";
-            this.MvU.Size = new System.Drawing.Size(24, 24);
+            this.MvU.Size = new System.Drawing.Size(28, 28);
             this.MvU.TabIndex = 8;
             this.MvU.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.MvU.UseVisualStyleBackColor = false;
@@ -288,9 +288,9 @@
             this.RmvSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.RmvSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.RmvSF.ForeColor = System.Drawing.Color.Transparent;
-            this.RmvSF.Location = new System.Drawing.Point(649, 57);
+            this.RmvSF.Location = new System.Drawing.Point(757, 66);
             this.RmvSF.Name = "RmvSF";
-            this.RmvSF.Size = new System.Drawing.Size(24, 24);
+            this.RmvSF.Size = new System.Drawing.Size(28, 28);
             this.RmvSF.TabIndex = 7;
             this.RmvSF.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.RmvSF.UseVisualStyleBackColor = false;
@@ -306,9 +306,9 @@
             this.AddSF.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.AddSF.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AddSF.ForeColor = System.Drawing.Color.Transparent;
-            this.AddSF.Location = new System.Drawing.Point(649, 34);
+            this.AddSF.Location = new System.Drawing.Point(757, 39);
             this.AddSF.Name = "AddSF";
-            this.AddSF.Size = new System.Drawing.Size(24, 24);
+            this.AddSF.Size = new System.Drawing.Size(28, 28);
             this.AddSF.TabIndex = 6;
             this.AddSF.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.AddSF.UseVisualStyleBackColor = false;
@@ -390,6 +390,12 @@
             this.OSFd.Text = "Open SoundFont\'s directory";
             this.OSFd.Click += new System.EventHandler(this.OSFd_Click);
             // 
+            // EBPV
+            // 
+            this.EBPV.Index = 2;
+            this.EBPV.Text = "Edit bank and preset values";
+            this.EBPV.Click += new System.EventHandler(this.EBPV_Click);
+            // 
             // menuItem2
             // 
             this.menuItem2.Index = 3;
@@ -449,9 +455,9 @@
             this.Preload.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.Preload.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Preload.ForeColor = System.Drawing.Color.Transparent;
-            this.Preload.Location = new System.Drawing.Point(649, 117);
+            this.Preload.Location = new System.Drawing.Point(757, 135);
             this.Preload.Name = "Preload";
-            this.Preload.Size = new System.Drawing.Size(24, 24);
+            this.Preload.Size = new System.Drawing.Size(28, 28);
             this.Preload.TabIndex = 32;
             this.Preload.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             this.Preload.UseVisualStyleBackColor = false;
@@ -485,16 +491,16 @@
             this.Lis.GridLines = true;
             this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.Lis.HideSelection = false;
-            listViewItem2.StateImageIndex = 0;
+            listViewItem1.StateImageIndex = 0;
             this.Lis.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
+            listViewItem1});
             this.Lis.LabelWrap = false;
             this.Lis.LineAfter = -1;
             this.Lis.LineBefore = -1;
-            this.Lis.Location = new System.Drawing.Point(5, 34);
+            this.Lis.Location = new System.Drawing.Point(6, 39);
             this.Lis.Name = "Lis";
             this.Lis.ShowGroups = false;
-            this.Lis.Size = new System.Drawing.Size(639, 401);
+            this.Lis.Size = new System.Drawing.Size(745, 462);
             this.Lis.TabIndex = 3;
             this.Lis.UseCompatibleStateImageBehavior = false;
             this.Lis.View = System.Windows.Forms.View.Details;
@@ -572,15 +578,9 @@
             this.SFSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SFSize.Width = 62;
             // 
-            // EBPV
-            // 
-            this.EBPV.Index = 2;
-            this.EBPV.Text = "Edit bank and preset values";
-            this.EBPV.Click += new System.EventHandler(this.EBPV_Click);
-            // 
             // SoundFontListEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.Preload);
             this.Controls.Add(this.Lis);
@@ -598,8 +598,9 @@
             this.Controls.Add(this.MvU);
             this.Controls.Add(this.RmvSF);
             this.Controls.Add(this.AddSF);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "SoundFontListEditor";
-            this.Size = new System.Drawing.Size(678, 454);
+            this.Size = new System.Drawing.Size(791, 524);
             this.Load += new System.EventHandler(this.SoundFontListEditor_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

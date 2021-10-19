@@ -64,27 +64,27 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 9);
+            this.label1.Location = new System.Drawing.Point(12, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 13);
+            this.label1.Size = new System.Drawing.Size(58, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Filename:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 35);
+            this.label2.Location = new System.Drawing.Point(12, 40);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(129, 13);
+            this.label2.Size = new System.Drawing.Size(144, 15);
             this.label2.TabIndex = 1;
             this.label2.Text = "Internal SoundFont name:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 61);
+            this.label3.Location = new System.Drawing.Point(12, 70);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(108, 13);
+            this.label3.Size = new System.Drawing.Size(129, 15);
             this.label3.TabIndex = 2;
             this.label3.Text = "Copyright information:";
             // 
@@ -92,38 +92,38 @@
             // 
             this.FNBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.FNBox.Location = new System.Drawing.Point(142, 6);
+            this.FNBox.Location = new System.Drawing.Point(166, 7);
             this.FNBox.Name = "FNBox";
             this.FNBox.ReadOnly = true;
-            this.FNBox.Size = new System.Drawing.Size(377, 20);
+            this.FNBox.Size = new System.Drawing.Size(439, 23);
             this.FNBox.TabIndex = 3;
             // 
             // ISFBox
             // 
             this.ISFBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ISFBox.Location = new System.Drawing.Point(142, 32);
+            this.ISFBox.Location = new System.Drawing.Point(166, 37);
             this.ISFBox.Name = "ISFBox";
             this.ISFBox.ReadOnly = true;
-            this.ISFBox.Size = new System.Drawing.Size(377, 20);
+            this.ISFBox.Size = new System.Drawing.Size(439, 23);
             this.ISFBox.TabIndex = 4;
             // 
             // CIBox
             // 
             this.CIBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CIBox.Location = new System.Drawing.Point(142, 58);
+            this.CIBox.Location = new System.Drawing.Point(166, 67);
             this.CIBox.Name = "CIBox";
             this.CIBox.ReadOnly = true;
-            this.CIBox.Size = new System.Drawing.Size(377, 20);
+            this.CIBox.Size = new System.Drawing.Size(439, 23);
             this.CIBox.TabIndex = 5;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 87);
+            this.label4.Location = new System.Drawing.Point(12, 100);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(115, 13);
+            this.label4.Size = new System.Drawing.Size(125, 15);
             this.label4.TabIndex = 6;
             this.label4.Text = "Size of the SoundFont:";
             // 
@@ -131,9 +131,9 @@
             // 
             this.SofSFLab.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SofSFLab.Location = new System.Drawing.Point(142, 87);
+            this.SofSFLab.Location = new System.Drawing.Point(166, 100);
             this.SofSFLab.Name = "SofSFLab";
-            this.SofSFLab.Size = new System.Drawing.Size(377, 13);
+            this.SofSFLab.Size = new System.Drawing.Size(440, 15);
             this.SofSFLab.TabIndex = 8;
             this.SofSFLab.Text = "label5";
             // 
@@ -141,18 +141,18 @@
             // 
             this.SFfLab.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SFfLab.Location = new System.Drawing.Point(142, 113);
+            this.SFfLab.Location = new System.Drawing.Point(166, 130);
             this.SFfLab.Name = "SFfLab";
-            this.SFfLab.Size = new System.Drawing.Size(377, 13);
+            this.SFfLab.Size = new System.Drawing.Size(440, 15);
             this.SFfLab.TabIndex = 10;
             this.SFfLab.Text = "label6";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 113);
+            this.label7.Location = new System.Drawing.Point(12, 130);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(94, 13);
+            this.label7.Size = new System.Drawing.Size(107, 15);
             this.label7.TabIndex = 9;
             this.label7.Text = "SoundFont format:";
             // 
@@ -160,9 +160,9 @@
             // 
             this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(10, 140);
+            this.label9.Location = new System.Drawing.Point(12, 192);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(54, 13);
+            this.label9.Size = new System.Drawing.Size(64, 15);
             this.label9.TabIndex = 12;
             this.label9.Text = "Comment:";
             // 
@@ -170,20 +170,20 @@
             // 
             this.CommentRich.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CommentRich.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.CommentRich.Location = new System.Drawing.Point(142, 137);
+            this.CommentRich.Location = new System.Drawing.Point(166, 188);
             this.CommentRich.Name = "CommentRich";
             this.CommentRich.ReadOnly = true;
             this.CommentRich.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.CommentRich.Size = new System.Drawing.Size(377, 140);
+            this.CommentRich.Size = new System.Drawing.Size(439, 161);
             this.CommentRich.TabIndex = 13;
             this.CommentRich.Text = "";
             // 
             // CloseBtn
             // 
             this.CloseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CloseBtn.Location = new System.Drawing.Point(444, 283);
+            this.CloseBtn.Location = new System.Drawing.Point(518, 357);
             this.CloseBtn.Name = "CloseBtn";
-            this.CloseBtn.Size = new System.Drawing.Size(75, 23);
+            this.CloseBtn.Size = new System.Drawing.Size(87, 27);
             this.CloseBtn.TabIndex = 14;
             this.CloseBtn.Text = "OK";
             this.CloseBtn.UseVisualStyleBackColor = true;
@@ -193,9 +193,9 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 288);
+            this.label5.Location = new System.Drawing.Point(12, 362);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 13);
+            this.label5.Size = new System.Drawing.Size(84, 15);
             this.label5.TabIndex = 15;
             this.label5.Text = "Last edited on:";
             // 
@@ -203,9 +203,9 @@
             // 
             this.LELabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.LELabel.Location = new System.Drawing.Point(142, 288);
+            this.LELabel.Location = new System.Drawing.Point(166, 362);
             this.LELabel.Name = "LELabel";
-            this.LELabel.Size = new System.Drawing.Size(157, 13);
+            this.LELabel.Size = new System.Drawing.Size(183, 15);
             this.LELabel.TabIndex = 16;
             this.LELabel.Text = "SAS";
             this.WhatDoesTheSFSay.SetToolTip(this.LELabel, "Do not trust this info, since it can be modified\r\nby sharing the SoundFont betwee" +
@@ -284,9 +284,9 @@
             // PrvwBtn
             // 
             this.PrvwBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.PrvwBtn.Location = new System.Drawing.Point(305, 283);
+            this.PrvwBtn.Location = new System.Drawing.Point(356, 357);
             this.PrvwBtn.Name = "PrvwBtn";
-            this.PrvwBtn.Size = new System.Drawing.Size(133, 23);
+            this.PrvwBtn.Size = new System.Drawing.Size(155, 27);
             this.PrvwBtn.TabIndex = 17;
             this.PrvwBtn.Text = "Play SoundFont preview";
             this.PrvwBtn.UseVisualStyleBackColor = true;
@@ -296,9 +296,9 @@
             // 
             this.SamF.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SamF.Location = new System.Drawing.Point(142, 140);
+            this.SamF.Location = new System.Drawing.Point(166, 162);
             this.SamF.Name = "SamF";
-            this.SamF.Size = new System.Drawing.Size(377, 13);
+            this.SamF.Size = new System.Drawing.Size(440, 15);
             this.SamF.TabIndex = 19;
             this.SamF.Text = "label6";
             this.SamF.Visible = false;
@@ -306,19 +306,19 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(10, 140);
+            this.label8.Location = new System.Drawing.Point(12, 162);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(82, 13);
+            this.label8.Size = new System.Drawing.Size(93, 15);
             this.label8.TabIndex = 18;
             this.label8.Text = "Samples format:";
             this.label8.Visible = false;
             // 
             // SoundFontInfo
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(525, 313);
+            this.ClientSize = new System.Drawing.Size(612, 391);
             this.ControlBox = false;
             this.Controls.Add(this.SamF);
             this.Controls.Add(this.label8);
@@ -338,6 +338,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "SoundFontInfo";
             this.ShowIcon = false;

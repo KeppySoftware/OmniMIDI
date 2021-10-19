@@ -53,7 +53,7 @@
             this.label5.Dock = System.Windows.Forms.DockStyle.Top;
             this.label5.Location = new System.Drawing.Point(0, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(643, 58);
+            this.label5.Size = new System.Drawing.Size(750, 67);
             this.label5.TabIndex = 15;
             this.label5.Text = resources.GetString("label5.Text");
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -62,11 +62,12 @@
             // 
             this.Lis.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.Lis.FormattingEnabled = true;
-            this.Lis.Location = new System.Drawing.Point(0, 88);
+            this.Lis.ItemHeight = 15;
+            this.Lis.Location = new System.Drawing.Point(0, 102);
             this.Lis.Name = "Lis";
             this.Lis.ScrollAlwaysVisible = true;
             this.Lis.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.Lis.Size = new System.Drawing.Size(643, 290);
+            this.Lis.Size = new System.Drawing.Size(750, 334);
             this.Lis.TabIndex = 16;
             // 
             // SelectedListBox
@@ -81,18 +82,18 @@
             "List 6",
             "List 7",
             "List 8"});
-            this.SelectedListBox.Location = new System.Drawing.Point(117, 61);
+            this.SelectedListBox.Location = new System.Drawing.Point(136, 70);
             this.SelectedListBox.Name = "SelectedListBox";
-            this.SelectedListBox.Size = new System.Drawing.Size(521, 21);
+            this.SelectedListBox.Size = new System.Drawing.Size(607, 23);
             this.SelectedListBox.TabIndex = 37;
             this.SelectedListBox.SelectedIndexChanged += new System.EventHandler(this.SelectedListBox_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 65);
+            this.label1.Location = new System.Drawing.Point(7, 75);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(105, 13);
+            this.label1.Size = new System.Drawing.Size(116, 15);
             this.label1.TabIndex = 36;
             this.label1.Text = "Select applist to edit:";
             // 
@@ -136,14 +137,15 @@
             // 
             // SFListAssign
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(643, 378);
+            this.ClientSize = new System.Drawing.Size(750, 436);
             this.Controls.Add(this.SelectedListBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Lis);
             this.Controls.Add(this.label5);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

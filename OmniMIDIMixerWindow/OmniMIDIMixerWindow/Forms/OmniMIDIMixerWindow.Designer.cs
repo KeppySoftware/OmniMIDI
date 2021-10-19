@@ -162,11 +162,11 @@
             // 
             // AllCh
             // 
-            this.AllCh.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AllCh.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AllCh.ForeColor = System.Drawing.Color.Black;
-            this.AllCh.Location = new System.Drawing.Point(554, 13);
+            this.AllCh.Location = new System.Drawing.Point(646, 15);
             this.AllCh.Name = "AllCh";
-            this.AllCh.Size = new System.Drawing.Size(31, 13);
+            this.AllCh.Size = new System.Drawing.Size(36, 15);
             this.AllCh.TabIndex = 71;
             this.AllCh.Text = "All";
             this.AllCh.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -183,11 +183,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.MainVol.AutoSize = false;
             this.MainVol.LargeChange = 1;
-            this.MainVol.Location = new System.Drawing.Point(559, 29);
+            this.MainVol.Location = new System.Drawing.Point(652, 33);
             this.MainVol.Maximum = 100;
             this.MainVol.Name = "MainVol";
             this.MainVol.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.MainVol.Size = new System.Drawing.Size(27, 202);
+            this.MainVol.Size = new System.Drawing.Size(31, 233);
             this.MainVol.TabIndex = 70;
             this.MainVol.TickFrequency = 10;
             this.WhatIsThis.SetToolTip(this.MainVol, "Control the volume of all the channels through this slider.");
@@ -196,44 +196,44 @@
             // 
             // CH16
             // 
-            this.CH16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH16.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH16.ForeColor = System.Drawing.Color.Black;
-            this.CH16.Location = new System.Drawing.Point(504, 13);
+            this.CH16.Location = new System.Drawing.Point(588, 15);
             this.CH16.Name = "CH16";
-            this.CH16.Size = new System.Drawing.Size(27, 13);
+            this.CH16.Size = new System.Drawing.Size(31, 15);
             this.CH16.TabIndex = 52;
             this.CH16.Text = "16";
             this.CH16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH15
             // 
-            this.CH15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH15.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH15.ForeColor = System.Drawing.Color.Black;
-            this.CH15.Location = new System.Drawing.Point(471, 13);
+            this.CH15.Location = new System.Drawing.Point(549, 15);
             this.CH15.Name = "CH15";
-            this.CH15.Size = new System.Drawing.Size(27, 13);
+            this.CH15.Size = new System.Drawing.Size(31, 15);
             this.CH15.TabIndex = 53;
             this.CH15.Text = "15";
             this.CH15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH14
             // 
-            this.CH14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH14.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH14.ForeColor = System.Drawing.Color.Black;
-            this.CH14.Location = new System.Drawing.Point(438, 13);
+            this.CH14.Location = new System.Drawing.Point(511, 15);
             this.CH14.Name = "CH14";
-            this.CH14.Size = new System.Drawing.Size(27, 13);
+            this.CH14.Size = new System.Drawing.Size(31, 15);
             this.CH14.TabIndex = 54;
             this.CH14.Text = "14";
             this.CH14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH13
             // 
-            this.CH13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH13.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH13.ForeColor = System.Drawing.Color.Black;
-            this.CH13.Location = new System.Drawing.Point(405, 13);
+            this.CH13.Location = new System.Drawing.Point(472, 15);
             this.CH13.Name = "CH13";
-            this.CH13.Size = new System.Drawing.Size(27, 13);
+            this.CH13.Size = new System.Drawing.Size(31, 15);
             this.CH13.TabIndex = 58;
             this.CH13.Text = "13";
             this.CH13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -244,132 +244,132 @@
             // 
             // CH12
             // 
-            this.CH12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH12.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH12.ForeColor = System.Drawing.Color.Black;
-            this.CH12.Location = new System.Drawing.Point(372, 13);
+            this.CH12.Location = new System.Drawing.Point(434, 15);
             this.CH12.Name = "CH12";
-            this.CH12.Size = new System.Drawing.Size(27, 13);
+            this.CH12.Size = new System.Drawing.Size(31, 15);
             this.CH12.TabIndex = 56;
             this.CH12.Text = "12";
             this.CH12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH11
             // 
-            this.CH11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH11.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH11.ForeColor = System.Drawing.Color.Black;
-            this.CH11.Location = new System.Drawing.Point(341, 13);
+            this.CH11.Location = new System.Drawing.Point(398, 15);
             this.CH11.Name = "CH11";
-            this.CH11.Size = new System.Drawing.Size(27, 13);
+            this.CH11.Size = new System.Drawing.Size(31, 15);
             this.CH11.TabIndex = 57;
             this.CH11.Text = "11";
             this.CH11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH10
             // 
-            this.CH10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH10.ForeColor = System.Drawing.Color.Black;
-            this.CH10.Location = new System.Drawing.Point(303, 13);
+            this.CH10.Location = new System.Drawing.Point(353, 15);
             this.CH10.Name = "CH10";
-            this.CH10.Size = new System.Drawing.Size(39, 13);
+            this.CH10.Size = new System.Drawing.Size(45, 15);
             this.CH10.TabIndex = 65;
             this.CH10.Text = "Drums";
             this.CH10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH9
             // 
-            this.CH9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH9.ForeColor = System.Drawing.Color.Black;
-            this.CH9.Location = new System.Drawing.Point(275, 13);
+            this.CH9.Location = new System.Drawing.Point(321, 15);
             this.CH9.Name = "CH9";
-            this.CH9.Size = new System.Drawing.Size(27, 13);
+            this.CH9.Size = new System.Drawing.Size(31, 15);
             this.CH9.TabIndex = 59;
             this.CH9.Text = "9";
             this.CH9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH8
             // 
-            this.CH8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH8.ForeColor = System.Drawing.Color.Black;
-            this.CH8.Location = new System.Drawing.Point(242, 13);
+            this.CH8.Location = new System.Drawing.Point(282, 15);
             this.CH8.Name = "CH8";
-            this.CH8.Size = new System.Drawing.Size(27, 13);
+            this.CH8.Size = new System.Drawing.Size(31, 15);
             this.CH8.TabIndex = 60;
             this.CH8.Text = "8";
             this.CH8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH7
             // 
-            this.CH7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH7.ForeColor = System.Drawing.Color.Black;
-            this.CH7.Location = new System.Drawing.Point(209, 13);
+            this.CH7.Location = new System.Drawing.Point(244, 15);
             this.CH7.Name = "CH7";
-            this.CH7.Size = new System.Drawing.Size(27, 13);
+            this.CH7.Size = new System.Drawing.Size(31, 15);
             this.CH7.TabIndex = 61;
             this.CH7.Text = "7";
             this.CH7.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH6
             // 
-            this.CH6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH6.ForeColor = System.Drawing.Color.Black;
-            this.CH6.Location = new System.Drawing.Point(176, 13);
+            this.CH6.Location = new System.Drawing.Point(205, 15);
             this.CH6.Name = "CH6";
-            this.CH6.Size = new System.Drawing.Size(27, 13);
+            this.CH6.Size = new System.Drawing.Size(31, 15);
             this.CH6.TabIndex = 62;
             this.CH6.Text = "6";
             this.CH6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH5
             // 
-            this.CH5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH5.ForeColor = System.Drawing.Color.Black;
-            this.CH5.Location = new System.Drawing.Point(143, 13);
+            this.CH5.Location = new System.Drawing.Point(167, 15);
             this.CH5.Name = "CH5";
-            this.CH5.Size = new System.Drawing.Size(27, 13);
+            this.CH5.Size = new System.Drawing.Size(31, 15);
             this.CH5.TabIndex = 63;
             this.CH5.Text = "5";
             this.CH5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH4
             // 
-            this.CH4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH4.ForeColor = System.Drawing.Color.Black;
-            this.CH4.Location = new System.Drawing.Point(110, 13);
+            this.CH4.Location = new System.Drawing.Point(128, 15);
             this.CH4.Name = "CH4";
-            this.CH4.Size = new System.Drawing.Size(27, 13);
+            this.CH4.Size = new System.Drawing.Size(31, 15);
             this.CH4.TabIndex = 64;
             this.CH4.Text = "4";
             this.CH4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH3
             // 
-            this.CH3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH3.ForeColor = System.Drawing.Color.Black;
-            this.CH3.Location = new System.Drawing.Point(77, 13);
+            this.CH3.Location = new System.Drawing.Point(90, 15);
             this.CH3.Name = "CH3";
-            this.CH3.Size = new System.Drawing.Size(27, 13);
+            this.CH3.Size = new System.Drawing.Size(31, 15);
             this.CH3.TabIndex = 51;
             this.CH3.Text = "3";
             this.CH3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH2
             // 
-            this.CH2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH2.ForeColor = System.Drawing.Color.Black;
-            this.CH2.Location = new System.Drawing.Point(44, 13);
+            this.CH2.Location = new System.Drawing.Point(51, 15);
             this.CH2.Name = "CH2";
-            this.CH2.Size = new System.Drawing.Size(27, 13);
+            this.CH2.Size = new System.Drawing.Size(31, 15);
             this.CH2.TabIndex = 55;
             this.CH2.Text = "2";
             this.CH2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // CH1
             // 
-            this.CH1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CH1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CH1.ForeColor = System.Drawing.Color.Black;
-            this.CH1.Location = new System.Drawing.Point(11, 13);
+            this.CH1.Location = new System.Drawing.Point(13, 15);
             this.CH1.Name = "CH1";
-            this.CH1.Size = new System.Drawing.Size(27, 13);
+            this.CH1.Size = new System.Drawing.Size(31, 15);
             this.CH1.TabIndex = 50;
             this.CH1.Text = "1";
             this.CH1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -379,9 +379,9 @@
             this.RLab.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RLab.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RLab.ForeColor = System.Drawing.Color.White;
-            this.RLab.Location = new System.Drawing.Point(35, 162);
+            this.RLab.Location = new System.Drawing.Point(41, 187);
             this.RLab.Name = "RLab";
-            this.RLab.Size = new System.Drawing.Size(16, 16);
+            this.RLab.Size = new System.Drawing.Size(19, 18);
             this.RLab.TabIndex = 49;
             this.RLab.Text = "R";
             this.RLab.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -391,9 +391,9 @@
             this.LLab.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LLab.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LLab.ForeColor = System.Drawing.Color.White;
-            this.LLab.Location = new System.Drawing.Point(12, 162);
+            this.LLab.Location = new System.Drawing.Point(14, 187);
             this.LLab.Name = "LLab";
-            this.LLab.Size = new System.Drawing.Size(16, 16);
+            this.LLab.Size = new System.Drawing.Size(19, 18);
             this.LLab.TabIndex = 48;
             this.LLab.Text = "L";
             this.LLab.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -404,11 +404,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH16VOL.AutoSize = false;
             this.CH16VOL.LargeChange = 1;
-            this.CH16VOL.Location = new System.Drawing.Point(507, 29);
+            this.CH16VOL.Location = new System.Drawing.Point(591, 33);
             this.CH16VOL.Maximum = 100;
             this.CH16VOL.Name = "CH16VOL";
             this.CH16VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH16VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH16VOL.Size = new System.Drawing.Size(31, 233);
             this.CH16VOL.TabIndex = 46;
             this.CH16VOL.TickFrequency = 10;
             this.CH16VOL.Scroll += new System.EventHandler(this.CH16VOL_Scroll);
@@ -419,11 +419,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH15VOL.AutoSize = false;
             this.CH15VOL.LargeChange = 1;
-            this.CH15VOL.Location = new System.Drawing.Point(474, 29);
+            this.CH15VOL.Location = new System.Drawing.Point(553, 33);
             this.CH15VOL.Maximum = 100;
             this.CH15VOL.Name = "CH15VOL";
             this.CH15VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH15VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH15VOL.Size = new System.Drawing.Size(31, 233);
             this.CH15VOL.TabIndex = 45;
             this.CH15VOL.TickFrequency = 10;
             this.CH15VOL.Scroll += new System.EventHandler(this.CH15VOL_Scroll);
@@ -434,11 +434,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH14VOL.AutoSize = false;
             this.CH14VOL.LargeChange = 1;
-            this.CH14VOL.Location = new System.Drawing.Point(441, 29);
+            this.CH14VOL.Location = new System.Drawing.Point(514, 33);
             this.CH14VOL.Maximum = 100;
             this.CH14VOL.Name = "CH14VOL";
             this.CH14VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH14VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH14VOL.Size = new System.Drawing.Size(31, 233);
             this.CH14VOL.TabIndex = 44;
             this.CH14VOL.TickFrequency = 10;
             this.CH14VOL.Scroll += new System.EventHandler(this.CH14VOL_Scroll);
@@ -449,11 +449,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH13VOL.AutoSize = false;
             this.CH13VOL.LargeChange = 1;
-            this.CH13VOL.Location = new System.Drawing.Point(408, 29);
+            this.CH13VOL.Location = new System.Drawing.Point(476, 33);
             this.CH13VOL.Maximum = 100;
             this.CH13VOL.Name = "CH13VOL";
             this.CH13VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH13VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH13VOL.Size = new System.Drawing.Size(31, 233);
             this.CH13VOL.TabIndex = 43;
             this.CH13VOL.TickFrequency = 10;
             this.CH13VOL.Scroll += new System.EventHandler(this.CH13VOL_Scroll);
@@ -464,11 +464,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH12VOL.AutoSize = false;
             this.CH12VOL.LargeChange = 1;
-            this.CH12VOL.Location = new System.Drawing.Point(375, 29);
+            this.CH12VOL.Location = new System.Drawing.Point(437, 33);
             this.CH12VOL.Maximum = 100;
             this.CH12VOL.Name = "CH12VOL";
             this.CH12VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH12VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH12VOL.Size = new System.Drawing.Size(31, 233);
             this.CH12VOL.TabIndex = 42;
             this.CH12VOL.TickFrequency = 10;
             this.CH12VOL.Scroll += new System.EventHandler(this.CH12VOL_Scroll);
@@ -479,11 +479,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH11VOL.AutoSize = false;
             this.CH11VOL.LargeChange = 1;
-            this.CH11VOL.Location = new System.Drawing.Point(344, 29);
+            this.CH11VOL.Location = new System.Drawing.Point(401, 33);
             this.CH11VOL.Maximum = 100;
             this.CH11VOL.Name = "CH11VOL";
             this.CH11VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH11VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH11VOL.Size = new System.Drawing.Size(31, 233);
             this.CH11VOL.TabIndex = 41;
             this.CH11VOL.TickFrequency = 10;
             this.CH11VOL.Scroll += new System.EventHandler(this.CH11VOL_Scroll);
@@ -494,11 +494,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH10VOL.AutoSize = false;
             this.CH10VOL.LargeChange = 1;
-            this.CH10VOL.Location = new System.Drawing.Point(311, 29);
+            this.CH10VOL.Location = new System.Drawing.Point(363, 33);
             this.CH10VOL.Maximum = 100;
             this.CH10VOL.Name = "CH10VOL";
             this.CH10VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH10VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH10VOL.Size = new System.Drawing.Size(31, 233);
             this.CH10VOL.TabIndex = 40;
             this.CH10VOL.TickFrequency = 10;
             this.CH10VOL.Scroll += new System.EventHandler(this.CH10VOL_Scroll);
@@ -509,11 +509,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH9VOL.AutoSize = false;
             this.CH9VOL.LargeChange = 1;
-            this.CH9VOL.Location = new System.Drawing.Point(278, 29);
+            this.CH9VOL.Location = new System.Drawing.Point(324, 33);
             this.CH9VOL.Maximum = 100;
             this.CH9VOL.Name = "CH9VOL";
             this.CH9VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH9VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH9VOL.Size = new System.Drawing.Size(31, 233);
             this.CH9VOL.TabIndex = 39;
             this.CH9VOL.TickFrequency = 10;
             this.CH9VOL.Scroll += new System.EventHandler(this.CH9VOL_Scroll);
@@ -524,11 +524,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH8VOL.AutoSize = false;
             this.CH8VOL.LargeChange = 1;
-            this.CH8VOL.Location = new System.Drawing.Point(245, 29);
+            this.CH8VOL.Location = new System.Drawing.Point(286, 33);
             this.CH8VOL.Maximum = 100;
             this.CH8VOL.Name = "CH8VOL";
             this.CH8VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH8VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH8VOL.Size = new System.Drawing.Size(31, 233);
             this.CH8VOL.TabIndex = 38;
             this.CH8VOL.TickFrequency = 10;
             this.CH8VOL.Scroll += new System.EventHandler(this.CH8VOL_Scroll);
@@ -539,11 +539,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH7VOL.AutoSize = false;
             this.CH7VOL.LargeChange = 1;
-            this.CH7VOL.Location = new System.Drawing.Point(212, 29);
+            this.CH7VOL.Location = new System.Drawing.Point(247, 33);
             this.CH7VOL.Maximum = 100;
             this.CH7VOL.Name = "CH7VOL";
             this.CH7VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH7VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH7VOL.Size = new System.Drawing.Size(31, 233);
             this.CH7VOL.TabIndex = 37;
             this.CH7VOL.TickFrequency = 10;
             this.CH7VOL.Scroll += new System.EventHandler(this.CH7VOL_Scroll);
@@ -554,11 +554,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH6VOL.AutoSize = false;
             this.CH6VOL.LargeChange = 1;
-            this.CH6VOL.Location = new System.Drawing.Point(179, 29);
+            this.CH6VOL.Location = new System.Drawing.Point(209, 33);
             this.CH6VOL.Maximum = 100;
             this.CH6VOL.Name = "CH6VOL";
             this.CH6VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH6VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH6VOL.Size = new System.Drawing.Size(31, 233);
             this.CH6VOL.TabIndex = 36;
             this.CH6VOL.TickFrequency = 10;
             this.CH6VOL.Scroll += new System.EventHandler(this.CH6VOL_Scroll);
@@ -569,11 +569,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH5VOL.AutoSize = false;
             this.CH5VOL.LargeChange = 1;
-            this.CH5VOL.Location = new System.Drawing.Point(146, 29);
+            this.CH5VOL.Location = new System.Drawing.Point(170, 33);
             this.CH5VOL.Maximum = 100;
             this.CH5VOL.Name = "CH5VOL";
             this.CH5VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH5VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH5VOL.Size = new System.Drawing.Size(31, 233);
             this.CH5VOL.TabIndex = 35;
             this.CH5VOL.TickFrequency = 10;
             this.CH5VOL.Scroll += new System.EventHandler(this.CH5VOL_Scroll);
@@ -584,11 +584,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH4VOL.AutoSize = false;
             this.CH4VOL.LargeChange = 1;
-            this.CH4VOL.Location = new System.Drawing.Point(113, 29);
+            this.CH4VOL.Location = new System.Drawing.Point(132, 33);
             this.CH4VOL.Maximum = 100;
             this.CH4VOL.Name = "CH4VOL";
             this.CH4VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH4VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH4VOL.Size = new System.Drawing.Size(31, 233);
             this.CH4VOL.TabIndex = 34;
             this.CH4VOL.TickFrequency = 10;
             this.CH4VOL.Scroll += new System.EventHandler(this.CH4VOL_Scroll);
@@ -599,11 +599,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH3VOL.AutoSize = false;
             this.CH3VOL.LargeChange = 1;
-            this.CH3VOL.Location = new System.Drawing.Point(80, 29);
+            this.CH3VOL.Location = new System.Drawing.Point(93, 33);
             this.CH3VOL.Maximum = 100;
             this.CH3VOL.Name = "CH3VOL";
             this.CH3VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH3VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH3VOL.Size = new System.Drawing.Size(31, 233);
             this.CH3VOL.TabIndex = 33;
             this.CH3VOL.TickFrequency = 10;
             this.CH3VOL.Scroll += new System.EventHandler(this.CH3VOL_Scroll);
@@ -614,11 +614,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH2VOL.AutoSize = false;
             this.CH2VOL.LargeChange = 1;
-            this.CH2VOL.Location = new System.Drawing.Point(47, 29);
+            this.CH2VOL.Location = new System.Drawing.Point(55, 33);
             this.CH2VOL.Maximum = 100;
             this.CH2VOL.Name = "CH2VOL";
             this.CH2VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH2VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH2VOL.Size = new System.Drawing.Size(31, 233);
             this.CH2VOL.TabIndex = 32;
             this.CH2VOL.TickFrequency = 10;
             this.CH2VOL.Scroll += new System.EventHandler(this.CH2VOL_Scroll);
@@ -629,11 +629,11 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.CH1VOL.AutoSize = false;
             this.CH1VOL.LargeChange = 1;
-            this.CH1VOL.Location = new System.Drawing.Point(14, 29);
+            this.CH1VOL.Location = new System.Drawing.Point(16, 33);
             this.CH1VOL.Maximum = 100;
             this.CH1VOL.Name = "CH1VOL";
             this.CH1VOL.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.CH1VOL.Size = new System.Drawing.Size(27, 202);
+            this.CH1VOL.Size = new System.Drawing.Size(31, 233);
             this.CH1VOL.TabIndex = 31;
             this.CH1VOL.TickFrequency = 10;
             this.CH1VOL.Scroll += new System.EventHandler(this.CH1VOL_Scroll);
@@ -704,9 +704,9 @@
             this.Meter.Controls.Add(this.LV1);
             this.Meter.Controls.Add(this.LLab);
             this.Meter.Controls.Add(this.RLab);
-            this.Meter.Location = new System.Drawing.Point(602, 13);
+            this.Meter.Location = new System.Drawing.Point(702, 15);
             this.Meter.Name = "Meter";
-            this.Meter.Size = new System.Drawing.Size(63, 213);
+            this.Meter.Size = new System.Drawing.Size(73, 246);
             this.Meter.TabIndex = 74;
             this.WhatIsThis.SetToolTip(this.Meter, "The volume mixer");
             // 
@@ -715,9 +715,9 @@
             this.VolLevel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.VolLevel.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.VolLevel.ForeColor = System.Drawing.Color.White;
-            this.VolLevel.Location = new System.Drawing.Point(2, 4);
+            this.VolLevel.Location = new System.Drawing.Point(2, 5);
             this.VolLevel.Name = "VolLevel";
-            this.VolLevel.Size = new System.Drawing.Size(59, 23);
+            this.VolLevel.Size = new System.Drawing.Size(69, 27);
             this.VolLevel.TabIndex = 94;
             this.VolLevel.Text = "0%";
             this.VolLevel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -726,9 +726,9 @@
             // 
             this.RV22.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV22.BackColor = System.Drawing.Color.DeepPink;
-            this.RV22.Location = new System.Drawing.Point(35, 29);
+            this.RV22.Location = new System.Drawing.Point(41, 33);
             this.RV22.Name = "RV22";
-            this.RV22.Size = new System.Drawing.Size(16, 5);
+            this.RV22.Size = new System.Drawing.Size(19, 6);
             this.RV22.TabIndex = 93;
             this.RV22.Visible = false;
             // 
@@ -738,7 +738,7 @@
             this.SignalLabel.AutoSize = true;
             this.SignalLabel.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SignalLabel.ForeColor = System.Drawing.Color.White;
-            this.SignalLabel.Location = new System.Drawing.Point(6, 189);
+            this.SignalLabel.Location = new System.Drawing.Point(7, 218);
             this.SignalLabel.Name = "SignalLabel";
             this.SignalLabel.Size = new System.Drawing.Size(33, 11);
             this.SignalLabel.TabIndex = 72;
@@ -748,9 +748,9 @@
             // 
             this.LED.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LED.BackColor = System.Drawing.Color.Black;
-            this.LED.Location = new System.Drawing.Point(42, 189);
+            this.LED.Location = new System.Drawing.Point(49, 218);
             this.LED.Name = "LED";
-            this.LED.Size = new System.Drawing.Size(12, 12);
+            this.LED.Size = new System.Drawing.Size(14, 14);
             this.LED.TabIndex = 73;
             this.LED.Paint += new System.Windows.Forms.PaintEventHandler(this.LED_Paint);
             // 
@@ -758,9 +758,9 @@
             // 
             this.LV22.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV22.BackColor = System.Drawing.Color.DeepPink;
-            this.LV22.Location = new System.Drawing.Point(12, 29);
+            this.LV22.Location = new System.Drawing.Point(14, 33);
             this.LV22.Name = "LV22";
-            this.LV22.Size = new System.Drawing.Size(16, 5);
+            this.LV22.Size = new System.Drawing.Size(19, 6);
             this.LV22.TabIndex = 71;
             this.LV22.Visible = false;
             // 
@@ -768,9 +768,9 @@
             // 
             this.RV18.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV18.BackColor = System.Drawing.Color.DarkOrange;
-            this.RV18.Location = new System.Drawing.Point(35, 53);
+            this.RV18.Location = new System.Drawing.Point(41, 61);
             this.RV18.Name = "RV18";
-            this.RV18.Size = new System.Drawing.Size(16, 5);
+            this.RV18.Size = new System.Drawing.Size(19, 6);
             this.RV18.TabIndex = 89;
             this.RV18.Visible = false;
             // 
@@ -778,9 +778,9 @@
             // 
             this.LV18.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV18.BackColor = System.Drawing.Color.DarkOrange;
-            this.LV18.Location = new System.Drawing.Point(12, 53);
+            this.LV18.Location = new System.Drawing.Point(14, 61);
             this.LV18.Name = "LV18";
-            this.LV18.Size = new System.Drawing.Size(16, 5);
+            this.LV18.Size = new System.Drawing.Size(19, 6);
             this.LV18.TabIndex = 67;
             this.LV18.Visible = false;
             // 
@@ -788,9 +788,9 @@
             // 
             this.RV21.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV21.BackColor = System.Drawing.Color.Crimson;
-            this.RV21.Location = new System.Drawing.Point(35, 35);
+            this.RV21.Location = new System.Drawing.Point(41, 40);
             this.RV21.Name = "RV21";
-            this.RV21.Size = new System.Drawing.Size(16, 5);
+            this.RV21.Size = new System.Drawing.Size(19, 6);
             this.RV21.TabIndex = 92;
             this.RV21.Visible = false;
             // 
@@ -798,9 +798,9 @@
             // 
             this.LV21.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV21.BackColor = System.Drawing.Color.Crimson;
-            this.LV21.Location = new System.Drawing.Point(12, 35);
+            this.LV21.Location = new System.Drawing.Point(14, 40);
             this.LV21.Name = "LV21";
-            this.LV21.Size = new System.Drawing.Size(16, 5);
+            this.LV21.Size = new System.Drawing.Size(19, 6);
             this.LV21.TabIndex = 70;
             this.LV21.Visible = false;
             // 
@@ -808,9 +808,9 @@
             // 
             this.RV13.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV13.BackColor = System.Drawing.Color.GreenYellow;
-            this.RV13.Location = new System.Drawing.Point(35, 83);
+            this.RV13.Location = new System.Drawing.Point(41, 96);
             this.RV13.Name = "RV13";
-            this.RV13.Size = new System.Drawing.Size(16, 5);
+            this.RV13.Size = new System.Drawing.Size(19, 6);
             this.RV13.TabIndex = 84;
             this.RV13.Visible = false;
             // 
@@ -818,9 +818,9 @@
             // 
             this.LV13.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV13.BackColor = System.Drawing.Color.GreenYellow;
-            this.LV13.Location = new System.Drawing.Point(12, 83);
+            this.LV13.Location = new System.Drawing.Point(14, 96);
             this.LV13.Name = "LV13";
-            this.LV13.Size = new System.Drawing.Size(16, 5);
+            this.LV13.Size = new System.Drawing.Size(19, 6);
             this.LV13.TabIndex = 62;
             this.LV13.Visible = false;
             // 
@@ -828,9 +828,9 @@
             // 
             this.RV20.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV20.BackColor = System.Drawing.Color.Red;
-            this.RV20.Location = new System.Drawing.Point(35, 41);
+            this.RV20.Location = new System.Drawing.Point(41, 47);
             this.RV20.Name = "RV20";
-            this.RV20.Size = new System.Drawing.Size(16, 5);
+            this.RV20.Size = new System.Drawing.Size(19, 6);
             this.RV20.TabIndex = 91;
             this.RV20.Visible = false;
             // 
@@ -838,9 +838,9 @@
             // 
             this.LV20.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV20.BackColor = System.Drawing.Color.Red;
-            this.LV20.Location = new System.Drawing.Point(12, 41);
+            this.LV20.Location = new System.Drawing.Point(14, 47);
             this.LV20.Name = "LV20";
-            this.LV20.Size = new System.Drawing.Size(16, 5);
+            this.LV20.Size = new System.Drawing.Size(19, 6);
             this.LV20.TabIndex = 69;
             this.LV20.Visible = false;
             // 
@@ -848,9 +848,9 @@
             // 
             this.RV19.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV19.BackColor = System.Drawing.Color.Red;
-            this.RV19.Location = new System.Drawing.Point(35, 47);
+            this.RV19.Location = new System.Drawing.Point(41, 54);
             this.RV19.Name = "RV19";
-            this.RV19.Size = new System.Drawing.Size(16, 5);
+            this.RV19.Size = new System.Drawing.Size(19, 6);
             this.RV19.TabIndex = 90;
             this.RV19.Visible = false;
             // 
@@ -858,9 +858,9 @@
             // 
             this.LV19.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV19.BackColor = System.Drawing.Color.Red;
-            this.LV19.Location = new System.Drawing.Point(12, 47);
+            this.LV19.Location = new System.Drawing.Point(14, 54);
             this.LV19.Name = "LV19";
-            this.LV19.Size = new System.Drawing.Size(16, 5);
+            this.LV19.Size = new System.Drawing.Size(19, 6);
             this.LV19.TabIndex = 68;
             this.LV19.Visible = false;
             // 
@@ -868,9 +868,9 @@
             // 
             this.RV17.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV17.BackColor = System.Drawing.Color.Gold;
-            this.RV17.Location = new System.Drawing.Point(35, 59);
+            this.RV17.Location = new System.Drawing.Point(41, 68);
             this.RV17.Name = "RV17";
-            this.RV17.Size = new System.Drawing.Size(16, 5);
+            this.RV17.Size = new System.Drawing.Size(19, 6);
             this.RV17.TabIndex = 88;
             this.RV17.Visible = false;
             // 
@@ -878,9 +878,9 @@
             // 
             this.LV17.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV17.BackColor = System.Drawing.Color.Gold;
-            this.LV17.Location = new System.Drawing.Point(12, 59);
+            this.LV17.Location = new System.Drawing.Point(14, 68);
             this.LV17.Name = "LV17";
-            this.LV17.Size = new System.Drawing.Size(16, 5);
+            this.LV17.Size = new System.Drawing.Size(19, 6);
             this.LV17.TabIndex = 66;
             this.LV17.Visible = false;
             // 
@@ -888,9 +888,9 @@
             // 
             this.RV8.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV8.BackColor = System.Drawing.Color.Lime;
-            this.RV8.Location = new System.Drawing.Point(35, 113);
+            this.RV8.Location = new System.Drawing.Point(41, 130);
             this.RV8.Name = "RV8";
-            this.RV8.Size = new System.Drawing.Size(16, 5);
+            this.RV8.Size = new System.Drawing.Size(19, 6);
             this.RV8.TabIndex = 79;
             this.RV8.Visible = false;
             // 
@@ -898,9 +898,9 @@
             // 
             this.RV16.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV16.BackColor = System.Drawing.Color.Yellow;
-            this.RV16.Location = new System.Drawing.Point(35, 65);
+            this.RV16.Location = new System.Drawing.Point(41, 75);
             this.RV16.Name = "RV16";
-            this.RV16.Size = new System.Drawing.Size(16, 5);
+            this.RV16.Size = new System.Drawing.Size(19, 6);
             this.RV16.TabIndex = 87;
             this.RV16.Visible = false;
             // 
@@ -908,9 +908,9 @@
             // 
             this.LV8.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV8.BackColor = System.Drawing.Color.Lime;
-            this.LV8.Location = new System.Drawing.Point(12, 113);
+            this.LV8.Location = new System.Drawing.Point(14, 130);
             this.LV8.Name = "LV8";
-            this.LV8.Size = new System.Drawing.Size(16, 5);
+            this.LV8.Size = new System.Drawing.Size(19, 6);
             this.LV8.TabIndex = 57;
             this.LV8.Visible = false;
             // 
@@ -918,9 +918,9 @@
             // 
             this.RV12.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV12.BackColor = System.Drawing.Color.Chartreuse;
-            this.RV12.Location = new System.Drawing.Point(35, 89);
+            this.RV12.Location = new System.Drawing.Point(41, 103);
             this.RV12.Name = "RV12";
-            this.RV12.Size = new System.Drawing.Size(16, 5);
+            this.RV12.Size = new System.Drawing.Size(19, 6);
             this.RV12.TabIndex = 83;
             this.RV12.Visible = false;
             // 
@@ -928,9 +928,9 @@
             // 
             this.LV16.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV16.BackColor = System.Drawing.Color.Yellow;
-            this.LV16.Location = new System.Drawing.Point(12, 65);
+            this.LV16.Location = new System.Drawing.Point(14, 75);
             this.LV16.Name = "LV16";
-            this.LV16.Size = new System.Drawing.Size(16, 5);
+            this.LV16.Size = new System.Drawing.Size(19, 6);
             this.LV16.TabIndex = 65;
             this.LV16.Visible = false;
             // 
@@ -938,9 +938,9 @@
             // 
             this.RV15.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV15.BackColor = System.Drawing.Color.Yellow;
-            this.RV15.Location = new System.Drawing.Point(35, 71);
+            this.RV15.Location = new System.Drawing.Point(41, 82);
             this.RV15.Name = "RV15";
-            this.RV15.Size = new System.Drawing.Size(16, 5);
+            this.RV15.Size = new System.Drawing.Size(19, 6);
             this.RV15.TabIndex = 86;
             this.RV15.Visible = false;
             // 
@@ -948,9 +948,9 @@
             // 
             this.LV12.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV12.BackColor = System.Drawing.Color.Chartreuse;
-            this.LV12.Location = new System.Drawing.Point(12, 89);
+            this.LV12.Location = new System.Drawing.Point(14, 103);
             this.LV12.Name = "LV12";
-            this.LV12.Size = new System.Drawing.Size(16, 5);
+            this.LV12.Size = new System.Drawing.Size(19, 6);
             this.LV12.TabIndex = 61;
             this.LV12.Visible = false;
             // 
@@ -958,9 +958,9 @@
             // 
             this.RV14.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV14.BackColor = System.Drawing.Color.Yellow;
-            this.RV14.Location = new System.Drawing.Point(35, 77);
+            this.RV14.Location = new System.Drawing.Point(41, 89);
             this.RV14.Name = "RV14";
-            this.RV14.Size = new System.Drawing.Size(16, 5);
+            this.RV14.Size = new System.Drawing.Size(19, 6);
             this.RV14.TabIndex = 85;
             this.RV14.Visible = false;
             // 
@@ -968,9 +968,9 @@
             // 
             this.LV15.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV15.BackColor = System.Drawing.Color.Yellow;
-            this.LV15.Location = new System.Drawing.Point(12, 71);
+            this.LV15.Location = new System.Drawing.Point(14, 82);
             this.LV15.Name = "LV15";
-            this.LV15.Size = new System.Drawing.Size(16, 5);
+            this.LV15.Size = new System.Drawing.Size(19, 6);
             this.LV15.TabIndex = 64;
             this.LV15.Visible = false;
             // 
@@ -978,9 +978,9 @@
             // 
             this.RV7.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV7.BackColor = System.Drawing.Color.Lime;
-            this.RV7.Location = new System.Drawing.Point(35, 119);
+            this.RV7.Location = new System.Drawing.Point(41, 137);
             this.RV7.Name = "RV7";
-            this.RV7.Size = new System.Drawing.Size(16, 5);
+            this.RV7.Size = new System.Drawing.Size(19, 6);
             this.RV7.TabIndex = 78;
             this.RV7.Visible = false;
             // 
@@ -988,9 +988,9 @@
             // 
             this.LV14.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV14.BackColor = System.Drawing.Color.Yellow;
-            this.LV14.Location = new System.Drawing.Point(12, 77);
+            this.LV14.Location = new System.Drawing.Point(14, 89);
             this.LV14.Name = "LV14";
-            this.LV14.Size = new System.Drawing.Size(16, 5);
+            this.LV14.Size = new System.Drawing.Size(19, 6);
             this.LV14.TabIndex = 63;
             this.LV14.Visible = false;
             // 
@@ -998,9 +998,9 @@
             // 
             this.RV11.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV11.BackColor = System.Drawing.Color.Lime;
-            this.RV11.Location = new System.Drawing.Point(35, 95);
+            this.RV11.Location = new System.Drawing.Point(41, 110);
             this.RV11.Name = "RV11";
-            this.RV11.Size = new System.Drawing.Size(16, 5);
+            this.RV11.Size = new System.Drawing.Size(19, 6);
             this.RV11.TabIndex = 82;
             this.RV11.Visible = false;
             // 
@@ -1008,9 +1008,9 @@
             // 
             this.LV7.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV7.BackColor = System.Drawing.Color.Lime;
-            this.LV7.Location = new System.Drawing.Point(12, 119);
+            this.LV7.Location = new System.Drawing.Point(14, 137);
             this.LV7.Name = "LV7";
-            this.LV7.Size = new System.Drawing.Size(16, 5);
+            this.LV7.Size = new System.Drawing.Size(19, 6);
             this.LV7.TabIndex = 56;
             this.LV7.Visible = false;
             // 
@@ -1018,9 +1018,9 @@
             // 
             this.RV6.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV6.BackColor = System.Drawing.Color.Lime;
-            this.RV6.Location = new System.Drawing.Point(35, 125);
+            this.RV6.Location = new System.Drawing.Point(41, 144);
             this.RV6.Name = "RV6";
-            this.RV6.Size = new System.Drawing.Size(16, 5);
+            this.RV6.Size = new System.Drawing.Size(19, 6);
             this.RV6.TabIndex = 77;
             this.RV6.Visible = false;
             // 
@@ -1028,9 +1028,9 @@
             // 
             this.LV11.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV11.BackColor = System.Drawing.Color.Lime;
-            this.LV11.Location = new System.Drawing.Point(12, 95);
+            this.LV11.Location = new System.Drawing.Point(14, 110);
             this.LV11.Name = "LV11";
-            this.LV11.Size = new System.Drawing.Size(16, 5);
+            this.LV11.Size = new System.Drawing.Size(19, 6);
             this.LV11.TabIndex = 60;
             this.LV11.Visible = false;
             // 
@@ -1038,9 +1038,9 @@
             // 
             this.RV10.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV10.BackColor = System.Drawing.Color.Lime;
-            this.RV10.Location = new System.Drawing.Point(35, 101);
+            this.RV10.Location = new System.Drawing.Point(41, 117);
             this.RV10.Name = "RV10";
-            this.RV10.Size = new System.Drawing.Size(16, 5);
+            this.RV10.Size = new System.Drawing.Size(19, 6);
             this.RV10.TabIndex = 81;
             this.RV10.Visible = false;
             // 
@@ -1048,9 +1048,9 @@
             // 
             this.LV6.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV6.BackColor = System.Drawing.Color.Lime;
-            this.LV6.Location = new System.Drawing.Point(12, 125);
+            this.LV6.Location = new System.Drawing.Point(14, 144);
             this.LV6.Name = "LV6";
-            this.LV6.Size = new System.Drawing.Size(16, 5);
+            this.LV6.Size = new System.Drawing.Size(19, 6);
             this.LV6.TabIndex = 55;
             this.LV6.Visible = false;
             // 
@@ -1058,9 +1058,9 @@
             // 
             this.RV5.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV5.BackColor = System.Drawing.Color.LimeGreen;
-            this.RV5.Location = new System.Drawing.Point(35, 131);
+            this.RV5.Location = new System.Drawing.Point(41, 151);
             this.RV5.Name = "RV5";
-            this.RV5.Size = new System.Drawing.Size(16, 5);
+            this.RV5.Size = new System.Drawing.Size(19, 6);
             this.RV5.TabIndex = 76;
             this.RV5.Visible = false;
             // 
@@ -1068,9 +1068,9 @@
             // 
             this.LV10.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV10.BackColor = System.Drawing.Color.Lime;
-            this.LV10.Location = new System.Drawing.Point(12, 101);
+            this.LV10.Location = new System.Drawing.Point(14, 117);
             this.LV10.Name = "LV10";
-            this.LV10.Size = new System.Drawing.Size(16, 5);
+            this.LV10.Size = new System.Drawing.Size(19, 6);
             this.LV10.TabIndex = 59;
             this.LV10.Visible = false;
             // 
@@ -1078,9 +1078,9 @@
             // 
             this.RV9.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV9.BackColor = System.Drawing.Color.Lime;
-            this.RV9.Location = new System.Drawing.Point(35, 107);
+            this.RV9.Location = new System.Drawing.Point(41, 123);
             this.RV9.Name = "RV9";
-            this.RV9.Size = new System.Drawing.Size(16, 5);
+            this.RV9.Size = new System.Drawing.Size(19, 6);
             this.RV9.TabIndex = 80;
             this.RV9.Visible = false;
             // 
@@ -1088,9 +1088,9 @@
             // 
             this.LV5.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV5.BackColor = System.Drawing.Color.LimeGreen;
-            this.LV5.Location = new System.Drawing.Point(12, 131);
+            this.LV5.Location = new System.Drawing.Point(14, 151);
             this.LV5.Name = "LV5";
-            this.LV5.Size = new System.Drawing.Size(16, 5);
+            this.LV5.Size = new System.Drawing.Size(19, 6);
             this.LV5.TabIndex = 54;
             this.LV5.Visible = false;
             // 
@@ -1098,9 +1098,9 @@
             // 
             this.RV4.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV4.BackColor = System.Drawing.Color.Green;
-            this.RV4.Location = new System.Drawing.Point(35, 137);
+            this.RV4.Location = new System.Drawing.Point(41, 158);
             this.RV4.Name = "RV4";
-            this.RV4.Size = new System.Drawing.Size(16, 5);
+            this.RV4.Size = new System.Drawing.Size(19, 6);
             this.RV4.TabIndex = 75;
             this.RV4.Visible = false;
             // 
@@ -1108,9 +1108,9 @@
             // 
             this.LV9.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV9.BackColor = System.Drawing.Color.Lime;
-            this.LV9.Location = new System.Drawing.Point(12, 107);
+            this.LV9.Location = new System.Drawing.Point(14, 123);
             this.LV9.Name = "LV9";
-            this.LV9.Size = new System.Drawing.Size(16, 5);
+            this.LV9.Size = new System.Drawing.Size(19, 6);
             this.LV9.TabIndex = 58;
             this.LV9.Visible = false;
             // 
@@ -1118,9 +1118,9 @@
             // 
             this.RV3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV3.BackColor = System.Drawing.Color.ForestGreen;
-            this.RV3.Location = new System.Drawing.Point(35, 143);
+            this.RV3.Location = new System.Drawing.Point(41, 165);
             this.RV3.Name = "RV3";
-            this.RV3.Size = new System.Drawing.Size(16, 5);
+            this.RV3.Size = new System.Drawing.Size(19, 6);
             this.RV3.TabIndex = 74;
             this.RV3.Visible = false;
             // 
@@ -1128,9 +1128,9 @@
             // 
             this.LV4.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV4.BackColor = System.Drawing.Color.Green;
-            this.LV4.Location = new System.Drawing.Point(12, 137);
+            this.LV4.Location = new System.Drawing.Point(14, 158);
             this.LV4.Name = "LV4";
-            this.LV4.Size = new System.Drawing.Size(16, 5);
+            this.LV4.Size = new System.Drawing.Size(19, 6);
             this.LV4.TabIndex = 53;
             this.LV4.Visible = false;
             // 
@@ -1138,9 +1138,9 @@
             // 
             this.RV2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV2.BackColor = System.Drawing.Color.DarkGreen;
-            this.RV2.Location = new System.Drawing.Point(35, 149);
+            this.RV2.Location = new System.Drawing.Point(41, 172);
             this.RV2.Name = "RV2";
-            this.RV2.Size = new System.Drawing.Size(16, 5);
+            this.RV2.Size = new System.Drawing.Size(19, 6);
             this.RV2.TabIndex = 73;
             this.RV2.Visible = false;
             // 
@@ -1148,9 +1148,9 @@
             // 
             this.LV3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV3.BackColor = System.Drawing.Color.ForestGreen;
-            this.LV3.Location = new System.Drawing.Point(12, 143);
+            this.LV3.Location = new System.Drawing.Point(14, 165);
             this.LV3.Name = "LV3";
-            this.LV3.Size = new System.Drawing.Size(16, 5);
+            this.LV3.Size = new System.Drawing.Size(19, 6);
             this.LV3.TabIndex = 52;
             this.LV3.Visible = false;
             // 
@@ -1158,9 +1158,9 @@
             // 
             this.RV1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.RV1.BackColor = System.Drawing.Color.DarkSlateGray;
-            this.RV1.Location = new System.Drawing.Point(35, 155);
+            this.RV1.Location = new System.Drawing.Point(41, 179);
             this.RV1.Name = "RV1";
-            this.RV1.Size = new System.Drawing.Size(16, 5);
+            this.RV1.Size = new System.Drawing.Size(19, 6);
             this.RV1.TabIndex = 72;
             this.RV1.Visible = false;
             // 
@@ -1168,9 +1168,9 @@
             // 
             this.LV2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV2.BackColor = System.Drawing.Color.DarkGreen;
-            this.LV2.Location = new System.Drawing.Point(12, 149);
+            this.LV2.Location = new System.Drawing.Point(14, 172);
             this.LV2.Name = "LV2";
-            this.LV2.Size = new System.Drawing.Size(16, 5);
+            this.LV2.Size = new System.Drawing.Size(19, 6);
             this.LV2.TabIndex = 51;
             this.LV2.Visible = false;
             // 
@@ -1178,9 +1178,9 @@
             // 
             this.LV1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.LV1.BackColor = System.Drawing.Color.DarkSlateGray;
-            this.LV1.Location = new System.Drawing.Point(12, 155);
+            this.LV1.Location = new System.Drawing.Point(14, 179);
             this.LV1.Name = "LV1";
-            this.LV1.Size = new System.Drawing.Size(16, 5);
+            this.LV1.Size = new System.Drawing.Size(19, 6);
             this.LV1.TabIndex = 50;
             this.LV1.Visible = false;
             // 
@@ -1334,11 +1334,11 @@
             // 
             // OmniMIDIMixerWindow
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(677, 237);
+            this.ClientSize = new System.Drawing.Size(790, 277);
             this.Controls.Add(this.Meter);
             this.Controls.Add(this.AllCh);
             this.Controls.Add(this.MainVol);
@@ -1374,6 +1374,7 @@
             this.Controls.Add(this.CH3VOL);
             this.Controls.Add(this.CH2VOL);
             this.Controls.Add(this.CH1VOL);
+            this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

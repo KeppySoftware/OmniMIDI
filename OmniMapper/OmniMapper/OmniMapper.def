@@ -1,4 +1,4 @@
 LIBRARY		OmniMapper
 EXPORTS
 	DriverProc
-	modMessage
+	modMessage = mM
