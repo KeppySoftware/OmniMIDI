@@ -74,7 +74,7 @@ namespace OmniMIDIConfigurator
                 return;
             }
 
-            PatchFunc(Functions.ApplyWinMMWRPPatch(false, PA.FILE_ARCH.UNK, out Status), "DAW", Status);
+            PatchFunc(Functions.ApplyWinMMWRPPatch(true, PA.FILE_ARCH.UNK, out Status), "DAW", Status);
         }
 
         private void UnpatchApp_Click(object sender, EventArgs e)

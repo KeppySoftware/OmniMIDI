@@ -312,7 +312,8 @@ void InitializeEventsProcesserThreads() {
 }
 
 void AudioEngine(LPVOID lpParam) {
-	DWORD dlen = 0;
+	DWORD DataLength = 0;
+	QWORD QDataLength = 0;
 
 	PrintMessageToDebugLog("AudioEngine", "Initializing audio rendering thread...");
 	// Skip if ASIO isn't using the direct feed mode
@@ -327,9 +328,18 @@ void AudioEngine(LPVOID lpParam) {
 				{
 					_PlayBufDataChk();
 					
-					dlen = BASS_ChannelGetData(OMStream, FSndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float));
-					if (dlen != -1) SndDrv->WriteFrame(FSndBuf, dlen / sizeof(float));
+					if ((DataLength = BASS_ChannelGetData(OMStream, FSndBuf, BASS_DATA_FLOAT + SamplesPerFrame * sizeof(float))) != -1)
+						SndDrv->WriteFrame(FSndBuf, DataLength / sizeof(float));
 					
+					_FWAIT;
+					continue;
+				}
+				case BASS_OUTPUT:
+//				case DXAUDIO_ENGINE:
+				{
+					_PlayBufDataChk();
+					BASS_ChannelUpdate(OMStream, /*(ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ?*/ ManagedSettings.ChannelUpdateLength /*: 0*/);
+
 					_FWAIT;
 					continue;
 				}
@@ -345,19 +355,10 @@ void AudioEngine(LPVOID lpParam) {
 					// Parse some notes for the WAV mode
 					_PlayBufDataChk();
 
-					QWORD qlen = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
-					BASS_ChannelGetData(OMStream, FSndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | qlen);
-					BASS_Encode_Write(OMStream, FSndBuf, qlen);
+					QDataLength = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
+					BASS_ChannelGetData(OMStream, FSndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | QDataLength);
+					BASS_Encode_Write(OMStream, FSndBuf, QDataLength);
 
-					continue;
-				}
-				case BASS_OUTPUT:
-				// case DXAUDIO_ENGINE:
-				{
-					_PlayBufDataChk();
-					BASS_ChannelUpdate(OMStream, /*(ManagedSettings.CurrentEngine != DXAUDIO_ENGINE) ?*/ ManagedSettings.ChannelUpdateLength /*: 0*/);
-
-					_FWAIT;
 					continue;
 				}
 				default:
@@ -1156,7 +1157,6 @@ BEGSWITCH:
 			}
 
 			InitializationCompleted = TRUE;
-			ASIOInit = TRUE;
 		}
 
 		break;
@@ -1187,6 +1187,7 @@ BEGSWITCH:
 						NULL, 
 						ManagedSettings.AudioFrequency,
 						ManagedSettings.MonoRendering ? 1 : 2, 
+						4,
 						SamplesPerFrame,
 						ManagedSettings.XASPFSweepRate);
 			}

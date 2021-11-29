@@ -8,7 +8,7 @@ public:
 
 	virtual bool IsLoaded() = 0;
 
-	virtual const char* OpenStream(void* hwnd, unsigned sample_rate, unsigned short nch, unsigned max_samples_per_frame, unsigned num_frames) = 0;
+	virtual const char* OpenStream(void* hwnd, unsigned sample_rate, unsigned short nch, unsigned short bps, unsigned max_samples_per_frame, unsigned num_frames) = 0;
 	
 	virtual const char* WriteFrame(void* buffer, unsigned num_samples) = 0;
 };

@@ -107,9 +107,6 @@ BOOL HostSessionMode = FALSE;
 BOOL AppLibWarning = FALSE;
 BOOL LastChoice = TRUE;
 
-// Check if init
-BOOL ASIOInit = FALSE;
-
 // Stream
 BASS_INFO info;
 BOOL LogarithmVol = FALSE;
