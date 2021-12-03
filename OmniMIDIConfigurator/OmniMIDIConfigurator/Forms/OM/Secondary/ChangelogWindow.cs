@@ -63,7 +63,7 @@ namespace OmniMIDIConfigurator
                 };
 
                 HtmlAgilityPack.HtmlDocument doc = web.Load(String.Format("{0}/releases/tag/{1}", Properties.Settings.Default.ProjectLink, version));
-                return doc.DocumentNode.SelectSingleNode("//div[@class='markdown-body']");
+                return doc.DocumentNode.SelectSingleNode("//div[@class='markdown-body my-3']");
             }
             catch (WebException ex)
             {

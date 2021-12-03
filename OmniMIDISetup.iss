@@ -20,7 +20,7 @@
 #define MixerWindow "OmniMIDIMixerWindow"
 #define OutputName "OmniMIDISetup"
 #define ProductName "OmniMIDI"
-#define Version '14.6.11.0'
+#define Version '14.6.12.0'
                        
 #define MIDIMapper 'OmniMapper'
 #define lib32 'external_packages\lib'
@@ -299,19 +299,6 @@ begin
   Result := IsWindowsVersionOrNewer(6, 0);
 end;
 
-function Framework40IsNotInstalled(): boolean;
-var
-  bSuccess: Boolean;
-  installVer: String;
-begin
-  Result := True;
-
-  bSuccess := RegQueryStringValue(HKLM, 'Software\Microsoft\NET Framework Setup\NDP\v4\Full', 'TargetVersion', installVer);
-  if (True = bSuccess) and (installVer = '4.0.0') then begin
-    Result := False;
-  end;
-end;
-
 function CheckOBSVer(): boolean;
 var
   Major, Minor, Rev, Build: Word;
@@ -327,7 +314,7 @@ begin
   end;
 end;
 
-function Framework45IsNotInstalled(): boolean;
+function Framework46IsNotInstalled(): boolean;
 var
   bSuccess: Boolean;
   regVersion: Cardinal;
@@ -335,23 +322,16 @@ begin
   Result := True;
 
   bSuccess := RegQueryDWordValue(HKLM, 'Software\Microsoft\NET Framework Setup\NDP\v4\Full', 'Release', regVersion);
-  if (True = bSuccess) and (regVersion >= 378389) then begin
+  if (True = bSuccess) and (regVersion >= 393295) then begin
     Result := False;
   end;
 end;
 
 procedure InitializeWizard;
 begin
-  if IsWindowsVistaOrNewer() then begin
-    if Framework45IsNotInstalled() then begin
-      idpAddFile('http://go.microsoft.com/fwlink/?LinkId=397707', ExpandConstant('{tmp}\NetFramework45Installer.exe'));
-      idpDownloadAfter(wpPreparing);
-    end;
-  end else begin
-    if Framework40IsNotInstalled() then begin
-      idpAddFile('http://go.microsoft.com/fwlink/?linkid=182805', ExpandConstant('{tmp}\NetFramework40Installer.exe'));
-      idpDownloadAfter(wpPreparing);
-    end;
+  if Framework46IsNotInstalled() then begin
+    idpAddFile('http://go.microsoft.com/fwlink/?linkid=528233', ExpandConstant('{tmp}\NetFramework46Installer.exe'));
+    idpDownloadAfter(wpPreparing);
   end;
 end;
 
@@ -360,36 +340,19 @@ var
   StatusText: string;
   ResultCode: Integer;
 begin
-  if IsWindowsVistaOrNewer() then begin
-    StatusText := WizardForm.StatusLabel.Caption;
-    WizardForm.StatusLabel.Caption := 'Please wait while OmniMIDI installs .NET 4.5.2 for you...';
-    WizardForm.ProgressGauge.Style := npbstMarquee;
-    try
-      if not Exec(ExpandConstant('{tmp}\NetFramework45Installer.exe'), '/passive /norestart', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
-      begin
-        MsgBox('OmniIMDI failed to install .NET Framework 4.5.2!' + #13#10 + 'Error code: ' + IntToStr(ResultCode) + '.' + #13#10 + #13#10 + 'Please try to install the framework manually.', mbError, MB_OK);
-      end;
-    finally
-      WizardForm.StatusLabel.Caption := StatusText;
-      WizardForm.ProgressGauge.Style := npbstNormal;
-
-      DeleteFile(ExpandConstant('{tmp}\NetFramework45Installer.exe'));
+  StatusText := WizardForm.StatusLabel.Caption;
+  WizardForm.StatusLabel.Caption := 'Please wait while OmniMIDI installs .NET 4.6 for you...';
+  WizardForm.ProgressGauge.Style := npbstMarquee;
+  try
+    if not Exec(ExpandConstant('{tmp}\NetFramework46Installer.exe'), '/passive /norestart', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
+    begin
+      MsgBox('OmniIMDI failed to install .NET Framework 4.6!' + #13#10 + 'Error code: ' + IntToStr(ResultCode) + '.' + #13#10 + #13#10 + 'Please try to install the framework manually.', mbError, MB_OK);
     end;
-  end else begin
-    StatusText := WizardForm.StatusLabel.Caption;
-    WizardForm.StatusLabel.Caption := 'Please wait while OmniMIDI installs .NET 4.0.3 for you...';
-    WizardForm.ProgressGauge.Style := npbstMarquee;
-    try
-      if not Exec(ExpandConstant('{tmp}\NetFramework40Installer.exe'), '/passive /norestart', '', SW_SHOW, ewWaitUntilTerminated, ResultCode) then
-      begin
-        MsgBox('OmniIMDI failed to install .NET Framework 4.0.3!' + #13#10 + 'Error code: ' + IntToStr(ResultCode) + '.' + #13#10 + #13#10 + 'Please try to install the framework manually.', mbError, MB_OK);
-      end;
-    finally
-      WizardForm.StatusLabel.Caption := StatusText;
-      WizardForm.ProgressGauge.Style := npbstNormal;
+  finally
+    WizardForm.StatusLabel.Caption := StatusText;
+    WizardForm.ProgressGauge.Style := npbstNormal;
 
-      DeleteFile(ExpandConstant('{tmp}\NetFramework40Installer.exe'));
-    end;
+    DeleteFile(ExpandConstant('{tmp}\NetFramework46Installer.exe'));
   end;
 end;
 
@@ -397,15 +360,8 @@ procedure CurStepChanged(CurStep: TSetupStep);
 begin
   case CurStep of
     ssInstall:
-      begin
-      if IsWindowsVistaOrNewer() then begin
-        if Framework45IsNotInstalled() then begin
+      if Framework46IsNotInstalled() then begin
           InstallFramework();
-        end;
-      end else begin
-        if Framework40IsNotInstalled() then begin
-          InstallFramework();
-        end;
       end;
     end;
   end;
