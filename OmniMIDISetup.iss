@@ -363,6 +363,5 @@ begin
       if Framework46IsNotInstalled() then begin
           InstallFramework();
       end;
-    end;
   end;
 end;
