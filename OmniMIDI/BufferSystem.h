@@ -222,7 +222,7 @@ void __inline SendLongToBASSMIDI(LPMIDIHDR IIMidiHdr) {
 // since Running Status is a MANDATORY feature in MIDI drivers
 // and can not be skipped
 void __inline PBufData(void) {
-	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead];
+	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead].Event;
 	if (dwParam1 & 0x80)
 		LastRunningStatus = (BYTE)dwParam1;
 
@@ -235,13 +235,13 @@ void __inline PSmallBufData(void)
 {
 	auto HeadStart = EVBuffer.ReadHead;
 	auto HeadPos = HeadStart; //fast volatile
-	DWORD dwParam1 = EVBuffer.Buffer[HeadPos];
+	DWORD dwParam1 = EVBuffer.Buffer[HeadPos].Event;
 
 	if (!~dwParam1) return;
 
 	for (;;)
 	{
-		EVBuffer.Buffer[HeadPos] = ~0;
+		EVBuffer.Buffer[HeadPos].Event = ~0;
 
 		if (++HeadPos >= EVBuffer.BufSize)
 			HeadPos = 0;
@@ -259,7 +259,7 @@ void __inline PSmallBufData(void)
 
 		if (HeadPos == HeadStart) return;
 
-		dwParam1 = EVBuffer.Buffer[HeadPos];
+		dwParam1 = EVBuffer.Buffer[HeadPos].Event;
 		if (!~dwParam1) return;
 	}
 }
@@ -323,12 +323,12 @@ void __inline ParseData(DWORD_PTR dwParam1) {
 
 	if (NextWriteHead != EVBuffer.ReadHead)
 	{
-		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
+		EVBuffer.Buffer[EVBuffer.WriteHead].Event = dwParam1;
 		EVBuffer.WriteHead = NextWriteHead;
 	}
 	else if (!ManagedSettings.DontMissNotes)
 	{
-		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
+		EVBuffer.Buffer[EVBuffer.WriteHead].Event = dwParam1;
 		//do NOT advance the WriteHead for a more sensical note skipping
 		//EVBuffer.WriteHead = NextWriteHead;
 	}
@@ -339,17 +339,8 @@ void __inline ParseData(DWORD_PTR dwParam1) {
 
 		if(EVBuffer.BufSize >= SMALLBUFFER)
 			while (NextWriteHead == EVBuffer.ReadHead) _FWAIT;
-		else
-		{
-			volatile DWORD* dwVolatileEvent = EVBuffer.Buffer; // + NextWriteHead;
-			/*
-				EvBuffer resize resets both heads to 0, so checking
-				anything but the first event in the buffer will softlock completely
-			*/
-			while (~*dwVolatileEvent) _FWAIT;
-		}
 
-		EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
+		EVBuffer.Buffer[EVBuffer.WriteHead].Event = dwParam1;
 		EVBuffer.WriteHead = NextWriteHead;
 	}
 
@@ -365,7 +356,7 @@ void __inline ParseDataHyper(DWORD_PTR dwParam1)
 	ULONGLONG NextWriteHead = EVBuffer.WriteHead + 1;
 	if (NextWriteHead >= EVBuffer.BufSize) NextWriteHead = 0;
 
-	EVBuffer.Buffer[EVBuffer.WriteHead] = dwParam1;
+	EVBuffer.Buffer[EVBuffer.WriteHead].Event = dwParam1;
 
 	if (NextWriteHead != EVBuffer.ReadHead)
 		EVBuffer.WriteHead = NextWriteHead; //skip notes properly

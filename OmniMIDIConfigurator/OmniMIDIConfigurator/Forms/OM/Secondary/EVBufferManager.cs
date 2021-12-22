@@ -51,7 +51,7 @@ namespace OmniMIDIConfigurator
                 decimal evbuffratiotemp = Convert.ToDecimal(Program.SynthSettings.GetValue("EvBufferMultRatio", "1"));
                 ArraySize.Enabled = false;
                 RatioVal.Enabled = true;
-                ArraySize.Value = installedMemory / 4;
+                ArraySize.Value = installedMemory / 64;
                 if (evbuffratiotemp == 1) RatioVal.Value = 128;
                 else RatioVal.Value = evbuffratiotemp;
             }
@@ -69,7 +69,7 @@ namespace OmniMIDIConfigurator
 
         private void PerformRAMCheck()
         {
-            ulong check = (ulong)((ArraySize.Value * 4) / RatioVal.Value);
+            ulong check = (ulong)((ArraySize.Value * 64) / RatioVal.Value);
 
             if (check >= (installedMemory / 8))
             {
@@ -77,8 +77,8 @@ namespace OmniMIDIConfigurator
                 {
                     WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wir;
                     WarningLabel.Text = 
-                        String.Format("ERROR:\nYou cannot use all the available memory!\n(Size: {0} ({1} DWORDs * 4 / {2}))",
-                            SoundFontListExtension.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 4 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value
+                        String.Format("ERROR:\nYou cannot use all the available memory!\n(Size: {0} ({1} DWORDs * 64 / {2}))",
+                            SoundFontListExtension.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 64 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value
                             );
                     ApplySettings.Enabled = false;
                 }
@@ -86,9 +86,9 @@ namespace OmniMIDIConfigurator
                 {
                     WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wi;
                     WarningLabel.Text = 
-                        String.Format("WARNING:\nYou should leave at least {0} of RAM available to Windows.\n(Size: {1} ({2} DWORDs * 4 / {3}))",
+                        String.Format("WARNING:\nYou should leave at least {0} of RAM available to Windows.\n(Size: {1} ({2} DWORDs * 64 / {3}))",
                             SoundFontListExtension.ReturnSoundFontSize(null, "evbuff", (long)installedMemory / 6),
-                            SoundFontListExtension.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 4 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value
+                            SoundFontListExtension.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 64 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value
                             );
                     ApplySettings.Enabled = true;
                 }
@@ -96,13 +96,13 @@ namespace OmniMIDIConfigurator
             else if (check > 1 && check < 128)
             {
                 WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wi;
-                WarningLabel.Text = "WARNING: You might experience lag or missed events when going below 128 bytes.";
+                WarningLabel.Text = "WARNING: You might experience lag or missed events when going below 1024 bytes.";
                 ApplySettings.Enabled = true;
             }
             else if (check == 1)
             {
                 WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.wi;
-                WarningLabel.Text = String.Format("The final size will be {0}.\n(({1} DWORDs * 4) / {2})\nNot recommended.", SoundFontListExtension.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 4 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value);
+                WarningLabel.Text = String.Format("The final size will be {0}.\n(({1} DWORDs * 64) / {2})\nNot recommended.", SoundFontListExtension.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 64 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value);
                 ApplySettings.Enabled = true;
             }
             else if (check < 1)
@@ -114,7 +114,7 @@ namespace OmniMIDIConfigurator
             else
             {
                 WarningSign.Image = OmniMIDIConfigurator.Properties.Resources.successicon;
-                WarningLabel.Text = String.Format("The final size will be {0}.\n({1} DWORDs * 4) / {2})\nLooks good!", SoundFontListExtension.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 4 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value);
+                WarningLabel.Text = String.Format("The final size will be {0}.\n({1} DWORDs * 64) / {2})\nLooks good!", SoundFontListExtension.ReturnSoundFontSize(null, "evbuff", (long)ArraySize.Value * 64 / (long)RatioVal.Value), ArraySize.Value, RatioVal.Value);
                 ApplySettings.Enabled = true;
             }
         }

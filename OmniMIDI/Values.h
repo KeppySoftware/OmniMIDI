@@ -44,18 +44,24 @@ DebugInfo ManagedDebugInfo = DebugInfo();
 BOOL AlreadyStartedOnce = FALSE;
 
 // EVBuffer
+typedef struct EvBuf_t {
+	DWORD Event;
+	DWORD Align[15];
+};
+
 typedef struct EventsBuffer {
-	DWORD*				Buffer;
-	QWORD				BufSize;
+	EvBuf_t*			Buffer;
+	ULONGLONG			BufSize;
 	volatile ULONGLONG	ReadHead;
 	volatile ULONGLONG	WriteHead;
 };
+
 // The buffer's structure
-EventsBuffer EVBuffer;							// The buffer
-DWORD LastRunningStatus = 0;				// Last running status
-QWORD EvBufferSize = 4096;
-DWORD EvBufferMultRatio = 1;
-DWORD GetEvBuffSizeFromRAM = 0;
+EventsBuffer EVBuffer;						// The buffer
+ULONG LastRunningStatus = 0;				// Last running status
+ULONGLONG EvBufferSize = 4096;
+ULONG EvBufferMultRatio = 1;
+ULONG GetEvBuffSizeFromRAM = 0;
 
 // BASS lib
 typedef struct OMLib {

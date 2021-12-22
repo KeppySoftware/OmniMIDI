@@ -611,7 +611,7 @@ void FreeUpMemory() {
 	PrintMessageToDebugLog("FreeUpMemoryFunc", "Freeing EV buffer...");
 	if (EVBuffer.Buffer)
 	{
-		if (VirtualUnlock(EVBuffer.Buffer, EVBuffer.BufSize * sizeof(DWORD)))
+		if (VirtualUnlock(EVBuffer.Buffer, EVBuffer.BufSize * sizeof(EvBuf_t)))
 			PrintMessageToDebugLog("AllocateMemoryFunc", "Unlocked buffer from RAM.");
 
 		if (!VirtualFree(EVBuffer.Buffer, 0, MEM_RELEASE))
@@ -688,18 +688,18 @@ void AllocateMemory(BOOL restart) {
 			// Print the values to the log
 			PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer size (in amount of DWORDs)", FALSE, TempEvBufferSize);
 			PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer division ratio", TRUE, EvBufferMultRatio);
-			PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer final size (in bytes, one DWORD is 4 bytes)", FALSE, EvBufferSize * 4);
+			PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "EV buffer final size (in bytes, one EvBuf_t is 64 bytes)", FALSE, EvBufferSize * sizeof(EvBuf_t));
 			PrintMemoryMessageToDebugLog("AllocateMemoryFunc", "Total RAM available (in bytes)", FALSE, status.ullTotalPhys);
 
 			PrintMessageToDebugLog("AllocateMemoryFunc", "Allocating EV buffer...");
 			EVBuffer.BufSize = EvBufferSize;
-			EVBuffer.Buffer = (DWORD*)VirtualAlloc(NULL, EVBuffer.BufSize * sizeof(DWORD), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+			EVBuffer.Buffer = (EvBuf_t*)VirtualAlloc(NULL, EVBuffer.BufSize * sizeof(EvBuf_t), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 			if (EVBuffer.Buffer == NULL) {
 				MessageBox(NULL, L"The driver failed to allocate the events buffer!\n\nNot enough memory, press OK to quit.", L"OmniMIDI - FATAL ERREOR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 				exit(ERROR_NOT_ENOUGH_MEMORY);
 			}
 
-			if (!VirtualLock(EVBuffer.Buffer, EVBuffer.BufSize * sizeof(DWORD)))
+			if (!VirtualLock(EVBuffer.Buffer, EVBuffer.BufSize * sizeof(EvBuf_t)))
 				PrintMessageToDebugLog("AllocateMemoryFunc", "VirtualLock failed to lock the events buffer to the CPU cache/RAM. This could reduce performance!");
 			else
 				PrintMessageToDebugLog("AllocateMemoryFunc", "VirtualLock successfully locked the events buffer to the CPU cache/RAM.");
