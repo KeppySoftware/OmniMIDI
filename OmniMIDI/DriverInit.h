@@ -21,6 +21,8 @@ void SetNoteValuesFromSettings() {
 }
 
 void TightenTimings() {
+	return;
+
 	TIMECAPS TC;
 	
 	if (timeGetDevCaps(&TC, sizeof(TC)) != TIMERR_NOERROR)
@@ -44,6 +46,8 @@ void TightenTimings() {
 }
 
 void ResetTimings() {
+	return;
+
 	if (Org) {
 		if (NT_SUCCESS(NtSetTimerResolution(Org, true, &Dummy))) {
 			PrintMessageToDebugLog("ResetTimings", "Timings reset to normal through NtSetTimerResolution.");
@@ -56,6 +60,8 @@ void ResetTimings() {
 }
 
 BOOL EnableMIDIFeedbackMode() {
+	return true;
+
 	try {
 		// Initialize feedback device info
 		DWORD NumDevs = 0;
@@ -91,21 +97,26 @@ BOOL EnableMIDIFeedbackMode() {
 			return FALSE;
 		}
 
-		if (!owinmm) {
+		if (!OWINMM) {
 			// First check if the user patched the app using WinMMWRP 4.5+
 			PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Checking if Windows Multimedia Wrapper is loaded...");
+			/*
 			GetOWINMM = (GO)GetProcAddress(GetModuleHandle(L"winmm"), "GetOWINMM");
 			SystemGetVersion = (SGV)GetProcAddress(GetModuleHandle(L"winmm"), "mmsystemGetVersion");
+			*/
 
+			/*
 			if (SystemGetVersion() == 0x0502U)
 			{
 				PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Unsupported version of the Windows Multimedia Wrapper detected.");
 				MessageBox(NULL, L"This version of the Windows Multimedia Wrapper is not supported.\nPlease upgrade it by repatching the application.\n\nThe MIDI feedback mode will not be enabled.\n\nPress OK to continue", L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 				return FALSE;
 			}
+			*/
 
 			// If they didn't, load WINMM from the system directory
 			// (CAUTION: THIS IS NOT RECOMMENDED WHEN USING WINMMWRP 4.0 OR EARLIER!)
+			/*
 			if (!GetOWINMM) {
 				PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Loading Windows Multimedia API (OWINMM) from System32... (This is to avoid issues with WinMMWRP)");
 
@@ -118,22 +129,26 @@ BOOL EnableMIDIFeedbackMode() {
 			// If they did, then, use the new GetOWINMM function
 			// to get the original WINMM from the wrapper itself
 			else owinmm = GetOWINMM();
+			*/
 
 			// If there's no OWINMM, abort the feedback initialization process
 			// and mark the feedback mode as not loaded
+			/*
 			if (!owinmm)
 			{
 				PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Something went wrong while loading OWINMM! Feedback mode disabled.");
 				return FALSE;
 			}
-
+			*/
 			// Import the required functions from the OWINMM lib
-			MMmidiOutOpen = (MOO)GetProcAddress(owinmm, "midiOutOpen");
-			MMmidiOutClose = (MOC)GetProcAddress(owinmm, "midiOutClose");
-			MMmidiOutGetNumDevs = (MOGND)GetProcAddress(owinmm, "midiOutGetNumDevs");
-			MMmidiOutShortMsg = (MOSM)GetProcAddress(owinmm, "midiOutShortMsg");
-			MMmidiOutLongMsg = (MOLM)GetProcAddress(owinmm, "midiOutLongMsg");
-			MMmidiOutGetDevCapsW = (MOGDCW)GetProcAddress(owinmm, "midiOutGetDevCapsW");
+			/*
+			VMMmidiOutOpen = (MOO)GetProcAddress(owinmm, "midiOutOpen");
+			VMMmidiOutClose = (MOC)GetProcAddress(owinmm, "midiOutClose");
+			VMMmidiOutGetNumDevs = (MOGND)GetProcAddress(owinmm, "midiOutGetNumDevs");
+			VMMmidiOutShortMsg = (MOSM)GetProcAddress(owinmm, "midiOutShortMsg");
+			VMMmidiOutLongMsg = (MOLM)GetProcAddress(owinmm, "midiOutLongMsg");
+			VMMmidiOutGetDevCapsW = (MOGDCW)GetProcAddress(owinmm, "midiOutGetDevCapsW");
+			*/
 
 			// If one of the functions fails to load,
 			// abort the feedback initialization process and mark the feedback mode as not loaded
@@ -207,12 +222,14 @@ BOOL DisableMIDIFeedbackMode() {
 			PrintMessageToDebugLog("DisableMIDIFeedbackMode", "Disabled.");
 		}
 
+		/*
 		if (owinmm && !GetOWINMM) {
 			if (!FreeLibrary(owinmm))
 				throw;
 		}
 		
 		owinmm = NULL;
+		*/
 
 		return TRUE;
 	}
@@ -530,6 +547,7 @@ BOOL InitializeStream(INT32 mixfreq) {
 
 	// Create the stream with 16 MIDI channels, and the various settings
 	OMStream = BASS_MIDI_StreamCreate(16,
+		(ManagedSettings.BASSDSMode ? BASS_MIDI_ASYNC : 0) |
 		(ManagedSettings.CurrentEngine != BASS_OUTPUT ? BASS_STREAM_DECODE : 0) |
 		(ManagedSettings.IgnoreSysReset ? BASS_MIDI_NOSYSRESET : 0) |
 		(ManagedSettings.MonoRendering ? BASS_SAMPLE_MONO : 0) |

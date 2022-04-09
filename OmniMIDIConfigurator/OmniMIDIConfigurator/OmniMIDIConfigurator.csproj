@@ -577,14 +577,12 @@
     <Content Include="Resources\Icons\PayPalLogo.png" />
     <Content Include="Resources\Images\OMLauncherChristmas.png" />
     <Content Include="Resources\Images\OMLauncherFish.png" />
+    <None Include="Resources\LICENSE.txt" />
     <Content Include="Resources\LoudMax\LoudMax32.dll" />
     <Content Include="Resources\LoudMax\LoudMax64.dll" />
     <Content Include="Resources\WinMM\winmm32DAW.dll" />
-    <Content Include="Resources\WinMM\winmm32wrp.dll" />
     <Content Include="Resources\WinMM\winmm64DAW.dll" />
-    <Content Include="Resources\WinMM\winmm64wrp.dll" />
     <Content Include="Resources\WinMM\winmmARM64DAW.dll" />
-    <Content Include="Resources\WinMM\winmmARM64wrp.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="Date" BeforeTargets="BeforeBuild">

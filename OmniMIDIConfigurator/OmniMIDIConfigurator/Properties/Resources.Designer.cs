@@ -439,16 +439,6 @@ namespace OmniMIDIConfigurator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] winmm32wrp {
-            get {
-                object obj = ResourceManager.GetObject("winmm32wrp", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
         internal static byte[] winmm64DAW {
             get {
                 object obj = ResourceManager.GetObject("winmm64DAW", resourceCulture);
@@ -459,29 +449,9 @@ namespace OmniMIDIConfigurator.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] winmm64wrp {
-            get {
-                object obj = ResourceManager.GetObject("winmm64wrp", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
         internal static byte[] winmmARM64DAW {
             get {
                 object obj = ResourceManager.GetObject("winmmARM64DAW", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] winmmARM64wrp {
-            get {
-                object obj = ResourceManager.GetObject("winmmARM64wrp", resourceCulture);
                 return ((byte[])(obj));
             }
         }

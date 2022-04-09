@@ -412,7 +412,7 @@ BOOL LoadBASSFunctions() {
 			PrintMessageToDebugLog("ImportBASS", "Importing BASS DLLs to memory...");
 
 			// Load modules
-			// RegQueryValueEx(Configuration.Address, L"FastLibs", NULL, &dwType, (LPBYTE)&ManagedSettings.FastLibs, &dwSize);
+			OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 
 			if (!LoadDriverModule(&BASS, L"bass.dll")) return FALSE;
 			if (!LoadDriverModule(&BASSMIDI, L"bassmidi.dll")) return FALSE;
@@ -818,6 +818,7 @@ void LoadSettings(BOOL Restart, BOOL RT)
 			RegQueryValueEx(Configuration.Address, L"LinAttMod", NULL, &dwType, (LPBYTE)&ManagedSettings.LinAttMod, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"LinDecVol", NULL, &dwType, (LPBYTE)&ManagedSettings.LinDecVol, &dwSize);
 			RegQueryValueEx(Configuration.Address, L"NoSFGenLimits", NULL, &dwType, (LPBYTE)&ManagedSettings.NoSFGenLimits, &dwSize);
+			RegQueryValueEx(Configuration.Address, L"BASSDSMode", NULL, &dwType, (LPBYTE)&ManagedSettings.BASSDSMode, &dwSize);
 
 			if (ManagedSettings.CurrentEngine != AUDTOWAV) RegQueryValueEx(Configuration.Address, L"NotesCatcherWithAudio", NULL, &dwType, (LPBYTE)&TempNCWA, &dwSize);
 			else ManagedSettings.NotesCatcherWithAudio = TRUE;

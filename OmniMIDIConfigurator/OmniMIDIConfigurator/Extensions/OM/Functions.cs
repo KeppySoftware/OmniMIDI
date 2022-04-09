@@ -554,6 +554,8 @@ namespace OmniMIDIConfigurator
             WinMMDialog.Multiselect = false;
             WinMMDialog.InitialDirectory = Properties.Settings.Default.LastPatchPath;
 
+            IntPtr Dummy = new IntPtr();
+
             if (WinMMDialog.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -575,27 +577,62 @@ namespace OmniMIDIConfigurator
                     }
 
                     RemovePatchFiles(WinMMDialog.FileName, true);
-                    if (BitApp == PA.FILE_ARCH.i386)
+
+                    switch (BitApp)
                     {
-                        Status = "x86 (i386)";
-                        File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm32DAW : Properties.Resources.winmm32wrp);
-                    }
-                    else if (BitApp == PA.FILE_ARCH.AMD64)
-                    {
-                        Status = "x64 (AMD64)";
-                        File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmm64DAW : Properties.Resources.winmm64wrp);
-                    }
-                    else if (BitApp == PA.FILE_ARCH.AArch64)
-                    {
-                        Status = "ARM64 (AArch64)";
-                        File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), DAWMode ? Properties.Resources.winmmARM64DAW : Properties.Resources.winmmARM64wrp);
-                    }
-                    else
-                    {
-                        Program.ShowError(4, "Error", "Unable to patch the following executable!\nThe configurator can only patch x86, x86-64 and ARM64 executables.\n\nPress OK to continue", null);
-                        Status = "UNK (UNK)";
-                        WinMMDialog.Dispose();
-                        return DialogResult.No;
+                        case PA.FILE_ARCH.i386:
+                            Status = "x86 (i386)";
+
+                            if (DAWMode)
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm32DAW);
+                            else
+                                File.Copy(
+                                    String.Format("{0}\\{1}", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86), "OmniMIDI.dll"),
+                                    String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"));
+
+                            break;
+
+                        case PA.FILE_ARCH.AMD64:
+                            Status = "x64 (AMD64)";
+
+                            if (!Environment.Is64BitOperatingSystem)
+                                break;                 
+
+                            Wow64DisableWow64FsRedirection(ref Dummy);
+
+                            if (DAWMode)
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm64DAW);
+                            else
+                                File.Copy(
+                                    String.Format("{0}\\{1}", Environment.GetFolderPath(Environment.SpecialFolder.System), "OmniMIDI.dll"),
+                                    String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"));
+
+                            Wow64RevertWow64FsRedirection(Dummy);
+
+                            break;
+
+                        case PA.FILE_ARCH.AArch64:
+                            Status = "ARM64 (AArch64)";
+
+                            Wow64DisableWow64FsRedirection(ref Dummy);
+
+                            if (DAWMode)
+                                File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmmARM64DAW);
+                            else
+                                File.Copy(
+                                    String.Format("{0}\\{1}", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysArm32"), "OmniMIDI.dll"),
+                                    String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"));
+
+                            Wow64RevertWow64FsRedirection(Dummy);
+
+                            break;
+
+                        case PA.FILE_ARCH.UNK:
+                        default:
+                            Program.ShowError(4, "Error", "Unable to patch the following executable!\nThe configurator can only patch x86, x86-64 and ARM64 executables.\n\nPress OK to continue", null);
+                            Status = "UNK (UNK)";
+                            WinMMDialog.Dispose();
+                            return DialogResult.No;
                     }
                 }
                 catch

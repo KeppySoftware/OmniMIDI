@@ -177,6 +177,7 @@ namespace OmniMIDIConfigurator
                 FadeoutDisable.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("DisableNotesFadeOut", 0));
                 MonophonicFunc.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("MonoRendering", 0));
                 SlowDownPlayback.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("DontMissNotes", 0));
+                AsyncProcessing.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("BASSDSMode", 1));
                 KSDAPIBox.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("KDMAPIEnabled", 1));
                 HMode.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("HyperPlayback", 0));
                 OldBuff.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("NotesCatcherWithAudio", 0));
@@ -278,6 +279,8 @@ namespace OmniMIDIConfigurator
             Program.SynthSettings.SetValue("MonoRendering", Convert.ToInt32(MonophonicFunc.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("DontMissNotes", Convert.ToInt32(SlowDownPlayback.Checked), RegistryValueKind.DWord);
             Program.SynthSettings.SetValue("KDMAPIEnabled", Convert.ToInt32(KSDAPIBox.Checked), RegistryValueKind.DWord);
+            Program.SynthSettings.SetValue("BASSDSMode", Convert.ToInt32(AsyncProcessing.Checked), RegistryValueKind.DWord);
+
             Program.SynthSettings.SetValue("HyperPlayback", Convert.ToInt32(HMode.Checked), RegistryValueKind.DWord);
 
             Program.SynthSettings.SetValue("IgnoreAllEvents", Convert.ToInt32(IgnoreAllEvents.Checked), RegistryValueKind.DWord);

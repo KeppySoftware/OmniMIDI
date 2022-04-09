@@ -352,6 +352,7 @@ DWORD(CALLBACK* _ProcData)(void* buffer, DWORD length, void* user) = DummyProcDa
 MMRESULT WINAPI DummymidiOutShortMsg(HMIDIOUT, DWORD) noexcept { return MMSYSERR_NOERROR; };
 MMRESULT WINAPI DummymidiOutLongMsg(HMIDIOUT, LPMIDIHDR, UINT) noexcept { return MMSYSERR_NOERROR; };
 
+/*
 typedef HMODULE(WINAPI* GO)();
 typedef UINT(WINAPI* SGV)();
 typedef MMRESULT(WINAPI* MOC)(HMIDIOUT);
@@ -360,15 +361,17 @@ typedef MMRESULT(WINAPI* MOSM)(HMIDIOUT, DWORD);
 typedef MMRESULT(WINAPI* MOLM)(HMIDIOUT, LPMIDIHDR, UINT);
 typedef DWORD(WINAPI* MOGND)();
 typedef MMRESULT(WINAPI* MOGDCW)(UINT_PTR, LPMIDIOUTCAPSW, UINT);
+*/
 
 BOOL FeedbackBlacklisted = FALSE;
-HMODULE owinmm = NULL;					// ?
+/*
 GO GetOWINMM = 0;
 SGV SystemGetVersion = 0;
-MOC MMmidiOutClose = 0;
-MOO MMmidiOutOpen = 0;
-MOSM MMmidiOutShortMsg = DummymidiOutShortMsg;
-MOLM MMmidiOutLongMsg = DummymidiOutLongMsg;
-MOGND MMmidiOutGetNumDevs = 0;
-MOGDCW MMmidiOutGetDevCapsW = 0;
+MOC VMMmidiOutClose = 0;
+MOO VMMmidiOutOpen = 0;
+MOSM VMMmidiOutShortMsg = DummymidiOutShortMsg;
+MOLM VMMmidiOutLongMsg = DummymidiOutLongMsg;
+MOGND VMMmidiOutGetNumDevs = 0;
+MOGDCW VMMmidiOutGetDevCapsW = 0;
+*/
 UINT TimerResolution = 1;

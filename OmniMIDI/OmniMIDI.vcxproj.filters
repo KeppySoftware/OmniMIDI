@@ -70,6 +70,9 @@
     <ClInclude Include="NTDLLDummy.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="WinMMWRP\WinMM.h">
+      <Filter>WinMMWRP</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
@@ -80,6 +83,9 @@
     </Filter>
     <Filter Include="Runtime">
       <UniqueIdentifier>{bc795566-3e5e-4b04-868e-bd68977dd818}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WinMMWRP">
+      <UniqueIdentifier>{7c2b4cdf-1c6f-4061-a859-813b6e414e23}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

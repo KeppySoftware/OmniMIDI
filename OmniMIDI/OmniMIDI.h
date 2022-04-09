@@ -200,6 +200,8 @@ typedef struct
 	DWORD EchoLeftDelay = 500;				// Echo left delay (ms)
 	DWORD EchoRightDelay = 500;				// Echo right delay (ms)
 	BOOL EchoPanDelay = FALSE;				// Echo pan delay
+
+	BOOL BASSDSMode = TRUE;					// Process events in async mode
 } Settings;
 #endif
 

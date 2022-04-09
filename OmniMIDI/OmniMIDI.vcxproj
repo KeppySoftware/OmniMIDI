@@ -42,6 +42,7 @@
     <ClInclude Include="SoundFontLoader.h" />
     <ClInclude Include="sound_out.h" />
     <ClInclude Include="Values.h" />
+    <ClInclude Include="WinMMWRP\WinMM.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
