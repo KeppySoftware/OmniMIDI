@@ -105,7 +105,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 	bool OnlyDrivers32 = true;
 
 	// What's the first MIDIx slot available? We'll check later.
-	bool MIDISlots[9] = { true, true, true, true, true, true, true, true, true };
+	bool MIDISlots[9] = { false, false, false, false, false, false, false, false, false };
 
 	// We need to register, woohoo
 	if (_stricmp(CommandLine, "RegisterDrv") == 0 || _stricmp(CommandLine, "RegisterDrvS") == 0 ||
@@ -203,19 +203,17 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 								{
 									// Check if Alias has been found and it's equal midiX
 									if (_wcsicmp(Buf32, ShakraKey) == 0)
-									{
-										// It's a match, mark the slot as occupied
-										MIDISlots[MIDIEntry] = false;
-										break;
-									}
+										continue;
 								}
+
+								if (MIDIEntry < MAX_DEVICEID)
+									MIDISlots[MIDIEntry] = true;
 							}
 
 							// Nothing found? Let's continue until we run out of devices.
 						}
 
 					}
-
 				}
 			}
 
@@ -400,12 +398,12 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			// Failed to register, let's delete the virtual device.
 			else 
 			{
-				wchar_t F[] = L"Free";
-				wchar_t O[] = L"Occupied";
+				wchar_t F[] = L"Slot free";
+				wchar_t O[] = L"Slot occupied";
 
 				ZeroMemory(Buf32, sizeof(Buf32));
 				swprintf_s(Buf32, sizeof(Buf32),
-					L"No MIDI slots available for OmniMIDI to register properly!\nDown below you can find a list of which slots are available at the moment.\n\nPress OK to quit.\n\nmidi1 free: %s\nmidi2 free: %s\nmidi3 free: %s\nmidi4 free: %s\nmidi5 free: %s\nmidi6 free: %s\nmidi7 free: %s\nmidi8 free: %s\nmidi9 free: %s", 
+					L"No MIDI slots available for OmniMIDI to register properly!\nDown below you can find a list of which slots are available at the moment.\n\nPress OK to quit.\n\nmidi1: %s\nmidi2: %s\nmidi3: %s\nmidi4: %s\nmidi5: %s\nmidi6: %s\nmidi7: %s\nmidi8: %s\nmidi9: %s", 
 					MIDISlots[0] ? F : O, MIDISlots[1] ? F : O, MIDISlots[2] ? F : O, MIDISlots[3] ? F : O,
 					MIDISlots[4] ? F : O, MIDISlots[5] ? F : O, MIDISlots[6] ? F : O, MIDISlots[7] ? F : O, 
 					MIDISlots[8] ? F : O);
