@@ -105,7 +105,8 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 	bool OnlyDrivers32 = true;
 
 	// What's the first MIDIx slot available? We'll check later.
-	bool MIDISlots[9] = { false, false, false, false, false, false, false, false, false };
+	bool MIDISlots[9] = { true, true, true, true, true, true, true, true, true };
+	std::vector<std::wstring> Drvs;
 
 	// We need to register, woohoo
 	if (_stricmp(CommandLine, "RegisterDrv") == 0 || _stricmp(CommandLine, "RegisterDrvS") == 0 ||
@@ -182,6 +183,8 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 								ZeroMemory(Buf32, sizeof(Buf32));
 								if (!RegQueryValueExW(DevCheckKey, L"Driver", 0, &sztype, (LPBYTE)&Buf32, &BufSize))
 								{
+									Drvs.push_back(Buf32);
+
 									// If Alias has been found and it's equal midiX, mark the slot as busy.
 									if (_wcsicmp(Buf32, SHAKRA_DRIVER_NAME) == 0)
 									{
@@ -203,16 +206,16 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 								{
 									// Check if Alias has been found and it's equal midiX
 									if (_wcsicmp(Buf32, ShakraKey) == 0)
-										continue;
+									{
+										// It's a match, mark the slot as occupied
+										if (MIDIEntry < MAX_DEVICEID)
+											MIDISlots[MIDIEntry - 1] = false;
+
+										break;
+									}
 								}
-
-								if (MIDIEntry < MAX_DEVICEID)
-									MIDISlots[MIDIEntry] = true;
 							}
-
-							// Nothing found? Let's continue until we run out of devices.
 						}
-
 					}
 				}
 			}
@@ -357,15 +360,15 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 
 			bool Pass = false;
 			int FinalID = 0;
-			for (int MIDIEntry = MIN_DEVICEID; MIDIEntry < MAX_DEVICEID; MIDIEntry++)
+			for (int MIDIEntry = 0; MIDIEntry < MAX_DEVICEID; MIDIEntry++)
 			{
 				// If the slot isn't available, quit.
 				if (!MIDISlots[MIDIEntry]) continue;
 
 				// Slot is empty! Register.
 				else {
-					Pass = TRUE;
-					FinalID = MIDIEntry;
+					Pass = true;
+					FinalID = MIDIEntry + 1;
 					break;
 				}
 			}
@@ -399,14 +402,13 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 			else 
 			{
 				wchar_t F[] = L"Slot free";
-				wchar_t O[] = L"Slot occupied";
 
 				ZeroMemory(Buf32, sizeof(Buf32));
 				swprintf_s(Buf32, sizeof(Buf32),
 					L"No MIDI slots available for OmniMIDI to register properly!\nDown below you can find a list of which slots are available at the moment.\n\nPress OK to quit.\n\nmidi1: %s\nmidi2: %s\nmidi3: %s\nmidi4: %s\nmidi5: %s\nmidi6: %s\nmidi7: %s\nmidi8: %s\nmidi9: %s", 
-					MIDISlots[0] ? F : O, MIDISlots[1] ? F : O, MIDISlots[2] ? F : O, MIDISlots[3] ? F : O,
-					MIDISlots[4] ? F : O, MIDISlots[5] ? F : O, MIDISlots[6] ? F : O, MIDISlots[7] ? F : O, 
-					MIDISlots[8] ? F : O);
+					MIDISlots[0] ? F : Drvs[0].c_str(), MIDISlots[1] ? F : Drvs[1].c_str(), MIDISlots[2] ? F : Drvs[2].c_str(), MIDISlots[3] ? F : Drvs[3].c_str(),
+					MIDISlots[4] ? F : Drvs[4].c_str(), MIDISlots[5] ? F : Drvs[5].c_str(), MIDISlots[6] ? F : Drvs[6].c_str(), MIDISlots[7] ? F : Drvs[7].c_str(),
+					MIDISlots[8] ? F : Drvs[8].c_str());
 
 				MessageBox(HWND, Buf32, L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR);
 

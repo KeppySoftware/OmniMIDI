@@ -16,9 +16,13 @@ I really didn't want to ruin kode54's original source code, so I decided to crea
 Oh, and of course, the driver wouldn't be where it is now, without kode54's help from behind the scenes. He helped me a lot with some issues I was having with some parts of his code. (Which I eventually replaced, but still.)<br />
 
 ### Do you feel like your driver is complete now?
-Tough question... I honestly have no idea. I mean, there's always room for improvement.<br />
+Tough question... I honestly have no idea. I mean, there's always room for improvement.<br/>
 But I feel like I have nothing else to add to it at this point, I'm literally out of ideas.<br/>
 If you're a programmer, and you have some ideas on how to improve or expand the driver's functionalities, please hit me up or send a pull requests with the edits.
+
+### Didn't you stop updating it?
+Yes, but I still do small updates from time to time when needed, and I also do updates on request.<br/>
+I've received numerous donations from people that don't want the driver to be abandoned, and I'm really thankful to all of them for their support!
 
 ### Ok ok, enough of your story... What's so special about your driver that makes it different from the others out there?
 Good question. The driver has unique features, such as:
@@ -67,35 +71,23 @@ The minimum requirements for this synthesizer to work are the following:
 
 ### Recommended system requirements for studio environments
 For the best experience, it's recommended to run the synthesizer on a PC with the following specifications:
-- An octa-core CPU running at 3GHz
-- 32GB of RAM
+- AMD Ryzen 9 5900X
+- 32GB of RAM *(3600MHz)*
 - Realtek ALC1220 with ASIO4ALL or Native Instruments Komplete Audio 6 (or another dedicated ASIO-capable hardware interface)
-- Windows 10 Pro
+- Windows 10 Pro 21H2
 - OmniMapper and Windows Multimedia Wrapper for DAWs _(Both included in the driver's configurator, for easy installation)_
 
 ### Requirements for compiling the source code
 To compile (and test) the synthesizer, you need:
-- Microsoft Visual Studio 2019
-- Inno Setup 6.x (It's recommended to install Inno Script Studio and the Inno Setup Pack)
+- Microsoft Visual Studio 2022
+- Inno Setup 6.1+ (It's recommended to install Inno Script Studio and the Inno Setup Pack)
 - Inno Downloader Plugin
-- Microsoft Windows SDK 10.0.19042
+- Microsoft Windows SDK 10.0.22000
 
 ## ASIO support details
 You can read the lists here: [OmniMIDIASIOSupportList folder on GitHub](https://github.com/KeppySoftware/OmniMIDI/tree/master/OmniMIDIASIOSupportList)
 <br />
 **WARNING**: Since I can not test all the ASIO devices available on the market (Mainly because they're not cheap), if you have one, please... Test it with OmniMIDI, then send me an e-mail about it to [kaleidonkep99@outlook.com](mailto:kaleidonkep99@outlook.com).
-
-<p align="center">
-  ✔️: Supported<br />
-  ⚠️: Partially supported, or implemented in a different way<br />
-  ❌: Unsupported<br />
-  <sub>* Might require some advanced computer expertise</sub>
-</p>
-
-<p align="center">
-  <a href="http://www.softpedia.com/get/Multimedia/Audio/Audio-Mixers-Synthesizers/Keppys-Synthesizer.shtml#status"><img src="https://www.softpedia.com/_img/sp100clean.png?1" /></a><br />
-  
-</p>
 
 # Credits
 BASSMIDI driver by Kode54 and mudlord: https://github.com/kode54/BASSMIDI-Driver
