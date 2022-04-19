@@ -158,7 +158,7 @@ namespace OmniMIDIConfigurator
                 LiveChangesTrigger.Checked = Properties.Settings.Default.LiveChanges;
 
                 VolumeBoost.Checked = Convert.ToBoolean(Program.SynthSettings.GetValue("VolumeBoost", 0));
-                VolKnob.Maximum = VolumeBoost.Checked ? 50000 : 10000;
+                VolKnob.Maximum = VolumeBoost.Checked ? 100000 : 10000;
                 VolKnob.Value = Convert.ToInt32(Program.SynthSettings.GetValue("OutputVolume", 10000));
 
                 AutoLoad.Checked = Properties.Settings.Default.AutoLoadList;
@@ -365,7 +365,7 @@ namespace OmniMIDIConfigurator
             else
             {
                 Program.SynthSettings.SetValue("VolumeBoost", 1, RegistryValueKind.DWord);
-                VolKnob.Maximum = 50000;
+                VolKnob.Maximum = 100000;
                 VolumeBoost.Checked = true;
                 VolKnob.Refresh();
             }
@@ -407,7 +407,8 @@ namespace OmniMIDIConfigurator
             else VolSimView.ForeColor = Color.FromArgb(255, 53, 0, 119);
 
             decimal VolVal = (decimal)VolKnob.Value / 100;
-            VolSimView.Text = String.Format("{0}", VolVal.ToString("000.00"));
+
+            VolSimView.Text = String.Format("{0}", VolVal.ToString((VolVal < 1000) ? "000.00" : "0000.0"));
 
             Program.SynthSettings.SetValue("OutputVolume", VolKnob.Value.ToString(), RegistryValueKind.DWord);
         }

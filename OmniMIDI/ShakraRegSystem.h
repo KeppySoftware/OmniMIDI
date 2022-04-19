@@ -79,7 +79,7 @@ void ShakraError(wchar_t* Msg, wchar_t* Position, wchar_t* File, wchar_t* Line)
 
 	OutputDebugString(Buf);
 
-#ifdef _DEBUG
+#ifdef DEBUGV
 	MessageBox(NULL, Buf, L"Shakra - Debug message", MB_OK | MB_SYSTEMMODAL | MB_ICONWARNING);
 #endif
 
@@ -99,6 +99,7 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 	DWORD sztype = REG_SZ;
 
 	// Drivers32 Shakra
+	wchar_t Drv[255], Alias[255];
 	wchar_t Buf32[255];
 	wchar_t Buf64[255];
 	wchar_t ShakraKey[255];
@@ -167,27 +168,28 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 				if (!RegOpenKeyExW(DevCheckKey, L"midi", NULL, KEY_READ, &DevCheckKey))
 				{
 					// Get the first subkey inside the "midi" key (it's always one only)
-					if (!RegEnumKeyEx(DevCheckKey, 0, achKey, &cbName, NULL, NULL, NULL, NULL))
+					if (!RegEnumKeyExW(DevCheckKey, 0, achKey, &cbName, NULL, NULL, NULL, NULL))
 					{
 						// Open the subkey you got, and check the Alias
 						if (!RegOpenKeyExW(DevCheckKey, achKey, NULL, KEY_READ, &DevCheckKey))
 						{
+							DWORD ABufSize = sizeof(Alias), BBufSize = sizeof(Buf32);
+
 							// Loop until you find the Alias
 							for (int MIDIEntry = MIN_DEVICEID; MIDIEntry < CLEANUP_DEVICEID; MIDIEntry++)
 							{
-								DWORD BufSize = sizeof(Buf32);
-
 								ZeroMemory(ShakraKey, sizeof(ShakraKey));
 								swprintf_s(ShakraKey, sizeof(ShakraKey), (wchar_t*)MIDI_REGISTRY_ENTRY_TEMPLATE, MIDIEntry);
 
 								ZeroMemory(Buf32, sizeof(Buf32));
-								if (!RegQueryValueExW(DevCheckKey, L"Driver", 0, &sztype, (LPBYTE)&Buf32, &BufSize))
+								if (!RegQueryValueExW(DevCheckKey, L"Driver", 0, &sztype, (LPBYTE)&Drv, &BBufSize))
 								{
-									Drvs.push_back(Buf32);
+									DLOG(L"Got driver");
 
-									// If Alias has been found and it's equal midiX, mark the slot as busy.
+									// Check if the driver matches OM
 									if (_wcsicmp(Buf32, SHAKRA_DRIVER_NAME) == 0)
 									{
+										// It does! We're in.
 										if (Registration)
 										{
 											DERROR(L"The driver is already registered!");
@@ -199,19 +201,28 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 											break;
 										}
 									}
-								}
-
-								ZeroMemory(Buf32, sizeof(Buf32));
-								if (!RegQueryValueExW(DevCheckKey, L"Alias", 0, &sztype, (LPBYTE)&Buf32, &BufSize))
-								{
-									// Check if Alias has been found and it's equal midiX
-									if (_wcsicmp(Buf32, ShakraKey) == 0)
+									else
 									{
-										// It's a match, mark the slot as occupied
+										DLOG(L"Driver is not OmniMIDI");
+
+										ZeroMemory(Buf32, sizeof(Buf32));
+										ZeroMemory(Alias, sizeof(Alias));
+										if (!RegQueryValueExW(DevCheckKey, L"Alias", 0, &sztype, (LPBYTE)&Alias, &ABufSize))
+										{
+											DLOG(Alias);
+
+											auto Position = Drvs.begin() + MIDIEntry - 1;
+
+											ZeroMemory(Buf32, sizeof(Buf32));
+											if (!RegQueryValueExW(DevCheckKey, L"Description", 0, &sztype, (LPBYTE)&Buf32, &BBufSize))
+												Drvs.insert(Position, Buf32);
+
+											DLOG(Buf32);
+										}
+
+										// It doesn't, we're not in
 										if (MIDIEntry < MAX_DEVICEID)
 											MIDISlots[MIDIEntry - 1] = false;
-
-										break;
 									}
 								}
 							}
@@ -399,24 +410,22 @@ void __stdcall DriverRegistration(HWND HWND, HINSTANCE HinstanceDLL, LPSTR Comma
 				}
 			}
 			// Failed to register, let's delete the virtual device.
-			else 
-			{
-				wchar_t F[] = L"Slot free";
-
-				ZeroMemory(Buf32, sizeof(Buf32));
-				swprintf_s(Buf32, sizeof(Buf32),
-					L"No MIDI slots available for OmniMIDI to register properly!\nDown below you can find a list of which slots are available at the moment.\n\nPress OK to quit.\n\nmidi1: %s\nmidi2: %s\nmidi3: %s\nmidi4: %s\nmidi5: %s\nmidi6: %s\nmidi7: %s\nmidi8: %s\nmidi9: %s", 
-					MIDISlots[0] ? F : Drvs[0].c_str(), MIDISlots[1] ? F : Drvs[1].c_str(), MIDISlots[2] ? F : Drvs[2].c_str(), MIDISlots[3] ? F : Drvs[3].c_str(),
-					MIDISlots[4] ? F : Drvs[4].c_str(), MIDISlots[5] ? F : Drvs[5].c_str(), MIDISlots[6] ? F : Drvs[6].c_str(), MIDISlots[7] ? F : Drvs[7].c_str(),
-					MIDISlots[8] ? F : Drvs[8].c_str());
-
-				MessageBox(HWND, Buf32, L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR);
+			else {
+				wchar_t F[] = L"Slot free or no info";
 
 				SetupDiRemoveDevice(DeviceInfo, &DeviceInfoData);
 				RegDeleteValueW(DriversWOW64Key, ShakraKey);
 #ifdef _WIN64
 				RegDeleteValueW(Drivers32Key, ShakraKey);
 #endif
+				ZeroMemory(Buf32, sizeof(Buf32));
+				swprintf_s(Buf32, sizeof(Buf32),
+					L"No MIDI slots available for OmniMIDI to register properly!\nDown below you can find a list of which slots are available at the moment.\n\nPress OK to quit.\n\nmidi1: %s\nmidi2: %s\nmidi3: %s\nmidi4: %s\nmidi5: %s\nmidi6: %s\nmidi7: %s\nmidi8: %s\nmidi9: %s",
+					MIDISlots[0] ? F : Drvs[0].c_str(), MIDISlots[1] ? F : Drvs[1].c_str(), MIDISlots[2] ? F : Drvs[2].c_str(), MIDISlots[3] ? F : Drvs[3].c_str(),
+					MIDISlots[4] ? F : Drvs[4].c_str(), MIDISlots[5] ? F : Drvs[5].c_str(), MIDISlots[6] ? F : Drvs[6].c_str(), MIDISlots[7] ? F : Drvs[7].c_str(),
+					MIDISlots[8] ? F : Drvs[8].c_str());
+
+				MessageBox(HWND, Buf32, L"OmniMIDI - ERROR", MB_OK | MB_ICONERROR);
 			}
 
 			SetupDiDestroyDeviceInfoList(DeviceInfo);

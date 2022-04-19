@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsPanel));
             this.EnginesBox = new System.Windows.Forms.GroupBox();
+            this.DSPSettingsBox = new OmniMIDIConfigurator.LinkLabelEx();
             this.NoSFGenLimits = new System.Windows.Forms.CheckBox();
             this.LinDecVol = new System.Windows.Forms.CheckBox();
             this.LinAttMod = new System.Windows.Forms.CheckBox();
@@ -47,6 +48,7 @@
             this.VolLabel = new System.Windows.Forms.Label();
             this.DrvHzLabel = new System.Windows.Forms.Label();
             this.Frequency = new System.Windows.Forms.ComboBox();
+            this.VolKnob = new KnobControl.KnobControl();
             this.BufferText = new System.Windows.Forms.Label();
             this.bufsize = new System.Windows.Forms.NumericUpDown();
             this.SincConv = new System.Windows.Forms.ComboBox();
@@ -66,6 +68,8 @@
             this.SlowDownPlayback = new System.Windows.Forms.CheckBox();
             this.OldBuff = new System.Windows.Forms.CheckBox();
             this.SynthBox = new System.Windows.Forms.GroupBox();
+            this.AsyncProcessing = new System.Windows.Forms.CheckBox();
+            this.PitchShifting = new OmniMIDIConfigurator.LinkLabelEx();
             this.AutoLoad = new System.Windows.Forms.CheckBox();
             this.PrioLab = new System.Windows.Forms.Label();
             this.IgnoreNotesLV = new System.Windows.Forms.NumericUpDown();
@@ -107,17 +111,13 @@
             this.FastHotKeys = new System.Windows.Forms.CheckBox();
             this.LegacySetDia = new System.Windows.Forms.GroupBox();
             this.Troubleshooter = new System.Windows.Forms.Button();
-            this.ShowChangelogUpdate = new System.Windows.Forms.CheckBox();
-            this.AsyncProcessing = new System.Windows.Forms.CheckBox();
             this.MinidumpsFolder = new OmniMIDIConfigurator.LinkLabelEx();
             this.MIDIFeedbackTool = new OmniMIDIConfigurator.LinkLabelEx();
             this.WinMMSpeedDiag = new OmniMIDIConfigurator.LinkLabelEx();
+            this.ShowChangelogUpdate = new System.Windows.Forms.CheckBox();
             this.DebugModeFolder = new OmniMIDIConfigurator.LinkLabelEx();
             this.SpatialSound = new OmniMIDIConfigurator.LinkLabelEx();
             this.ChangeEVBuf = new OmniMIDIConfigurator.LinkLabelEx();
-            this.PitchShifting = new OmniMIDIConfigurator.LinkLabelEx();
-            this.DSPSettingsBox = new OmniMIDIConfigurator.LinkLabelEx();
-            this.VolKnob = new KnobControl.KnobControl();
             this.EnginesBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxCPU)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.PolyphonyLimit)).BeginInit();
@@ -174,6 +174,18 @@
             this.EnginesBox.TabIndex = 0;
             this.EnginesBox.TabStop = false;
             this.EnginesBox.Text = "Audio engine settings";
+            // 
+            // DSPSettingsBox
+            // 
+            this.DSPSettingsBox.AutoSize = true;
+            this.DSPSettingsBox.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.DSPSettingsBox.Location = new System.Drawing.Point(7, 459);
+            this.DSPSettingsBox.Name = "DSPSettingsBox";
+            this.DSPSettingsBox.Size = new System.Drawing.Size(350, 15);
+            this.DSPSettingsBox.TabIndex = 60;
+            this.DSPSettingsBox.TabStop = true;
+            this.DSPSettingsBox.Text = ">>> Change reverb, chorus and echo settings (Separate window)";
+            this.DSPSettingsBox.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DSPSettingsBox_LinkClicked);
             // 
             // NoSFGenLimits
             // 
@@ -385,6 +397,33 @@
             this.Frequency.Size = new System.Drawing.Size(74, 23);
             this.Frequency.TabIndex = 6;
             this.Requirements.SetToolTip(this.Frequency, "This will require a restart of the audio stream.");
+            // 
+            // VolKnob
+            // 
+            this.VolKnob.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.VolKnob.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.VolKnob.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.VolKnob.EndAngle = 405F;
+            this.VolKnob.ImeMode = System.Windows.Forms.ImeMode.On;
+            this.VolKnob.knobBackColor = System.Drawing.Color.White;
+            this.VolKnob.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
+            this.VolKnob.LargeChange = 1000;
+            this.VolKnob.Location = new System.Drawing.Point(682, 385);
+            this.VolKnob.Maximum = 10000;
+            this.VolKnob.Minimum = 0;
+            this.VolKnob.Name = "VolKnob";
+            this.VolKnob.PointerColor = System.Drawing.Color.White;
+            this.VolKnob.ScaleColor = System.Drawing.Color.Black;
+            this.VolKnob.ScaleDivisions = 10;
+            this.VolKnob.ScaleSubDivisions = 10;
+            this.VolKnob.ShowLargeScale = false;
+            this.VolKnob.ShowSmallScale = false;
+            this.VolKnob.Size = new System.Drawing.Size(93, 93);
+            this.VolKnob.SmallChange = 500;
+            this.VolKnob.StartAngle = 135F;
+            this.VolKnob.TabIndex = 16;
+            this.VolKnob.Value = 10000;
+            this.VolKnob.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
             // 
             // BufferText
             // 
@@ -658,6 +697,30 @@
             this.SynthBox.TabIndex = 1;
             this.SynthBox.TabStop = false;
             this.SynthBox.Text = "Synthesizer settings";
+            // 
+            // AsyncProcessing
+            // 
+            this.AsyncProcessing.AutoSize = true;
+            this.AsyncProcessing.Location = new System.Drawing.Point(10, 126);
+            this.AsyncProcessing.Name = "AsyncProcessing";
+            this.AsyncProcessing.Size = new System.Drawing.Size(587, 19);
+            this.AsyncProcessing.TabIndex = 60;
+            this.AsyncProcessing.Text = "Process MIDI events asynchronously from audio output buffer (Could increase laten" +
+    "cy and rendering time)";
+            this.ButtonsDesc.SetToolTip(this.AsyncProcessing, resources.GetString("AsyncProcessing.ToolTip"));
+            this.AsyncProcessing.UseVisualStyleBackColor = true;
+            // 
+            // PitchShifting
+            // 
+            this.PitchShifting.AutoSize = true;
+            this.PitchShifting.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
+            this.PitchShifting.Location = new System.Drawing.Point(7, 275);
+            this.PitchShifting.Name = "PitchShifting";
+            this.PitchShifting.Size = new System.Drawing.Size(381, 15);
+            this.PitchShifting.TabIndex = 25;
+            this.PitchShifting.TabStop = true;
+            this.PitchShifting.Text = ">>> Change transposing and concert pitch settings (Separate window)";
+            this.PitchShifting.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PitchShifting_LinkClicked);
             // 
             // AutoLoad
             // 
@@ -1121,28 +1184,6 @@
             this.Troubleshooter.UseVisualStyleBackColor = true;
             this.Troubleshooter.Click += new System.EventHandler(this.Troubleshooter_Click);
             // 
-            // ShowChangelogUpdate
-            // 
-            this.ShowChangelogUpdate.AutoSize = true;
-            this.ShowChangelogUpdate.Location = new System.Drawing.Point(10, 182);
-            this.ShowChangelogUpdate.Name = "ShowChangelogUpdate";
-            this.ShowChangelogUpdate.Size = new System.Drawing.Size(350, 19);
-            this.ShowChangelogUpdate.TabIndex = 46;
-            this.ShowChangelogUpdate.Text = "Always show changelog on start-up, after applying an update";
-            this.ShowChangelogUpdate.UseVisualStyleBackColor = true;
-            // 
-            // AsyncProcessing
-            // 
-            this.AsyncProcessing.AutoSize = true;
-            this.AsyncProcessing.Location = new System.Drawing.Point(10, 126);
-            this.AsyncProcessing.Name = "AsyncProcessing";
-            this.AsyncProcessing.Size = new System.Drawing.Size(587, 19);
-            this.AsyncProcessing.TabIndex = 60;
-            this.AsyncProcessing.Text = "Process MIDI events asynchronously from audio output buffer (Could increase laten" +
-    "cy and rendering time)";
-            this.ButtonsDesc.SetToolTip(this.AsyncProcessing, resources.GetString("AsyncProcessing.ToolTip"));
-            this.AsyncProcessing.UseVisualStyleBackColor = true;
-            // 
             // MinidumpsFolder
             // 
             this.MinidumpsFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1181,6 +1222,16 @@
             this.WinMMSpeedDiag.Text = "Change speed of the Windows Multimedia Wrapper";
             this.WinMMSpeedDiag.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.WinMMSpeedDiag_LinkClicked);
             // 
+            // ShowChangelogUpdate
+            // 
+            this.ShowChangelogUpdate.AutoSize = true;
+            this.ShowChangelogUpdate.Location = new System.Drawing.Point(10, 182);
+            this.ShowChangelogUpdate.Name = "ShowChangelogUpdate";
+            this.ShowChangelogUpdate.Size = new System.Drawing.Size(350, 19);
+            this.ShowChangelogUpdate.TabIndex = 46;
+            this.ShowChangelogUpdate.Text = "Always show changelog on start-up, after applying an update";
+            this.ShowChangelogUpdate.UseVisualStyleBackColor = true;
+            // 
             // DebugModeFolder
             // 
             this.DebugModeFolder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1218,57 +1269,6 @@
             this.ChangeEVBuf.TabStop = true;
             this.ChangeEVBuf.Text = "Change size of the events buffer (EVBuffer)";
             this.ChangeEVBuf.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ChangeEVBuf_LinkClicked);
-            // 
-            // PitchShifting
-            // 
-            this.PitchShifting.AutoSize = true;
-            this.PitchShifting.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.PitchShifting.Location = new System.Drawing.Point(7, 275);
-            this.PitchShifting.Name = "PitchShifting";
-            this.PitchShifting.Size = new System.Drawing.Size(381, 15);
-            this.PitchShifting.TabIndex = 25;
-            this.PitchShifting.TabStop = true;
-            this.PitchShifting.Text = ">>> Change transposing and concert pitch settings (Separate window)";
-            this.PitchShifting.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.PitchShifting_LinkClicked);
-            // 
-            // DSPSettingsBox
-            // 
-            this.DSPSettingsBox.AutoSize = true;
-            this.DSPSettingsBox.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(53)))), ((int)(((byte)(0)))), ((int)(((byte)(119)))));
-            this.DSPSettingsBox.Location = new System.Drawing.Point(7, 459);
-            this.DSPSettingsBox.Name = "DSPSettingsBox";
-            this.DSPSettingsBox.Size = new System.Drawing.Size(350, 15);
-            this.DSPSettingsBox.TabIndex = 60;
-            this.DSPSettingsBox.TabStop = true;
-            this.DSPSettingsBox.Text = ">>> Change reverb, chorus and echo settings (Separate window)";
-            this.DSPSettingsBox.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.DSPSettingsBox_LinkClicked);
-            // 
-            // VolKnob
-            // 
-            this.VolKnob.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.VolKnob.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.VolKnob.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.VolKnob.EndAngle = 405F;
-            this.VolKnob.ImeMode = System.Windows.Forms.ImeMode.On;
-            this.VolKnob.knobBackColor = System.Drawing.Color.White;
-            this.VolKnob.KnobPointerStyle = KnobControl.KnobControl.knobPointerStyle.line;
-            this.VolKnob.LargeChange = 1000;
-            this.VolKnob.Location = new System.Drawing.Point(682, 385);
-            this.VolKnob.Maximum = 10000;
-            this.VolKnob.Minimum = 0;
-            this.VolKnob.Name = "VolKnob";
-            this.VolKnob.PointerColor = System.Drawing.Color.White;
-            this.VolKnob.ScaleColor = System.Drawing.Color.Black;
-            this.VolKnob.ScaleDivisions = 10;
-            this.VolKnob.ScaleSubDivisions = 10;
-            this.VolKnob.ShowLargeScale = false;
-            this.VolKnob.ShowSmallScale = false;
-            this.VolKnob.Size = new System.Drawing.Size(93, 93);
-            this.VolKnob.SmallChange = 500;
-            this.VolKnob.StartAngle = 135F;
-            this.VolKnob.TabIndex = 16;
-            this.VolKnob.Value = 10000;
-            this.VolKnob.ValueChanged += new KnobControl.ValueChangedEventHandler(this.VolTrackBar_Scroll);
             // 
             // SettingsPanel
             // 
