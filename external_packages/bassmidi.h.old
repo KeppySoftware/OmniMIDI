@@ -220,8 +220,6 @@ typedef struct {
 #define MIDI_EVENT_VIBRATO_RATE		80
 #define MIDI_EVENT_VIBRATO_DEPTH	81
 #define MIDI_EVENT_VIBRATO_DELAY	82
-#define MIDI_EVENT_MASTER_FINETUNE	83
-#define MIDI_EVENT_MASTER_COARSETUNE	84
 #define MIDI_EVENT_MIXLEVEL			0x10000
 #define MIDI_EVENT_TRANSPOSE		0x10001
 #define MIDI_EVENT_SYSTEMEX			0x10002
@@ -414,7 +412,7 @@ static inline BOOL BASS_MIDI_FontPack(HSOUNDFONT handle, const WCHAR *outfile, c
 	return BASS_MIDI_FontPack(handle, (const void*)outfile, (const void*)encoder, flags | BASS_UNICODE);
 }
 
-static inline BOOL BASS_MIDI_FontUnpack(HSOUNDFONT handle, const WCHAR *outfile, DWORD flags)
+static inline BOOL BASS_MIDI_FontUnpack(HSOUNDFONT handle, const WCHAR * outfile, DWORD flags)
 {
 	return BASS_MIDI_FontUnpack(handle, (const void*)outfile, flags | BASS_UNICODE);
 }

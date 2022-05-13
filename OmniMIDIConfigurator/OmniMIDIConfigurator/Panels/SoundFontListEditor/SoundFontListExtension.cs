@@ -78,16 +78,22 @@ namespace OmniMIDIConfigurator
 
         public static string ReturnSoundFontFormatMore(string fileext)
         {
-            if (fileext.ToLowerInvariant() == ".sf1")
-                return "SoundFont 1.x by E-mu Systems";
-            else if (fileext.ToLowerInvariant() == ".sf2")
-                return "SoundFont 2.x by Creative Labs";
-            else if (fileext.ToLowerInvariant() == ".sfz")
-                return "SoundFontZ by Cakewalk™";
-            else if (fileext.ToLowerInvariant() == ".sf2pack")
-                return "SoundFont 2 compressed package";
-            else
-                return "Unknown format";
+            switch (fileext.ToLowerInvariant())
+            {
+                case ".sf1":
+                    return "SoundFont 1.x by E-mu™ Systems";
+                case ".sf2":
+                    return "SoundFont 2.x by Creative™ Labs";
+                case ".sf2pack":
+                    return "SoundFont 2 compressed package";
+                case ".sf3":
+                    return "SoundFont 3.x by MuseScore";
+                case ".sfz":
+                    return "SoundFontZ by Cakewalk™";
+                default:
+                    return "Unknown format";
+
+            }
         }
 
         public static string ReturnSoundFontSize(string preset, string ext, long length)

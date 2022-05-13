@@ -159,7 +159,7 @@ void __inline SendToBASSMIDI(DWORD dwParam1) {
 			}
 		}
 
-		_BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, len);
+		_BMSEs(OMStream, BMSEsRAWFlags, &dwParam1, len);
 		return;
 	}
 }
@@ -183,7 +183,7 @@ void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 			if (ManagedSettings.OverrideNoteLength)
 				Evs[1] = { MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8), dwParam1 & 0xF, FNoteLengthValue, 0 };
 
-			BASS_MIDI_StreamEvents(OMStream, (ManagedSettings.BASSDSMode ? BASS_MIDI_EVENTS_ASYNC : 0) | BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME | BASS_MIDI_EVENTS_CANCEL, &Evs, ManagedSettings.OverrideNoteLength ? 2 : 1);
+			BASS_MIDI_StreamEvents(OMStream, BMSEsFlags, &Evs, ManagedSettings.OverrideNoteLength ? 2 : 1);
 
 			return;
 		}
@@ -191,7 +191,7 @@ void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 			if (!ManagedSettings.OverrideNoteLength && ManagedSettings.DelayNoteOff) {
 				Evs[0] = { MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8), dwParam1 & 0xF, FDelayNoteOff, 0 };
 
-				BASS_MIDI_StreamEvents(OMStream, (ManagedSettings.BASSDSMode ? BASS_MIDI_EVENTS_ASYNC : 0) | BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME | BASS_MIDI_EVENTS_CANCEL, &Evs, 1);
+				BASS_MIDI_StreamEvents(OMStream, BMSEsFlags, &Evs, 1);
 			}
 
 			return;

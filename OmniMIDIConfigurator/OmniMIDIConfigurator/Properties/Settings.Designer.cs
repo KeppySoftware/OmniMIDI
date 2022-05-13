@@ -12,7 +12,7 @@ namespace OmniMIDIConfigurator.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.3.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -119,50 +119,6 @@ namespace OmniMIDIConfigurator.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ArrayOfInt xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <int>-1</int>
-  <int>-1</int>
-  <int>-1</int>
-  <int>-1</int>
-  <int>-1</int>
-  <int>-1</int>
-  <int>-1</int>
-  <int>-1</int>
-  <int>-1</int>
-  <int>-1</int>
-</ArrayOfInt>")]
-        public int[] SFColumnsSize {
-            get {
-                return ((int[])(this["SFColumnsSize"]));
-            }
-            set {
-                this["SFColumnsSize"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ArrayOfInt xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <int>425</int>
-  <int>30</int>
-  <int>30</int>
-  <int>30</int>
-  <int>30</int>
-  <int>30</int>
-  <int>32</int>
-  <int>53</int>
-  <int>62</int>
-</ArrayOfInt>")]
-        public int[] SFColumnsDefSize {
-            get {
-                return ((int[])(this["SFColumnsDefSize"]));
-            }
-        }
-        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/KeppySoftware/OmniMIDI")]
@@ -220,21 +176,6 @@ namespace OmniMIDIConfigurator.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <string>.sf1</string>
-  <string>.sf2</string>
-  <string>.sf2pack</string>
-  <string>.sfz</string>
-</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection SupportedFormats {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["SupportedFormats"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1970-01-01")]
@@ -273,8 +214,44 @@ namespace OmniMIDIConfigurator.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfInt xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <int>425</int>
+  <int>30</int>
+  <int>30</int>
+  <int>30</int>
+  <int>30</int>
+  <int>30</int>
+  <int>32</int>
+  <int>53</int>
+  <int>62</int>
+</ArrayOfInt>")]
+        public int[] SFColumnsDefSize {
+            get {
+                return ((int[])(this["SFColumnsDefSize"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <string>.sf1</string>
+  <string>.sf2</string>
+  <string>.sf2pack</string>
+  <string>.sf3</string>
+  <string>.sfz</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection SupportedFormats {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["SupportedFormats"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsd=\"http://www.w3." +
+            "org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n  <s" +
             "tring>Pre-release branch</string>\r\n  <string>prerelease</string>\r\n</ArrayOfStrin" +
             "g>")]
         public global::System.Collections.Specialized.StringCollection PreReleaseBranch {
@@ -285,8 +262,8 @@ namespace OmniMIDIConfigurator.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsd=\"http://www.w3." +
+            "org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n  <s" +
             "tring>Stable branch</string>\r\n  <string>stable</string>\r\n</ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection StableBranch {
             get {
@@ -296,12 +273,36 @@ namespace OmniMIDIConfigurator.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsd=\"http://www.w3." +
+            "org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n  <s" +
             "tring>Slow branch</string>\r\n  <string>slow</string>\r\n</ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection SlowBranch {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["SlowBranch"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfInt xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+  <int>-1</int>
+</ArrayOfInt>")]
+        public int[] SFColumnsSize {
+            get {
+                return ((int[])(this["SFColumnsSize"]));
+            }
+            set {
+                this["SFColumnsSize"] = value;
             }
         }
     }

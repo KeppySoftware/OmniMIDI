@@ -108,6 +108,7 @@ BOOL BASSLoadedToMemory = FALSE;
 BOOL KDMAPIEnabled = FALSE;
 BOOL IsKDMAPIViaWinMM = FALSE;
 BOOL HostSessionMode = FALSE;
+int BMSEsFlags = 0, BMSEsRAWFlags = 0;
 
 // DLL hell
 BOOL AppLibWarning = FALSE;

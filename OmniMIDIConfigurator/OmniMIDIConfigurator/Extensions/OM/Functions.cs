@@ -18,6 +18,9 @@ namespace OmniMIDIConfigurator
         [DllImport("kernel32.dll")]
         public static extern void GetNativeSystemInfo(ref SYSTEM_INFO lpSystemInfo);
 
+        [DllImport("kernel32.dll")]
+        public static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, SymbolicLink dwFlags);
+
         public const short PROCESSOR_ARCHITECTURE_UNKNOWN = 0xFF;
         public const short PROCESSOR_ARCHITECTURE_ARM64 = 12;
         public const short PROCESSOR_ARCHITECTURE_AMD64 = 9;
@@ -38,6 +41,12 @@ namespace OmniMIDIConfigurator
             public int dwAllocationGranularity;
             public short wProcessorLevel;
             public short wProcessorRevision;
+        }
+
+        public enum SymbolicLink
+        {
+            File = 0,
+            Directory = 1
         }
 
         public enum FILE_ARCH
@@ -586,9 +595,9 @@ namespace OmniMIDIConfigurator
                             if (DAWMode)
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm32DAW);
                             else
-                                File.Copy(
+                                PA.CreateSymbolicLink(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"),
                                     String.Format("{0}\\{1}", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86), "OmniMIDI.dll"),
-                                    String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"));
+                                    PA.SymbolicLink.File);
 
                             break;
 
@@ -603,9 +612,9 @@ namespace OmniMIDIConfigurator
                             if (DAWMode)
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm64DAW);
                             else
-                                File.Copy(
+                                PA.CreateSymbolicLink(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"),
                                     String.Format("{0}\\{1}", Environment.GetFolderPath(Environment.SpecialFolder.System), "OmniMIDI.dll"),
-                                    String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"));
+                                    PA.SymbolicLink.File);
 
                             Wow64RevertWow64FsRedirection(Dummy);
 
@@ -619,9 +628,9 @@ namespace OmniMIDIConfigurator
                             if (DAWMode)
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmmARM64DAW);
                             else
-                                File.Copy(
-                                    String.Format("{0}\\{1}", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysArm32"), "OmniMIDI.dll"),
-                                    String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"));
+                                PA.CreateSymbolicLink(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"),
+                                 String.Format("{0}\\{1}", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysArm32"), "OmniMIDI.dll"),
+                                    PA.SymbolicLink.File);
 
                             Wow64RevertWow64FsRedirection(Dummy);
 

@@ -67,8 +67,10 @@ static BOOL FontLoader(LPWSTR in_path) {
 		PrintMessageToDebugLog("NewSFLoader", "Path has been parsed...");
 
 		PrintMessageToDebugLog("NewSFLoader", "Checking if it's a SoundFont or a list...");
-		if (!_wcsicmp(Extension, _T(".sf2")) ||
+		if (!_wcsicmp(Extension, _T(".sf1")) ||
+			!_wcsicmp(Extension, _T(".sf2")) ||
 			!_wcsicmp(Extension, _T(".sf2pack")) ||
+			!_wcsicmp(Extension, _T(".sf3")) ||
 			!_wcsicmp(Extension, _T(".sfz")))
 		{
 			PrintMessageToDebugLog("NewSFLoader", "It's a SoundFont. Checking if it exists...");

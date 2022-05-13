@@ -296,22 +296,20 @@
             // 
             this.SamF.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SamF.Location = new System.Drawing.Point(166, 162);
+            this.SamF.Location = new System.Drawing.Point(166, 161);
             this.SamF.Name = "SamF";
             this.SamF.Size = new System.Drawing.Size(440, 15);
             this.SamF.TabIndex = 19;
             this.SamF.Text = "label6";
-            this.SamF.Visible = false;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 162);
+            this.label8.Location = new System.Drawing.Point(12, 161);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(93, 15);
             this.label8.TabIndex = 18;
             this.label8.Text = "Samples format:";
-            this.label8.Visible = false;
             // 
             // SoundFontInfo
             // 

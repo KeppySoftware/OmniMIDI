@@ -564,6 +564,9 @@ BOOL InitializeStream(INT32 mixfreq) {
 			exit(ERROR_INVALID_HANDLE);
 		}
 	}
+
+	BMSEsFlags = (ManagedSettings.BASSDSMode ? BASS_MIDI_EVENTS_ASYNC : 0) | BASS_MIDI_EVENTS_STRUCT | BASS_MIDI_EVENTS_TIME | BASS_MIDI_EVENTS_CANCEL;
+	BMSEsRAWFlags = (ManagedSettings.BASSDSMode ? BASS_MIDI_EVENTS_ASYNC : 0) | BASS_MIDI_EVENTS_RAW;
 	
 	PrintMessageToDebugLog("InitializeStreamFunc", "Stream is now active!");
 	return TRUE;
