@@ -44,7 +44,8 @@ Sure, as long as you follow the [LICENSE](LICENSE.txt).
 
 ### Keppy's Direct MIDI API for developers
 You can access the Keppy's Direct MIDI API from here: [Keppy's Direct MIDI API Documentation](https://github.com/KeppySoftware/OmniMIDI/tree/master/DeveloperContent/KDMAPI.md)<br/>
-You can also access the source code for the Windows Multimedia Wrapper here: [WinMMWRP on GitHub](https://github.com/KeppySoftware/WinMMWRP)
+You can also access the source code for the Windows Multimedia Wrapper here: [WinMMWRP on GitHub](https://github.com/KeppySoftware/WinMMWRP)<br/>
+Python bindings are available as well, get them from PyPI: [kdmapi](https://pypi.org/project/kdmapi/) (maintained by [SebaUbuntu](https://github.com/SebaUbuntu), source code [here](https://github.com/SebaUbuntu/kdmapi))
 
 Here's a list of applications that currently have *native* support for the Keppy's Direct MIDI API:
 - mmidi by Sono, the first third-party project to feature my API at all: _N/A_
