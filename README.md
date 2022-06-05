@@ -52,6 +52,7 @@ Here's a list of applications that currently have *native* support for the Keppy
 - Chikara by Kaydax, a PFA clone that uses Vulkan, and aims to be the best performing MIDI player available: https://github.com/Kaydax/Chikara
 - Kiva by Arduano, a multipurpose MIDI player with different graphic styles: https://github.com/arduano/Kiva
 - Zenith by Arduano, a multipurpose MIDI render with different graphic styles: https://arduano.github.io/Zenith-MIDI/
+- giradischi by SebaUbuntu, a simple Python + Qt6 MIDI player supporting multiple APIs, KDMAPI being one of them: https://github.com/SebaUbuntu/giradischi
 
 ### Can you make a WinMM patch for other drivers too?
 There's a patch available for VirtualMIDISynth. You can get it here: https://github.com/KeppySoftware/WinMMWRP/releases/tag/4.2A
