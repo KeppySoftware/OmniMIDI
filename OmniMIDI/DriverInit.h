@@ -60,14 +60,17 @@ void ResetTimings() {
 }
 
 BOOL EnableMIDIFeedbackMode() {
-	return true;
+	// If minimal playback is enabled, abort the feedback initialization process,
+	// since the required functions aren't called in this mode.
+	if (HyperMode)
+		return FALSE;
 
 	try {
 		// Initialize feedback device info
 		DWORD NumDevs = 0;
 		MIDIOUTCAPSW CapsW;
 		BOOL FeedbackEnabled = FALSE;
-		wchar_t FeedbackDevice[MAX_PATH] = L"Microsoft GS Wavetable Synth\0";
+		wchar_t FeedbackDevice[32] = L"Microsoft GS Wavetable Synth\0";
 
 		// Initialize registry values
 		DWORD dwType = REG_DWORD;
@@ -80,11 +83,6 @@ BOOL EnableMIDIFeedbackMode() {
 		OpenRegistryKey(Configuration, L"Software\\OmniMIDI\\Configuration", TRUE);
 		RegQueryValueEx(Configuration.Address, L"FeedbackEnabled", NULL, &dwType, (LPBYTE)&FeedbackEnabled, &dwSize);
 		RegQueryValueEx(Configuration.Address, L"FeedbackDevice", NULL, &ASType, (LPBYTE)&FeedbackDevice, &ASSize);
-
-		// If minimal playback is enabled, abort the feedback initialization process,
-		// since the required functions aren't called in this mode.
-		if (HyperMode)
-			return FALSE;
 
 		// If the process has been blacklisted through KDMAPI,
 		// or the feedback mode isn't enabled, return and don't load OWINMM

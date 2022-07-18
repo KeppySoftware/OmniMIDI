@@ -46,6 +46,7 @@ typedef long NTSTATUS;
 #include <Dbghelp.h>
 #include <assert.h>
 #include <strsafe.h>
+#include <VersionHelpers.h>
 #include "NTDLLDummy.h"
 #include "Resource.h"
 #include "OmniMIDI.h"

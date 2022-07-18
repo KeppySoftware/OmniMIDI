@@ -595,9 +595,14 @@ namespace OmniMIDIConfigurator
                             if (DAWMode)
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm32DAW);
                             else
-                                PA.CreateSymbolicLink(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"),
+                            {
+                                if (!PA.CreateSymbolicLink(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"),
                                     String.Format("{0}\\{1}", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86), "OmniMIDI.dll"),
-                                    PA.SymbolicLink.File);
+                                    PA.SymbolicLink.File))
+                                {
+                                    throw new Exception("No administrator permissions?");
+                                }
+                            }
 
                             break;
 
@@ -612,9 +617,14 @@ namespace OmniMIDIConfigurator
                             if (DAWMode)
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmm64DAW);
                             else
-                                PA.CreateSymbolicLink(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"),
+                            {
+                                if (!PA.CreateSymbolicLink(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"),
                                     String.Format("{0}\\{1}", Environment.GetFolderPath(Environment.SpecialFolder.System), "OmniMIDI.dll"),
-                                    PA.SymbolicLink.File);
+                                    PA.SymbolicLink.File))
+                                {
+                                    throw new Exception("No administrator permissions?");
+                                }
+                            }
 
                             Wow64RevertWow64FsRedirection(Dummy);
 
@@ -628,9 +638,14 @@ namespace OmniMIDIConfigurator
                             if (DAWMode)
                                 File.WriteAllBytes(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"), Properties.Resources.winmmARM64DAW);
                             else
-                                PA.CreateSymbolicLink(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"),
-                                 String.Format("{0}\\{1}", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysArm32"), "OmniMIDI.dll"),
-                                    PA.SymbolicLink.File);
+                            {
+                                if (!PA.CreateSymbolicLink(String.Format("{0}\\{1}", DirectoryPath, "winmm.dll"),
+                                    String.Format("{0}\\{1}", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysArm32"), "OmniMIDI.dll"),
+                                    PA.SymbolicLink.File))
+                                {
+                                    throw new Exception("No administrator permissions?");
+                                }
+                            }
 
                             Wow64RevertWow64FsRedirection(Dummy);
 
