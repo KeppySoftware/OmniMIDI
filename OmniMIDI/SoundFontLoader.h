@@ -236,7 +236,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 
 						continue;
 					}
-					else if (TempLine.find(L"sf.desb") == 0)
+					else if (TempLine.find(L"sf.desb ") == 0)
 					{
 						if (AlreadyInitialized)
 						{

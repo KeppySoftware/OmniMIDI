@@ -281,10 +281,15 @@ namespace OmniMIDIConfigurator
             switch (e.Button)
             {
                 case MouseButtons.Middle:
-                    Lis.Invalidate();
-                    Lis.SelectedItems.Clear();
-                    Lis.GetItemAt(e.X, e.Y).Selected = true;
-                    new SoundFontInfo(Lis.GetItemAt(e.X, e.Y).Text).ShowDialog();
+                    ListViewItem Item = Lis.GetItemAt(e.X, e.Y);
+
+                    if (Item != null)
+                    {
+                        Lis.Invalidate();
+                        Lis.SelectedItems.Clear();
+                        new SoundFontInfo(Item.Text).ShowDialog();
+                    }
+
                     break;
             }
         }

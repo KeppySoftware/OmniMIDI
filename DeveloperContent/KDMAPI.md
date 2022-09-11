@@ -20,7 +20,7 @@ MMRESULT(WINAPI*mmOutClose)(HMIDIOUT hmo) = 0;
 MMRESULT(WINAPI*mmOutShortMsg)(HMIDIOUT hmo, DWORD dwMsg) = 0;
 UINT(WINAPI*mmOutGetErrorTextA)(MMRESULT mmrError, LPTSTR, lpText, UINT cchText) = 0;
 
-MMRESULT(WINAPI*KShortMsg)(DWORD msg) = 0;
+VOID(WINAPI*KShortMsg)(DWORD msg) = 0;
 ...
 
 ...
@@ -268,17 +268,15 @@ KSendCustomEvent = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendCusto
 
 ### **SendDirectData**
 Allows you to send MIDI events to the short events buffer of the driver.<br />
+This function, unlike midiOutShortMsg, does NOT return a value, and it will fail quietly.
 The available arguments are:
 
 - `DWORD dwMsg`: The MIDI event to send to the driver.
 ```c
-MMRESULT(WINAPI*KShortMsg)(DWORD msg) = 0;
+VOID(WINAPI*KShortMsg)(DWORD msg) = 0;
 KShortMsg = (void*)GetProcAddress(GetModuleHandle("OmniMIDI"), "SendDirectData"); // Or SendDirectDataNoBuf
 ...
-	MMRESULT res = KShortMsg(0x0);
-	if (res) {
-		printf("Something went wrong, it's supposed to return 0.\nReturned value: %d", res);
-	}
+	KShortMsg(0x0);
 ...
 ```
 <hr />

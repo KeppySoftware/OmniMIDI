@@ -96,10 +96,7 @@ namespace KDMAPI
 	public static extern uint SendCustomEvent(uint eventtype, uint chan, uint param);
 	
 	[DllImport("OmniMIDI.dll")]
-	public static extern uint SendDirectData(uint dwMsg);
-			
-	[DllImport("OmniMIDI.dll")]
-	public static extern uint SendDirectDataNoBuf(uint dwMsg);
+	public static extern void SendDirectData(uint dwMsg);
 
 	[DllImport("OmniMIDI.dll")]
 	public static extern uint SendDirectLongData(ref MIDIHDR IIMidiHdr);
