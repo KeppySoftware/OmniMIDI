@@ -63,8 +63,8 @@ ShowLanguageDialog=no
 SolidCompression=yes
 SetupMutex=OmniMIDISetup,KeppySoftware\OmniMIDISetup
 TimeStampsInUTC=True
-UninstallDisplayIcon={syswow64}\{#InstallDir}\OmniMIDI.exe
-UninstallDisplayName={#ProductName} (Uninstall only)
+UninstallDisplayIcon={syswow64}\{#InstallDir}\{#Configurator}.exe
+UninstallDisplayName={#ProductName}
 UninstallDisplaySize=8241947
 UninstallFilesDir={syswow64}\{#InstallDir}
 UsePreviousSetupType=False
@@ -148,7 +148,7 @@ Source: "{#lib32}\bassenc.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "
 Source: "{#lib32}\bass_vst.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\basswasapi.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: Windows64
 Source: "{#lib32}\xaudio2_9redist.dll"; DestDir: "{syswow64}\{#InstallDir}"; DestName: "xaudio2_9_win7.dll"; Flags: replacesameversion ignoreversion; Check: WindowsAMD64
-Source: "output\{#InstallDir}.dbl"; DestDir: "{syswow64}\{#InstallDir}"; Flags: replacesameversion ignoreversion; Check: Windows64
+Source: "{#outputdir32}\{#InstallDir}.dbl"; DestDir: "{syswow64}\{#InstallDir}"; Flags: replacesameversion ignoreversion; Check: Windows64
 
 ; 32-bit libs for IA32
 Source: "{#lib32}\bass.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
@@ -163,7 +163,7 @@ Source: "{#lib32}\bassenc.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "basse
 Source: "{#lib32}\bass_vst.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "bass_vst.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\basswasapi.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "basswasapi.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 Source: "{#lib32}\xaudio2_9redist.dll"; DestDir: "{sys}\{#InstallDir}"; DestName: "xaudio2_9_win7.dll"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
-Source: "output\{#InstallDir}.dbl"; DestDir: "{sys}\{#InstallDir}"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
+Source: "{#outputdir32}\{#InstallDir}.dbl"; DestDir: "{sys}\{#InstallDir}"; Flags: replacesameversion ignoreversion; Check: not WindowsAMD64
 
 [Dirs]
 ; 64-bit OS
