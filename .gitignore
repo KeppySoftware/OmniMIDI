@@ -11,6 +11,7 @@
 /*.vcxproj.user
 /.vs
 /Debug
+/OmniMIDIv2/
 /OmniMIDI/*.dll
 /OmniMIDI/*.exe
 /OmniMIDI/*.exp
@@ -67,6 +68,7 @@
 /OmniMapper/OmniMapper/output
 /OmniMapper/OmniMapper/x64
 /Release
+/external_packages/newmmddk.h
 /external_packages/lib/*.dll
 /external_packages/lib64/*.dll
 /ipch

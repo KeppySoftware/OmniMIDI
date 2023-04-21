@@ -331,6 +331,8 @@ DDP DefDriverProcImp = 0;
 void DummyPlayBufData() noexcept { return; };
 void DummyPrepareForBASSMIDI(DWORD, DWORD) noexcept { return; };
 void DummyParseData(DWORD_PTR) noexcept { return; };
+void DummyShortMsg(DWORD) noexcept { return; };
+void DummyLongMsg(LPMIDIHDR, UINT) noexcept { return; };
 BOOL WINAPI DummyBMSE(HSTREAM, DWORD, DWORD, DWORD) noexcept { return TRUE; };
 DWORD WINAPI DummyBMSEs(HSTREAM, DWORD, const void*, DWORD) noexcept { return 0; };
 DWORD CALLBACK DummyProcData(void*, DWORD, void*) noexcept { return 0; };
@@ -341,6 +343,8 @@ void(*_PrsData)(DWORD_PTR dwParam1) = DummyParseData;
 void(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD dwParam1) = DummyPrepareForBASSMIDI;
 void(*_PlayBufData)(void) = DummyPlayBufData;
 void(*_PlayBufDataChk)(void) = DummyPlayBufData;
+void(*_FeedbackShortMsg)(DWORD) = DummyShortMsg;
+void(*_FeedbackLongMsg)(LPMIDIHDR, UINT) = DummyLongMsg;
 BOOL(WINAPI* _BMSE)(HSTREAM, DWORD, DWORD, DWORD) = DummyBMSE;
 DWORD(WINAPI* _BMSEs)(HSTREAM, DWORD, const void*, DWORD) = DummyBMSEs;
 DWORD(CALLBACK* _ProcData)(void* buffer, DWORD length, void* user) = DummyProcData;
@@ -348,10 +352,6 @@ DWORD(CALLBACK* _ProcData)(void* buffer, DWORD length, void* user) = DummyProcDa
 // and passes the events without checking for anything
 
 // ----------------------------------------------------------------------
-
-// OWINMM
-MMRESULT WINAPI DummymidiOutShortMsg(HMIDIOUT, DWORD) noexcept { return MMSYSERR_NOERROR; };
-MMRESULT WINAPI DummymidiOutLongMsg(HMIDIOUT, LPMIDIHDR, UINT) noexcept { return MMSYSERR_NOERROR; };
 
 /*
 typedef HMODULE(WINAPI* GO)();

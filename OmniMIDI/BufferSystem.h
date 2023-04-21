@@ -101,20 +101,17 @@ DWORD __inline ReturnEditedEvent(DWORD dwParam1) {
 	return dwParam1;
 }
 
-BOOL __inline SendShortMIDIFeedback(DWORD dwParam1) {
-	if (OMFeedback) {
-		return (MMmidiOutShortMsg((HMIDIOUT)OMFeedback, dwParam1) == MMSYSERR_NOERROR);
-	}
-
-	return FALSE;
+void __inline SendShortMIDIFeedback(DWORD dwParam1) {
+	MMmidiOutShortMsg((HMIDIOUT)OMFeedback, dwParam1);
 }
 
-BOOL __inline SendLongMIDIFeedback(LPMIDIHDR MIDIHDR, UINT Size) {
-	if (OMFeedback) {
-		return (MMmidiOutLongMsg((HMIDIOUT)OMFeedback, MIDIHDR, Size) == MMSYSERR_NOERROR);
+void __inline SendLongMIDIFeedback(LPMIDIHDR mHDR, UINT Size) {
+	if (mHDR && Size != 0) {
+		LPMIDIHDR lpMidiHdr = (MIDIHDR*)calloc(Size, sizeof(MIDIHDR));
+		memcpy(lpMidiHdr, mHDR, Size);
+		MMmidiOutLongMsg((HMIDIOUT)OMFeedback, lpMidiHdr, Size);
+		free(lpMidiHdr);
 	}
-
-	return FALSE;
 }
 
 void __inline SendToBASSMIDI(DWORD dwParam1) {
@@ -173,7 +170,7 @@ void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 	if (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F)
 		dwParam1 = ReturnEditedEvent(dwParam1);
 
-	SendShortMIDIFeedback(dwParam1);
+	_FeedbackShortMsg(dwParam1);
 
 	if (ManagedSettings.OverrideNoteLength || ManagedSettings.DelayNoteOff) {
 		if (((dwParam1 & 0xF0) == MIDI_NOTEON && ((dwParam1 >> 16) & 0xFF))) {

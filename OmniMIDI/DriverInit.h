@@ -156,6 +156,9 @@ BOOL EnableMIDIFeedbackMode() {
 			}
 		}
 
+		_FeedbackShortMsg = SendShortMIDIFeedback;
+		_FeedbackLongMsg = SendLongMIDIFeedback;
+
 		PrintMessageToDebugLog("EnableMIDIFeedbackMode", "Feedback mode enabled. Searching for feedback target device...");
 
 		// Get the total number of devices from OWINMM
@@ -197,10 +200,10 @@ BOOL EnableMIDIFeedbackMode() {
 
 BOOL DisableMIDIFeedbackMode() {
 	try {
-		MMmidiOutShortMsg = DummymidiOutShortMsg;
-		MMmidiOutLongMsg = DummymidiOutLongMsg;
-
 		if (OMFeedback) {
+			_FeedbackShortMsg = DummyShortMsg;
+			_FeedbackLongMsg = DummyLongMsg;
+
 			PrintMessageToDebugLog("DisableMIDIFeedbackMode", "Disabling feedback mode...");
 
 			switch (MMmidiOutClose((HMIDIOUT)OMFeedback)) {
@@ -217,6 +220,7 @@ BOOL DisableMIDIFeedbackMode() {
 			}
 
 			OMFeedback = NULL;
+
 			PrintMessageToDebugLog("DisableMIDIFeedbackMode", "Disabled.");
 		}
 
@@ -373,7 +377,7 @@ void AudioEngine(LPVOID lpParam) {
 					QDataLength = BASS_ChannelSeconds2Bytes(OMStream, 0.016);
 					BASS_ChannelGetData(OMStream, FSndBuf, AudioRenderingType(FALSE, ManagedSettings.AudioBitDepth) | QDataLength);
 					BASS_Encode_Write(OMStream, FSndBuf, QDataLength);
-
+					 
 					continue;
 				}
 				default:

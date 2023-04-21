@@ -38,6 +38,9 @@ typedef long NTSTATUS;
 #include <codecvt>
 #include <string>
 #include <future>
+#include <exception>
+#include <typeinfo>
+#include <stdexcept>
 #include <mmddk.h>
 #include <shlobj.h>
 #include <sstream>
@@ -347,14 +350,14 @@ extern "C" MMRESULT WINAPI modMessage(UINT uDeviceID, UINT uMsg, DWORD_PTR dwUse
 		_PrsData(dwParam1);
 		return MMSYSERR_NOERROR;
 	case MODM_LONGDATA:
+		_FeedbackLongMsg((MIDIHDR*)dwParam1, dwParam2);
+
 		// Pass it to a KDMAPI function
 		RetVal = SendDirectLongData((MIDIHDR*)dwParam1, dwParam2);
 
 		// Tell the app that the buffer has been played
 		DoCallback(MOM_DONE, dwParam1, 0);
 		// if (CustomCallback) CustomCallback((HMIDIOUT)OMMOD.hMidi, MM_MOM_DONE, WMMCI, dwParam1, 0);
-
-		SendLongMIDIFeedback((MIDIHDR*)dwParam1, dwParam2);
 
 		return RetVal;
 	case MODM_STRMDATA:
