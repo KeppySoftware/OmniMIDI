@@ -9,10 +9,10 @@ UINT CPUThreadsAvailable = 0;
 
 #define LOADLIBFUNCTION(l, f) *((void**)&f)=GetProcAddress(l,#f)
 
-#define GETCMD(f) (f & 0xF0)
-#define GETSP(f) ((f & 0xFF0000) >> 16)
-#define GETFP(f) ((f & 0x00FF00) >> 8)
-#define GETCHANNEL(f) (f & 0xF)
+#define GETCMD(f) f & 0xF0
+#define GETSP(f) (f >> 16) & 0xFF
+#define GETFP(f) (f >> 8) & 0xFF
+#define GETCHANNEL(f) f & 0xF
 
 #define SETVELOCITY(f, nf) f = (f & 0xFF00FFFF) | ((DWORD(nf) & 0xFF) << 16)
 #define SETNOTE(f, nf) f = (f & 0xFFFF00FF) | ((DWORD(nf) & 0xFF) << 8)

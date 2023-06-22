@@ -692,18 +692,10 @@ extern "C" VOID KDMAPI SendDirectDataNoBuf(DWORD dwMsg) noexcept {
 }
 
 extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {
-	// What's this for? You'll see...
-	DWORD FLen = 0;
-
 	// Check if the MIDIHDR buffer is valid before doing
 	// anything, to avoid EXCEPTION_ACCESS_VIOLATION crashes
 	if (!IIMidiHdr)														// Buffer doesn't exist
 		return DebugResult("UnprepareLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
-
-	// If dwBytesRecorded is 0, use dwBufferLength instead
-	// Thank you MSDN for not telling me about it, 
-	// and thanks to Windows Media Player for doing this...
-	FLen = IIMidiHdr->dwBytesRecorded < 1 ? IIMidiHdr->dwBufferLength : IIMidiHdr->dwBytesRecorded;
 
 	if (IIMidiHdrSize != sizeof(MIDIHDR))								// The struct size is not correct
 		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "The MIDIHDR struct size is not correct.");
@@ -711,17 +703,28 @@ extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSi
 	if (IIMidiHdr->dwBufferLength > LONGMSG_MAXSIZE)					// Buffer is bigger than 64K
 		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "The given stream buffer is greater than 64K.");
 
-	if (IIMidiHdr->dwBytesRecorded > IIMidiHdr->dwBufferLength ||		// The recorded buffer is bigger than the actual buffer? How.
-		IIMidiHdr->dwBufferLength < 1)									// Buffer is smaller than one?
+	if (IIMidiHdr->dwBufferLength < 1)									// Buffer has a size of zero?
 		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "Invalid buffer size passed to dwBytesRecorded.");
 
 	if (IIMidiHdr->dwFlags & MHDR_PREPARED)								// Already prepared, everything is fine
 		return DebugResult("PrepareLongData", MMSYSERR_NOERROR, "The buffer is already prepared.");
 
-	// Lock the buffer
-	if (!VirtualLock(IIMidiHdr->lpData, FLen))
+	// Lock the struct
+	if (!VirtualLock(IIMidiHdr, sizeof(MIDIHDR)))
+	{
 		// Unable to lock
+		return DebugResult("PrepareLongData", MMSYSERR_NOMEM, "VirtualLock failed to lock the struct to the virtual address space. Not enough memory available.");
+	}
+	// Locked successfully
+	else PrintMessageToDebugLog("PrepareLongData", "Buffer locked to virtual address space.");
+
+	// Lock the buffer
+	if (!VirtualLock(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength))
+	{
+		// Unable to lock
+		VirtualUnlock(IIMidiHdr, sizeof(MIDIHDR));
 		return DebugResult("PrepareLongData", MMSYSERR_NOMEM, "VirtualLock failed to lock the buffer to the virtual address space. Not enough memory available.");
+	}
 	// Locked successfully
 	else PrintMessageToDebugLog("PrepareLongData", "Buffer locked to virtual address space.");
 
@@ -736,18 +739,10 @@ extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSi
 }
 
 extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {
-	// What's this for? You'll see...
-	DWORD FLen = 0;
-
 	// Check if the MIDIHDR buffer is valid before doing
 	// anything, to avoid EXCEPTION_ACCESS_VIOLATION crashes
 	if (!IIMidiHdr)													// Buffer doesn't exist
 		return DebugResult("UnprepareLongData", MMSYSERR_INVALPARAM, "The buffer doesn't exist, or hasn't been allocated.");
-
-	// If dwBytesRecorded is 0, use dwBufferLength instead
-	// Thank you MSDN for not telling me about it, 
-	// and thanks to Windows Media Player for doing this...
-	FLen = IIMidiHdr->dwBytesRecorded < 1 ? IIMidiHdr->dwBufferLength : IIMidiHdr->dwBytesRecorded;
 
 	if (IIMidiHdrSize != sizeof(MIDIHDR))								// The struct size is not correct
 		return DebugResult("PrepareLongData", MMSYSERR_INVALPARAM, "The MIDIHDR struct size is not correct.");
@@ -755,17 +750,16 @@ extern "C" MMRESULT KDMAPI UnprepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdr
 	if (IIMidiHdr->dwBufferLength > LONGMSG_MAXSIZE)				// Buffer is bigger than 64K
 		return DebugResult("UnprepareLongData", MMSYSERR_INVALPARAM, "The given stream buffer is greater than 64K.");
 
-	if (IIMidiHdr->dwBytesRecorded > IIMidiHdr->dwBufferLength ||	// The recorded buffer is bigger than the actual buffer? How.
-		IIMidiHdr->dwBufferLength < 1)								// Buffer is smaller tha one?
+	if (IIMidiHdr->dwBufferLength < 1)								// Buffer has a size of zero?
 		return DebugResult("UnprepareLongData", MMSYSERR_INVALPARAM, "Invalid buffer size passed to dwBytesRecorded.");
 
 	if (IIMidiHdr->dwFlags & MHDR_INQUEUE)							// The buffer is currently being played from the driver, cannot unprepare
 		return DebugResult("UnprepareLongData", MIDIERR_STILLPLAYING, "The buffer is still in queue.");
 
 	// Unlock the buffer
-	if (!VirtualUnlock(IIMidiHdr->lpData, FLen))
+	if (!VirtualUnlock(IIMidiHdr->lpData, IIMidiHdr->dwBufferLength) || !VirtualUnlock(IIMidiHdr, sizeof(MIDIHDR)))
 	{
-		DWORD e = GetLastError();
+		const DWORD e = GetLastError();
 
 		// 0x9E == Buffer already unlocked
 		if (e != 0x9E)

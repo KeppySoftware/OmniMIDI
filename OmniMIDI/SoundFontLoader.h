@@ -291,9 +291,10 @@ static BOOL FontLoader(LPWSTR in_path) {
 					HSOUNDFONT font = BASS_MIDI_FontInit(CurrentSF->Path,
 						BASS_UNICODE | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP | 
 						(CurrentSF->XGBankMode ? BASS_MIDI_FONT_XGDRUMS : NULL) |
-						(ManagedSettings.AudioRampIn ? NULL : BASS_MIDI_FONT_NORAMPIN) | 
-						(ManagedSettings.LinAttMod ? NULL : BASS_MIDI_FONT_LINATTMOD) |
-						(ManagedSettings.LinDecVol ? NULL : BASS_MIDI_FONT_LINDECVOL));
+						(ManagedSettings.AudioRampIn ? BASS_MIDI_FONT_NORAMPIN : 0) |
+						(ManagedSettings.LinAttMod ? BASS_MIDI_FONT_LINATTMOD : 0) |
+						(ManagedSettings.LinDecVol ? BASS_MIDI_FONT_LINDECVOL : 0) |
+						(ManagedSettings.NoSFGenLimits ? BASS_MIDI_FONT_NOLIMITS : 0));
 
 					if (!font) {
 						PrintSoundFontToDebugLog(CurrentSF->Path, "An error has occurred while initializing the SoundFont.");

@@ -72,7 +72,7 @@ typedef long NTSTATUS;
 #include "WinMMWRP/WinMM.h"
 
 // Shakra backport
-#include "ShakraRegSystem.h"
+#include "WDMInstall.h"
 
 // Variables
 #include "BASSErrors.h"
@@ -96,8 +96,6 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD CallReason, LPVOID lpReserved)
 		}
 
 		hinst = hModule;
-		BASS_MIDI_StreamEvent = DummyBMSE;
-		BASS_MIDI_StreamEvents = DummyBMSEs;
 
 		if (!NT_SUCCESS(NtQuerySystemTime(&TickStart))) {
 			OutputDebugStringA("Failed to parse starting tick through NtQuerySystemTime! OmniMIDI will not load.");

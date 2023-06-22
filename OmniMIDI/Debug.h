@@ -532,7 +532,7 @@ void PrintEventToDebugLog(DWORD dwParam) {
 			sprintf(Msg + strlen(Msg), "Channel aftertouch, Channel: %u, Pressure: %u\n", GETCHANNEL(dwParam), GETFP(dwParam));
 			break;
 		case 0xE0:
-			sprintf(Msg + strlen(Msg), "Pitch wheel, Channel: %u, LSB: %u, MSB: %u\n", GETCHANNEL(dwParam), GETFP(dwParam), GETSP(dwParam));
+			sprintf(Msg + strlen(Msg), "Pitch wheel (RPN %u), Channel: %u, LSB: %u, MSB: %u\n", ((dwParam - 0xC0) & 0xE0), GETCHANNEL(dwParam), GETFP(dwParam), GETSP(dwParam));
 			break;
 		case 0xF0:{
 			switch (dwParam & 0xFF) {

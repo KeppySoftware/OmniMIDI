@@ -55,9 +55,6 @@
     <ClInclude Include="LockSystem.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="ShakraRegSystem.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\external_packages\basswasapi.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -97,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="sound_out_xa.cpp">
       <Filter>Runtime</Filter>
+    </ClCompile>
+    <ClCompile Include="WDMInstall.h">
+      <Filter>Headers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -119,45 +119,54 @@ void __inline SendToBASSMIDI(DWORD dwParam1) {
 
 	// PrintEventToDebugLog(dwParam1);
 
-	switch (GETCMD(dwParam1)) {
-	case MIDI_NOTEON:
-		_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, dwParam1 >> 8);
-		return;
-	case MIDI_NOTEOFF:
-		_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8));
-		return;
-	case MIDI_POLYAFTER:
-		_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_KEYPRES, dwParam1 >> 8);
-		return;
-	case MIDI_PROGCHAN:
-		_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_PROGRAM, (BYTE)(dwParam1 >> 8));
-		return;
-	case MIDI_CHANAFTER:
-		_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_CHANPRES, (BYTE)(dwParam1 >> 8));
-		return;
-	default:
-		if (!(dwParam1 - 0x80 & 0xC0))
-		{
-			_BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
-			return;
+	switch (dwParam1 & 0xFF) {
+	case 0xFF:
+		for (int i = 0; i < 16; i++) {
+			_BMSE(OMStream, i, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
 		}
+		return;
 
-		if (!((dwParam1 - 0xC0) & 0xE0)) len = 2;
-		else if ((dwParam1 & 0xF0) == 0xF0)
-		{
-			switch (dwParam1 & 0xF)
+	default:
+		switch (GETCMD(dwParam1)) {
+		case MIDI_NOTEON:
+			_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, dwParam1 >> 8);
+			return;
+		case MIDI_NOTEOFF:
+			_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8));
+			return;
+		case MIDI_POLYAFTER:
+			_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_KEYPRES, dwParam1 >> 8);
+			return;
+		case MIDI_PROGCHAN:
+			_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_PROGRAM, (BYTE)(dwParam1 >> 8));
+			return;
+		case MIDI_CHANAFTER:
+			_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_CHANPRES, (BYTE)(dwParam1 >> 8));
+			return;
+		default:
+			if (!(dwParam1 - 0x80 & 0xC0))
 			{
-			case 3:
-				len = 2;
-				break;
-			default:
-				// Not supported by OmniMIDI!
+				_BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
 				return;
 			}
-		}
 
-		_BMSEs(OMStream, BMSEsRAWFlags, &dwParam1, len);
-		return;
+			if (!((dwParam1 - 0xC0) & 0xE0)) len = 2;
+			else if ((dwParam1 & 0xF0) == 0xF0)
+			{
+				switch (dwParam1 & 0xF)
+				{
+				case 3:
+					len = 2;
+					break;
+				default:
+					// Not supported by OmniMIDI!
+					return;
+				}
+			}
+
+			_BMSEs(OMStream, BMSEsRAWFlags, &dwParam1, len);
+			return;
+		}
 	}
 }
 
@@ -180,7 +189,7 @@ void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 			if (ManagedSettings.OverrideNoteLength)
 				Evs[1] = { MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8), dwParam1 & 0xF, FNoteLengthValue, 0 };
 
-			BASS_MIDI_StreamEvents(OMStream, BMSEsFlags, &Evs, ManagedSettings.OverrideNoteLength ? 2 : 1);
+			_BMSEs(OMStream, BMSEsFlags, &Evs, ManagedSettings.OverrideNoteLength ? 2 : 1);
 
 			return;
 		}
@@ -188,7 +197,7 @@ void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 			if (!ManagedSettings.OverrideNoteLength && ManagedSettings.DelayNoteOff) {
 				Evs[0] = { MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8), dwParam1 & 0xF, FDelayNoteOff, 0 };
 
-				BASS_MIDI_StreamEvents(OMStream, BMSEsFlags, &Evs, 1);
+				_BMSEs(OMStream, BMSEsFlags, &Evs, 1);
 			}
 
 			return;

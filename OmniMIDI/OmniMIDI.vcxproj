@@ -29,6 +29,7 @@
   <ItemGroup>
     <ClCompile Include="OmniMIDI.cpp" />
     <ClCompile Include="sound_out_xa.cpp" />
+    <ClCompile Include="WDMInstall.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\external_packages\bass.h" />
@@ -50,7 +51,6 @@
     <ClInclude Include="OmniMIDI.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Settings.h" />
-    <ClInclude Include="ShakraRegSystem.h" />
     <ClInclude Include="SoundFontLoader.h" />
     <ClInclude Include="sound_out.h" />
     <ClInclude Include="Values.h" />

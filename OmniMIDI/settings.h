@@ -158,7 +158,7 @@ void ResetSynth(BOOL SwitchingBufferMode, BOOL ModeReset) {
 	if (ModeReset) {
 		// Wait for the heads to align, to avoid crashes
 		UnsetBufferPointers();
-		BASS_MIDI_StreamEvent(OMStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_XG);
+		_BMSE(OMStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_XG);
 		PrintMessageToDebugLog("ResetSynth", "Sent SysEx to BASSMIDI.");
 		SetBufferPointers();
 	}
@@ -492,9 +492,6 @@ BOOL LoadBASSFunctions() {
 			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamLoadSamples);
 			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamSetFonts);
 			LOADLIBFUNCTION(BASSMIDI.Lib, BASS_MIDI_StreamGetChannel);
-
-			_BMSE = BASS_MIDI_StreamEvent;
-			_BMSEs = BASS_MIDI_StreamEvents;
 
 			// Load plugins
 			LoadPluginModule(&bassflac, L"bassflac.dll");

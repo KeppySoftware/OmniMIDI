@@ -404,7 +404,7 @@ static inline HSTREAM BASS_MIDI_StreamCreateURL(const WCHAR *url, DWORD offset, 
 	return BASS_MIDI_StreamCreateURL((const char*)url, offset, flags | BASS_UNICODE, proc, user, freq);
 }
 
-static inline HSOUNDFONT BASS_MIDI_FontInit(const WCHAR *file, DWORD flags)
+static inline HSOUNDFONT BASS_MIDI_FontInit(const void *file, DWORD flags)
 {
 	return BASS_MIDI_FontInit((const void*)file, flags|BASS_UNICODE);
 }
