@@ -550,6 +550,19 @@ namespace OmniMIDIConfigurator
             }
         }
 
+        public static bool CheckIfDriveIsNTFS(string drive)
+        {
+            DriveInfo[] AllDrives = DriveInfo.GetDrives();
+
+            foreach (DriveInfo d in AllDrives)
+            {
+                if (d.Name == drive && d.DriveFormat == "NTFS")
+                    return true;
+            }
+
+            return false;
+        }
+
         public static bool CheckMIDIMapper() // Check if OmniMapper is installed
         {
             return (Functions.CLSID32.GetValue("midimapper", "midimap.dll").ToString() == "OmniMIDI\\OmniMapper.dll");
@@ -600,7 +613,25 @@ namespace OmniMIDIConfigurator
                                     String.Format("{0}\\{1}", Environment.GetFolderPath(Environment.SpecialFolder.SystemX86), "OmniMIDI.dll"),
                                     PA.SymbolicLink.File))
                                 {
-                                    throw new Exception("No administrator permissions?");
+                                    int error = Marshal.GetLastWin32Error();
+
+                                    switch (error)
+                                    {
+                                        case 0x000:
+                                            break;
+
+                                        case 0x005:
+                                            throw new UnauthorizedAccessException("Unable to write to target file system.");
+
+                                        case 0x3F0:
+                                            if (!CheckIfDriveIsNTFS(Path.GetPathRoot(DirectoryPath)))
+                                                throw new NotSupportedException("Target file system not supported for symlinks.");
+                                            else
+                                                throw new UnauthorizedAccessException("Unable to write to target file system.");
+
+                                        default:
+                                            throw new Exception("Unknown exception.");
+                                    }
                                 }
                             }
 
@@ -622,7 +653,25 @@ namespace OmniMIDIConfigurator
                                     String.Format("{0}\\{1}", Environment.GetFolderPath(Environment.SpecialFolder.System), "OmniMIDI.dll"),
                                     PA.SymbolicLink.File))
                                 {
-                                    throw new Exception("No administrator permissions?");
+                                    int error = Marshal.GetLastWin32Error();
+
+                                    switch (error)
+                                    {
+                                        case 0x000:
+                                            break;
+
+                                        case 0x005:
+                                            throw new UnauthorizedAccessException("Unable to write to target file system.");
+
+                                        case 0x3F0:
+                                            if (!CheckIfDriveIsNTFS(Path.GetPathRoot(DirectoryPath)))
+                                                throw new NotSupportedException("Target file system not supported for symlinks.");
+                                            else
+                                                throw new UnauthorizedAccessException("Unable to write to target file system.");
+
+                                        default:
+                                            throw new Exception("Unknown exception.");
+                                    }
                                 }
                             }
 
@@ -643,7 +692,25 @@ namespace OmniMIDIConfigurator
                                     String.Format("{0}\\{1}", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "SysArm32"), "OmniMIDI.dll"),
                                     PA.SymbolicLink.File))
                                 {
-                                    throw new Exception("No administrator permissions?");
+                                    int error = Marshal.GetLastWin32Error();
+
+                                    switch (error)
+                                    {
+                                        case 0x000:
+                                            break;
+
+                                        case 0x005:
+                                            throw new UnauthorizedAccessException("Unable to write to target file system.");
+
+                                        case 0x3F0:
+                                            if (!CheckIfDriveIsNTFS(Path.GetPathRoot(DirectoryPath)))
+                                                throw new NotSupportedException("Target file system not supported for symlinks.");
+                                            else
+                                                throw new UnauthorizedAccessException("Unable to write to target file system.");
+
+                                        default:
+                                            throw new Exception("Unknown exception.");
+                                    }
                                 }
                             }
 
@@ -659,10 +726,24 @@ namespace OmniMIDIConfigurator
                             return DialogResult.No;
                     }
                 }
-                catch
+                catch (NotSupportedException ex)
+                {
+                    Program.ShowError(4, "Error", "The target file system does not support symlinks.\n\nThe patch only supports target drives formatted in NTFS.", null);
+                    Status = "NOTSUPPR";
+                    WinMMDialog.Dispose();
+                    return DialogResult.No;
+                }
+                catch (UnauthorizedAccessException ex)
                 {
                     RestartAsAdmin();
                     Status = "ADMINREQ";
+                    WinMMDialog.Dispose();
+                    return DialogResult.No;
+                }
+                catch (Exception ex)
+                {
+                    Program.ShowError(4, "Error", "An unknown error as occurred.", null);
+                    Status = "UNKNOWN";
                     WinMMDialog.Dispose();
                     return DialogResult.No;
                 }

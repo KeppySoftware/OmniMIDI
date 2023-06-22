@@ -23,6 +23,7 @@ extern "C" {
 #define BASS_ERROR_WASAPI_BUFFER	5001	// buffer size is invalid
 #define BASS_ERROR_WASAPI_CATEGORY	5002	// can't set category
 #define BASS_ERROR_WASAPI_DENIED	5003	// access denied
+#define BASS_ERROR_WASAPI_RAW		5004	// raw not supported
 
 // Device info structure
 typedef struct {

@@ -114,3 +114,4 @@ output/OmniMIDIWatchdog.exe
 output/Test OmniMIDI Configurator.bat
 output/OmniMIDIDevEnum.exe
 OmniMapper/OmniMapper/OmniMIDI.h
+OmniMIDIConfigurator/.vs/

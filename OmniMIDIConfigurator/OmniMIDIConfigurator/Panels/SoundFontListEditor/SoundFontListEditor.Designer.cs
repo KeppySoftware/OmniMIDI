@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
             "Mama mia",
             "127",
             "127",
@@ -85,6 +86,7 @@
             this.PreloadSF = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SFFormat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SFSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ButtonToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.SuspendLayout();
             // 
             // SFlg
@@ -101,6 +103,7 @@
             this.SFlg.Size = new System.Drawing.Size(28, 28);
             this.SFlg.TabIndex = 4;
             this.SFlg.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonToolTip.SetToolTip(this.SFlg, "How does this panel work?");
             this.SFlg.UseVisualStyleBackColor = false;
             this.SFlg.Click += new System.EventHandler(this.SFlg_Click);
             this.SFlg.Paint += new System.Windows.Forms.PaintEventHandler(this.SoundFontListGuideButton);
@@ -130,6 +133,7 @@
             this.EL.Size = new System.Drawing.Size(28, 35);
             this.EL.TabIndex = 14;
             this.EL.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonToolTip.SetToolTip(this.EL, "Export SoundFont list to a file...");
             this.EL.UseVisualStyleBackColor = false;
             this.EL.Click += new System.EventHandler(this.EL_Click);
             this.EL.Paint += new System.Windows.Forms.PaintEventHandler(this.ImportListButton);
@@ -148,6 +152,7 @@
             this.LoadToApp.Size = new System.Drawing.Size(28, 28);
             this.LoadToApp.TabIndex = 10;
             this.LoadToApp.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonToolTip.SetToolTip(this.LoadToApp, "Force all apps that are using OM to load the SoundFont list");
             this.LoadToApp.UseVisualStyleBackColor = false;
             this.LoadToApp.Click += new System.EventHandler(this.LoadToApp_Click);
             this.LoadToApp.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonLoad);
@@ -166,6 +171,7 @@
             this.IEL.Size = new System.Drawing.Size(28, 35);
             this.IEL.TabIndex = 13;
             this.IEL.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonToolTip.SetToolTip(this.IEL, "Import SoundFont list from a file...");
             this.IEL.UseVisualStyleBackColor = false;
             this.IEL.Click += new System.EventHandler(this.IEL_Click);
             this.IEL.Paint += new System.Windows.Forms.PaintEventHandler(this.ImportListButton);
@@ -239,6 +245,7 @@
             this.CLi.Size = new System.Drawing.Size(28, 28);
             this.CLi.TabIndex = 5;
             this.CLi.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonToolTip.SetToolTip(this.CLi, "Clear SoundFont list");
             this.CLi.UseVisualStyleBackColor = false;
             this.CLi.Click += new System.EventHandler(this.CLi_Click);
             this.CLi.Paint += new System.Windows.Forms.PaintEventHandler(this.ClearListButton);
@@ -257,6 +264,7 @@
             this.MvD.Size = new System.Drawing.Size(28, 28);
             this.MvD.TabIndex = 9;
             this.MvD.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonToolTip.SetToolTip(this.MvD, "Move SoundFont down in the list");
             this.MvD.UseVisualStyleBackColor = false;
             this.MvD.Click += new System.EventHandler(this.MvD_Click);
             this.MvD.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonUpDown);
@@ -275,6 +283,7 @@
             this.MvU.Size = new System.Drawing.Size(28, 28);
             this.MvU.TabIndex = 8;
             this.MvU.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonToolTip.SetToolTip(this.MvU, "Move SoundFont up in the list");
             this.MvU.UseVisualStyleBackColor = false;
             this.MvU.Click += new System.EventHandler(this.MvU_Click);
             this.MvU.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonUpDown);
@@ -293,6 +302,7 @@
             this.RmvSF.Size = new System.Drawing.Size(28, 28);
             this.RmvSF.TabIndex = 7;
             this.RmvSF.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonToolTip.SetToolTip(this.RmvSF, "Remove a SoundFont from the list");
             this.RmvSF.UseVisualStyleBackColor = false;
             this.RmvSF.Click += new System.EventHandler(this.RmvSF_Click);
             this.RmvSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonAddRemove);
@@ -311,6 +321,7 @@
             this.AddSF.Size = new System.Drawing.Size(28, 28);
             this.AddSF.TabIndex = 6;
             this.AddSF.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonToolTip.SetToolTip(this.AddSF, "Add a SoundFont to the list");
             this.AddSF.UseVisualStyleBackColor = false;
             this.AddSF.Click += new System.EventHandler(this.AddSF_Click);
             this.AddSF.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonAddRemove);
@@ -460,6 +471,7 @@
             this.Preload.Size = new System.Drawing.Size(28, 28);
             this.Preload.TabIndex = 32;
             this.Preload.TextAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.ButtonToolTip.SetToolTip(this.Preload, "Toggle preloading for the selected SoundFont in the list");
             this.Preload.UseVisualStyleBackColor = false;
             this.Preload.Click += new System.EventHandler(this.Preload_Click);
             this.Preload.Paint += new System.Windows.Forms.PaintEventHandler(this.ButtonLoad);
@@ -491,9 +503,9 @@
             this.Lis.GridLines = true;
             this.Lis.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.Lis.HideSelection = false;
-            listViewItem1.StateImageIndex = 0;
+            listViewItem3.StateImageIndex = 0;
             this.Lis.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1});
+            listViewItem3});
             this.Lis.LabelWrap = false;
             this.Lis.LineAfter = -1;
             this.Lis.LineBefore = -1;
@@ -578,6 +590,12 @@
             this.SFSize.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SFSize.Width = 62;
             // 
+            // ButtonToolTip
+            // 
+            this.ButtonToolTip.IsBalloon = true;
+            this.ButtonToolTip.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.ButtonToolTip.ToolTipTitle = "Information";
+            // 
             // SoundFontListEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -655,5 +673,6 @@
         public System.Windows.Forms.Button Preload;
         public System.Windows.Forms.ColumnHeader DesBankLSB;
         private System.Windows.Forms.MenuItem EBPV;
+        private System.Windows.Forms.ToolTip ButtonToolTip;
     }
 }
