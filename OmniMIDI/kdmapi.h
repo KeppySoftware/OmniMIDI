@@ -335,8 +335,8 @@ void Supervisor(LPVOID lpV) {
 	try {
 		if (LoadBASSFunctions()) {
 			// Parse the app name, and start the debug pipe to the debug window
-			PrintMessageToDebugLog("StreamWatchdog", "Checking if app is allowed to use RTSS OSD...");
-			if (!AlreadyStartedOnce) StartDebugPipe(FALSE);
+			if (!AlreadyStartedOnce) 
+				StartDebugPipe(FALSE);
 
 			if (!ATThreadDone)
 				ATThreadDone = CreateEvent(NULL, TRUE, FALSE, L"ATThreadDone");
@@ -641,7 +641,7 @@ extern "C" BOOL KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DW
 			OMCookedPlayer->Tempo = 500000;
 			OMCookedPlayer->TimeDiv = 384;
 			OMCookedPlayer->TempoMulti = ((OMCookedPlayer->Tempo * 10) / OMCookedPlayer->TimeDiv);
-			PrintVarToDebugLog("ICF", "TempoMulti", &OMCookedPlayer->TempoMulti, PRINT_UINT32);
+			PrintVarToDebugLog("ICF", "TempoMulti", (void*)OMCookedPlayer->TempoMulti, PRINT_UINT32);
 
 			PrintMessageToDebugLog("ICF", "CookedPlayer struct prepared.");
 
@@ -688,7 +688,7 @@ extern "C" VOID KDMAPI SendDirectData(DWORD dwMsg) noexcept {
 
 extern "C" VOID KDMAPI SendDirectDataNoBuf(DWORD dwMsg) noexcept {
 	// Send the data directly to BASSMIDI, bypassing the buffer altogether
-	_PforBASSMIDI(0, dwMsg);
+	_PforBASSMIDI(dwMsg);
 }
 
 extern "C" MMRESULT KDMAPI PrepareLongData(MIDIHDR * IIMidiHdr, UINT IIMidiHdrSize) {

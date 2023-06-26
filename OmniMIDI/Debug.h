@@ -9,6 +9,7 @@ OmniMIDI debug functions
 #define PRINT_FLOAT 4
 #define PRINT_BOOL 5
 #define PRINT_WCHAR 6
+#define PRINT_CHAR 7
 
 #define CurrentError(Message, Error, Text) case Error: sprintf_s(Message, NTFS_MAX_PATH, "Error %s:\n%s", #Error, #Text); break
 #define DefError(Message, Error, Text) sprintf_s(Message, NTFS_MAX_PATH, "Error %s:\n%s", #Error, #Text); break
@@ -150,6 +151,27 @@ void PrintCurrentTimeW() {
 	// Print to log
 	fwprintf(DebugLog, L"%02d-%02d-%04d %02d:%02d:%02d.%03d - ",
 		stime.wDay, stime.wMonth, stime.wYear, stime.wHour, stime.wMinute, stime.wSecond, stime.wMilliseconds);
+}
+
+void PrintHexToDebugLog(DWORD_PTR a, DWORD_PTR b) {
+	if (ManagedSettings.DebugMode) {
+		char* Msg = (char*)malloc(sizeof(char) * NTFS_MAX_PATH);
+
+		// Debug log is busy now
+		std::lock_guard<std::mutex> lock(DebugMutex);
+
+		// Print to log
+		PrintCurrentTime();
+		sprintf(Msg, "Stage <<BM>> | noLRS-> %x, LRS-> %x", a, b);
+
+		fprintf(DebugLog, Msg);
+		OutputDebugStringA(Msg);
+
+		free(Msg);
+
+		// Flush buffer
+		fflush(DebugLog);
+	}
 }
 
 void PrintMMToDebugLog(UINT uDID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dwParam1, DWORD_PTR dwParam2) {
@@ -364,7 +386,7 @@ void PrintVarToDebugLog(LPCSTR Stage, LPCSTR ValueName, void* Var, int Type) {
 		case PRINT_FLOAT:
 		{
 			float FVar = *(float*)Var;
-			sprintf(AMsg, "Stage <<%s>> | %s: %f (float)\n", Stage, ValueName, *(float*)Var);
+			sprintf(AMsg, "Stage <<%s>> | %s: %f (float)\n", Stage, ValueName, FVar);
 			fprintf(DebugLog, AMsg);
 			OutputDebugStringA(AMsg);
 			break;
@@ -377,9 +399,16 @@ void PrintVarToDebugLog(LPCSTR Stage, LPCSTR ValueName, void* Var, int Type) {
 			OutputDebugStringA(AMsg);
 			break;
 		}
+		case PRINT_CHAR:
+		{
+			sprintf(AMsg, "Stage <<%s>> | %s: %s (char)\n", Stage, ValueName, Var);
+			fprintf(DebugLog, AMsg);
+			OutputDebugStringA(AMsg);
+			break;
+		}
 		case PRINT_WCHAR:
 		{
-			swprintf(WMsg, L"Stage <<%S>> | %S: %s (wchar_t)\n", Stage, ValueName, (wchar_t*)Var);
+			swprintf(WMsg, L"Stage <<%S>> | %S: %s (wchar_t)\n", Stage, ValueName, Var);
 			fwprintf(DebugLog, WMsg);
 			OutputDebugStringW(WMsg);
 			break;

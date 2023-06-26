@@ -516,20 +516,23 @@ void InitializeBASSVST() {
 	PathAppend(LoudMax, _T("\\OmniMIDI\\LoudMax\\LoudMax32.dll"));
 #endif
 
+#ifndef _M_ARM64
 	// If the DLL exists, begin the loading process
 	if (PathFileExists(LoudMax)) {
-		// Initialize BASS_VST
-		if (LoadDriverModule(&BASS_VST, L"bass_vst.dll")) {
-			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ChannelSetDSP);
-			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ChannelFree);
-			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ChannelCreate);
-			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ProcessEvent);
-			LOADLIBFUNCTION(BASS_VST.Lib, BASS_VST_ProcessEventRaw);
-
-			BASS_VST_ChannelSetDSP(OMStream, LoudMax, BASS_UNICODE, 1);
+		if (!BASS_VST.Initialized) {
+			if (!LoadLib(&BASS_VST))
+				return;
 		}
-		else { /* Nothing, probably on ARM64 */ }
+		// Initialize BASS_VST
+		LoadFuncM(BASS_VST, BASS_VST_ChannelSetDSP);
+		LoadFuncM(BASS_VST, BASS_VST_ChannelFree);
+		LoadFuncM(BASS_VST, BASS_VST_ChannelCreate);
+		LoadFuncM(BASS_VST, BASS_VST_ProcessEvent);
+		LoadFuncM(BASS_VST, BASS_VST_ProcessEventRaw);
+
+		BASS_VST_ChannelSetDSP(OMStream, LoudMax, BASS_UNICODE, 1);
 	}
+#endif
 }
 
 BOOL InitializeStream(INT32 mixfreq) {

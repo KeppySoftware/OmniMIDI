@@ -7,12 +7,16 @@
 // Things
 UINT CPUThreadsAvailable = 0;
 
-#define LOADLIBFUNCTION(l, f) *((void**)&f)=GetProcAddress(l,#f)
+#define fv2fn(f)		(#f)
+#define SetPath(f)		if (!f.Path) f.Path = L#f
+#define LoadFuncM(l, f)	*((void**)&f) = GetProcAddress(l.Lib,#f)
 
-#define GETCMD(f) f & 0xF0
-#define GETSP(f) (f >> 16) & 0xFF
-#define GETFP(f) (f >> 8) & 0xFF
-#define GETCHANNEL(f) f & 0xF
+#define CHKLRS(f) (f & 0x80)
+#define GETCMD(f) (f & 0xF0)
+#define GETCHANNEL(f) (f & 0xF)
+#define GETSTATUS(f) (f & 0xFF)
+#define GETSP(f) (f >> 16)
+#define GETFP(f) (f >> 8)
 
 #define SETVELOCITY(f, nf) f = (f & 0xFF00FFFF) | ((DWORD(nf) & 0xFF) << 16)
 #define SETNOTE(f, nf) f = (f & 0xFFFF00FF) | ((DWORD(nf) & 0xFF) << 8)
@@ -58,15 +62,18 @@ typedef struct EventsBuffer {
 
 // The buffer's structure
 EventsBuffer EVBuffer;						// The buffer
-ULONG LastRunningStatus = 0;				// Last running status
+unsigned char LastRunningStatus = 0;		// Last running status
 ULONGLONG EvBufferSize = 4096;
 ULONG EvBufferMultRatio = 1;
 ULONG GetEvBuffSizeFromRAM = 0;
 
 // BASS lib
 typedef struct OMLib {
-	HMODULE Lib = NULL;
-	BOOL AppOwnDLL = FALSE;
+	const wchar_t* Path;
+	HMODULE Lib = nullptr;
+	bool AppOwnDLL = false;
+	bool LoadFailed = false;
+	bool Initialized = false;
 };
 OMLib BASS = {}, BASSWASAPI = {}, BASSASIO = {}, BASSENC = {}, BASSMIDI = {}, BASS_VST = {};
 HPLUGIN bassflac = NULL, basswv = NULL, bassopus = NULL;
@@ -329,7 +336,7 @@ DDP DefDriverProcImp = 0;
 
 // Critical sections but handled by OmniMIDI functions because f**k Windows
 void DummyPlayBufData() noexcept { return; };
-void DummyPrepareForBASSMIDI(DWORD, DWORD) noexcept { return; };
+void DummyPrepareForBASSMIDI(DWORD) noexcept { return; };
 void DummyParseData(DWORD_PTR) noexcept { return; };
 void DummyShortMsg(DWORD) noexcept { return; };
 void DummyLongMsg(LPMIDIHDR, UINT) noexcept { return; };
@@ -340,7 +347,7 @@ DWORD CALLBACK DummyProcData(void*, DWORD, void*) noexcept { return 0; };
 // Hyper switch
 BOOL HyperMode = 0;
 void(*_PrsData)(DWORD_PTR dwParam1) = DummyParseData;
-void(*_PforBASSMIDI)(DWORD LastRunningStatus, DWORD dwParam1) = DummyPrepareForBASSMIDI;
+void(*_PforBASSMIDI)(DWORD dwParam1) = DummyPrepareForBASSMIDI;
 void(*_PlayBufData)(void) = DummyPlayBufData;
 void(*_PlayBufDataChk)(void) = DummyPlayBufData;
 void(*_FeedbackShortMsg)(DWORD) = DummyShortMsg;

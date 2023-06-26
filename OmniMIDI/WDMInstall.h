@@ -217,6 +217,7 @@ static RegisterDriverResult registerDriver(const bool wow64Process, int& entryIx
 		MessageBoxA(NULL, CANNOT_OPEN_REGISTRY_ERR, REGISTRY_ERROR_TITLE, MB_OK | MB_ICONEXCLAMATION);
 		return RegisterDriverResult_FAILED;
 	}
+
 	MidiRegistryEntryName entryName;
 	if (!findFreeMidiRegEntry(entryIx, hReg, entryName)) {
 		RegCloseKey(hReg);
@@ -230,6 +231,7 @@ static RegisterDriverResult registerDriver(const bool wow64Process, int& entryIx
 		}
 		return RegisterDriverResult_ALREADY_EXISTS;
 	}
+
 	const char* freeEntryName = entryName.withIndex(entryIx)->toCString();
 	LSTATUS res = RegSetValueExA(hReg, freeEntryName, NULL, REG_SZ, (LPBYTE)OMNIMIDI_DRIVER_NAME, sizeof(OMNIMIDI_DRIVER_NAME));
 	RegCloseKey(hReg);
@@ -240,6 +242,7 @@ static RegisterDriverResult registerDriver(const bool wow64Process, int& entryIx
 	if (wow64Process && !registerDriverInWow(freeEntryName)) {
 		return RegisterDriverResult_FAILED;
 	}
+
 	return RegisterDriverResult_OK;
 }
 

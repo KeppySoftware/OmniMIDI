@@ -114,67 +114,128 @@ void __inline SendLongMIDIFeedback(LPMIDIHDR mHDR, UINT Size) {
 	}
 }
 
-void __inline SendToBASSMIDI(DWORD dwParam1) {
-	DWORD len = 3;
+bool __inline SendToBASSMIDI(unsigned int ev) {
+	/*
+	
+	For more info about how an event is structured, read this doc from Microsoft:
+	https://learn.microsoft.com/en-us/windows/win32/api/mmeapi/nf-mmeapi-midioutshortmsg
 
-	// PrintEventToDebugLog(dwParam1);
+	-
+	TL;DR is here though:
+	Let's assume that we have an event coming through, of value 0x007F7F95.
+	MIDI events are ALWAYS big endian.
 
-	switch (dwParam1 & 0xFF) {
+	The high-order byte of the high word is ignored.
+
+	The low-order of the high word contains the first part of the data, which, for
+	a NoteOn event, is the key number (from 0 to 127).
+
+	The high-order of the low word contains the second part of the data, which, for
+	a NoteOn event, is the velocity of the key (again, from 0 to 127).
+	
+	The low-order byte of the low word contains two nibbles combined into one.
+	The first nibble contains the type of event (1001 is 0x9, which is a NoteOn),
+	while the second nibble contains the channel (0101 is 0x5, which is the 5th channel).
+
+	So, in short, we can read it as follows:
+	0x957F7F should press the 128th key on the keyboard at full velocity, on MIDI channel 5.
+
+	But hey! We can also receive events with a long running status, which means there's no status byte!
+	That event, if we consider the same example from before, will look like this: 0x00007F7F
+
+	Such event will only work if the driver receives a status event, which will be stored in memory.
+	So, in a sequence of data like this:
+	..
+	1. 0x00044A90 (NoteOn on key 75 at velocity 10)
+	2. 0x00007F7F (... then on key 128 at velocity 127)
+	3. 0x00006031 (... then on key 50 at velocity 96)
+	4. 0x0000605F (... and finally on key 95 at velocity 96)
+	..
+	The same status from event 1 will be applied to all the status-less events from 2 and onwards.
+	-
+
+	INFO: ev will be recasted as char in some parts of the code, since those parts
+	do not require the high-word part of the unsigned int.
+
+	*/
+
+	unsigned int tev = ev;
+
+	if (CHKLRS(GETSTATUS(tev)) != 0) LastRunningStatus = GETSTATUS(tev);
+	else tev = ev << 8 | LastRunningStatus;
+
+	unsigned int ch = tev & 0xF;
+	unsigned int evt = 0;
+	unsigned int param = GETFP(tev);
+
+	unsigned int cmd = GETCMD(tev);
+	unsigned int len = 3;
+	bool ok = true;
+
+	switch (LastRunningStatus) {
+	// Handle 0xFF (GS reset) first!
 	case 0xFF:
 		for (int i = 0; i < 16; i++) {
-			_BMSE(OMStream, i, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT);
+			if (!BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_SOUNDOFF, 0))
+				ok = false;
+
+			if (!BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_NOTESOFF, 0))
+				ok = false;
+
+			if (!BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT))
+				ok = false;
 		}
-		return;
+		return ok;
 
 	default:
-		switch (GETCMD(dwParam1)) {
+		switch (GETCMD(ev)) {
 		case MIDI_NOTEON:
-			_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, dwParam1 >> 8);
-			return;
+			evt = MIDI_EVENT_NOTE;
+			break;
 		case MIDI_NOTEOFF:
-			_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_NOTE, (BYTE)(dwParam1 >> 8));
-			return;
+			evt = MIDI_EVENT_NOTE;
+			param = (char)param;
+			break;
 		case MIDI_POLYAFTER:
-			_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_KEYPRES, dwParam1 >> 8);
-			return;
+			evt = MIDI_EVENT_KEYPRES;
+			break;
 		case MIDI_PROGCHAN:
-			_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_PROGRAM, (BYTE)(dwParam1 >> 8));
-			return;
+			evt = MIDI_EVENT_PROGRAM;
+			param = (char)param;
+			break;
 		case MIDI_CHANAFTER:
-			_BMSE(OMStream, dwParam1 & 0xF, MIDI_EVENT_CHANPRES, (BYTE)(dwParam1 >> 8));
-			return;
+			evt = MIDI_EVENT_CHANPRES;
+			param = (char)param;
+			break;
 		default:
-			if (!(dwParam1 - 0x80 & 0xC0))
-			{
-				_BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &dwParam1, 3);
-				return;
-			}
+			// Some events do not have a specific counter part on BASSMIDI's side, so they have
+			// to be directly fed to the library by using the BASS_MIDI_EVENTS_RAW flag.
+			if (!(ev - 0x80 & 0xC0))
+				return _BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &tev, 3);
 
-			if (!((dwParam1 - 0xC0) & 0xE0)) len = 2;
-			else if ((dwParam1 & 0xF0) == 0xF0)
+			if (!((ev - 0xC0) & 0xE0)) len = 2;
+			else if (GETCMD(ev) == 0xF0)
 			{
-				switch (dwParam1 & 0xF)
+				switch (ev & 0xF)
 				{
 				case 3:
 					len = 2;
 					break;
 				default:
 					// Not supported by OmniMIDI!
-					return;
+					return false;
 				}
 			}
 
-			_BMSEs(OMStream, BMSEsRAWFlags, &dwParam1, len);
-			return;
+			return _BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &tev, len);
 		}
 	}
+
+	return _BMSE(OMStream, ch, evt, param);
 }
 
-void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
+void __inline PrepareForBASSMIDI(DWORD dwParam1) {
 	BASS_MIDI_EVENT Evs[2];
-
-	if (!(dwParam1 & 0x80))
-		dwParam1 = dwParam1 << 8 | LastRunningStatus;
 
 	if (ManagedSettings.FullVelocityMode || ManagedSettings.TransposeValue != 0x7F)
 		dwParam1 = ReturnEditedEvent(dwParam1);
@@ -207,10 +268,7 @@ void __inline PrepareForBASSMIDI(DWORD LastRunningStatus, DWORD dwParam1) {
 	SendToBASSMIDI(dwParam1);
 }
 
-void __inline PrepareForBASSMIDIHyper(DWORD LastRunningStatus, DWORD dwParam1) {
-	if (!(dwParam1 & 0x80))
-		dwParam1 = dwParam1 << 8 | LastRunningStatus;
-
+void __inline PrepareForBASSMIDIHyper(DWORD dwParam1) {
 	SendToBASSMIDI(dwParam1);
 }
 
@@ -229,12 +287,10 @@ void __inline SendLongToBASSMIDI(LPMIDIHDR IIMidiHdr) {
 // and can not be skipped
 void __inline PBufData(void) {
 	DWORD dwParam1 = EVBuffer.Buffer[EVBuffer.ReadHead].Event;
-	if (dwParam1 & 0x80)
-		LastRunningStatus = (BYTE)dwParam1;
 
 	if (++EVBuffer.ReadHead >= EVBuffer.BufSize) EVBuffer.ReadHead = 0;
 
-	_PforBASSMIDI(LastRunningStatus, dwParam1);
+	_PforBASSMIDI(dwParam1);
 }
 
 void __inline PSmallBufData(void)
@@ -254,13 +310,7 @@ void __inline PSmallBufData(void)
 
 		EVBuffer.ReadHead = HeadPos;
 
-		if (~dwParam1)
-		{
-			if (dwParam1 & 0x80)
-				LastRunningStatus = (BYTE)dwParam1;
-
-			_PforBASSMIDI(LastRunningStatus, dwParam1);
-		}
+		if (~dwParam1) _PforBASSMIDI(dwParam1);
 		else return;
 
 		if (HeadPos == HeadStart) return;
