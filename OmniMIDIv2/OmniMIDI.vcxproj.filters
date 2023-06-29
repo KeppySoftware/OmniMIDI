@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Extensions">
+      <UniqueIdentifier>{32b66a3e-4ffa-4bd6-9277-e81d845d2197}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Extensions">
+      <UniqueIdentifier>{db341718-4333-4734-8506-58b9d687a68c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Mandatory">
+      <UniqueIdentifier>{3676059e-76d4-4f8e-a9d4-be90f349aca7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mandatory">
+      <UniqueIdentifier>{e5436d45-82c9-4c9b-8407-fe7364b499ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\WDM">
+      <UniqueIdentifier>{589c6ff6-91d5-437f-9b8d-842df0074ff9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\WDM">
+      <UniqueIdentifier>{cbe897c2-9634-4044-b9a6-d87f99a66b7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Synthesizer">
+      <UniqueIdentifier>{2af71ab6-7d05-445e-896e-add295b6cf71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Synthesizer">
+      <UniqueIdentifier>{42ab0514-ea83-41b8-a996-853b7e93bcfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Synthesizer\BASS">
+      <UniqueIdentifier>{962b29bc-2133-4b6c-b50e-8b1a821913b0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ErrSys.h">
+      <Filter>Header Files\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files\Mandatory</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files\Mandatory</Filter>
+    </ClInclude>
+    <ClInclude Include="WDMDrv.h">
+      <Filter>Header Files\WDM</Filter>
+    </ClInclude>
+    <ClInclude Include="SynthMain.h">
+      <Filter>Header Files\Synthesizer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrSys.cpp">
+      <Filter>Source Files\Extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="WDMEntry.cpp">
+      <Filter>Source Files\WDM</Filter>
+    </ClCompile>
+    <ClCompile Include="WDMDrv.cpp">
+      <Filter>Source Files\WDM</Filter>
+    </ClCompile>
+    <ClCompile Include="SynthMain.cpp">
+      <Filter>Source Files\Synthesizer</Filter>
+    </ClCompile>
+    <ClCompile Include="bass.cpp">
+      <Filter>Source Files\Synthesizer\BASS</Filter>
+    </ClCompile>
+    <ClCompile Include="bassmidi.cpp">
+      <Filter>Source Files\Synthesizer\BASS</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="WDMEntry.h">
+      <Filter>Header Files\WDM</Filter>
+    </None>
+  </ItemGroup>
+</Project>
