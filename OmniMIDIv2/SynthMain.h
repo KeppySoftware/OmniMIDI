@@ -193,16 +193,14 @@ namespace OmniMIDI {
 		}
 
 		bool Push(unsigned int ev) {
-			size_t NextWriteHead = WriteHead + 1;
-			if (NextWriteHead >= Size) NextWriteHead = 0;
+			size_t LocalWriteHead = WriteHead;
+			size_t NextWriteHead = LocalWriteHead + 1;
 
-			Buffer[WriteHead].Event = ev;
+			if (NextWriteHead >= Size)
+				NextWriteHead = 0;
 
-#ifdef _STATSDEV
-			EventsSent++;
-#endif
-
-			if (NextWriteHead == ReadHeadCached) {
+			if (NextWriteHead == ReadHeadCached)
+			{
 				ReadHeadCached = ReadHead;
 				if (NextWriteHead == ReadHeadCached) {
 #ifdef _STATSDEV
@@ -211,24 +209,27 @@ namespace OmniMIDI {
 					return false;
 				}
 			}
+
+			Buffer[LocalWriteHead].Event = ev;
 			WriteHead = NextWriteHead;
 
 			return true;
 		}
 
 		bool Pop(unsigned int& ev) {
-			size_t NextReadHead = ReadHead + 1;
-			if (NextReadHead >= Size) NextReadHead = 0;
-
-			if (NextReadHead == WriteHeadCached) {
+			size_t LocalReadHead = ReadHead;
+			if (LocalReadHead == WriteHeadCached)
+			{
 				WriteHeadCached = WriteHead;
-				if (NextReadHead == WriteHeadCached) {
+				if (LocalReadHead == WriteHeadCached)
 					return false;
-				}
 			}
 
-			ev = Buffer[NextReadHead].Event;
+			size_t NextReadHead = LocalReadHead + 1;
+			if (NextReadHead >= Size)
+				NextReadHead = 0;
 
+			ev = Buffer[LocalReadHead].Event;
 			ReadHead = NextReadHead;
 
 			return true;
