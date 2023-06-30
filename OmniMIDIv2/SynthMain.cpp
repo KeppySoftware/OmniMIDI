@@ -5,7 +5,6 @@ This file contains the required code to run the driver under Windows 7 SP1 and l
 This file is useful only if you want to compile the driver under Windows, it's not needed for Linux/macOS porting.
 */
 
-#include "pch.h"
 #include "SynthMain.h"
 
 bool OmniMIDI::SynthModule::LoadLib(Lib* Target) {
@@ -28,41 +27,25 @@ bool OmniMIDI::SynthModule::LoadLib(Lib* Target) {
 		// Otherwise, let's load our own
 		else {
 			// Let's get the system path
-			PWSTR Dir;
-			LSTATUS Success = SHGetKnownFolderPath(FOLDERID_System, 0, NULL, &Dir);
-			bool Good = SUCCEEDED(Success);
-			assert(Good == true);
-
-			if (Good)
-			{
-				Success = StringCchPrintfW(SysDir, sizeof(SysDir), L"%ws", Dir);
-				Good = SUCCEEDED(Success);
-				assert(Good == true);
-			}
-
-			CoTaskMemFree((LPVOID)Dir);
-
-			// If we failed to get a system path,
-			// return false
-			if (!Good)
-				return false;
-
-			int swp = swprintf_s(DLLPath, MAX_PATH, L"%s.dll\0", Target->Path);
-			assert(swp != -1);
-
-			Target->Library = LoadLibrary(DLLPath);
-
-			if (!Target->Library)
-			{
-				swp = swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s.dll\0", SysDir, Target->Path);
+			if (Utils.GetFolderPath(FOLDERID_System, SysDir, sizeof(SysDir))) {
+				int swp = swprintf_s(DLLPath, MAX_PATH, L"%s.dll\0", Target->Path);
 				assert(swp != -1);
 
 				Target->Library = LoadLibrary(DLLPath);
-				assert(Target->Library != 0);
 
 				if (!Target->Library)
-					return false;
+				{
+					swp = swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s.dll\0", SysDir, Target->Path);
+					assert(swp != -1);
+
+					Target->Library = LoadLibrary(DLLPath);
+					assert(Target->Library != 0);
+
+					if (!Target->Library)
+						return false;
+				}
 			}
+			else return false;
 		}
 	}
 
@@ -238,12 +221,25 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 	int limit = sizeof(LibImports) / sizeof(LibImports[0]);
 
 	if (!NanoSleep)
-		NanoSleep = (unsigned int (WINAPI*)(unsigned char, signed long long*))GetProcAddress(GetModuleHandle(L"ntdll"), "NtDelayExecution");
+	{
+		auto mod = GetModuleHandleA("ntdll");
+		assert(mod != 0);
 
-	assert(NanoSleep != 0);
+		if (!mod)
+		{
+			FNERROR(SynErr, L"Could not load NTDLL from memory!!! What's happening???");
+			return false;
+		}
 
-	if (!NanoSleep)
-		FNERROR(SynErr, L"Where's NtDelayExecution... Is this Windows 95?");
+		NanoSleep = (unsigned int (WINAPI*)(unsigned char, signed long long*))GetProcAddress(mod, "NtDelayExecution");
+		assert(NanoSleep != 0);
+
+		if (!NanoSleep)
+		{
+			FNERROR(SynErr, L"Where's NtDelayExecution... Is this Windows 95?");
+			return false;
+		}
+	}
 
 	void* ptr = nullptr;
 
@@ -335,8 +331,13 @@ bool OmniMIDI::SynthModule::UnloadSynthModule() {
 }
 
 bool OmniMIDI::SynthModule::StartSynthModule() {
+	// SF path
+	wchar_t OMPath[MAX_PATH] = { 0 };
+
+	// BASS stream flags
 	unsigned int StreamFlags = BASS_SAMPLE_FLOAT | BASS_MIDI_ASYNC;
 
+	// If the audio stream is not 0, then stream is allocated already
 	if (AudioStream)
 		return true;
 
@@ -386,6 +387,7 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 			return false;
 		}
 
+#pragma warning(suppress: 4312)
 		if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_ASYNC | BASS_WASAPI_EVENT | BASS_WASAPI_SAMPLES, 32.0f, 0, WASAPIPROC_BASS, (void*)AudioStream)) {
 			NERROR(SynErr, L"BASS_WASAPI_Init failed.", false);
 			return false;
@@ -404,38 +406,54 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 		return false;
 	}
 
-	std::fstream sfs;
-	sfs.open(L"E:\\GitHub\\OmniMIDI\\OmniMIDIv2\\x64\\Release\\paolo.json");
+	if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
+		swprintf_s(OMPath, L"%s\\OmniMIDI\\lists\\OmniMIDI_A.json\0", OMPath);
 
-	if (sfs.is_open()) {
-		JsonData = nlohmann::json::parse(sfs, nullptr, false, true);
+		std::fstream sfs;
+		sfs.open(OMPath);
 
-		for (int i = 0; i < JsonData["SoundFonts"].size(); i++) {
-			BASS_MIDI_FONTEX sf;
+		if (sfs.is_open()) {
+			// Read the JSON data from there
+			auto json = nlohmann::json::parse(sfs, nullptr, false, true);
 
-			nlohmann::json subitem = JsonData["SoundFonts"][i];
+			if (json != nullptr) {
+				auto JsonData = json["SoundFonts"];
 
-			if (subitem != nullptr) {
-				std::string path = subitem["path"];
+				if (!(JsonData == nullptr || JsonData.size() < 1)) {
+					for (int i = 0; i < JsonData.size(); i++) {
+						BASS_MIDI_FONTEX sf;
+						nlohmann::json subitem = JsonData[i];
 
-				sf.font = BASS_MIDI_FontInit(path.c_str(), BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
-				sf.spreset = subitem["spreset"]; // all presets
-				sf.sbank = subitem["sbank"]; // all banks
-				sf.dpreset = subitem["dpreset"]; // all presets
-				sf.dbank = subitem["dbank"]; // default banks
-				sf.dbanklsb = subitem["dbanklsb"]; // destination bank LSB 0
-				BASS_MIDI_FontLoad(sf.font, sf.spreset, sf.sbank);
+						// Is item valid?
+						if (subitem != nullptr) {
+							std::string sfpath = subitem["path"];
 
-				SoundFonts.push_back(sf);
+							sf.font = BASS_MIDI_FontInit(sfpath.c_str(), BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
+							sf.spreset = subitem["spreset"];
+							sf.sbank = subitem["sbank"];
+							sf.dpreset = subitem["dpreset"];
+							sf.dbank = subitem["dbank"];
+							sf.dbanklsb = subitem["dbanklsb"];
+
+							// Check if the soundfont loads, if it does then it's valid
+							if (BASS_MIDI_FontLoad(sf.font, sf.spreset, sf.sbank))
+								SoundFonts.push_back(sf);
+						}
+
+						// If it's not, then let's loop until the end of the JSON struct
+					}
+
+					std::reverse(SoundFonts.begin(), SoundFonts.end());
+					BASS_MIDI_StreamSetFonts(AudioStream, &SoundFonts[0], (unsigned int)SoundFonts.size() | BASS_MIDI_FONT_EX);
+				}
+				else NERROR(SynErr, L"SoundFonts JSON does exist, but it does not contain the required items.", false);
 			}
+			else NERROR(SynErr, L"Imvalid JSON structure!", false);
+
+			sfs.close();
 		}
+		else NERROR(SynErr, L"SoundFonts JSON does not exist.", false);
 	}
-	else LOG(SynErr, L"JsonData for SoundFonts does not exist!");
-
-	sfs.close();
-
-	std::reverse(SoundFonts.begin(), SoundFonts.end());
-	BASS_MIDI_StreamSetFonts(AudioStream, &SoundFonts[0], (unsigned int)SoundFonts.size() | BASS_MIDI_FONT_EX);
 
 	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_BUFFER, 1);
 	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_VOICES, 1000);

@@ -59,7 +59,6 @@ typedef	unsigned int SynthResult;
 #define EvBuf				EvBuf_t
 
 #include <Windows.h>
-#include <ShlObj_core.h>
 #include <strsafe.h>
 #include <bass.h>
 #include <basswasapi.h>
@@ -73,8 +72,9 @@ typedef	unsigned int SynthResult;
 #include <vector>
 #include <codecvt>
 #include <locale>
-#include <nlohmann\json.hpp>
 #include "ErrSys.h"
+#include "Utils.h"
+#include <nlohmann\json.hpp>
 
 namespace {
 	struct LibImport
@@ -261,7 +261,7 @@ namespace OmniMIDI {
 		std::thread _EvtThread;
 		EvBuf* Events;
 
-		nlohmann::json JsonData;
+		WinUtils::SysPath Utils;
 		signed long long onenano = -1;
 		unsigned int (WINAPI* NanoSleep)(unsigned char, signed long long*);
 		unsigned int AudioStream;

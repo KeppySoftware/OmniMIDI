@@ -7,7 +7,6 @@
 
 */
 
-#include "pch.h"
 #include <bass.h>
 
 BOOL(WINAPI* BASS_SetConfig)(DWORD option, DWORD value) = 0;

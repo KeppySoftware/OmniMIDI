@@ -45,23 +45,17 @@
     <ClInclude Include="ErrSys.h">
       <Filter>Header Files\Extensions</Filter>
     </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>Header Files\Mandatory</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Header Files\Mandatory</Filter>
-    </ClInclude>
     <ClInclude Include="WDMDrv.h">
       <Filter>Header Files\WDM</Filter>
     </ClInclude>
     <ClInclude Include="SynthMain.h">
       <Filter>Header Files\Synthesizer</Filter>
     </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files\Extensions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ErrSys.cpp">
       <Filter>Source Files\Extensions</Filter>
     </ClCompile>
@@ -82,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="basswasapi.cpp">
       <Filter>Source Files\Synthesizer\BASS</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>Source Files\Extensions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

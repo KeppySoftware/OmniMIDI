@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include <Windows.h>
 #include <devguid.h>
 #include <newdev.h>
 #include <regstr.h>

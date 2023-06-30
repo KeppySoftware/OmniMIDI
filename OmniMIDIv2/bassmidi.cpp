@@ -7,7 +7,6 @@
 
 */
 
-#include "pch.h"
 #include <bassmidi.h>
 
 DWORD(WINAPI* BASS_MIDI_GetVersion)(void) = 0;

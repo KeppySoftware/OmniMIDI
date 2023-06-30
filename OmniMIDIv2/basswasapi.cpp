@@ -7,7 +7,6 @@
 
 */
 
-#include "pch.h"
 #include <basswasapi.h>
 
 DWORD(WINAPI* BASS_WASAPI_GetVersion)() = 0;

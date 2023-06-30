@@ -7,7 +7,6 @@
 
 */
 
-#include "pch.h"
 #include "WDMDrv.h"
 
 #ifdef _WIN32
