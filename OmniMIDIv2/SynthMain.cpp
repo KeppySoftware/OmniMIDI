@@ -116,9 +116,6 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 		if (!LoadLib(&BAudLib))
 			return false;
 
-		if (!LoadLib(&BWasLib))
-			return false;
-
 		if (!LoadLib(&BMidLib))
 			return false;
 
@@ -130,9 +127,15 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 		if (*(LibImports[i].ptr))
 			continue;
 
-		*(LibImports[i].ptr) = (void*)GetProcAddress(BWasLib.Library, LibImports[i].name);
-		if (*(LibImports[i].ptr))
-			continue;
+		if (AudioEngine == WASAPI)
+		{
+			if (!LoadLib(&BWasLib))
+				return false;
+
+			*(LibImports[i].ptr) = (void*)GetProcAddress(BWasLib.Library, LibImports[i].name);
+			if (*(LibImports[i].ptr))
+				continue;
+		}
 	}
 
 	return !(BAudLib.LoadFailed && BMidLib.LoadFailed && BWasLib.LoadFailed);
@@ -153,12 +156,16 @@ bool OmniMIDI::SynthModule::UnloadFuncs() {
 
 void OmniMIDI::SynthModule::AudioThread() {
 	while (IsSynthInitialized()) {
-		BASS_ChannelUpdate(AudioStream, 1);
+		BASS_ChannelUpdate(AudioStream, 0);
 		NanoSleep(0, &onenano);
 	}
 }
 
 void OmniMIDI::SynthModule::EventsThread() {
+	// Spin while waiting for the stream to go online
+	while (AudioStream == 0)
+		NanoSleep(0, &onenano);
+
 	while (IsSynthInitialized()) {
 		if (!ProcessEvBuf())
 			NanoSleep(0, &onenano);
@@ -279,23 +286,18 @@ bool OmniMIDI::SynthModule::ProcessEvBuf() {
 	return true;
 }
 
-unsigned int CALLBACK OmniMIDI::SynthModule::WASAPIProc(void* buffer, unsigned int length, void* user) {
-	unsigned int data = BASS_ChannelGetData(AudioStream, buffer, length);
-	return (data == -1) ? NULL : data;
-}
-
 bool OmniMIDI::SynthModule::LoadSynthModule() {
 	// LOG(SynErr, L"LoadSynthModule called.");
 	if (LoadFuncs()) {
 		SoundFonts = new BASS_MIDI_FONTEX[1];
 		Events = new EvBuf(32768);
-		//_AudThread = std::thread(&SynthModule::AudioThread, this);
 		_EvtThread = std::thread(&SynthModule::EventsThread, this);
 		// LOG(SynErr, L"LoadFuncs succeeded.");
 		// TODO
 		return true;
 	}
 	
+	NERROR(SynErr, L"Something went wrong here!!!", true);
 	return false;
 }
 
@@ -303,7 +305,6 @@ bool OmniMIDI::SynthModule::UnloadSynthModule() {
 	// LOG(SynErr, L"UnloadSynthModule called.");
 	if (UnloadFuncs()) {
 		// LOG(SynErr, L"UnloadFuncs succeeded.");
-		//_AudThread.join();
 		_EvtThread.join();
 
 #ifdef _STATSDEV
@@ -314,67 +315,115 @@ bool OmniMIDI::SynthModule::UnloadSynthModule() {
 		return true;
 	}
 
+	NERROR(SynErr, L"Something went wrong here!!!", true);
 	return false;
 }
 
 bool OmniMIDI::SynthModule::StartSynthModule() {
+	unsigned int StreamFlags = BASS_SAMPLE_FLOAT | BASS_MIDI_ASYNC;
+
 	if (AudioStream)
 		return true;
 
-	BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 0);
-	BASS_SetConfig(BASS_CONFIG_DEV_PERIOD, -256);
-	BASS_SetConfig(BASS_CONFIG_BUFFER, 0);
-	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
-	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
+	switch (AudioEngine) {
+	case BASS_INTERNAL:
+		BASS_SetConfig(BASS_CONFIG_BUFFER, 0);
+		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
+		BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 
-	if (BASS_Init(0, 48000, BASS_DEVICE_STEREO, nullptr, nullptr))
-	{
-		AudioStream = BASS_MIDI_StreamCreate(16, BASS_SAMPLE_FLOAT | BASS_MIDI_ASYNC | BASS_STREAM_DECODE, 0);
-		if (!AudioStream)
-		{
-			LOG(SynErr, L"BASS_MIDI_StreamCreate failed!");
+		if (!BASS_Init(-1, 48000, BASS_DEVICE_STEREO, nullptr, nullptr)) {
+			NERROR(SynErr, L"BASS_Init failed.", false);
 			return false;
 		}
 
-		if (BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_ASYNC | BASS_WASAPI_EVENT | BASS_WASAPI_SAMPLES, 32.0f, 0, WASAPIPROC_BASS, (void*)AudioStream)) {
-
-			SoundFonts[0].font = BASS_MIDI_FontInit(L"I:\\mpiano-4.1.sf2", BASS_UNICODE | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
-			SoundFonts[0].spreset = -1; // all presets
-			SoundFonts[0].sbank = -1; // all banks
-			SoundFonts[0].dpreset = -1; // all presets
-			SoundFonts[0].dbank = 0; // default banks
-			SoundFonts[0].dbanklsb = 0; // destination bank LSB 0
-
-			BASS_MIDI_FontLoad(SoundFonts[0].font, SoundFonts[0].spreset, SoundFonts[0].sbank);
-			BASS_MIDI_StreamSetFonts(AudioStream, SoundFonts, 1 | BASS_MIDI_FONT_EX);
-
-			BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_BUFFER, 1);
-			BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_VOICES, 1000);
-			BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_CPU, 85);
-
-			/*if (!BASS_ChannelPlay(AudioStream, false))
-			{
-				LOG(SynErr, L"BASS_ChannelPlay failed.");
-				return false;
-			}*/
-
-			BASS_WASAPI_Start();
-
-			return true;
+		AudioStream = BASS_MIDI_StreamCreate(16, StreamFlags, 0);
+		if (!AudioStream)
+		{
+			NERROR(SynErr, L"BASS_MIDI_StreamCreate failed!", false);
+			return false;
 		}
+
+		if (!BASS_ChannelPlay(AudioStream, false)) {
+			NERROR(SynErr, L"BASS_ChannelPlay failed.", false);
+			return false;
+		}
+
+		_AudThread = std::thread(&SynthModule::AudioThread, this);
+		if (!_AudThread.joinable()) {
+			NERROR(SynErr, L"_AudThread failed.", false);
+			return false;
+		}
+
+		break;
+
+	case WASAPI:
+		StreamFlags |= BASS_STREAM_DECODE;
+
+		if (!BASS_Init(0, 48000, BASS_DEVICE_STEREO, nullptr, nullptr)) {
+			NERROR(SynErr, L"BASS_Init failed.", false);
+			return false;
+		}
+		
+		AudioStream = BASS_MIDI_StreamCreate(16, StreamFlags, 0);
+		if (!AudioStream)
+		{
+			NERROR(SynErr, L"BASS_MIDI_StreamCreate w/ BASS_STREAM_DECODE failed!", false);
+			return false;
+		}
+
+		if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_ASYNC | BASS_WASAPI_EVENT | BASS_WASAPI_SAMPLES, 32.0f, 0, WASAPIPROC_BASS, (void*)AudioStream)) {
+			NERROR(SynErr, L"BASS_WASAPI_Init failed.", false);
+			return false;
+		}
+
+		if (!BASS_WASAPI_Start()) {
+			NERROR(SynErr, L"BASS_WASAPI_Start failed.", false);
+			return false;
+		}
+
+		break;
+
+	case INVALID_ENGINE:
+	default:
+		NERROR(SynErr, L"Invalid or unimplemented engine!", false);
+		return false;
 	}
 
-	LOG(SynErr, L"BASS_Init failed.");
-	return false;
+	SoundFonts[0].font = BASS_MIDI_FontInit(L"E:\\Archive\\MIDIs\\SoundFonts\\Piano_de_Cola_(Grand_Piano).sf2", BASS_UNICODE | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
+	SoundFonts[0].spreset = -1; // all presets
+	SoundFonts[0].sbank = -1; // all banks
+	SoundFonts[0].dpreset = -1; // all presets
+	SoundFonts[0].dbank = 0; // default banks
+	SoundFonts[0].dbanklsb = 0; // destination bank LSB 0
+
+	BASS_MIDI_FontLoad(SoundFonts[0].font, SoundFonts[0].spreset, SoundFonts[0].sbank);
+	BASS_MIDI_StreamSetFonts(AudioStream, SoundFonts, 1 | BASS_MIDI_FONT_EX);
+
+	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_BUFFER, 1);
+	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_VOICES, 1000);
+	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_CPU, 85);
+
+	return true;
 }
 
 bool OmniMIDI::SynthModule::StopSynthModule() {
 	if (AudioStream) {
-		BASS_WASAPI_Stop(true);
-		BASS_WASAPI_Free();
 		BASS_StreamFree(AudioStream);
-		BASS_Free();
 		AudioStream = 0;
+
+		switch (AudioEngine) {
+		case BASS_INTERNAL:
+			_AudThread.join();
+			break;
+		case WASAPI:
+			BASS_WASAPI_Stop(true);
+			BASS_WASAPI_Free();
+			break;
+		default:
+			break;
+		}
+
+		BASS_Free();
 	}
 
 	return true;
@@ -386,10 +435,7 @@ SynthResult OmniMIDI::SynthModule::UPlayShortEvent(unsigned int ev) {
 
 SynthResult OmniMIDI::SynthModule::PlayShortEvent(unsigned int ev) {
 	if (!BMidLib.Initialized)
-		return SYNTH_NOTINIT;
-
-	if (BMidLib.LoadFailed)
-		return SYNTH_INITERR;
+		return BMidLib.LoadFailed ? SYNTH_INITERR : SYNTH_NOTINIT;
 
 	return UPlayShortEvent(ev);
 }
@@ -401,17 +447,10 @@ SynthResult OmniMIDI::SynthModule::UPlayLongEvent(char* ev, unsigned int size) {
 
 SynthResult OmniMIDI::SynthModule::PlayLongEvent(char* ev, unsigned int size) {
 	if (!BMidLib.Initialized)
-		return SYNTH_NOTINIT;
+		return BMidLib.LoadFailed ? SYNTH_INITERR : SYNTH_NOTINIT;
 
-	if (BMidLib.LoadFailed)
-		return SYNTH_INITERR;
-
-	// No buffer?
-	if (size < 1)
-		return SYNTH_OK;
-
-	// The maximum size for a long header is 64K!
-	if (size > 65535)
+	// The size has to be between 1B and 64KB!
+	if (size < 1 || size > 65535)
 		return SYNTH_INVALPARAM;
 
 	return UPlayLongEvent(ev, size);

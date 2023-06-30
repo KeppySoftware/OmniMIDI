@@ -10,6 +10,9 @@ This file is useful only if you want to compile the driver under Windows, it's n
 
 #pragma once
 
+// Uncomment this if you want stats to be shown once the synth is closed
+// #define _STATSDEV
+
 typedef	unsigned int SynthResult;
 
 #define CHKLRS(f)			(f & 0x80)
@@ -42,6 +45,14 @@ typedef	unsigned int SynthResult;
 #define SYNTH_NOTINIT		0x01
 #define SYNTH_INITERR		0x02
 #define SYNTH_INVALPARAM	0x03
+
+// Engines
+#define INVALID_ENGINE		-1
+#define BASS_INTERNAL		0
+#define WASAPI				1
+#define XAUDIO_2_9			2
+#define ASIO				3
+#define KERNEL_STREAM		4
 
 #define fv2fn(f)			(#f)
 #define ImpFunc(f)			{(void**)&##f, #f}
@@ -138,19 +149,19 @@ namespace OmniMIDI {
 	class SonoBuf_t {
 	private:
 		SonoBufEv* Buffer;
-		size_t Size { 0 };
+		size_t Size{ 0 };
 
 		// Written by reader thread
 		alignas(64) volatile size_t	ReadHead { 0 };
-		size_t WriteHeadCached { 0 };
+		size_t WriteHeadCached{ 0 };
 
 		// Written by writer thread
 		alignas(64) volatile size_t	WriteHead { 0 };
-		size_t ReadHeadCached { 0 };
+		size_t ReadHeadCached{ 0 };
 
 #ifdef _STATSDEV
-		size_t EventsSent { 0 };
-		size_t EventsSkipped { 0 };
+		size_t EventsSent{ 0 };
+		size_t EventsSkipped{ 0 };
 #endif
 
 	public:
@@ -220,67 +231,6 @@ namespace OmniMIDI {
 		}
 	};
 
-	// EVBuffer
-	class EvBuf_t {
-	private:
-		std::vector<unsigned int> Buffer{};
-		alignas(64) size_t Size { 0 };
-		alignas(64) std::atomic<size_t> ReadHead{ 0 };
-		alignas(64) size_t WriteHeadCached { 0 };
-		alignas(64) std::atomic<size_t> WriteHead{ 0 };
-		alignas(64) size_t ReadHeadCached { 0 };
-
-	public:
-		EvBuf_t(size_t ReqSize) : Buffer(ReqSize, 0) {
-			Size = ReqSize;
-		}
-
-		~EvBuf_t() {
-			Size = 0;
-			Buffer.clear();
-		}
-
-		bool Push(unsigned int ev) {
-			if (Size == 0)
-				return false;
-
-			auto const tWriteHead = WriteHead.load(std::memory_order_relaxed);
-			auto tNextWritePos = tWriteHead + 1;
-			if (tNextWritePos == Size) {
-				tNextWritePos = 0;
-			}
-			if (tNextWritePos == ReadHeadCached) {
-				ReadHeadCached = ReadHead.load(std::memory_order_acquire);
-				if (tNextWritePos == ReadHeadCached) {
-					return false;
-				}
-			}
-			Buffer[tWriteHead] = ev;
-			WriteHead.store(tNextWritePos, std::memory_order_release);
-			return true;
-		}
-
-		bool Pop(unsigned int& ev) {
-			if (Size == 0)
-				return false;
-
-			auto const tReadHead = ReadHead.load(std::memory_order_relaxed);
-			if (tReadHead == WriteHeadCached) {
-				WriteHeadCached = WriteHead.load(std::memory_order_acquire);
-				if (ReadHead == WriteHeadCached) {
-					return false;
-				}
-			}
-			ev = Buffer[tReadHead];
-			auto tNextReadPos = tReadHead + 1;
-			if (tNextReadPos == Size) {
-				tNextReadPos = 0;
-			}
-			ReadHead.store(tNextReadPos, std::memory_order_release);
-			return true;
-		}
-	};
-
 	class SynthModule {
 	private:
 		ErrorSystem::WinErr SynErr;
@@ -298,6 +248,7 @@ namespace OmniMIDI {
 		unsigned int AudioStream;
 		BASS_MIDI_FONTEX* SoundFonts;
 
+		int AudioEngine = WASAPI;
 		char LastRunningStatus = 0x0;
 		const unsigned char XGReset[9] = { 0xF0, 0x43, 0x10, 0x4C, 0x00, 0x00, 0x7E, 0x00, 0xF7 };
 
@@ -312,7 +263,7 @@ namespace OmniMIDI {
 		bool ProcessEvBuf();
 
 	public:
-		bool IsSynthInitialized() { return (BAudLib.Initialized && BWasLib.Initialized && BMidLib.Initialized); }
+		bool IsSynthInitialized() { return (AudioStream != 0); }
 		bool LoadSynthModule();
 		bool UnloadSynthModule();
 		bool StartSynthModule();
