@@ -306,7 +306,6 @@ bool OmniMIDI::SynthModule::UnloadFuncs() {
 bool OmniMIDI::SynthModule::LoadSynthModule() {
 	// LOG(SynErr, L"LoadSynthModule called.");
 	if (LoadFuncs()) {
-		SoundFonts = new BASS_MIDI_FONTEX[1];
 		Events = new EvBuf(32768);
 		_EvtThread = std::thread(&SynthModule::EventsThread, this);
 		// LOG(SynErr, L"LoadFuncs succeeded.");
@@ -327,7 +326,7 @@ bool OmniMIDI::SynthModule::UnloadSynthModule() {
 		Events->GetStats();
 		delete Events;
 
-		delete[] SoundFonts;
+		SoundFonts.clear();
 		return true;
 	}
 
@@ -405,15 +404,38 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 		return false;
 	}
 
-	SoundFonts[0].font = BASS_MIDI_FontInit(L"E:\\Archive\\MIDIs\\SoundFonts\\piano korg triton.sf2", BASS_UNICODE | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
-	SoundFonts[0].spreset = -1; // all presets
-	SoundFonts[0].sbank = -1; // all banks
-	SoundFonts[0].dpreset = -1; // all presets
-	SoundFonts[0].dbank = 0; // default banks
-	SoundFonts[0].dbanklsb = 0; // destination bank LSB 0
+	std::fstream sfs;
+	sfs.open(L"E:\\GitHub\\OmniMIDI\\OmniMIDIv2\\x64\\Release\\paolo.json");
 
-	BASS_MIDI_FontLoad(SoundFonts[0].font, SoundFonts[0].spreset, SoundFonts[0].sbank);
-	BASS_MIDI_StreamSetFonts(AudioStream, SoundFonts, 1 | BASS_MIDI_FONT_EX);
+	if (sfs.is_open()) {
+		JsonData = nlohmann::json::parse(sfs, nullptr, false, true);
+
+		for (int i = 0; i < JsonData["SoundFonts"].size(); i++) {
+			BASS_MIDI_FONTEX sf;
+
+			nlohmann::json subitem = JsonData["SoundFonts"][i];
+
+			if (subitem != nullptr) {
+				std::string path = subitem["path"];
+
+				sf.font = BASS_MIDI_FontInit(path.c_str(), BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
+				sf.spreset = subitem["spreset"]; // all presets
+				sf.sbank = subitem["sbank"]; // all banks
+				sf.dpreset = subitem["dpreset"]; // all presets
+				sf.dbank = subitem["dbank"]; // default banks
+				sf.dbanklsb = subitem["dbanklsb"]; // destination bank LSB 0
+				BASS_MIDI_FontLoad(sf.font, sf.spreset, sf.sbank);
+
+				SoundFonts.push_back(sf);
+			}
+		}
+	}
+	else LOG(SynErr, L"JsonData for SoundFonts does not exist!");
+
+	sfs.close();
+
+	std::reverse(SoundFonts.begin(), SoundFonts.end());
+	BASS_MIDI_StreamSetFonts(AudioStream, &SoundFonts[0], (unsigned int)SoundFonts.size() | BASS_MIDI_FONT_EX);
 
 	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_BUFFER, 1);
 	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_VOICES, 1000);

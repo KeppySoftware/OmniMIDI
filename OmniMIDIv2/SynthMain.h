@@ -59,6 +59,8 @@ typedef	unsigned int SynthResult;
 #define EvBuf				EvBuf_t
 
 #include <Windows.h>
+#include <ShlObj_core.h>
+#include <strsafe.h>
 #include <bass.h>
 #include <basswasapi.h>
 #include <bassmidi.h>
@@ -66,9 +68,12 @@ typedef	unsigned int SynthResult;
 #include <atomic>
 #include <algorithm>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <vector>
-#include <ShlObj_core.h>
-#include <strsafe.h>
+#include <codecvt>
+#include <locale>
+#include <nlohmann\json.hpp>
 #include "ErrSys.h"
 
 namespace {
@@ -256,10 +261,11 @@ namespace OmniMIDI {
 		std::thread _EvtThread;
 		EvBuf* Events;
 
+		nlohmann::json JsonData;
 		signed long long onenano = -1;
 		unsigned int (WINAPI* NanoSleep)(unsigned char, signed long long*);
 		unsigned int AudioStream;
-		BASS_MIDI_FONTEX* SoundFonts;
+		std::vector<BASS_MIDI_FONTEX> SoundFonts;
 
 		int AudioEngine = WASAPI;
 		char LastRunningStatus = 0x0;
@@ -269,18 +275,17 @@ namespace OmniMIDI {
 		bool LoadFuncs();
 		bool UnloadFuncs();
 		
-		unsigned int WASAPIProc(void* buffer, unsigned int length, void* user);
 		void AudioThread();
 		void EventsThread();
 		bool ProcessEvBuf();
 
 	public:
-		bool IsSynthInitialized() { return (AudioStream != 0); }
 		bool LoadSynthModule();
 		bool UnloadSynthModule();
 		bool StartSynthModule();
 		bool StopSynthModule();
 		bool ChangeSetting(unsigned int setting, void* var, size_t size);
+		bool IsSynthInitialized() { return (AudioStream != 0); }
 
 		// Event handling system
 		SynthResult PlayShortEvent(unsigned int ev);
