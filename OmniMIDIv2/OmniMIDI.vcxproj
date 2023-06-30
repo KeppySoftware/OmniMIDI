@@ -143,7 +143,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;OMNIMIDI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_STATSDEV;OMNIMIDI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -168,6 +168,7 @@
   <ItemGroup>
     <ClCompile Include="bass.cpp" />
     <ClCompile Include="bassmidi.cpp" />
+    <ClCompile Include="basswasapi.cpp" />
     <ClCompile Include="ErrSys.cpp" />
     <ClCompile Include="SynthMain.cpp" />
     <ClCompile Include="WDMDrv.cpp" />

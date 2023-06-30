@@ -73,7 +73,7 @@ MMRESULT WINAPI modMessage(UINT DeviceID, UINT Message, DWORD_PTR UserPointer, D
 		return (r == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
 
 	case MODM_RESET:
-		return (SynthModule.PlayShortEvent(0x7FFFFFFF) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
+		return (SynthModule.PlayShortEvent(0x010101FF) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
 
 	case MODM_OPEN:
 		if (SynthModule.LoadSynthModule()) {

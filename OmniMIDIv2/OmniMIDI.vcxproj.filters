@@ -80,6 +80,9 @@
     <ClCompile Include="bassmidi.cpp">
       <Filter>Source Files\Synthesizer\BASS</Filter>
     </ClCompile>
+    <ClCompile Include="basswasapi.cpp">
+      <Filter>Source Files\Synthesizer\BASS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="WDMEntry.h">

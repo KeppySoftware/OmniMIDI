@@ -49,9 +49,12 @@ typedef	unsigned int SynthResult;
 
 #include <Windows.h>
 #include <bass.h>
+#include <basswasapi.h>
 #include <bassmidi.h>
 #include <thread>
 #include <atomic>
+#include <algorithm>
+#include <iostream>
 #include <vector>
 #include <ShlObj_core.h>
 #include <strsafe.h>
@@ -90,6 +93,18 @@ namespace {
 		ImpFunc(BASS_SetConfig),
 		ImpFunc(BASS_Stop),
 		ImpFunc(BASS_StreamFree),
+
+		// BASSWASAPI
+		ImpFunc(BASS_WASAPI_Init),
+		ImpFunc(BASS_WASAPI_Free),
+		ImpFunc(BASS_WASAPI_IsStarted),
+		ImpFunc(BASS_WASAPI_Start),
+		ImpFunc(BASS_WASAPI_Stop),
+		ImpFunc(BASS_WASAPI_GetDeviceInfo),
+		ImpFunc(BASS_WASAPI_GetInfo),
+		ImpFunc(BASS_WASAPI_GetDevice),
+		ImpFunc(BASS_WASAPI_GetLevelEx),
+		ImpFunc(BASS_WASAPI_PutData),
 
 		// BASSMIDI
 		ImpFunc(BASS_MIDI_FontFree),
@@ -133,10 +148,10 @@ namespace OmniMIDI {
 		alignas(64) volatile size_t	WriteHead { 0 };
 		size_t ReadHeadCached { 0 };
 
-	#ifdef _DEBUG
+#ifdef _STATSDEV
 		size_t EventsSent { 0 };
 		size_t EventsSkipped { 0 };
-	#endif
+#endif
 
 	public:
 		SonoBuf_t(size_t ReqSize) {
@@ -146,8 +161,24 @@ namespace OmniMIDI {
 
 		~SonoBuf_t() {
 			Size = 0;
+			ReadHead = 0;
+			WriteHead = 0;
+			ReadHeadCached = 0;
+			WriteHeadCached = 0;
+#ifdef _STATSDEV
+			EventsSent = 0;
+			EventsSkipped = 0;
+#endif
 			delete[] Buffer;
 		}
+
+#ifdef _STATSDEV
+		void GetStats() {
+			char asdf[1024] = {};
+			snprintf(asdf, sizeof(asdf), "%llu of %llu events skipped", EventsSkipped, EventsSent);
+			MessageBoxA(NULL, asdf, "", 0);
+		}
+#endif
 
 		bool Push(unsigned int ev) {
 			size_t NextWriteHead = WriteHead + 1;
@@ -155,16 +186,16 @@ namespace OmniMIDI {
 
 			Buffer[WriteHead].Event = ev;
 
-	#ifdef _DEBUG
+#ifdef _STATSDEV
 			EventsSent++;
-	#endif
+#endif
 
 			if (NextWriteHead == ReadHeadCached) {
 				ReadHeadCached = ReadHead;
 				if (NextWriteHead == ReadHeadCached) {
-	#ifdef _DEBUG
+#ifdef _STATSDEV
 					EventsSkipped++;
-	#endif
+#endif
 					return false;
 				}
 			}
@@ -256,6 +287,7 @@ namespace OmniMIDI {
 
 		Lib BAudLib;
 		Lib BMidLib;
+		Lib BWasLib;
 
 		std::thread _AudThread;
 		std::thread _EvtThread;
@@ -274,12 +306,13 @@ namespace OmniMIDI {
 		bool LoadFuncs();
 		bool UnloadFuncs();
 		
+		unsigned int WASAPIProc(void* buffer, unsigned int length, void* user);
 		void AudioThread();
 		void EventsThread();
 		bool ProcessEvBuf();
 
 	public:
-		bool IsSynthInitialized() { return (BAudLib.Initialized && BMidLib.Initialized); }
+		bool IsSynthInitialized() { return (BAudLib.Initialized && BWasLib.Initialized && BMidLib.Initialized); }
 		bool LoadSynthModule();
 		bool UnloadSynthModule();
 		bool StartSynthModule();

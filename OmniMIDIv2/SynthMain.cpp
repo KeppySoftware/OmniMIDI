@@ -47,12 +47,16 @@ bool OmniMIDI::SynthModule::LoadLib(Lib* Target) {
 			if (!Good)
 				return false;
 
-			int swp = swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s.dll\0", SysDir, Target->Path);
+			int swp = swprintf_s(DLLPath, MAX_PATH, L"%s.dll\0", Target->Path);
 			assert(swp != -1);
 
-			if (FindFirstFile(DLLPath, &FD) == INVALID_HANDLE_VALUE)
-				return false;
-			else {
+			Target->Library = LoadLibrary(DLLPath);
+
+			if (!Target->Library)
+			{
+				swp = swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s.dll\0", SysDir, Target->Path);
+				assert(swp != -1);
+
 				Target->Library = LoadLibrary(DLLPath);
 				assert(Target->Library != 0);
 
@@ -99,6 +103,9 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 	if (!BMidLib.Path)
 		BMidLib.Path = L"BASSMIDI";
 
+	if (!BWasLib.Path)
+		BWasLib.Path = L"BASSWASAPI";
+
 	int limit = sizeof(LibImports) / sizeof(LibImports[0]);
 
 	if (!NanoSleep)
@@ -109,23 +116,33 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 		if (!LoadLib(&BAudLib))
 			return false;
 
-		*(LibImports[i].ptr) = (void*)GetProcAddress(BAudLib.Library, LibImports[i].name);
-		if (*(LibImports[i].ptr))
-			continue;
+		if (!LoadLib(&BWasLib))
+			return false;
 
 		if (!LoadLib(&BMidLib))
 			return false;
 
+		*(LibImports[i].ptr) = (void*)GetProcAddress(BAudLib.Library, LibImports[i].name);
+		if (*(LibImports[i].ptr))
+			continue;
+
 		*(LibImports[i].ptr) = (void*)GetProcAddress(BMidLib.Library, LibImports[i].name);
+		if (*(LibImports[i].ptr))
+			continue;
+
+		*(LibImports[i].ptr) = (void*)GetProcAddress(BWasLib.Library, LibImports[i].name);
 		if (*(LibImports[i].ptr))
 			continue;
 	}
 
-	return !(BAudLib.LoadFailed && BMidLib.LoadFailed);
+	return !(BAudLib.LoadFailed && BMidLib.LoadFailed && BWasLib.LoadFailed);
 }
 
 bool OmniMIDI::SynthModule::UnloadFuncs() {
 	if (!UnloadLib(&BMidLib))
+		return false;
+
+	if (!UnloadLib(&BWasLib))
 		return false;
 
 	if (!UnloadLib(&BAudLib))
@@ -136,11 +153,9 @@ bool OmniMIDI::SynthModule::UnloadFuncs() {
 
 void OmniMIDI::SynthModule::AudioThread() {
 	while (IsSynthInitialized()) {
-		BASS_ChannelUpdate(AudioStream, 0);
+		BASS_ChannelUpdate(AudioStream, 1);
 		NanoSleep(0, &onenano);
 	}
-
-
 }
 
 void OmniMIDI::SynthModule::EventsThread() {
@@ -264,12 +279,17 @@ bool OmniMIDI::SynthModule::ProcessEvBuf() {
 	return true;
 }
 
+unsigned int CALLBACK OmniMIDI::SynthModule::WASAPIProc(void* buffer, unsigned int length, void* user) {
+	unsigned int data = BASS_ChannelGetData(AudioStream, buffer, length);
+	return (data == -1) ? NULL : data;
+}
+
 bool OmniMIDI::SynthModule::LoadSynthModule() {
 	// LOG(SynErr, L"LoadSynthModule called.");
 	if (LoadFuncs()) {
 		SoundFonts = new BASS_MIDI_FONTEX[1];
 		Events = new EvBuf(32768);
-		_AudThread = std::thread(&SynthModule::AudioThread, this);
+		//_AudThread = std::thread(&SynthModule::AudioThread, this);
 		_EvtThread = std::thread(&SynthModule::EventsThread, this);
 		// LOG(SynErr, L"LoadFuncs succeeded.");
 		// TODO
@@ -283,9 +303,12 @@ bool OmniMIDI::SynthModule::UnloadSynthModule() {
 	// LOG(SynErr, L"UnloadSynthModule called.");
 	if (UnloadFuncs()) {
 		// LOG(SynErr, L"UnloadFuncs succeeded.");
-		_AudThread.join();
+		//_AudThread.join();
 		_EvtThread.join();
 
+#ifdef _STATSDEV
+		Events->GetStats();
+#endif
 		delete Events;
 		delete[] SoundFonts;
 		return true;
@@ -298,39 +321,47 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 	if (AudioStream)
 		return true;
 
+	BASS_SetConfig(BASS_CONFIG_DEV_BUFFER, 0);
+	BASS_SetConfig(BASS_CONFIG_DEV_PERIOD, -256);
 	BASS_SetConfig(BASS_CONFIG_BUFFER, 0);
 	BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
 	BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 
-	if (BASS_Init(-1, 48000, BASS_DEVICE_STEREO, nullptr, nullptr))
+	if (BASS_Init(0, 48000, BASS_DEVICE_STEREO, nullptr, nullptr))
 	{
-		AudioStream = BASS_MIDI_StreamCreate(16, BASS_SAMPLE_FLOAT | BASS_MIDI_ASYNC, 0);
-		if (!AudioStream) 
+		AudioStream = BASS_MIDI_StreamCreate(16, BASS_SAMPLE_FLOAT | BASS_MIDI_ASYNC | BASS_STREAM_DECODE, 0);
+		if (!AudioStream)
 		{
 			LOG(SynErr, L"BASS_MIDI_StreamCreate failed!");
 			return false;
 		}
 
-		SoundFonts[0].font = BASS_MIDI_FontInit(L"E:\\Archive\\MIDIs\\SoundFonts\\piano korg triton.sf2", BASS_UNICODE | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
-		SoundFonts[0].spreset = -1; // all presets
-		SoundFonts[0].sbank = -1; // all banks
-		SoundFonts[0].dpreset = -1; // all presets
-		SoundFonts[0].dbank = 0; // default banks
-		SoundFonts[0].dbanklsb = 0; // destination bank LSB 0
+		if (BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_ASYNC | BASS_WASAPI_EVENT | BASS_WASAPI_SAMPLES, 32.0f, 0, WASAPIPROC_BASS, (void*)AudioStream)) {
 
-		BASS_MIDI_FontLoad(SoundFonts[0].font, SoundFonts[0].spreset, SoundFonts[0].sbank);
-		BASS_MIDI_StreamSetFonts(AudioStream, SoundFonts, 1 | BASS_MIDI_FONT_EX);
+			SoundFonts[0].font = BASS_MIDI_FontInit(L"I:\\mpiano-4.1.sf2", BASS_UNICODE | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
+			SoundFonts[0].spreset = -1; // all presets
+			SoundFonts[0].sbank = -1; // all banks
+			SoundFonts[0].dpreset = -1; // all presets
+			SoundFonts[0].dbank = 0; // default banks
+			SoundFonts[0].dbanklsb = 0; // destination bank LSB 0
 
-		BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_BUFFER, 1);
-		BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_VOICES, 1000);
+			BASS_MIDI_FontLoad(SoundFonts[0].font, SoundFonts[0].spreset, SoundFonts[0].sbank);
+			BASS_MIDI_StreamSetFonts(AudioStream, SoundFonts, 1 | BASS_MIDI_FONT_EX);
 
-		if (!BASS_ChannelPlay(AudioStream, false))
-		{
-			LOG(SynErr, L"BASS_ChannelPlay failed.");
-			return false;
+			BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_BUFFER, 1);
+			BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_VOICES, 1000);
+			BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_CPU, 85);
+
+			/*if (!BASS_ChannelPlay(AudioStream, false))
+			{
+				LOG(SynErr, L"BASS_ChannelPlay failed.");
+				return false;
+			}*/
+
+			BASS_WASAPI_Start();
+
+			return true;
 		}
-
-		return true;
 	}
 
 	LOG(SynErr, L"BASS_Init failed.");
@@ -339,6 +370,8 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 
 bool OmniMIDI::SynthModule::StopSynthModule() {
 	if (AudioStream) {
+		BASS_WASAPI_Stop(true);
+		BASS_WASAPI_Free();
 		BASS_StreamFree(AudioStream);
 		BASS_Free();
 		AudioStream = 0;
