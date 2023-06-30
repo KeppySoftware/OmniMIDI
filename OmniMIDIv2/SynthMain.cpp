@@ -203,7 +203,7 @@ bool OmniMIDI::SynthModule::ProcessEvBuf() {
 			return true;
 		}
 
-		if (!(tev - 0xC0 & 0xE0)) len = 2;
+		if (!((tev - 0xC0) & 0xE0)) len = 2;
 		else if (cmd == 0xF0)
 		{
 			switch (GETCHANNEL(tev))
@@ -243,7 +243,7 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 	assert(NanoSleep != 0);
 
 	if (!NanoSleep)
-		FNERROR(SynErr, L"How even? How can your OS not have NtDelayExecution??? Are we in NT 4.0????");
+		FNERROR(SynErr, L"Where's NtDelayExecution... Is this Windows 95?");
 
 	void* ptr = nullptr;
 

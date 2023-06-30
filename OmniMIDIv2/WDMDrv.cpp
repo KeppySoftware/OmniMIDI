@@ -1,8 +1,10 @@
 /*
-OmniMIDI v15+ (Rewrite) for Windows NT
+* 
+	OmniMIDI v15+ (Rewrite) for Windows NT
 
-This file contains the required code to run the driver under Windows 7 SP1 and later.
-This file is useful only if you want to compile the driver under Windows, it's not needed for Linux/macOS porting.
+	This file contains the required code to run the driver under Windows 7 SP1 and later.
+	This file is useful only if you want to compile the driver under Windows, it's not needed for Linux/macOS porting.
+
 */
 
 #include "pch.h"
@@ -96,6 +98,12 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 		Caps2W.vDriverVersion = MAKEWORD(6, 2);
 		memcpy((LPMIDIOUTCAPS2W)CapsPointer, &Caps2W, min(CapsSize, sizeof(Caps2W)));
 		break;
+
+	default:
+		// ???????
+		NERROR(MaskErr, L"Size passed to CapsSize does not match any valid MIDIOUTCAPS struct.", false);
+		return MMSYSERR_INVALPARAM;
+
 	}
 
 	return MMSYSERR_NOERROR;
