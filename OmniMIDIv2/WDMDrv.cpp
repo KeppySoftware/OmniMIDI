@@ -98,7 +98,6 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 		break;
 	}
 
-	LOG(MaskErr, L"Caps have been shared with the app.");
 	return MMSYSERR_NOERROR;
 }
 

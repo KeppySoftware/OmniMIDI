@@ -93,13 +93,13 @@ MMRESULT WINAPI modMessage(UINT DeviceID, UINT Message, DWORD_PTR UserPointer, D
 
 	case MODM_CLOSE:
 		if (SynthModule.StopSynthModule()) {
-			// if (SynthModule.UnloadSynthModule()) {
+			if (SynthModule.UnloadSynthModule()) {
 				fDriverCallback.CallbackFunction(MOM_CLOSE, 0, 0);
 				if (fDriverCallback.ClearCallbackFunction())
 				{
 					return MMSYSERR_NOERROR;
 				}
-			// }
+			}
 		}
 
 		LOG(WDMErr, L"MODM_CLOSE failed.");

@@ -114,3 +114,7 @@ output/Test OmniMIDI Configurator.bat
 output/OmniMIDIDevEnum.exe
 OmniMapper/OmniMapper/OmniMIDI.h
 OmniMIDIConfigurator/.vs/
+OmniMIDIv2/.vs/
+OmniMIDIv2/x64/Debug/bass.obj
+OmniMIDIv2/x64/
+OmniMIDIv2/OmniMIDI.vcxproj.user
