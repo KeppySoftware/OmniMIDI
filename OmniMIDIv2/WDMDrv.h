@@ -17,14 +17,16 @@ This file is useful only if you want to compile the driver under Windows, it's n
 #include <assert.h>
 #include "ErrSys.h"
 
-using namespace std;
-
 namespace WinDriver {
 	typedef VOID(CALLBACK* WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
 
 	class DriverMask {
 	private:
-		const wchar_t* TemplateName = L"OmniMIDI (Port %d)\0";
+#ifdef _DEBUG
+		const wchar_t* TemplateName = L"OmniMIDI (Debug)\0";
+#else
+		const wchar_t* TemplateName = L"OmniMIDI\0";
+#endif
 
 		unsigned short ManufacturerID = 0xFFFF;
 		unsigned short ProductID = 0xFFFF;

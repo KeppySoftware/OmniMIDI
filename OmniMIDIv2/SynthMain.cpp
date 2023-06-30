@@ -96,64 +96,6 @@ bool OmniMIDI::SynthModule::UnloadLib(Lib* Target) {
 	return true;
 }
 
-bool OmniMIDI::SynthModule::LoadFuncs() {
-	if (!BAudLib.Path)
-		BAudLib.Path = L"BASS";
-
-	if (!BMidLib.Path)
-		BMidLib.Path = L"BASSMIDI";
-
-	if (!BWasLib.Path)
-		BWasLib.Path = L"BASSWASAPI";
-
-	int limit = sizeof(LibImports) / sizeof(LibImports[0]);
-
-	if (!NanoSleep)
-		NanoSleep = (unsigned int (WINAPI*)(unsigned char, signed long long*))GetProcAddress(GetModuleHandle(L"ntdll"), "NtDelayExecution");
-
-	for (int i = 0; i < limit; i++)
-	{
-		if (!LoadLib(&BAudLib))
-			return false;
-
-		if (!LoadLib(&BMidLib))
-			return false;
-
-		*(LibImports[i].ptr) = (void*)GetProcAddress(BAudLib.Library, LibImports[i].name);
-		if (*(LibImports[i].ptr))
-			continue;
-
-		*(LibImports[i].ptr) = (void*)GetProcAddress(BMidLib.Library, LibImports[i].name);
-		if (*(LibImports[i].ptr))
-			continue;
-
-		if (AudioEngine == WASAPI)
-		{
-			if (!LoadLib(&BWasLib))
-				return false;
-
-			*(LibImports[i].ptr) = (void*)GetProcAddress(BWasLib.Library, LibImports[i].name);
-			if (*(LibImports[i].ptr))
-				continue;
-		}
-	}
-
-	return !(BAudLib.LoadFailed && BMidLib.LoadFailed && BWasLib.LoadFailed);
-}
-
-bool OmniMIDI::SynthModule::UnloadFuncs() {
-	if (!UnloadLib(&BMidLib))
-		return false;
-
-	if (!UnloadLib(&BWasLib))
-		return false;
-
-	if (!UnloadLib(&BAudLib))
-		return false;
-
-	return true;
-}
-
 void OmniMIDI::SynthModule::AudioThread() {
 	while (IsSynthInitialized()) {
 		BASS_ChannelUpdate(AudioStream, 0);
@@ -261,17 +203,23 @@ bool OmniMIDI::SynthModule::ProcessEvBuf() {
 			return true;
 		}
 
-		if (!((tev - 0xC0) & 0xE0)) len = 2;
+		if (!(tev - 0xC0 & 0xE0)) len = 2;
 		else if (cmd == 0xF0)
 		{
-			switch (tev & 0xF)
+			switch (GETCHANNEL(tev))
 			{
 			case 0x3:
+				// This is 0xF3, which is a system reset.
 				len = 2;
 				break;
 			case 0xF:
-				BASS_MIDI_StreamEvents(AudioStream, BASS_MIDI_EVENTS_RAW, &XGReset, 9);
+				// This is 0xFF, which is a system reset.
+				BASS_MIDI_StreamEvent(AudioStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
 				return true;
+			case 0xA:	// Start (CookedPlayer)
+			case 0xB:	// Continue (CookedPlayer)
+			case 0xC:	// Stop (CookedPlayer)
+			case 0xE:	// Sensing
 			default:
 				// Not supported by OmniMIDI!
 				return true;
@@ -283,6 +231,75 @@ bool OmniMIDI::SynthModule::ProcessEvBuf() {
 	}
 
 	BASS_MIDI_StreamEvent(AudioStream, ch, evt, param2 << 8 | param1);
+	return true;
+}
+
+bool OmniMIDI::SynthModule::LoadFuncs() {
+	int limit = sizeof(LibImports) / sizeof(LibImports[0]);
+
+	if (!NanoSleep)
+		NanoSleep = (unsigned int (WINAPI*)(unsigned char, signed long long*))GetProcAddress(GetModuleHandle(L"ntdll"), "NtDelayExecution");
+
+	assert(NanoSleep != 0);
+
+	if (!NanoSleep)
+		FNERROR(SynErr, L"How even? How can your OS not have NtDelayExecution??? Are we in NT 4.0????");
+
+	void* ptr = nullptr;
+
+	// Load required libs
+	if (!LoadLib(&BAudLib))
+		return false;
+
+	if (!LoadLib(&BMidLib))
+		return false;
+
+	if (AudioEngine == WASAPI)
+	{
+		if (!LoadLib(&BWasLib))
+			return false;
+	}
+
+	for (int i = 0; i < limit; i++)
+	{
+		ptr = (void*)GetProcAddress(BAudLib.Library, LibImports[i].name);
+		if (ptr)
+		{
+			*(LibImports[i].ptr) = ptr;
+			continue;
+		}
+
+		ptr = (void*)GetProcAddress(BMidLib.Library, LibImports[i].name);
+		if (ptr)
+		{
+			*(LibImports[i].ptr) = ptr;
+			continue;
+		}
+
+		if (BWasLib.Initialized)
+		{
+			ptr = (void*)GetProcAddress(BWasLib.Library, LibImports[i].name);
+			if (ptr)
+			{
+				*(LibImports[i].ptr) = ptr;
+				continue;
+			}
+		}
+	}
+
+	return !(BAudLib.LoadFailed && BMidLib.LoadFailed && BWasLib.LoadFailed);
+}
+
+bool OmniMIDI::SynthModule::UnloadFuncs() {
+	if (!UnloadLib(&BMidLib))
+		return false;
+
+	if (!UnloadLib(&BWasLib))
+		return false;
+
+	if (!UnloadLib(&BAudLib))
+		return false;
+
 	return true;
 }
 
@@ -307,10 +324,9 @@ bool OmniMIDI::SynthModule::UnloadSynthModule() {
 		// LOG(SynErr, L"UnloadFuncs succeeded.");
 		_EvtThread.join();
 
-#ifdef _STATSDEV
 		Events->GetStats();
-#endif
 		delete Events;
+
 		delete[] SoundFonts;
 		return true;
 	}
@@ -389,7 +405,7 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 		return false;
 	}
 
-	SoundFonts[0].font = BASS_MIDI_FontInit(L"E:\\Archive\\MIDIs\\SoundFonts\\Piano_de_Cola_(Grand_Piano).sf2", BASS_UNICODE | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
+	SoundFonts[0].font = BASS_MIDI_FontInit(L"E:\\Archive\\MIDIs\\SoundFonts\\piano korg triton.sf2", BASS_UNICODE | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
 	SoundFonts[0].spreset = -1; // all presets
 	SoundFonts[0].sbank = -1; // all banks
 	SoundFonts[0].dpreset = -1; // all presets
@@ -454,4 +470,11 @@ SynthResult OmniMIDI::SynthModule::PlayLongEvent(char* ev, unsigned int size) {
 		return SYNTH_INVALPARAM;
 
 	return UPlayLongEvent(ev, size);
+}
+
+int OmniMIDI::SynthModule::TalkToBASSMIDI(unsigned int evt, unsigned int chan, unsigned int param) {
+	if (!BMidLib.Initialized)
+		return 0;
+
+	return BASS_MIDI_StreamEvent(AudioStream, chan, evt, param);
 }

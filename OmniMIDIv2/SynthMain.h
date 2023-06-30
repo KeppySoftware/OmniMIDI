@@ -56,7 +56,7 @@ typedef	unsigned int SynthResult;
 
 #define fv2fn(f)			(#f)
 #define ImpFunc(f)			{(void**)&##f, #f}
-#define EvBuf				SonoBuf_t
+#define EvBuf				EvBuf_t
 
 #include <Windows.h>
 #include <bass.h>
@@ -115,7 +115,6 @@ namespace {
 		ImpFunc(BASS_WASAPI_GetInfo),
 		ImpFunc(BASS_WASAPI_GetDevice),
 		ImpFunc(BASS_WASAPI_GetLevelEx),
-		ImpFunc(BASS_WASAPI_PutData),
 
 		// BASSMIDI
 		ImpFunc(BASS_MIDI_FontFree),
@@ -140,24 +139,24 @@ namespace OmniMIDI {
 		bool AppSelfHosted = false;
 	};
 
-	struct SonoBufEv {
+	struct Ev {
 		DWORD Event;
 		DWORD Align[15];
 	};
 
 	// Sono's buffer
-	class SonoBuf_t {
+	class EvBuf_t {
 	private:
-		SonoBufEv* Buffer;
+		Ev* Buffer;
 		size_t Size{ 0 };
 
 		// Written by reader thread
 		alignas(64) volatile size_t	ReadHead { 0 };
-		size_t WriteHeadCached{ 0 };
+		alignas(64) size_t WriteHeadCached{ 0 };
 
 		// Written by writer thread
 		alignas(64) volatile size_t	WriteHead { 0 };
-		size_t ReadHeadCached{ 0 };
+		alignas(64) size_t ReadHeadCached{ 0 };
 
 #ifdef _STATSDEV
 		size_t EventsSent{ 0 };
@@ -165,12 +164,12 @@ namespace OmniMIDI {
 #endif
 
 	public:
-		SonoBuf_t(size_t ReqSize) {
-			Buffer = new SonoBufEv[ReqSize];
+		EvBuf_t(size_t ReqSize) {
+			Buffer = new Ev[ReqSize];
 			Size = ReqSize;
 		}
 
-		~SonoBuf_t() {
+		~EvBuf_t() {
 			Size = 0;
 			ReadHead = 0;
 			WriteHead = 0;
@@ -183,13 +182,15 @@ namespace OmniMIDI {
 			delete[] Buffer;
 		}
 
-#ifdef _STATSDEV
 		void GetStats() {
+#ifdef _STATSDEV
 			char asdf[1024] = {};
 			snprintf(asdf, sizeof(asdf), "%llu of %llu events skipped", EventsSkipped, EventsSent);
 			MessageBoxA(NULL, asdf, "", 0);
-		}
+#else
+			// Absolutely nothing.
 #endif
+		}
 
 		bool Push(unsigned int ev) {
 			size_t NextWriteHead = WriteHead + 1;
@@ -216,18 +217,29 @@ namespace OmniMIDI {
 		}
 
 		bool Pop(unsigned int& ev) {
-			if (ReadHead == WriteHeadCached) {
+			size_t NextReadHead = ReadHead + 1;
+			if (NextReadHead >= Size) NextReadHead = 0;
+
+			if (NextReadHead == WriteHeadCached) {
 				WriteHeadCached = WriteHead;
-				if (ReadHead == WriteHeadCached) {
+				if (NextReadHead == WriteHeadCached) {
 					return false;
 				}
 			}
 
-			ev = Buffer[ReadHead].Event;
+			ev = Buffer[NextReadHead].Event;
 
-			if (++ReadHead >= Size) ReadHead = 0;
+			ReadHead = NextReadHead;
 
 			return true;
+		}
+
+		void Peek(unsigned int& ev) {
+			if (ReadHead == WriteHead) {
+				return;
+			}
+
+			ev = Buffer[ReadHead].Event;
 		}
 	};
 
@@ -235,9 +247,9 @@ namespace OmniMIDI {
 	private:
 		ErrorSystem::WinErr SynErr;
 
-		Lib BAudLib;
-		Lib BMidLib;
-		Lib BWasLib;
+		Lib BAudLib = { .Path = L"BASS" };
+		Lib BMidLib = { .Path = L"BASSMIDI" };
+		Lib BWasLib = { .Path = L"BASSWASAPI" };
 
 		std::thread _AudThread;
 		std::thread _EvtThread;
@@ -250,7 +262,6 @@ namespace OmniMIDI {
 
 		int AudioEngine = WASAPI;
 		char LastRunningStatus = 0x0;
-		const unsigned char XGReset[9] = { 0xF0, 0x43, 0x10, 0x4C, 0x00, 0x00, 0x7E, 0x00, 0xF7 };
 
 		bool LoadLib(Lib* Target);
 		bool UnloadLib(Lib* Target);
@@ -273,8 +284,11 @@ namespace OmniMIDI {
 		// Event handling system
 		SynthResult PlayShortEvent(unsigned int ev);
 		SynthResult UPlayShortEvent(unsigned int ev);
+
 		SynthResult PlayLongEvent(char* ev, unsigned int size);
 		SynthResult UPlayLongEvent(char* ev, unsigned int size);
+
+		int TalkToBASSMIDI(unsigned int evt, unsigned int chan, unsigned int param);
 	};
 }
 

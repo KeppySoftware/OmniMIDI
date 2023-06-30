@@ -1,8 +1,10 @@
 /*
-OmniMIDI v15+ (Rewrite) for Windows NT
 
-This file contains the required code to run the driver under Windows 7 SP1 and later.
-This file is useful only if you want to compile the driver under Windows, it's not needed for Linux/macOS porting.
+	OmniMIDI v15+ (Rewrite) for Windows NT
+
+	This file contains the required code to run the driver under Windows 7 SP1 and later.
+	This file is useful only if you want to compile the driver under Windows, it's not needed for Linux/macOS porting.
+
 */
 
 #ifndef _WDMENTRY_H
@@ -22,6 +24,8 @@ This file is useful only if you want to compile the driver under Windows, it's n
 #undef DEFINE_DEVPROPKEY
 #endif
 #define DEFINE_DEVPROPKEY(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8, pid) EXTERN_C const DEVPROPKEY DECLSPEC_SELECTANY name = { { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }, pid }
+
+#define KDMAPI WINAPI
 
 // Copied from devpkey.h in the WinDDK
 DEFINE_DEVPROPKEY(DEVPKEY_Device_BusReportedDeviceDesc, 0x540b947e, 0x8b40, 0x45bc, 0xa8, 0xa2, 0x6a, 0x0b, 0x89, 0x4c, 0xbd, 0xa2, 4);	// DEVPROP_TYPE_STRING

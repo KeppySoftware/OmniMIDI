@@ -123,3 +123,54 @@ MMRESULT WINAPI modMessage(UINT DeviceID, UINT Message, DWORD_PTR UserPointer, D
 		return MMSYSERR_NOTSUPPORTED;
 	}
 }
+
+extern "C" __declspec(dllexport)
+int KDMAPI IsKDMAPIAvailable() {
+	return 1;
+}
+
+extern "C" __declspec(dllexport)
+int KDMAPI InitializeKDMAPIStream() {
+	if (SynthModule.LoadSynthModule()) {
+		if (SynthModule.StartSynthModule()) {
+			return 1;
+		}
+		SynthModule.StopSynthModule();
+	}
+	SynthModule.UnloadSynthModule();
+
+	LOG(WDMErr, L"InitializeKDMAPIStream failed.");
+	return 0;
+}
+
+extern "C" __declspec(dllexport)
+int KDMAPI TerminateKDMAPIStream() {
+	if (SynthModule.StopSynthModule()) {
+		if (SynthModule.UnloadSynthModule()) {
+			return 1;
+		}
+	}
+
+	LOG(WDMErr, L"TerminateKDMAPIStream failed.");
+	return 0;
+}
+
+extern "C" __declspec(dllexport)
+void KDMAPI ResetKDMAPIStream() {
+	SynthModule.PlayShortEvent(0x010101FF);
+}
+
+extern "C" __declspec(dllexport)
+void KDMAPI SendDirectData(unsigned int ev) {
+	SynthModule.PlayShortEvent(ev);
+}
+
+extern "C" __declspec(dllexport)
+void KDMAPI SendDirectDataNoBuf(unsigned int) {
+	// Unsupported.
+}
+
+extern "C" __declspec(dllexport)
+int KDMAPI SendCustomEvent(unsigned int evt, unsigned int chan, unsigned int param) {
+	return SynthModule.TalkToBASSMIDI(evt, chan, param);
+}

@@ -41,7 +41,7 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 		return MMSYSERR_INVALPARAM;
 	}
 
-	swprintf_s(DevName, MAXPNAMELEN, this->TemplateName, DeviceIdentifier);
+	swprintf_s(DevName, MAXPNAMELEN, this->TemplateName);
 
 	// I have to support all this s**t or else it won't work in some apps smh
 	switch (CapsSize) {

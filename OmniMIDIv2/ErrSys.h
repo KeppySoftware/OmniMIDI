@@ -31,8 +31,6 @@ This file is useful only if you want to compile the driver under Windows, it's n
 #include <tchar.h>
 #include <string>
 
-using namespace std;
-
 namespace ErrorSystem {
 	class WinErr {
 	private:
