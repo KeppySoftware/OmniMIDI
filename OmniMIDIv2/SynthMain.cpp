@@ -10,7 +10,6 @@ This file is useful only if you want to compile the driver under Windows, it's n
 bool OmniMIDI::SynthModule::LoadLib(Lib* Target) {
 	wchar_t SysDir[MAX_PATH] = { 0 };
 	wchar_t DLLPath[MAX_PATH] = { 0 };
-	WIN32_FIND_DATA FD = { 0 };
 
 	// Check if library is loaded
 	if (Target->Library == nullptr) {
@@ -31,19 +30,24 @@ bool OmniMIDI::SynthModule::LoadLib(Lib* Target) {
 				int swp = swprintf_s(DLLPath, MAX_PATH, L"%s.dll\0", Target->Path);
 				assert(swp != -1);
 
-				Target->Library = LoadLibrary(DLLPath);
-
-				if (!Target->Library)
-				{
-					swp = swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s.dll\0", SysDir, Target->Path);
-					assert(swp != -1);
-
+				if (swp != -1) {
 					Target->Library = LoadLibrary(DLLPath);
-					assert(Target->Library != 0);
 
 					if (!Target->Library)
-						return false;
+					{
+						swp = swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s.dll\0", SysDir, Target->Path);
+						assert(swp != -1);
+						if (swp != -1) {
+							Target->Library = LoadLibrary(DLLPath);
+							assert(Target->Library != 0);
+
+							if (!Target->Library)
+								return false;
+						}
+						else return false;
+					}
 				}
+				else return false;
 			}
 			else return false;
 		}
@@ -70,6 +74,9 @@ bool OmniMIDI::SynthModule::UnloadLib(Lib* Target) {
 		else {
 			bool r = FreeLibrary(Target->Library);
 			assert(r == true);
+			if (!r) {
+				FNERROR(SynErr, "FreeLibrary failed, this is BAD!");
+			}
 		}
 
 		Target->Library = nullptr;
@@ -150,7 +157,6 @@ bool OmniMIDI::SynthModule::ProcessEvBuf() {
 	else tev = tev << 8 | LastRunningStatus;
 
 	unsigned int evt = MIDI_SYSTEM_DEFAULT;
-	unsigned char status = GETSTATUS(tev);
 	unsigned char cmd = GETCMD(tev);
 	unsigned char ch = GETCHANNEL(tev);
 	unsigned char param1 = GETFP(tev);
@@ -227,7 +233,7 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 
 		if (!mod)
 		{
-			FNERROR(SynErr, L"Could not load NTDLL from memory!!! What's happening???");
+			FNERROR(SynErr, "Could not load NTDLL from memory!!! What's happening???");
 			return false;
 		}
 
@@ -236,7 +242,7 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 
 		if (!NanoSleep)
 		{
-			FNERROR(SynErr, L"Where's NtDelayExecution... Is this Windows 95?");
+			FNERROR(SynErr, "Where's NtDelayExecution... Is this Windows 95?");
 			return false;
 		}
 	}
@@ -309,7 +315,7 @@ bool OmniMIDI::SynthModule::LoadSynthModule() {
 		return true;
 	}
 	
-	NERROR(SynErr, L"Something went wrong here!!!", true);
+	NERROR(SynErr, "Something went wrong here!!!", true);
 	return false;
 }
 
@@ -326,7 +332,7 @@ bool OmniMIDI::SynthModule::UnloadSynthModule() {
 		return true;
 	}
 
-	NERROR(SynErr, L"Something went wrong here!!!", true);
+	NERROR(SynErr, "Something went wrong here!!!", true);
 	return false;
 }
 
@@ -348,25 +354,25 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 		BASS_SetConfig(BASS_CONFIG_UPDATETHREADS, 0);
 
 		if (!BASS_Init(-1, 48000, BASS_DEVICE_STEREO, nullptr, nullptr)) {
-			NERROR(SynErr, L"BASS_Init failed.", false);
+			NERROR(SynErr, "BASS_Init failed.", false);
 			return false;
 		}
 
 		AudioStream = BASS_MIDI_StreamCreate(16, StreamFlags, 0);
 		if (!AudioStream)
 		{
-			NERROR(SynErr, L"BASS_MIDI_StreamCreate failed!", false);
+			NERROR(SynErr, "BASS_MIDI_StreamCreate failed!", false);
 			return false;
 		}
 
 		if (!BASS_ChannelPlay(AudioStream, false)) {
-			NERROR(SynErr, L"BASS_ChannelPlay failed.", false);
+			NERROR(SynErr, "BASS_ChannelPlay failed.", false);
 			return false;
 		}
 
 		_AudThread = std::thread(&SynthModule::AudioThread, this);
 		if (!_AudThread.joinable()) {
-			NERROR(SynErr, L"_AudThread failed.", false);
+			NERROR(SynErr, "_AudThread failed.", false);
 			return false;
 		}
 
@@ -376,25 +382,24 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 		StreamFlags |= BASS_STREAM_DECODE;
 
 		if (!BASS_Init(0, 48000, BASS_DEVICE_STEREO, nullptr, nullptr)) {
-			NERROR(SynErr, L"BASS_Init failed.", false);
-			return false;
-		}
-		
-		AudioStream = BASS_MIDI_StreamCreate(16, StreamFlags, 0);
-		if (!AudioStream)
-		{
-			NERROR(SynErr, L"BASS_MIDI_StreamCreate w/ BASS_STREAM_DECODE failed!", false);
+			NERROR(SynErr, "BASS_Init failed.", false);
 			return false;
 		}
 
-#pragma warning(suppress: 4312)
+		AudioStream = BASS_MIDI_StreamCreate(16, StreamFlags, 0);
+		if (!AudioStream)
+		{
+			NERROR(SynErr, "BASS_MIDI_StreamCreate w/ BASS_STREAM_DECODE failed!", false);
+			return false;
+		}
+
 		if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_ASYNC | BASS_WASAPI_EVENT | BASS_WASAPI_SAMPLES, 32.0f, 0, WASAPIPROC_BASS, (void*)AudioStream)) {
-			NERROR(SynErr, L"BASS_WASAPI_Init failed.", false);
+			NERROR(SynErr, "BASS_WASAPI_Init failed.", false);
 			return false;
 		}
 
 		if (!BASS_WASAPI_Start()) {
-			NERROR(SynErr, L"BASS_WASAPI_Start failed.", false);
+			NERROR(SynErr, "BASS_WASAPI_Start failed.", false);
 			return false;
 		}
 
@@ -402,7 +407,7 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 
 	case INVALID_ENGINE:
 	default:
-		NERROR(SynErr, L"Invalid or unimplemented engine!", false);
+		NERROR(SynErr, "Invalid or unimplemented engine!", false);
 		return false;
 	}
 
@@ -413,46 +418,55 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 		sfs.open(OMPath);
 
 		if (sfs.is_open()) {
-			// Read the JSON data from there
-			auto json = nlohmann::json::parse(sfs, nullptr, false, true);
+			try {
+				// Read the JSON data from there
+				auto json = nlohmann::json::parse(sfs, nullptr, false, true);
 
-			if (json != nullptr) {
-				auto JsonData = json["SoundFonts"];
+				if (json != nullptr) {
+					auto JsonData = json["SoundFonts"];
 
-				if (!(JsonData == nullptr || JsonData.size() < 1)) {
-					for (int i = 0; i < JsonData.size(); i++) {
-						BASS_MIDI_FONTEX sf;
-						nlohmann::json subitem = JsonData[i];
+					if (!(JsonData == nullptr || JsonData.size() < 1)) {
+						for (int i = 0; i < JsonData.size(); i++) {
+							BASS_MIDI_FONTEX sf;
+							nlohmann::json subitem = JsonData[i];
 
-						// Is item valid?
-						if (subitem != nullptr) {
-							std::string sfpath = subitem["path"];
+							// Is item valid?
+							if (subitem != nullptr) {
+								std::string sfpath = subitem["path"];
 
-							sf.font = BASS_MIDI_FontInit(sfpath.c_str(), BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
-							sf.spreset = subitem["spreset"];
-							sf.sbank = subitem["sbank"];
-							sf.dpreset = subitem["dpreset"];
-							sf.dbank = subitem["dbank"];
-							sf.dbanklsb = subitem["dbanklsb"];
+								sf.font = BASS_MIDI_FontInit(sfpath.c_str(), BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
+								sf.spreset = subitem["spreset"];
+								sf.sbank = subitem["sbank"];
+								sf.dpreset = subitem["dpreset"];
+								sf.dbank = subitem["dbank"];
+								sf.dbanklsb = subitem["dbanklsb"];
+								sf.dbanklsb = subitem["dbanklsb"];
 
-							// Check if the soundfont loads, if it does then it's valid
-							if (BASS_MIDI_FontLoad(sf.font, sf.spreset, sf.sbank))
-								SoundFonts.push_back(sf);
+								// Check if the soundfont loads, if it does then it's valid
+								if (BASS_MIDI_FontLoad(sf.font, sf.spreset, sf.sbank))
+									SoundFonts.push_back(sf);
+							}
+
+							// If it's not, then let's loop until the end of the JSON struct
 						}
 
-						// If it's not, then let's loop until the end of the JSON struct
+						std::reverse(SoundFonts.begin(), SoundFonts.end());
+						BASS_MIDI_StreamSetFonts(AudioStream, &SoundFonts[0], (unsigned int)SoundFonts.size() | BASS_MIDI_FONT_EX);
 					}
-
-					std::reverse(SoundFonts.begin(), SoundFonts.end());
-					BASS_MIDI_StreamSetFonts(AudioStream, &SoundFonts[0], (unsigned int)SoundFonts.size() | BASS_MIDI_FONT_EX);
+					else NERROR(SynErr, "SoundFonts JSON does exist, but it does not contain the required items.", false);
 				}
-				else NERROR(SynErr, L"SoundFonts JSON does exist, but it does not contain the required items.", false);
-			}
-			else NERROR(SynErr, L"Imvalid JSON structure!", false);
+				else NERROR(SynErr, "Imvalid JSON structure!", false);
 
+
+			}
+			catch (nlohmann::json::type_error ex) {
+				char asdf[1024] = { 0 };
+				sprintf_s(asdf, "The JSON is corrupted or malformed!\n\nnlohmann::json says: %s", ex.what());
+				NERROR(SynErr, asdf, false);
+			}
 			sfs.close();
 		}
-		else NERROR(SynErr, L"SoundFonts JSON does not exist.", false);
+		else NERROR(SynErr, "SoundFonts JSON does not exist.", false);
 	}
 
 	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_BUFFER, 1);

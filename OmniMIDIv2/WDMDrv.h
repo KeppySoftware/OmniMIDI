@@ -70,8 +70,12 @@ namespace WinDriver {
 	public:
 
 		// Opening and closing the driver
-		bool SetDriverHandle(HDRVR);
+		bool SetDriverHandle(HDRVR drv);
 		bool UnsetDriverHandle();
+
+		// Loading and unloading the library
+		bool SetLibraryHandle(HMODULE mod);
+		bool UnsetLibraryHandle();
 
 		// Setting the driver's pointer for the app
 		bool OpenDriver(MIDIOPENDESC*, DWORD, DWORD_PTR);

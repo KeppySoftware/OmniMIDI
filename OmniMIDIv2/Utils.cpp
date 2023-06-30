@@ -1,5 +1,3 @@
-#pragma once
-
 #include "Utils.h"
 
 bool WinUtils::SysPath::GetFolderPath(const GUID FolderID, wchar_t* P, size_t PS) {

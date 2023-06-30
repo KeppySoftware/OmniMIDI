@@ -19,10 +19,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ReasonForCall, LPVOID lpReserved)
     switch (ReasonForCall)
     {
     case DLL_PROCESS_ATTACH:
+		return DriverComponent.SetLibraryHandle(hModule);
+	case DLL_PROCESS_DETACH:
+		return DriverComponent.UnsetLibraryHandle();
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
-    case DLL_PROCESS_DETACH:
-        break;
+		break;
     }
     return TRUE;
 }
@@ -87,7 +89,7 @@ MMRESULT WINAPI modMessage(UINT DeviceID, UINT Message, DWORD_PTR UserPointer, D
 		}
 		SynthModule.UnloadSynthModule();
 
-		LOG(WDMErr, L"MODM_OPEN failed.");
+		LOG(WDMErr, "MODM_OPEN failed.");
 		return MMSYSERR_NOTENABLED;
 
 	case MODM_CLOSE:
@@ -101,7 +103,7 @@ MMRESULT WINAPI modMessage(UINT DeviceID, UINT Message, DWORD_PTR UserPointer, D
 			}
 		}
 
-		LOG(WDMErr, L"MODM_CLOSE failed.");
+		LOG(WDMErr, "MODM_CLOSE failed.");
 		return MMSYSERR_ALLOCATED;
 
 	case MODM_GETNUMDEVS:
@@ -138,7 +140,7 @@ int KDMAPI InitializeKDMAPIStream() {
 	}
 	SynthModule.UnloadSynthModule();
 
-	LOG(WDMErr, L"InitializeKDMAPIStream failed.");
+	LOG(WDMErr, "InitializeKDMAPIStream failed.");
 	return 0;
 }
 
@@ -150,7 +152,7 @@ int KDMAPI TerminateKDMAPIStream() {
 		}
 	}
 
-	LOG(WDMErr, L"TerminateKDMAPIStream failed.");
+	LOG(WDMErr, "TerminateKDMAPIStream failed.");
 	return 0;
 }
 

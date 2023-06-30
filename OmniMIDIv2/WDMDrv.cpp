@@ -33,12 +33,12 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 	// Why would this happen? Stupid MIDI app dev smh
 	if (CapsPointer == nullptr)
 	{
-		NERROR(MaskErr, L"A null pointer has been passed to the function. The driver can't share its info with the application.", false);
+		NERROR(MaskErr, "A null pointer has been passed to the function. The driver can't share its info with the application.", false);
 		return MMSYSERR_INVALPARAM;
 	}
 
 	if (CapsSize == 0) {
-		NERROR(MaskErr, L"CapsSize has a value of 0, how is the driver supposed to determine the subtype of the struct?", false);
+		NERROR(MaskErr, "CapsSize has a value of 0, how is the driver supposed to determine the subtype of the struct?", false);
 		return MMSYSERR_INVALPARAM;
 	}
 
@@ -100,7 +100,7 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 
 	default:
 		// ???????
-		NERROR(MaskErr, L"Size passed to CapsSize does not match any valid MIDIOUTCAPS struct.", false);
+		NERROR(MaskErr, "Size passed to CapsSize does not match any valid MIDIOUTCAPS struct.", false);
 		return MMSYSERR_INVALPARAM;
 
 	}
@@ -122,7 +122,7 @@ bool WinDriver::DriverCallback::PrepareCallbackFunction(MIDIOPENDESC* OpInfStruc
 
 		// If callback mode is specified but no callback address is specified, abort the initialization
 		else {
-			NERROR(CallbackErr, L"No memory address has been specified for the callback function.", false);
+			NERROR(CallbackErr, "No memory address has been specified for the callback function.", false);
 			return false;
 		}
 	}
@@ -140,9 +140,6 @@ bool WinDriver::DriverCallback::ClearCallbackFunction() {
 }
 
 void WinDriver::DriverCallback::CallbackFunction(DWORD Message, DWORD_PTR Arg1, DWORD_PTR Arg2) {
-	WMMC Callback = nullptr;
-	int ReturnMessage = 0;
-
 	switch (this->CallbackMode & CALLBACK_TYPEMASK) {
 
 	case CALLBACK_FUNCTION:	// Use a custom function to notify the app
@@ -151,15 +148,15 @@ void WinDriver::DriverCallback::CallbackFunction(DWORD Message, DWORD_PTR Arg1, 
 		break;
 
 	case CALLBACK_EVENT:	// Set an event to notify the app
-		ReturnMessage = SetEvent((HANDLE)(this->Callback));
+		SetEvent((HANDLE)(this->Callback));
 		break;
 
 	case CALLBACK_THREAD:	// Send a message to a thread to notify the app
-		ReturnMessage = PostThreadMessage((DWORD)(this->Callback), Message, Arg1, Arg2);
+		PostThreadMessage((DWORD)(this->Callback), Message, Arg1, Arg2);
 		break;
 
 	case CALLBACK_WINDOW:	// Send a message to the app's main window
-		ReturnMessage = PostMessage((HWND)(this->Callback), Message, Arg1, Arg2);
+		PostMessage((HWND)(this->Callback), Message, Arg1, Arg2);
 		break;
 
 	default:				// stub
@@ -171,20 +168,20 @@ void WinDriver::DriverCallback::CallbackFunction(DWORD Message, DWORD_PTR Arg1, 
 bool WinDriver::DriverComponent::SetDriverHandle(HDRVR Handle) {
 	// The app tried to initialize the driver with no pointer?
 	if (Handle == nullptr) {
-		NERROR(DrvErr, L"A null pointer has been passed to the function.", true);
+		NERROR(DrvErr, "A null pointer has been passed to the function.", true);
+		return false;
+	}
+
+	// A pointer is already stored in the variable, UnSetDriverHandle hasn't been called
+	if (this->DrvHandle != nullptr) {
+		NERROR(DrvErr, "DrvHandle has been set in a previous call and not freed.", false);
 		return false;
 	}
 
 	// We already have the same pointer in memory.
 	if (this->DrvHandle == Handle) {
-		LOG(DrvErr, L"We already have the handle stored in memory. The app has Alzheimer's I guess?");
+		LOG(DrvErr, "We already have the DrvHandle in memory. The app has Alzheimer's I guess?");
 		return true;
-	}
-
-	// A pointer is already stored in the variable, UnSetDriverHandle hasn't been called
-	if (this->DrvHandle != nullptr) {
-		NERROR(DrvErr, L"DrvHandle has been set in a previous call and not freed.", false);
-		return false;
 	}
 
 	// All good, save the pointer to a local variable and return true
@@ -195,23 +192,57 @@ bool WinDriver::DriverComponent::SetDriverHandle(HDRVR Handle) {
 bool WinDriver::DriverComponent::UnsetDriverHandle() {
 	// Warn through stdout if the app is trying to free the driver twice
 	if (this->DrvHandle == nullptr)
-		LOG(DrvErr, L"The application called UnsetDriverHandle even though there's no handle set. Bad design?");
+		LOG(DrvErr, "The application called UnsetDriverHandle even though there's no handle set. Bad design?");
 
 	// Free the driver by setting the local variable to nullptr, then return true
 	this->DrvHandle = nullptr;
 	return true;
 }
 
+bool WinDriver::DriverComponent::SetLibraryHandle(HMODULE Module) {
+	// The app tried to initialize the driver with no pointer?
+	if (Module == nullptr) {
+		NERROR(DrvErr, "A null pointer has been passed to the function.", true);
+		return false;
+	}
+
+	// A pointer is already stored in the variable, UnSetDriverHandle hasn't been called
+	if (this->LibHandle != nullptr) {
+		NERROR(DrvErr, "LibHandle has been set in a previous call and not freed.", false);
+		return false;
+	}
+
+	// We already have the same pointer in memory.
+	if (this->LibHandle == Module) {
+		LOG(DrvErr, "We already have LibHandle stored in memory. The app has Alzheimer's I guess?");
+		return true;
+	}
+
+	// All good, save the pointer to a local variable and return true
+	this->LibHandle = Module;
+	return true;
+}
+
+bool WinDriver::DriverComponent::UnsetLibraryHandle() {
+	// Warn through stdout if the app is trying to free the driver twice
+	if (this->LibHandle == nullptr)
+		LOG(DrvErr, "The application called UnsetLibraryHandle even though there's no module set. Bad design?");
+
+	// Free the driver by setting the local variable to nullptr, then return true
+	this->LibHandle = nullptr;
+	return true;
+}
+
 bool WinDriver::DriverComponent::OpenDriver(MIDIOPENDESC* OpInfStruct, DWORD CallbackMode, DWORD_PTR CookedPlayerAddress) {
 	if (OpInfStruct->hMidi == nullptr) {
-		NERROR(DrvErr, L"No valid HMIDI pointer has been specified.", false);
+		NERROR(DrvErr, "No valid HMIDI pointer has been specified.", false);
 		return false;
 	}
 
 	// Check if the app wants a cooked player
 	if (CallbackMode & 0x00000002L) {
 		if (CookedPlayerAddress == NULL) {
-			NERROR(DrvErr, L"No memory address has been specified for the MIDI_IO_COOKED player.", false);
+			NERROR(DrvErr, "No memory address has been specified for the MIDI_IO_COOKED player.", false);
 			return false;
 		}
 		// stub
