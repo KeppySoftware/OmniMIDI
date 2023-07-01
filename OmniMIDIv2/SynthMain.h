@@ -63,6 +63,7 @@ typedef	unsigned int SynthResult;
 #include <bass.h>
 #include <basswasapi.h>
 #include <bassmidi.h>
+#include <bass_vst.h>
 #include <thread>
 #include <atomic>
 #include <algorithm>
@@ -132,7 +133,10 @@ namespace {
 		ImpFunc(BASS_MIDI_StreamGetEvent),
 		ImpFunc(BASS_MIDI_StreamLoadSamples),
 		ImpFunc(BASS_MIDI_StreamSetFonts),
-		ImpFunc(BASS_MIDI_StreamGetChannel)
+		ImpFunc(BASS_MIDI_StreamGetChannel),
+
+		// BASSVST
+		ImpFunc(BASS_VST_ChannelSetDSP),
 	};
 }
 
@@ -246,6 +250,7 @@ namespace OmniMIDI {
 		unsigned int MaxVoices = 1000;
 		unsigned int MaxCPU = 100;
 		int AudioEngine = WASAPI;
+		bool LoudMax = true;
 
 		// WASAPI
 		float WASAPIBuf = 32.0f;
@@ -277,6 +282,7 @@ namespace OmniMIDI {
 						MaxVoices = (unsigned int)JsonData["MaxVoices"];
 						MaxCPU = (unsigned int)JsonData["MaxCPU"];
 						AudioEngine = (int)JsonData["AudioEngine"];
+						LoudMax = (bool)JsonData["LoudMax"];
 						WASAPIBuf = (float)JsonData["WASAPIBuffer"];
 					}
 				}
@@ -291,6 +297,7 @@ namespace OmniMIDI {
 		Lib BAudLib = { .Name = L"BASS" };
 		Lib BMidLib = { .Name = L"BASSMIDI" };
 		Lib BWasLib = { .Name = L"BASSWASAPI" };
+		Lib BVstLib = { .Name = L"BASS_VST" };
 
 		std::thread _AudThread;
 		std::thread _EvtThread;

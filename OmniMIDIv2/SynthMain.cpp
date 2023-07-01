@@ -183,6 +183,14 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 			return false;
 	}
 
+#if defined(_M_AMD64) || defined(_M_IX86)
+	if (SynthSettings->LoudMax)
+	{
+		if (!BVstLib.LoadLib())
+			return false;
+	}
+#endif
+
 	for (int i = 0; i < limit; i++)
 	{
 		ptr = (void*)GetProcAddress(BAudLib.Library, LibImports[i].name);
@@ -208,6 +216,16 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 				continue;
 			}
 		}
+
+		if (BVstLib.Initialized)
+		{
+			ptr = (void*)GetProcAddress(BVstLib.Library, LibImports[i].name);
+			if (ptr)
+			{
+				*(LibImports[i].ptr) = ptr;
+				continue;
+			}
+		}
 	}
 
 	return !(BAudLib.LoadFailed && BMidLib.LoadFailed && BWasLib.LoadFailed);
@@ -221,6 +239,9 @@ bool OmniMIDI::SynthModule::UnloadFuncs() {
 		return false;
 
 	if (!BAudLib.UnloadLib())
+		return false;
+
+	if (!BVstLib.UnloadLib())
 		return false;
 
 	return true;
@@ -402,6 +423,21 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 
 	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_VOICES, SynthSettings->MaxVoices);
 	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_CPU, SynthSettings->MaxCPU);
+
+#if defined(_M_AMD64) || defined(_M_IX86)
+	wchar_t LoudMax[MAX_PATH] = { 0 };
+	if (SynthSettings->LoudMax && Utils.GetFolderPath(FOLDERID_Profile, LoudMax, sizeof(LoudMax)))
+	{
+#if defined(_M_AMD64)
+		swprintf_s(LoudMax, L"%s\\OmniMIDI\\LoudMax\\LoudMax64.dll", LoudMax);
+#elif defined(_M_IX86)
+		swprintf_s(LoudMax, L"%s\\OmniMIDI\\LoudMax\\LoudMax32.dll", LoudMax);
+#endif
+
+		if (GetFileAttributes(LoudMax) != INVALID_FILE_ATTRIBUTES)
+			BASS_VST_ChannelSetDSP(AudioStream, LoudMax, BASS_UNICODE, 1);
+	}
+#endif
 
 	return true;
 }
