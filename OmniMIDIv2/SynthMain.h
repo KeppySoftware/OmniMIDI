@@ -57,6 +57,8 @@ typedef	unsigned int SynthResult;
 #define fv2fn(f)			(#f)
 #define ImpFunc(f)			{(void**)&##f, #f}
 #define EvBuf				EvBuf_t
+#define JSONGetVal(f)		{ #f, f }
+#define JSONSetVal(t, f)	f = JsonData[#f].is_null() ? f : (t)JsonData[#f]
 
 #include <Windows.h>
 #include <strsafe.h>
@@ -281,17 +283,21 @@ namespace OmniMIDI {
 	};
 
 	struct Settings {
+	private:
+		ErrorSystem::WinErr SetErr;
+
+	public:
 		// Global settings
 		unsigned int MaxVoices = 1000;
-		unsigned int MaxCPU = 100;
+		unsigned int MaxCPU = 95;
 		int AudioEngine = WASAPI;
-		bool LoudMax = true;
+		bool LoudMax = false;
 
 		// WASAPI
 		float WASAPIBuf = 32.0f;
 
 		// ASIO
-		std::string ASIODevice;
+		std::string ASIODevice = "None";
 
 		Settings() {
 			// When you initialize Settings(), load OM's own settings by default
@@ -304,27 +310,62 @@ namespace OmniMIDI {
 			}
 		}
 
+		void CreateJSON(wchar_t* Path) {
+			std::fstream st;
+			st.open(Path, std::fstream::out | std::ofstream::trunc);
+			if (st.is_open()) {
+				nlohmann::json defset = {
+					{ "BASSSynth", {
+						JSONGetVal(MaxVoices),
+						JSONGetVal(MaxCPU),
+						JSONGetVal(AudioEngine),
+						JSONGetVal(LoudMax),
+						JSONGetVal(WASAPIBuf),
+						JSONGetVal(ASIODevice)
+					}}
+				};
+
+				std::string dump = defset.dump(1);
+				st.write(dump.c_str(), dump.length());
+				st.close();
+			}
+		}
+
 		// Here you can load your own JSON, it will be tied to ChangeSetting()
 		void LoadJSON(wchar_t* Path) {
 			std::fstream st;
-			st.open(Path);
+			st.open(Path, std::fstream::in);
 
 			if (st.is_open()) {
-				// Read the JSON data from there
-				auto json = nlohmann::json::parse(st, nullptr, false, true);
+				try {
+					// Read the JSON data from there
+					auto json = nlohmann::json::parse(st, nullptr, false, true);
 
-				if (json != nullptr) {
-					auto JsonData = json["BASSSynth"];
+					if (json != nullptr) {
+						auto JsonData = json["BASSSynth"];
 
-					if (!(JsonData == nullptr)) {
-						MaxVoices = (unsigned int)JsonData["MaxVoices"];
-						MaxCPU = (unsigned int)JsonData["MaxCPU"];
-						AudioEngine = (int)JsonData["AudioEngine"];
-						LoudMax = (bool)JsonData["LoudMax"];
-						WASAPIBuf = (float)JsonData["WASAPIBuffer"];
-						ASIODevice = JsonData["ASIODevice"];
+						if (!(JsonData == nullptr)) {
+							JSONSetVal(unsigned int, MaxVoices);
+							JSONSetVal(unsigned int, MaxCPU);
+							JSONSetVal(int, AudioEngine);
+							JSONSetVal(bool, LoudMax);
+							JSONSetVal(float, WASAPIBuf);
+							JSONSetVal(std::string, ASIODevice);
+						}
 					}
+					else throw nlohmann::json::type_error::create(667, "json structure is not valid", nullptr);
 				}
+				catch (nlohmann::json::type_error ex) {
+					st.close();
+
+					char asdf[1024] = { 0 };
+					sprintf_s(asdf, "The JSON is corrupted or malformed!\n\nnlohmann::json says: %s", ex.what());
+					NERROR(SetErr, asdf, false);
+
+					CreateJSON(Path);
+					return;
+				}
+				st.close();
 			}
 		}
 	};
@@ -353,7 +394,7 @@ namespace OmniMIDI {
 
 		bool LoadFuncs();
 		bool UnloadFuncs();
-		
+		void StreamSettings();
 		void AudioThread();
 		void EventsThread();
 		bool ProcessEvBuf();

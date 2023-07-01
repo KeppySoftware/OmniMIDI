@@ -410,7 +410,7 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 			return false;
 		}
 
-		BASS_ASIO_SetRate(0);
+		BASS_ASIO_SetRate(48000);
 
 		BASS_ASIO_ChannelSetFormat(0, 0, BASS_ASIO_FORMAT_FLOAT);
 		BASS_ASIO_ChannelEnableBASS(0, 0, AudioStream, 1);
