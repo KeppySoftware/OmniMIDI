@@ -7,87 +7,6 @@ This file is useful only if you want to compile the driver under Windows, it's n
 
 #include "SynthMain.h"
 
-bool OmniMIDI::SynthModule::LoadLib(Lib* Target) {
-	WinUtils::SysPath Utils;
-
-	wchar_t SysDir[MAX_PATH] = { 0 };
-	wchar_t DLLPath[MAX_PATH] = { 0 };
-
-	// Check if library is loaded
-	if (Target->Library == nullptr) {
-		// If not, begin loading process
-
-		// Check if the host MIDI application has a version of the library
-		// in memory already.
-		if ((Target->Library = GetModuleHandle(Target->Path)) != nullptr)
-		{
-			// (TODO) Make it so we can load our own version of it
-			// For now, just make the driver try and use that instead
-			return (Target->AppSelfHosted = true);
-		}
-		// Otherwise, let's load our own
-		else {
-			// Let's get the system path
-			if (Utils.GetFolderPath(FOLDERID_System, SysDir, sizeof(SysDir))) {
-				int swp = swprintf_s(DLLPath, MAX_PATH, L"%s.dll\0", Target->Path);
-				assert(swp != -1);
-
-				if (swp != -1) {
-					Target->Library = LoadLibrary(DLLPath);
-
-					if (!Target->Library)
-					{
-						swp = swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s.dll\0", SysDir, Target->Path);
-						assert(swp != -1);
-						if (swp != -1) {
-							Target->Library = LoadLibrary(DLLPath);
-							assert(Target->Library != 0);
-
-							if (!Target->Library)
-								return false;
-						}
-						else return false;
-					}
-				}
-				else return false;
-			}
-			else return false;
-		}
-	}
-
-	Target->Initialized = true;
-	return true;
-}
-
-bool OmniMIDI::SynthModule::UnloadLib(Lib* Target) {
-	// Check if library is already loaded
-	if (Target->Library != nullptr) {
-		// Set all flags to false
-		Target->Initialized = false;
-		Target->LoadFailed = false;
-
-		// Check if the library was originally loaded by the
-		// hosting MIDI application, this happens sometimes.
-		if (Target->AppSelfHosted)
-		{
-			// It was, set Lib to nullptr and return true
-			Target->AppSelfHosted = false;
-		}
-		else {
-			bool r = FreeLibrary(Target->Library);
-			assert(r == true);
-			if (!r) {
-				FNERROR(SynErr, "FreeLibrary failed, this is BAD!");
-			}
-		}
-
-		Target->Library = nullptr;
-	}
-
-	// It is, return true
-	return true;
-}
-
 void OmniMIDI::SynthModule::AudioThread() {
 	while (IsSynthInitialized()) {
 		BASS_ChannelUpdate(AudioStream, 0);
@@ -252,15 +171,15 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 	void* ptr = nullptr;
 
 	// Load required libs
-	if (!LoadLib(&BAudLib))
+	if (!BAudLib.LoadLib())
 		return false;
 
-	if (!LoadLib(&BMidLib))
+	if (!BMidLib.LoadLib())
 		return false;
 
 	if (SynthSettings->AudioEngine == WASAPI)
 	{
-		if (!LoadLib(&BWasLib))
+		if (!BWasLib.LoadLib())
 			return false;
 	}
 
@@ -295,13 +214,13 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 }
 
 bool OmniMIDI::SynthModule::UnloadFuncs() {
-	if (!UnloadLib(&BMidLib))
+	if (!BWasLib.UnloadLib())
 		return false;
 
-	if (!UnloadLib(&BWasLib))
+	if (!BMidLib.UnloadLib())
 		return false;
 
-	if (!UnloadLib(&BAudLib))
+	if (!BAudLib.UnloadLib())
 		return false;
 
 	return true;

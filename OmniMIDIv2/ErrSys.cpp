@@ -12,12 +12,12 @@ This file is useful only if you want to compile the driver under Windows, it's n
 void ErrorSystem::WinErr::Log(const char* Message, const char* Position, const char* File, const char* Line) {
 	char* Buf = new char[SZBufSize];
 
-	sprintf_s(Buf, BufSize, "DEBUG MSG FROM %s.\n\nFile: %s\nLine: %s\n\nMessage: %s", Position, File, Line, Message);
+	sprintf_s(Buf, BufSize, "Howdy from \"%s\".\n\nFile: %s\nLine: %s\n\nMessage: %s", Position, File, Line, Message);
 
 	OutputDebugStringA(Buf);
 
 #ifdef _DEBUG
-	MessageBoxA(NULL, Buf, "OmniMIDI - Debug message", MB_OK | MB_SYSTEMMODAL | MB_ICONWARNING);
+	MessageBoxA(NULL, Buf, "OmniMIDI - DEBUG", MB_OK | MB_SYSTEMMODAL | MB_ICONWARNING);
 #endif
 
 	delete[] Buf;
@@ -39,7 +39,7 @@ void ErrorSystem::WinErr::ThrowError(const char* Error, const char* Position, co
 
 		if (MsgBufSize != 0)
 		{
-			MessageBoxA(NULL, GLEBuf, "OmniMIDI - Error", IsSeriousError ? MB_ICONERROR : MB_ICONWARNING | MB_OK | MB_SYSTEMMODAL);
+			MessageBoxA(NULL, GLEBuf, "OmniMIDI - ERROR", IsSeriousError ? MB_ICONERROR : MB_ICONWARNING | MB_OK | MB_SYSTEMMODAL);
 			LocalFree(GLEBuf);
 		}
 	}
@@ -51,7 +51,7 @@ void ErrorSystem::WinErr::ThrowError(const char* Error, const char* Position, co
 		sprintf_s(Buf, BufSize, "An error has occured in the \"%s\" function!\n\nError: %s", Position, Error);
 #endif
 
-		MessageBoxA(NULL, Buf, "OmniMIDI - Error", IsSeriousError ? MB_ICONERROR : MB_ICONWARNING | MB_OK | MB_SYSTEMMODAL);
+		MessageBoxA(NULL, Buf, "OmniMIDI - ERROR", IsSeriousError ? MB_ICONERROR : MB_ICONWARNING | MB_OK | MB_SYSTEMMODAL);
 
 		delete[] Buf;
 	}

@@ -138,11 +138,107 @@ namespace {
 
 namespace OmniMIDI {
 	struct Lib {
-		const wchar_t* Path;
+		const wchar_t* Name;
 		HMODULE Library = nullptr;
 		bool Initialized = false;
 		bool LoadFailed = false;
 		bool AppSelfHosted = false;
+
+		bool LoadLib(wchar_t* CustomPath = nullptr) {
+			WinUtils::SysPath Utils;
+
+			wchar_t SysDir[MAX_PATH] = { 0 };
+			wchar_t DLLPath[MAX_PATH] = { 0 };
+			int swp = 0;
+
+			// Check if library is loaded
+			if (Library == nullptr) {
+				// If not, begin loading process
+
+				// Check if the host MIDI application has a version of the library
+				// in memory already.
+				if ((Library = GetModuleHandle(Name)) != nullptr)
+				{
+					// (TODO) Make it so we can load our own version of it
+					// For now, just make the driver try and use that instead
+					return (AppSelfHosted = true);
+				}
+				// Otherwise, let's load our own
+				else {
+					// Let's get the system path
+					if (CustomPath != nullptr) {
+						swp = swprintf_s(DLLPath, MAX_PATH, L"%s\\%s.dll\0", CustomPath, Name);
+						assert(swp != -1);
+
+						if (swp != -1) {
+							Library = LoadLibrary(DLLPath);
+
+							if (!Library)
+								return false;
+						}
+						else return false;
+					}
+					else {
+						if (Utils.GetFolderPath(FOLDERID_System, SysDir, sizeof(SysDir))) {
+							swp = swprintf_s(DLLPath, MAX_PATH, L"%s.dll\0", Name);
+							assert(swp != -1);
+
+							if (swp != -1) {
+								Library = LoadLibrary(DLLPath);
+
+								if (!Library)
+								{
+									swp = swprintf_s(DLLPath, MAX_PATH, L"%s\\OmniMIDI\\%s.dll\0", SysDir, Name);
+									assert(swp != -1);
+									if (swp != -1) {
+										Library = LoadLibrary(DLLPath);
+										assert(Library != 0);
+
+										if (!Library)
+											return false;
+									}
+									else return false;
+								}
+							}
+							else return false;
+						}
+						else return false;
+					}
+				}
+			}
+
+			Initialized = true;
+			return true;
+		}
+
+		bool UnloadLib() {
+			// Check if library is already loaded
+			if (Library != nullptr) {
+				// Set all flags to false
+				Initialized = false;
+				LoadFailed = false;
+
+				// Check if the library was originally loaded by the
+				// hosting MIDI application, this happens sometimes.
+				if (AppSelfHosted)
+				{
+					// It was, set Lib to nullptr and return true
+					AppSelfHosted = false;
+				}
+				else {
+					bool r = FreeLibrary(Library);
+					assert(r == true);
+					if (!r) {
+						throw;
+					}
+				}
+
+				Library = nullptr;
+			}
+
+			// It is, return true
+			return true;
+		}
 	};
 
 	struct Settings {
@@ -192,9 +288,9 @@ namespace OmniMIDI {
 	private:
 		ErrorSystem::WinErr SynErr;
 
-		Lib BAudLib = { .Path = L"BASS" };
-		Lib BMidLib = { .Path = L"BASSMIDI" };
-		Lib BWasLib = { .Path = L"BASSWASAPI" };
+		Lib BAudLib = { .Name = L"BASS" };
+		Lib BMidLib = { .Name = L"BASSMIDI" };
+		Lib BWasLib = { .Name = L"BASSWASAPI" };
 
 		std::thread _AudThread;
 		std::thread _EvtThread;
@@ -208,8 +304,6 @@ namespace OmniMIDI {
 		Settings* SynthSettings = nullptr;
 		char LastRunningStatus = 0x0;
 
-		bool LoadLib(Lib* Target);
-		bool UnloadLib(Lib* Target);
 		bool LoadFuncs();
 		bool UnloadFuncs();
 		

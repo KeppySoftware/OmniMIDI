@@ -51,13 +51,13 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ReasonForCall, LPVOID lpReserved)
 extern "C" __declspec(dllexport)
 LRESULT WINAPI DriverProc(DWORD DriverIdentifier, HDRVR DriverHandle, UINT Message, LONG Param1, LONG Param2) {
 	switch (Message) {
-	case DRV_LOAD:
+	case DRV_OPEN:
 		return DriverComponent->SetDriverHandle(DriverHandle);
-	case DRV_FREE:
+	case DRV_CLOSE:
 		return DriverComponent->UnsetDriverHandle();
 
-	case DRV_OPEN:
-	case DRV_CLOSE:
+	case DRV_LOAD:
+	case DRV_FREE:
 		return DRVCNF_OK;
 
 	case DRV_QUERYCONFIGURE:

@@ -186,16 +186,16 @@ bool WinDriver::DriverComponent::SetDriverHandle(HDRVR Handle) {
 		return false;
 	}
 
-	// A pointer is already stored in the variable, UnSetDriverHandle hasn't been called
-	if (this->DrvHandle != nullptr) {
-		NERROR(DrvErr, "DrvHandle has been set in a previous call and not freed.", false);
-		return false;
-	}
-
 	// We already have the same pointer in memory.
 	if (this->DrvHandle == Handle) {
 		LOG(DrvErr, "We already have the DrvHandle in memory. The app has Alzheimer's I guess?");
 		return true;
+	}
+
+	// A pointer is already stored in the variable, UnSetDriverHandle hasn't been called
+	if (this->DrvHandle != nullptr) {
+		LOG(DrvErr, "DrvHandle has been set in a previous call and not freed.");
+		return false;
 	}
 
 	// All good, save the pointer to a local variable and return true
