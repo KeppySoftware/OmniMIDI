@@ -23,7 +23,6 @@ bool WinDriver::DriverMask::ChangeSettings(short NMID, short NPID, short NT, sho
 }
 
 unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsPointer, DWORD CapsSize) {
-	wchar_t DevName[MAXPNAMELEN] = { 0 };
 	MIDIOUTCAPSA CapsA;
 	MIDIOUTCAPSW CapsW;
 	MIDIOUTCAPS2A Caps2A;
@@ -42,12 +41,10 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 		return MMSYSERR_INVALPARAM;
 	}
 
-	swprintf_s(DevName, MAXPNAMELEN, this->TemplateName);
-
 	// I have to support all this s**t or else it won't work in some apps smh
 	switch (CapsSize) {
 	case (sizeof(MIDIOUTCAPSA)):
-		wcstombs_s(&WCSTSRetVal, CapsA.szPname, sizeof(CapsA.szPname), DevName, MAXPNAMELEN);
+		wcstombs_s(&WCSTSRetVal, CapsA.szPname, sizeof(CapsA.szPname), this->TemplateName, MAXPNAMELEN);
 		CapsA.dwSupport = this->Support;
 		CapsA.wChannelMask = 0xFFFF;
 		CapsA.wMid = this->ManufacturerID;
@@ -60,7 +57,7 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 		break;
 
 	case (sizeof(MIDIOUTCAPSW)):
-		wcsncpy_s(CapsW.szPname, DevName, MAXPNAMELEN);
+		wcsncpy_s(CapsW.szPname, this->TemplateName, MAXPNAMELEN);
 		CapsW.dwSupport = this->Support;
 		CapsW.wChannelMask = 0xFFFF;
 		CapsW.wMid = this->ManufacturerID;
@@ -73,7 +70,7 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 		break;
 
 	case (sizeof(MIDIOUTCAPS2A)):
-		wcstombs_s(&WCSTSRetVal, Caps2A.szPname, sizeof(Caps2A.szPname), DevName, MAXPNAMELEN);
+		wcstombs_s(&WCSTSRetVal, Caps2A.szPname, sizeof(Caps2A.szPname), this->TemplateName, MAXPNAMELEN);
 		Caps2A.dwSupport = this->Support;
 		Caps2A.wChannelMask = 0xFFFF;
 		Caps2A.wMid = this->ManufacturerID;
@@ -86,7 +83,7 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 		break;
 
 	case (sizeof(MIDIOUTCAPS2W)):
-		wcsncpy_s(Caps2W.szPname, DevName, MAXPNAMELEN);
+		wcsncpy_s(Caps2W.szPname, this->TemplateName, MAXPNAMELEN);
 		Caps2W.dwSupport = this->Support;
 		Caps2W.wChannelMask = 0xFFFF;
 		Caps2W.wMid = this->ManufacturerID;
@@ -109,15 +106,27 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 }
 
 bool WinDriver::DriverCallback::PrepareCallbackFunction(MIDIOPENDESC* OpInfStruct, DWORD CallbackMode) {
-	// Save the pointer's address to memory
-	this->WMMHandle = OpInfStruct->hMidi;
+
+	if (pCallback) {
+		NERROR(CallbackErr, "A callback has already been allocated!", false);
+		return false;
+	}
 
 	// Check if the app wants the driver to do callbacks
 	if (CallbackMode != CALLBACK_NULL) {
 		if (OpInfStruct->dwCallback != 0) {
-			this->Callback = OpInfStruct->dwCallback;
-			this->CallbackMode = CallbackMode;
-			this->Instance = OpInfStruct->dwInstance;
+			pCallback = new Callback{
+				.Handle = OpInfStruct->hMidi,
+				.Mode = CallbackMode,
+				.Ptr = OpInfStruct->dwCallback,
+				.Instance = OpInfStruct->dwInstance
+			};
+
+#ifdef _DEBUG
+			char asdf[1024] = { 0 };
+			sprintf_s(asdf, "\n\n.Handle -> %x\n.Mode -> %x\n.Ptr -> %x\n.Instance -> %x", pCallback->Handle, pCallback->Mode, pCallback->Ptr, pCallback->Instance);
+			LOG(CallbackErr, asdf);
+#endif
 		}
 
 		// If callback mode is specified but no callback address is specified, abort the initialization
@@ -131,32 +140,37 @@ bool WinDriver::DriverCallback::PrepareCallbackFunction(MIDIOPENDESC* OpInfStruc
 }
 
 bool WinDriver::DriverCallback::ClearCallbackFunction() {
-	this->WMMHandle = nullptr;
-	this->Callback = 0;
-	this->CallbackMode = CALLBACK_NULL;
-	this->Instance = 0;
+	// Clear the callback
+	if (pCallback)
+	{
+		delete pCallback;
+		pCallback = nullptr;
+	}
 
 	return true;
 }
 
 void WinDriver::DriverCallback::CallbackFunction(DWORD Message, DWORD_PTR Arg1, DWORD_PTR Arg2) {
-	switch (this->CallbackMode & CALLBACK_TYPEMASK) {
+	if (!pCallback)
+		return;
+
+	switch (pCallback->Mode & CALLBACK_TYPEMASK) {
 
 	case CALLBACK_FUNCTION:	// Use a custom function to notify the app
 		// Use the app's custom function to send the callback
-		(*(WMMC)this->Callback)((HMIDIOUT)(this->WMMHandle), Message, this->Instance, Arg1, Arg2);
+		(*(WMMC)pCallback->Ptr)((HMIDIOUT)(pCallback->Handle), Message, pCallback->Instance, Arg1, Arg2);
 		break;
 
 	case CALLBACK_EVENT:	// Set an event to notify the app
-		SetEvent((HANDLE)(this->Callback));
+		SetEvent((HANDLE)(pCallback->Ptr));
 		break;
 
-	case CALLBACK_THREAD:	// Send a message to a thread to notify the app
-		PostThreadMessage((DWORD)(this->Callback), Message, Arg1, Arg2);
+	case CALLBACK_TASK:		// Send a message to a thread to notify the app
+		PostThreadMessageA((DWORD)(pCallback->Ptr), Message, Arg1, Arg2);
 		break;
 
 	case CALLBACK_WINDOW:	// Send a message to the app's main window
-		PostMessage((HWND)(this->Callback), Message, Arg1, Arg2);
+		PostMessageA((HWND)(pCallback->Ptr), Message, Arg1, Arg2);
 		break;
 
 	default:				// stub

@@ -8,6 +8,8 @@ This file is useful only if you want to compile the driver under Windows, it's n
 #include "SynthMain.h"
 
 bool OmniMIDI::SynthModule::LoadLib(Lib* Target) {
+	WinUtils::SysPath Utils;
+
 	wchar_t SysDir[MAX_PATH] = { 0 };
 	wchar_t DLLPath[MAX_PATH] = { 0 };
 
@@ -256,7 +258,7 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 	if (!LoadLib(&BMidLib))
 		return false;
 
-	if (AudioEngine == WASAPI)
+	if (SynthSettings->AudioEngine == WASAPI)
 	{
 		if (!LoadLib(&BWasLib))
 			return false;
@@ -306,6 +308,9 @@ bool OmniMIDI::SynthModule::UnloadFuncs() {
 }
 
 bool OmniMIDI::SynthModule::LoadSynthModule() {
+	if (!SynthSettings)
+		SynthSettings = new Settings;
+
 	// LOG(SynErr, L"LoadSynthModule called.");
 	if (LoadFuncs()) {
 		Events = new EvBuf(32768);
@@ -329,6 +334,9 @@ bool OmniMIDI::SynthModule::UnloadSynthModule() {
 		delete Events;
 
 		SoundFonts.clear();
+
+		delete SynthSettings;
+		SynthSettings = nullptr;
 		return true;
 	}
 
@@ -338,6 +346,7 @@ bool OmniMIDI::SynthModule::UnloadSynthModule() {
 
 bool OmniMIDI::SynthModule::StartSynthModule() {
 	// SF path
+	WinUtils::SysPath Utils;
 	wchar_t OMPath[MAX_PATH] = { 0 };
 
 	// BASS stream flags
@@ -347,7 +356,7 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 	if (AudioStream)
 		return true;
 
-	switch (AudioEngine) {
+	switch (SynthSettings->AudioEngine) {
 	case BASS_INTERNAL:
 		BASS_SetConfig(BASS_CONFIG_BUFFER, 0);
 		BASS_SetConfig(BASS_CONFIG_UPDATEPERIOD, 0);
@@ -364,6 +373,8 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 			NERROR(SynErr, "BASS_MIDI_StreamCreate failed!", false);
 			return false;
 		}
+
+		BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_BUFFER, 0);
 
 		if (!BASS_ChannelPlay(AudioStream, false)) {
 			NERROR(SynErr, "BASS_ChannelPlay failed.", false);
@@ -393,7 +404,7 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 			return false;
 		}
 
-		if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_ASYNC | BASS_WASAPI_EVENT | BASS_WASAPI_SAMPLES, 32.0f, 0, WASAPIPROC_BASS, (void*)AudioStream)) {
+		if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_ASYNC | BASS_WASAPI_EVENT | BASS_WASAPI_SAMPLES, SynthSettings->WASAPIBuf, 0, WASAPIPROC_BASS, (void*)AudioStream)) {
 			NERROR(SynErr, "BASS_WASAPI_Init failed.", false);
 			return false;
 		}
@@ -434,13 +445,14 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 							if (subitem != nullptr) {
 								std::string sfpath = subitem["path"];
 
-								sf.font = BASS_MIDI_FontInit(sfpath.c_str(), BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
+								bool xgdrums = subitem["xgdrums"];
 								sf.spreset = subitem["spreset"];
 								sf.sbank = subitem["sbank"];
 								sf.dpreset = subitem["dpreset"];
 								sf.dbank = subitem["dbank"];
 								sf.dbanklsb = subitem["dbanklsb"];
-								sf.dbanklsb = subitem["dbanklsb"];
+
+								sf.font = BASS_MIDI_FontInit(sfpath.c_str(), xgdrums ? BASS_MIDI_FONT_XGDRUMS : 0 | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP);
 
 								// Check if the soundfont loads, if it does then it's valid
 								if (BASS_MIDI_FontLoad(sf.font, sf.spreset, sf.sbank))
@@ -455,7 +467,7 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 					}
 					else NERROR(SynErr, "SoundFonts JSON does exist, but it does not contain the required items.", false);
 				}
-				else NERROR(SynErr, "Imvalid JSON structure!", false);
+				else NERROR(SynErr, "Invalid JSON structure!", false);
 
 
 			}
@@ -469,9 +481,8 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 		else NERROR(SynErr, "SoundFonts JSON does not exist.", false);
 	}
 
-	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_BUFFER, 1);
-	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_VOICES, 1000);
-	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_CPU, 85);
+	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_VOICES, SynthSettings->MaxVoices);
+	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_CPU, SynthSettings->MaxCPU);
 
 	return true;
 }
@@ -481,7 +492,7 @@ bool OmniMIDI::SynthModule::StopSynthModule() {
 		BASS_StreamFree(AudioStream);
 		AudioStream = 0;
 
-		switch (AudioEngine) {
+		switch (SynthSettings->AudioEngine) {
 		case BASS_INTERNAL:
 			_AudThread.join();
 			break;

@@ -72,6 +72,7 @@ typedef	unsigned int SynthResult;
 #include <vector>
 #include <codecvt>
 #include <locale>
+#include "EvBuf_t.h"
 #include "ErrSys.h"
 #include "Utils.h"
 #include <nlohmann\json.hpp>
@@ -144,108 +145,46 @@ namespace OmniMIDI {
 		bool AppSelfHosted = false;
 	};
 
-	struct Ev {
-		DWORD Event;
-		DWORD Align[15];
-	};
+	struct Settings {
+		// Global settings
+		unsigned int MaxVoices = 1000;
+		unsigned int MaxCPU = 100;
+		int AudioEngine = WASAPI;
 
-	// Sono's buffer
-	class EvBuf_t {
-	private:
-		Ev* Buffer;
-		size_t Size{ 0 };
+		// WASAPI
+		float WASAPIBuf = 32.0f;
 
-		// Written by reader thread
-		alignas(64) volatile size_t	ReadHead { 0 };
-		alignas(64) size_t WriteHeadCached{ 0 };
+		Settings() {
+			// When you initialize Settings(), load OM's own settings by default
+			WinUtils::SysPath Utils;
+			wchar_t OMPath[MAX_PATH] = { 0 };
 
-		// Written by writer thread
-		alignas(64) volatile size_t	WriteHead { 0 };
-		alignas(64) size_t ReadHeadCached{ 0 };
-
-#ifdef _STATSDEV
-		size_t EventsSent{ 0 };
-		size_t EventsSkipped{ 0 };
-#endif
-
-	public:
-		EvBuf_t(size_t ReqSize) {
-			Buffer = new Ev[ReqSize];
-			Size = ReqSize;
+			if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
+				swprintf_s(OMPath, L"%s\\OmniMIDI\\settings.json\0", OMPath);
+				LoadJSON(OMPath);
+			}
 		}
 
-		~EvBuf_t() {
-			Size = 0;
-			ReadHead = 0;
-			WriteHead = 0;
-			ReadHeadCached = 0;
-			WriteHeadCached = 0;
-#ifdef _STATSDEV
-			EventsSent = 0;
-			EventsSkipped = 0;
-#endif
-			delete[] Buffer;
-		}
+		// Here you can load your own JSON, it will be tied to ChangeSetting()
+		void LoadJSON(wchar_t* Path) {
+			std::fstream st;
+			st.open(Path);
 
-		void GetStats() {
-#ifdef _STATSDEV
-			char asdf[1024] = {};
-			snprintf(asdf, sizeof(asdf), "%llu of %llu events skipped", EventsSkipped, EventsSent);
-			MessageBoxA(NULL, asdf, "", 0);
-#else
-			// Absolutely nothing.
-#endif
-		}
+			if (st.is_open()) {
+				// Read the JSON data from there
+				auto json = nlohmann::json::parse(st, nullptr, false, true);
 
-		bool Push(unsigned int ev) {
-			size_t LocalWriteHead = WriteHead;
-			size_t NextWriteHead = LocalWriteHead + 1;
+				if (json != nullptr) {
+					auto JsonData = json["BASSSynth"];
 
-			if (NextWriteHead >= Size)
-				NextWriteHead = 0;
-
-			if (NextWriteHead == ReadHeadCached)
-			{
-				ReadHeadCached = ReadHead;
-				if (NextWriteHead == ReadHeadCached) {
-#ifdef _STATSDEV
-					EventsSkipped++;
-#endif
-					return false;
+					if (!(JsonData == nullptr)) {
+						MaxVoices = (unsigned int)JsonData["MaxVoices"];
+						MaxCPU = (unsigned int)JsonData["MaxCPU"];
+						AudioEngine = (int)JsonData["AudioEngine"];
+						WASAPIBuf = (float)JsonData["WASAPIBuffer"];
+					}
 				}
 			}
-
-			Buffer[LocalWriteHead].Event = ev;
-			WriteHead = NextWriteHead;
-
-			return true;
-		}
-
-		bool Pop(unsigned int& ev) {
-			size_t LocalReadHead = ReadHead;
-			if (LocalReadHead == WriteHeadCached)
-			{
-				WriteHeadCached = WriteHead;
-				if (LocalReadHead == WriteHeadCached)
-					return false;
-			}
-
-			size_t NextReadHead = LocalReadHead + 1;
-			if (NextReadHead >= Size)
-				NextReadHead = 0;
-
-			ev = Buffer[LocalReadHead].Event;
-			ReadHead = NextReadHead;
-
-			return true;
-		}
-
-		void Peek(unsigned int& ev) {
-			if (ReadHead == WriteHead) {
-				return;
-			}
-
-			ev = Buffer[ReadHead].Event;
 		}
 	};
 
@@ -261,13 +200,12 @@ namespace OmniMIDI {
 		std::thread _EvtThread;
 		EvBuf* Events;
 
-		WinUtils::SysPath Utils;
 		signed long long onenano = -1;
-		unsigned int (WINAPI* NanoSleep)(unsigned char, signed long long*);
-		unsigned int AudioStream;
+		unsigned int (WINAPI* NanoSleep)(unsigned char, signed long long*) = nullptr;
+		unsigned int AudioStream = 0;
 		std::vector<BASS_MIDI_FONTEX> SoundFonts;
 
-		int AudioEngine = WASAPI;
+		Settings* SynthSettings = nullptr;
 		char LastRunningStatus = 0x0;
 
 		bool LoadLib(Lib* Target);

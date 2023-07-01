@@ -54,6 +54,9 @@
     <ClInclude Include="Utils.h">
       <Filter>Header Files\Extensions</Filter>
     </ClInclude>
+    <ClInclude Include="EvBuf_t.h">
+      <Filter>Header Files\Synthesizer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ErrSys.cpp">
