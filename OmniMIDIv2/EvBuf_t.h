@@ -112,11 +112,11 @@ namespace OmniMIDI {
 		}
 
 		void Peek(unsigned int& ev) {
-			if (ReadHead == WriteHead) {
-				return;
-			}
+			size_t NextReadHead = ReadHead + 1;
+			if (NextReadHead >= Size)
+				NextReadHead = 0;
 
-			ev = Buffer[ReadHead].Event;
+			ev = Buffer[NextReadHead].Event;
 		}
 	};
 }

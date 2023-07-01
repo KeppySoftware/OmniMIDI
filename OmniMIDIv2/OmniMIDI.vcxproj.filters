@@ -83,6 +83,9 @@
     <ClCompile Include="Utils.cpp">
       <Filter>Source Files\Extensions</Filter>
     </ClCompile>
+    <ClCompile Include="bassasio.cpp">
+      <Filter>Source Files\Synthesizer\BASS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="WDMEntry.h">
