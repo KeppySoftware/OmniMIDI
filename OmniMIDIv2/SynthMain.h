@@ -61,8 +61,9 @@ typedef	unsigned int SynthResult;
 #include <Windows.h>
 #include <strsafe.h>
 #include <bass.h>
-#include <basswasapi.h>
 #include <bassmidi.h>
+#include <bassasio.h>
+#include <basswasapi.h>
 #include <thread>
 #include <atomic>
 #include <algorithm>
@@ -111,6 +112,18 @@ namespace {
 		ImpFunc(BASS_Stop),
 		ImpFunc(BASS_StreamFree),
 
+		// BASSMIDI
+		ImpFunc(BASS_MIDI_FontFree),
+		ImpFunc(BASS_MIDI_FontInit),
+		ImpFunc(BASS_MIDI_FontLoad),
+		ImpFunc(BASS_MIDI_StreamCreate),
+		ImpFunc(BASS_MIDI_StreamEvent),
+		ImpFunc(BASS_MIDI_StreamEvents),
+		ImpFunc(BASS_MIDI_StreamGetEvent),
+		ImpFunc(BASS_MIDI_StreamLoadSamples),
+		ImpFunc(BASS_MIDI_StreamSetFonts),
+		ImpFunc(BASS_MIDI_StreamGetChannel),
+
 		// BASSWASAPI
 		ImpFunc(BASS_WASAPI_Init),
 		ImpFunc(BASS_WASAPI_Free),
@@ -122,17 +135,27 @@ namespace {
 		ImpFunc(BASS_WASAPI_GetDevice),
 		ImpFunc(BASS_WASAPI_GetLevelEx),
 
-		// BASSMIDI
-		ImpFunc(BASS_MIDI_FontFree),
-		ImpFunc(BASS_MIDI_FontInit),
-		ImpFunc(BASS_MIDI_FontLoad),
-		ImpFunc(BASS_MIDI_StreamCreate),
-		ImpFunc(BASS_MIDI_StreamEvent),
-		ImpFunc(BASS_MIDI_StreamEvents),
-		ImpFunc(BASS_MIDI_StreamGetEvent),
-		ImpFunc(BASS_MIDI_StreamLoadSamples),
-		ImpFunc(BASS_MIDI_StreamSetFonts),
-		ImpFunc(BASS_MIDI_StreamGetChannel)
+		// BASSASIO
+		ImpFunc(BASS_ASIO_CheckRate),
+		ImpFunc(BASS_ASIO_ChannelEnable),
+		ImpFunc(BASS_ASIO_ChannelEnableBASS),
+		ImpFunc(BASS_ASIO_ChannelEnableMirror),
+		ImpFunc(BASS_ASIO_ChannelGetLevel),
+		ImpFunc(BASS_ASIO_ChannelJoin),
+		ImpFunc(BASS_ASIO_ChannelSetFormat),
+		ImpFunc(BASS_ASIO_ChannelSetRate),
+		ImpFunc(BASS_ASIO_ControlPanel),
+		ImpFunc(BASS_ASIO_ErrorGetCode),
+		ImpFunc(BASS_ASIO_Free),
+		ImpFunc(BASS_ASIO_GetDevice),
+		ImpFunc(BASS_ASIO_GetDeviceInfo),
+		ImpFunc(BASS_ASIO_GetLatency),
+		ImpFunc(BASS_ASIO_GetRate),
+		ImpFunc(BASS_ASIO_Init),
+		ImpFunc(BASS_ASIO_SetRate),
+		ImpFunc(BASS_ASIO_Start),
+		ImpFunc(BASS_ASIO_Stop),
+		ImpFunc(BASS_ASIO_IsStarted)
 	};
 }
 
@@ -250,6 +273,9 @@ namespace OmniMIDI {
 		// WASAPI
 		float WASAPIBuf = 32.0f;
 
+		// ASIO
+		std::string ASIODevice;
+
 		Settings() {
 			// When you initialize Settings(), load OM's own settings by default
 			WinUtils::SysPath Utils;
@@ -278,6 +304,7 @@ namespace OmniMIDI {
 						MaxCPU = (unsigned int)JsonData["MaxCPU"];
 						AudioEngine = (int)JsonData["AudioEngine"];
 						WASAPIBuf = (float)JsonData["WASAPIBuffer"];
+						ASIODevice = JsonData["ASIODevice"];
 					}
 				}
 			}
@@ -291,6 +318,7 @@ namespace OmniMIDI {
 		Lib BAudLib = { .Name = L"BASS" };
 		Lib BMidLib = { .Name = L"BASSMIDI" };
 		Lib BWasLib = { .Name = L"BASSWASAPI" };
+		Lib BAsiLib = { .Name = L"BASSASIO" };
 
 		std::thread _AudThread;
 		std::thread _EvtThread;

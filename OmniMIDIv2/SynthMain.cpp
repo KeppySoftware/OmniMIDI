@@ -177,10 +177,16 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 	if (!BMidLib.LoadLib())
 		return false;
 
-	if (SynthSettings->AudioEngine == WASAPI)
-	{
+	switch (SynthSettings->AudioEngine) {
+	case WASAPI:
 		if (!BWasLib.LoadLib())
 			return false;
+		break;
+
+	case ASIO:
+		if (!BAsiLib.LoadLib())
+			return false;
+		break;
 	}
 
 	for (int i = 0; i < limit; i++)
@@ -199,21 +205,34 @@ bool OmniMIDI::SynthModule::LoadFuncs() {
 			continue;
 		}
 
-		if (BWasLib.Initialized)
-		{
+		switch (SynthSettings->AudioEngine) {
+		case WASAPI:
 			ptr = (void*)GetProcAddress(BWasLib.Library, LibImports[i].name);
 			if (ptr)
 			{
 				*(LibImports[i].ptr) = ptr;
 				continue;
 			}
+			break;
+
+		case ASIO:
+			ptr = (void*)GetProcAddress(BAsiLib.Library, LibImports[i].name);
+			if (ptr)
+			{
+				*(LibImports[i].ptr) = ptr;
+				continue;
+			}
+			break;
 		}
 	}
 
-	return !(BAudLib.LoadFailed && BMidLib.LoadFailed && BWasLib.LoadFailed);
+	return true;
 }
 
 bool OmniMIDI::SynthModule::UnloadFuncs() {
+	if (!BAsiLib.UnloadLib())
+		return false;
+
 	if (!BWasLib.UnloadLib())
 		return false;
 
@@ -269,6 +288,8 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 	wchar_t OMPath[MAX_PATH] = { 0 };
 
 	// BASS stream flags
+	BASS_ASIO_DEVICEINFO info;
+	unsigned int ASIOCount = 0, ASIODev = 0;
 	unsigned int StreamFlags = BASS_SAMPLE_FLOAT | BASS_MIDI_ASYNC;
 
 	// If the audio stream is not 0, then stream is allocated already
@@ -287,8 +308,7 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 		}
 
 		AudioStream = BASS_MIDI_StreamCreate(16, StreamFlags, 0);
-		if (!AudioStream)
-		{
+		if (!AudioStream) {
 			NERROR(SynErr, "BASS_MIDI_StreamCreate failed!", false);
 			return false;
 		}
@@ -317,8 +337,7 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 		}
 
 		AudioStream = BASS_MIDI_StreamCreate(16, StreamFlags, 0);
-		if (!AudioStream)
-		{
+		if (!AudioStream) {
 			NERROR(SynErr, "BASS_MIDI_StreamCreate w/ BASS_STREAM_DECODE failed!", false);
 			return false;
 		}
@@ -330,6 +349,53 @@ bool OmniMIDI::SynthModule::StartSynthModule() {
 
 		if (!BASS_WASAPI_Start()) {
 			NERROR(SynErr, "BASS_WASAPI_Start failed.", false);
+			return false;
+		}
+
+		break;
+
+	case ASIO:
+		StreamFlags |= BASS_STREAM_DECODE;
+
+		if (!BASS_Init(0, 48000, BASS_DEVICE_STEREO, nullptr, nullptr)) {
+			NERROR(SynErr, "BASS_Init failed.", false);
+			return false;
+		}
+
+		AudioStream = BASS_MIDI_StreamCreate(16, StreamFlags, 0);
+		if (!AudioStream) {
+			NERROR(SynErr, "BASS_MIDI_StreamCreate w/ BASS_STREAM_DECODE failed!", false);
+			return false;
+		}
+
+		// Get the amount of ASIO devices available
+		for (0; BASS_ASIO_GetDeviceInfo(ASIOCount, &info); ASIOCount++);
+
+		if (ASIOCount < 1) {
+			NERROR(SynErr, "No ASIO devices available!", false);
+			return false;
+		}
+
+		// Iterate through the available audio devices
+		for (0; BASS_ASIO_GetDeviceInfo(ASIODev, &info); ASIODev++)
+		{
+			// Return the correct ID when found
+			if (strcmp(SynthSettings->ASIODevice.c_str(), info.name) == 0)
+				break;
+		}
+
+		if (!BASS_ASIO_Init(ASIODev, BASS_ASIO_THREAD | BASS_ASIO_JOINORDER)) {
+			NERROR(SynErr, "BASS_ASIO_Init failed!", false);
+			return false;
+		}
+
+		BASS_ASIO_SetRate(0);
+
+		BASS_ASIO_ChannelSetFormat(0, 0, BASS_ASIO_FORMAT_FLOAT);
+		BASS_ASIO_ChannelEnableBASS(0, 0, AudioStream, 1);
+
+		if (!BASS_ASIO_Start(0, std::thread::hardware_concurrency())) {
+			NERROR(SynErr, "BASS_ASIO_Start failed!", false);
 			return false;
 		}
 
@@ -419,6 +485,11 @@ bool OmniMIDI::SynthModule::StopSynthModule() {
 			BASS_WASAPI_Stop(true);
 			BASS_WASAPI_Free();
 			break;
+		case ASIO:
+			if (BASS_ASIO_IsStarted()) {
+				BASS_ASIO_Stop();
+				BASS_ASIO_Free();
+			}
 		default:
 			break;
 		}

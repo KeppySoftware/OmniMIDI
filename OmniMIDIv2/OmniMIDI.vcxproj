@@ -179,6 +179,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bass.cpp" />
+    <ClCompile Include="bassasio.cpp" />
     <ClCompile Include="bassmidi.cpp" />
     <ClCompile Include="basswasapi.cpp" />
     <ClCompile Include="ErrSys.cpp" />
