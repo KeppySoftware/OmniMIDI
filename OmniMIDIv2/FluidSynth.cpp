@@ -7,6 +7,9 @@
 
 */
 
-#include <bass\bass_vst.h>
+// Not supported on ARM Thumb-2!
+#ifndef _M_ARM
 
-DWORD(WINAPI* BASS_VST_ChannelSetDSP)(DWORD chHandle, const void* dllFile, DWORD flags, int priority) = 0;
+#include "FluidSynth.h"
+
+#endif

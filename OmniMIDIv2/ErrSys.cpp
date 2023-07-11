@@ -1,31 +1,46 @@
 /*
-OmniMIDI v15+ (Rewrite) for Windows NT
 
-This file contains the required code to run the driver under Windows 7 SP1 and later.
-This file is useful only if you want to compile the driver under Windows, it's not needed for Linux/macOS porting.
+	OmniMIDI v15+ (Rewrite) for Windows NT
+
+	This file contains the required code to run the driver under Windows 7 SP1 and later.
+	This file is useful only if you want to compile the driver under Windows, it's not needed for Linux/macOS porting.
+
 */
 
 #include "ErrSys.h"
 
-#ifdef _WIN32
+void ErrorSystem::WinErr::Log(const char* Message, const OmniMIDI::source_location& location, ...) {
+#if defined(_WIN32) && !defined(_M_ARM)
+	va_list vl;
+	va_start(vl, location);
 
-void ErrorSystem::WinErr::Log(const char* Message, const char* Position, const char* File, const char* Line) {
+	char* tBuf = new char[SZBufSize];
 	char* Buf = new char[SZBufSize];
+	
+	vsprintf_s(tBuf, SZBufSize, Message, vl);
 
-	sprintf_s(Buf, BufSize, "Howdy from \"%s\".\n\nFile: %s\nLine: %s\n\nMessage: %s", Position, File, Line, Message);
+	sprintf_s(Buf, SZBufSize, "Howdy from \"%s\".\n\nFile: %s\nLine: %d\n\nMessage:\n%s", location.function_name(), location.file_name(), location.line(), tBuf);
+	delete[] tBuf;
 
 	OutputDebugStringA(Buf);
 
 #ifdef _DEBUG
 	MessageBoxA(NULL, Buf, "OmniMIDI - DEBUG", MB_OK | MB_SYSTEMMODAL | MB_ICONWARNING);
 #endif
-
 	delete[] Buf;
+
+	va_end(vl);
+#endif
 }
 
-void ErrorSystem::WinErr::ThrowError(const char* Error, const char* Position, const char* File, const char* Line, bool IsSeriousError) {
+void ErrorSystem::WinErr::ThrowError(const char* Error, const OmniMIDI::source_location& location, bool IsSeriousError, ...) {
+#if defined(_WIN32) && !defined(_M_ARM)
+	va_list vl;
+	va_start(vl, IsSeriousError);
+
 	int GLE = GetLastError();
 	char* Buf = nullptr;
+	char* tBuf = nullptr;
 	LPSTR GLEBuf = nullptr;
 
 	if (!Error) {
@@ -44,20 +59,29 @@ void ErrorSystem::WinErr::ThrowError(const char* Error, const char* Position, co
 		}
 	}
 	else {
+		tBuf = new char[SZBufSize];
 		Buf = new char[SZBufSize];
+
+		vsprintf_s(tBuf, SZBufSize, Error, vl);
+
 #ifdef _DEBUG
-		sprintf_s(Buf, BufSize, "An error has occured in the \"%s\" function!\n\nFile: %s\nLine: %s\n\nError: %s", Position, File, Line, Error);
+		sprintf_s(Buf, BufSize, "An error has occured in the \"%s\" function!\n\nFile: %s\nLine: %s\n\nError:\n%s", location.function_name(), location.file_name(), location.line(), tBuf);
 #else
-		sprintf_s(Buf, BufSize, "An error has occured in the \"%s\" function!\n\nError: %s", Position, Error);
+		sprintf_s(Buf, BufSize, "An error has occured in the \"%s\" function!\n\nError:\n%s", location.function_name(), tBuf);
 #endif
+		delete[] tBuf;
 
 		MessageBoxA(NULL, Buf, "OmniMIDI - ERROR", IsSeriousError ? MB_ICONERROR : MB_ICONWARNING | MB_OK | MB_SYSTEMMODAL);
 
 		delete[] Buf;
 	}
+
+	va_end(vl);
+#endif
 }
 
 void ErrorSystem::WinErr::ThrowFatalError(const char* Error) {
+#if defined(_WIN32) && !defined(_M_ARM)
 	char* Buf = new char[SZBufSize];
 
 	sprintf_s(Buf, BufSize, "A fatal error has occured from which the driver is unable to recover!\n\nError: %s", Error);
@@ -67,6 +91,5 @@ void ErrorSystem::WinErr::ThrowFatalError(const char* Error) {
 	delete[] Buf;
 
 	throw ::GetLastError();
-}
-
 #endif
+}

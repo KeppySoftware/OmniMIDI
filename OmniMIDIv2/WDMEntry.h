@@ -19,7 +19,8 @@
 #include <setupapi.h>
 #include "ErrSys.h"
 #include "WDMDrv.h"
-#include "SynthMain.h"
+#include "KDMAPI.h"
+#include "BASSSynth.h"
 
 #ifdef DEFINE_DEVPROPKEY
 #undef DEFINE_DEVPROPKEY

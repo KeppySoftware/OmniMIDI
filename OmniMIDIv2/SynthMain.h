@@ -1,8 +1,10 @@
 /*
-OmniMIDI v15+ (Rewrite) for Windows NT
 
-This file contains the required code to run the driver under Windows 7 SP1 and later.
-This file is useful only if you want to compile the driver under Windows, it's not needed for Linux/macOS porting.
+	OmniMIDI v15+ (Rewrite) for Windows NT
+
+	This file contains the required code to run the driver under Windows 7 SP1 and later.
+	This file is useful only if you want to compile the driver under Windows, it's not needed for Linux/macOS porting.
+
 */
 
 #ifndef _SYNTHMAIN_H
@@ -44,29 +46,14 @@ typedef	unsigned int SynthResult;
 #define SYNTH_OK			0x00
 #define SYNTH_NOTINIT		0x01
 #define SYNTH_INITERR		0x02
-#define SYNTH_INVALPARAM	0x03
-
-// Engines
-#define INVALID_ENGINE		-1
-#define BASS_INTERNAL		0
-#define WASAPI				1
-#define XAUDIO_2_9			2
-#define ASIO				3
-#define KERNEL_STREAM		4
+#define SYNTH_LIBOFFLINE	0x03
+#define SYNTH_INVALPARAM	0x04
 
 #define fv2fn(f)			(#f)
 #define ImpFunc(f)			{(void**)&##f, #f}
-#define EvBuf				EvBuf_t
-#define JSONGetVal(f)		{ #f, f }
-#define JSONSetVal(t, f)	f = JsonData[#f].is_null() ? f : (t)JsonData[#f]
 
 #include <Windows.h>
 #include <strsafe.h>
-#include <bass.h>
-#include <bassmidi.h>
-#include <bass_vst.h>
-#include <bassasio.h>
-#include <basswasapi.h>
 #include <thread>
 #include <atomic>
 #include <algorithm>
@@ -76,114 +63,27 @@ typedef	unsigned int SynthResult;
 #include <vector>
 #include <codecvt>
 #include <locale>
-#include "EvBuf_t.h"
 #include "ErrSys.h"
 #include "Utils.h"
+#include "KDMAPI.h"
 #include <nlohmann\json.hpp>
 
-namespace {
-	struct LibImport
-	{
-		void** ptr;
-		const char* name;
-	}
-
-	LibImports[] = {
-		// BASS
-		ImpFunc(BASS_ChannelFlags),
-		ImpFunc(BASS_ChannelGetAttribute),
-		ImpFunc(BASS_ChannelGetData),
-		ImpFunc(BASS_ChannelGetLevelEx),
-		ImpFunc(BASS_ChannelIsActive),
-		ImpFunc(BASS_ChannelPlay),
-		ImpFunc(BASS_ChannelRemoveFX),
-		ImpFunc(BASS_ChannelSeconds2Bytes),
-		ImpFunc(BASS_ChannelSetAttribute),
-		ImpFunc(BASS_ChannelSetDevice),
-		ImpFunc(BASS_ChannelSetFX),
-		ImpFunc(BASS_ChannelStop),
-		ImpFunc(BASS_ChannelUpdate),
-		ImpFunc(BASS_ErrorGetCode),
-		ImpFunc(BASS_FXSetParameters),
-		ImpFunc(BASS_Free),
-		ImpFunc(BASS_GetDevice),
-		ImpFunc(BASS_GetDeviceInfo),
-		ImpFunc(BASS_GetInfo),
-		ImpFunc(BASS_Init),
-		ImpFunc(BASS_PluginFree),
-		ImpFunc(BASS_SetConfig),
-		ImpFunc(BASS_Stop),
-		ImpFunc(BASS_StreamFree),
-
-		// BASSMIDI
-		ImpFunc(BASS_MIDI_FontFree),
-		ImpFunc(BASS_MIDI_FontInit),
-		ImpFunc(BASS_MIDI_FontLoad),
-		ImpFunc(BASS_MIDI_StreamCreate),
-		ImpFunc(BASS_MIDI_StreamEvent),
-		ImpFunc(BASS_MIDI_StreamEvents),
-		ImpFunc(BASS_MIDI_StreamGetEvent),
-		ImpFunc(BASS_MIDI_StreamLoadSamples),
-		ImpFunc(BASS_MIDI_StreamSetFonts),
-		ImpFunc(BASS_MIDI_StreamGetChannel),
-
-		// BASSWASAPI
-		ImpFunc(BASS_WASAPI_Init),
-		ImpFunc(BASS_WASAPI_Free),
-		ImpFunc(BASS_WASAPI_IsStarted),
-		ImpFunc(BASS_WASAPI_Start),
-		ImpFunc(BASS_WASAPI_Stop),
-		ImpFunc(BASS_WASAPI_GetDeviceInfo),
-		ImpFunc(BASS_WASAPI_GetInfo),
-		ImpFunc(BASS_WASAPI_GetDevice),
-		ImpFunc(BASS_WASAPI_GetLevelEx),
-
-		// BASSMIDI
-		ImpFunc(BASS_MIDI_FontFree),
-		ImpFunc(BASS_MIDI_FontInit),
-		ImpFunc(BASS_MIDI_FontLoad),
-		ImpFunc(BASS_MIDI_StreamCreate),
-		ImpFunc(BASS_MIDI_StreamEvent),
-		ImpFunc(BASS_MIDI_StreamEvents),
-		ImpFunc(BASS_MIDI_StreamGetEvent),
-		ImpFunc(BASS_MIDI_StreamLoadSamples),
-		ImpFunc(BASS_MIDI_StreamSetFonts),
-		ImpFunc(BASS_MIDI_StreamGetChannel),
-
-		// BASSVST
-		ImpFunc(BASS_VST_ChannelSetDSP),
-
-		// BASSASIO
-		ImpFunc(BASS_ASIO_CheckRate),
-		ImpFunc(BASS_ASIO_ChannelEnable),
-		ImpFunc(BASS_ASIO_ChannelEnableBASS),
-		ImpFunc(BASS_ASIO_ChannelEnableMirror),
-		ImpFunc(BASS_ASIO_ChannelGetLevel),
-		ImpFunc(BASS_ASIO_ChannelJoin),
-		ImpFunc(BASS_ASIO_ChannelSetFormat),
-		ImpFunc(BASS_ASIO_ChannelSetRate),
-		ImpFunc(BASS_ASIO_ControlPanel),
-		ImpFunc(BASS_ASIO_ErrorGetCode),
-		ImpFunc(BASS_ASIO_Free),
-		ImpFunc(BASS_ASIO_GetDevice),
-		ImpFunc(BASS_ASIO_GetDeviceInfo),
-		ImpFunc(BASS_ASIO_GetLatency),
-		ImpFunc(BASS_ASIO_GetRate),
-		ImpFunc(BASS_ASIO_Init),
-		ImpFunc(BASS_ASIO_SetRate),
-		ImpFunc(BASS_ASIO_Start),
-		ImpFunc(BASS_ASIO_Stop),
-		ImpFunc(BASS_ASIO_IsStarted)
-	};
-}
-
 namespace OmniMIDI {
-	struct Lib {
+	class Lib {
+	private:
 		const wchar_t* Name;
 		HMODULE Library = nullptr;
 		bool Initialized = false;
 		bool LoadFailed = false;
 		bool AppSelfHosted = false;
+
+	public:
+		HMODULE Ptr() { return Library; }
+		bool IsOnline() { return (Library != nullptr && Initialized && !LoadFailed); }
+
+		Lib(const wchar_t* pName) {
+			Name = pName;
+		}
 
 		bool LoadLib(wchar_t* CustomPath = nullptr) {
 			WinUtils::SysPath Utils;
@@ -282,139 +182,29 @@ namespace OmniMIDI {
 		}
 	};
 
-	struct Settings {
-	private:
-		ErrorSystem::WinErr SetErr;
-
+	class SynthSettings {
 	public:
-		// Global settings
-		unsigned int MaxVoices = 1000;
-		unsigned int MaxCPU = 95;
-		int AudioEngine = WASAPI;
-		bool LoudMax = false;
-
-		// WASAPI
-		float WASAPIBuf = 32.0f;
-
-		// ASIO
-		std::string ASIODevice = "None";
-
-		Settings() {
-			// When you initialize Settings(), load OM's own settings by default
-			WinUtils::SysPath Utils;
-			wchar_t OMPath[MAX_PATH] = { 0 };
-
-			if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
-				swprintf_s(OMPath, L"%s\\OmniMIDI\\settings.json\0", OMPath);
-				LoadJSON(OMPath);
-			}
-		}
-
-		void CreateJSON(wchar_t* Path) {
-			std::fstream st;
-			st.open(Path, std::fstream::out | std::ofstream::trunc);
-			if (st.is_open()) {
-				nlohmann::json defset = {
-					{ "BASSSynth", {
-						JSONGetVal(MaxVoices),
-						JSONGetVal(MaxCPU),
-						JSONGetVal(AudioEngine),
-						JSONGetVal(LoudMax),
-						JSONGetVal(WASAPIBuf),
-						JSONGetVal(ASIODevice)
-					}}
-				};
-
-				std::string dump = defset.dump(1);
-				st.write(dump.c_str(), dump.length());
-				st.close();
-			}
-		}
-
-		// Here you can load your own JSON, it will be tied to ChangeSetting()
-		void LoadJSON(wchar_t* Path) {
-			std::fstream st;
-			st.open(Path, std::fstream::in);
-
-			if (st.is_open()) {
-				try {
-					// Read the JSON data from there
-					auto json = nlohmann::json::parse(st, nullptr, false, true);
-
-					if (json != nullptr) {
-						auto JsonData = json["BASSSynth"];
-
-						if (!(JsonData == nullptr)) {
-							JSONSetVal(unsigned int, MaxVoices);
-							JSONSetVal(unsigned int, MaxCPU);
-							JSONSetVal(int, AudioEngine);
-							JSONSetVal(bool, LoudMax);
-							JSONSetVal(float, WASAPIBuf);
-							JSONSetVal(std::string, ASIODevice);
-						}
-					}
-					else throw nlohmann::json::type_error::create(667, "json structure is not valid", nullptr);
-				}
-				catch (nlohmann::json::type_error ex) {
-					st.close();
-
-					char asdf[1024] = { 0 };
-					sprintf_s(asdf, "The JSON is corrupted or malformed!\n\nnlohmann::json says: %s", ex.what());
-					NERROR(SetErr, asdf, false);
-
-					CreateJSON(Path);
-					return;
-				}
-				st.close();
-			}
-		}
+		SynthSettings() {}
 	};
 
 	class SynthModule {
-	private:
-		ErrorSystem::WinErr SynErr;
-
-		Lib BAudLib = { .Name = L"BASS" };
-		Lib BMidLib = { .Name = L"BASSMIDI" };
-		Lib BWasLib = { .Name = L"BASSWASAPI" };
-		Lib BVstLib = { .Name = L"BASS_VST" };
-		Lib BAsiLib = { .Name = L"BASSASIO" };
-
-		std::thread _AudThread;
-		std::thread _EvtThread;
-		EvBuf* Events;
-
-		signed long long onenano = -1;
-		unsigned int (WINAPI* NanoSleep)(unsigned char, signed long long*) = nullptr;
-		unsigned int AudioStream = 0;
-		std::vector<BASS_MIDI_FONTEX> SoundFonts;
-
-		Settings* SynthSettings = nullptr;
-		char LastRunningStatus = 0x0;
-
-		bool LoadFuncs();
-		bool UnloadFuncs();
-		void StreamSettings();
-		void AudioThread();
-		void EventsThread();
-		bool ProcessEvBuf();
-
 	public:
-		bool LoadSynthModule();
-		bool UnloadSynthModule();
-		bool StartSynthModule();
-		bool StopSynthModule();
-		bool ChangeSetting(unsigned int setting, void* var, size_t size);
-		bool IsSynthInitialized() { return (AudioStream != 0); }
+		virtual ~SynthModule() {}
+		virtual bool LoadSynthModule() { return true; }
+		virtual bool UnloadSynthModule() { return true; }
+		virtual bool StartSynthModule() { return true; }
+		virtual bool StopSynthModule() { return true; }
+		virtual bool SettingsManager(unsigned int setting, bool get, void* var, size_t size) { return true; }
+		virtual bool IsSynthInitialized() { return true; }
 
 		// Event handling system
-		SynthResult PlayShortEvent(unsigned int ev);
-		SynthResult UPlayShortEvent(unsigned int ev);
+		virtual SynthResult PlayShortEvent(unsigned int ev) { return 0; }
+		virtual SynthResult UPlayShortEvent(unsigned int ev) { return 0; }
 
-		SynthResult PlayLongEvent(char* ev, unsigned int size);
-		SynthResult UPlayLongEvent(char* ev, unsigned int size);
+		virtual SynthResult PlayLongEvent(char* ev, unsigned int size) { return 0; }
+		virtual SynthResult UPlayLongEvent(char* ev, unsigned int size) { return 0; }
 
-		int TalkToBASSMIDI(unsigned int evt, unsigned int chan, unsigned int param);
+		virtual int TalkToSynthDirectly(unsigned int evt, unsigned int chan, unsigned int param) { return 0; }
 	};
 }
 

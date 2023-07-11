@@ -1,4 +1,13 @@
-#include <bassasio.h>
+/*
+
+	OmniMIDI v15+ (Rewrite) for Windows NT
+
+	This file contains the required code to run the driver under Windows 7 SP1 and later.
+	This file is useful only if you want to compile the driver under Windows, it's not needed for Linux/macOS porting.
+
+*/
+
+#include <bass\bassasio.h>
 
 unsigned int (WINAPI* BASS_ASIO_GetVersion)() = 0;
 int (WINAPI* BASS_ASIO_SetUnicode)(int unicode) = 0;

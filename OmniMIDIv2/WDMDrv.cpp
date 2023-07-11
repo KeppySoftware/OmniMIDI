@@ -123,9 +123,7 @@ bool WinDriver::DriverCallback::PrepareCallbackFunction(MIDIOPENDESC* OpInfStruc
 			};
 
 #ifdef _DEBUG
-			char asdf[1024] = { 0 };
-			sprintf_s(asdf, "\n\n.Handle -> %x\n.Mode -> %x\n.Ptr -> %x\n.Instance -> %x", pCallback->Handle, pCallback->Mode, pCallback->Ptr, pCallback->Instance);
-			LOG(CallbackErr, asdf);
+			LOG(CallbackErr, ".Handle -> %x\n.Mode -> %x\n.Ptr -> %x\n.Instance -> %x", pCallback->Handle, pCallback->Mode, pCallback->Ptr, pCallback->Instance);
 #endif
 		}
 

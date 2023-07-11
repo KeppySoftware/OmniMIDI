@@ -40,6 +40,12 @@
     <Filter Include="Source Files\Synthesizer\BASS">
       <UniqueIdentifier>{962b29bc-2133-4b6c-b50e-8b1a821913b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Synthesizer\Synth modules">
+      <UniqueIdentifier>{11b8d10b-51c5-4da3-a7d0-d60c1cddceb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Synthesizer\Synth modules">
+      <UniqueIdentifier>{b6b525ba-124f-45d1-b0a5-e1ee085b4975}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ErrSys.h">
@@ -57,6 +63,18 @@
     <ClInclude Include="EvBuf_t.h">
       <Filter>Header Files\Synthesizer</Filter>
     </ClInclude>
+    <ClInclude Include="KDMAPI.h">
+      <Filter>Header Files\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="BASSSynth.h">
+      <Filter>Header Files\Synthesizer\Synth modules</Filter>
+    </ClInclude>
+    <ClInclude Include="SrcLoc.h">
+      <Filter>Header Files\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="FluidSynth.h">
+      <Filter>Header Files\Synthesizer\Synth modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ErrSys.cpp">
@@ -67,9 +85,6 @@
     </ClCompile>
     <ClCompile Include="WDMDrv.cpp">
       <Filter>Source Files\WDM</Filter>
-    </ClCompile>
-    <ClCompile Include="SynthMain.cpp">
-      <Filter>Source Files\Synthesizer</Filter>
     </ClCompile>
     <ClCompile Include="bass.cpp">
       <Filter>Source Files\Synthesizer\BASS</Filter>
@@ -89,10 +104,17 @@
     <ClCompile Include="bass_vst.cpp">
       <Filter>Source Files\Synthesizer\BASS</Filter>
     </ClCompile>
+    <ClCompile Include="FluidSynth.cpp">
+      <Filter>Source Files\Synthesizer\Synth modules</Filter>
+    </ClCompile>
+    <ClCompile Include="BASSSynth.cpp">
+      <Filter>Source Files\Synthesizer\Synth modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="WDMEntry.h">
       <Filter>Header Files\WDM</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

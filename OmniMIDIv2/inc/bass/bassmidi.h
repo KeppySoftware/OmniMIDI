@@ -278,7 +278,11 @@ typedef struct {
 #define BASS_ATTRIB_MIDI_SPEED		0x12008
 #define BASS_ATTRIB_MIDI_REVERB		0x12009
 #define BASS_ATTRIB_MIDI_VOL		0x1200a
+#define BASS_ATTRIB_MIDI_EVENTBUF_TICK  0x1200b
+#define BASS_ATTRIB_MIDI_EVENTBUF_BYTE  0x1200c
+#define BASS_ATTRIB_MIDI_EVENTBUF_ASYNC 0x1200d
 #define BASS_ATTRIB_MIDI_TRACK_VOL	0x12100 // + track #
+
 
 // Additional tag type
 #define BASS_TAG_MIDI_TRACK	0x11000	// + track #, track text : array of null-terminated ANSI strings
