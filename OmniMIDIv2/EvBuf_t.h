@@ -12,7 +12,7 @@
 #ifndef _EVBUF_T_H
 #define _EVBUF_T_H
 
-#pragma once
+#define EvBuf				EvBuf_t
 
 namespace OmniMIDI {
 	struct Ev {

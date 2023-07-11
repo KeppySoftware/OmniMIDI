@@ -50,7 +50,19 @@ typedef	unsigned int SynthResult;
 #define SYNTH_INVALPARAM	0x04
 
 #define fv2fn(f)			(#f)
-#define ImpFunc(f)			{(void**)&##f, #f}
+#define ImpFunc(f)			LibImport((void**)&##f, #f)
+
+#define JSONGetVal(f)		{ #f, f }
+#define JSONSetVal(t, f)	f = JsonData[#f].is_null() ? f : (t)JsonData[#f]
+
+#define SettingsManagerCase(choice, get, type, setting, var, size) \
+	case choice: \
+		if (size != sizeof(type)) return false; \
+		if (get) *(type*)var = setting; \
+		else setting = *(type*)var; \
+		break;
+
+#define EMPTYMODULE			0xDEADBEEF
 
 #include <Windows.h>
 #include <strsafe.h>
@@ -69,6 +81,31 @@ typedef	unsigned int SynthResult;
 #include <nlohmann\json.hpp>
 
 namespace OmniMIDI {
+	class LibImport
+	{
+	private:
+		void** funcptr = nullptr;
+		const char* funcname = nullptr;
+
+	public:
+		LibImport(void** pptr, const char* pfuncname) {
+			funcptr = pptr;
+			funcname = pfuncname;
+		}
+
+		~LibImport() {
+			*(funcptr) = nullptr;
+			funcptr = nullptr;
+			funcname = nullptr;
+		}
+
+		void SetName(const char* pfuncname) { funcname = pfuncname; }
+		const char* GetName() { return funcname; }
+
+		void SetPtr(void* pfuncptr) { *(funcptr) = pfuncptr; }
+		void* GetPtr() { return *(funcptr); }
+	};
+
 	class Lib {
 	private:
 		const wchar_t* Name;
@@ -196,6 +233,7 @@ namespace OmniMIDI {
 		virtual bool StopSynthModule() { return true; }
 		virtual bool SettingsManager(unsigned int setting, bool get, void* var, size_t size) { return true; }
 		virtual bool IsSynthInitialized() { return true; }
+		virtual int SynthID() { return EMPTYMODULE; }
 
 		// Event handling system
 		virtual SynthResult PlayShortEvent(unsigned int ev) { return 0; }

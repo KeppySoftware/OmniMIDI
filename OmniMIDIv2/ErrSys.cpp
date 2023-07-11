@@ -9,10 +9,10 @@
 
 #include "ErrSys.h"
 
-void ErrorSystem::WinErr::Log(const char* Message, const OmniMIDI::source_location& location, ...) {
+void ErrorSystem::WinErr::Log(const char* Message, const OmniMIDI::source_location& location, int dummy, ...) {
 #if defined(_WIN32) && !defined(_M_ARM)
 	va_list vl;
-	va_start(vl, location);
+	va_start(vl, dummy);
 
 	char* tBuf = new char[SZBufSize];
 	char* Buf = new char[SZBufSize];
@@ -33,10 +33,10 @@ void ErrorSystem::WinErr::Log(const char* Message, const OmniMIDI::source_locati
 #endif
 }
 
-void ErrorSystem::WinErr::ThrowError(const char* Error, const OmniMIDI::source_location& location, bool IsSeriousError, ...) {
+void ErrorSystem::WinErr::ThrowError(const char* Error, const OmniMIDI::source_location& location, bool IsSeriousError, int dummy, ...) {
 #if defined(_WIN32) && !defined(_M_ARM)
 	va_list vl;
-	va_start(vl, IsSeriousError);
+	va_start(vl, dummy);
 
 	int GLE = GetLastError();
 	char* Buf = nullptr;

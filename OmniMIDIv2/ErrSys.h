@@ -10,8 +10,6 @@
 #ifndef _ERRSYS_H
 #define _ERRSYS_H
 
-#pragma once
-
 #include <Windows.h>
 #include <tchar.h>
 #include <string>
@@ -22,17 +20,17 @@
 #define S1(x)					S2(x)
 #define HERE					OmniMIDI::source_location::current()
 
-#define NERROR(x, y, z, ...)	x.ThrowError(y, HERE, z, __VA_ARGS__)
+#define NERROR(x, y, z, ...)	x.ThrowError(y, HERE, z, 0, __VA_ARGS__)
 #define FNERROR(x, y)			x.ThrowFatalError(y)
 
-#define NERRORW(x, y, z, ...)	x.ThrowErrorW(y, HERE, z, __VA_ARGS__)
+#define NERRORW(x, y, z, ...)	x.ThrowErrorW(y, HERE, z, 0, __VA_ARGS__)
 #define FNERRORW(x, y, ...)		x.ThrowFatalErrorW(y)
 
 #if _DEBUG
-#define LOG(x, y, ...)			x.Log(y, HERE, __VA_ARGS__)
-#define LOGV(x, y, ...)			x.Log(S1(y), HERE, __VA_ARGS__)
-#define LOGW(x, y, ...)			x.LogW(y, HERE, __VA_ARGS__)
-#define LOGVW(x, y, ...)		x.LogW(S1(y), HERE, __VA_ARGS__)
+#define LOG(x, y, ...)			x.Log(y, HERE, 0, __VA_ARGS__)
+#define LOGV(x, y, ...)			x.Log(S1(y), HERE, 0, __VA_ARGS__)
+#define LOGW(x, y, ...)			x.LogW(y, HERE, 0, __VA_ARGS__)
+#define LOGVW(x, y, ...)		x.LogW(S1(y), HERE, 0, __VA_ARGS__)
 #else
 #define LOG(x, y, ...)			NULL
 #define LOGV(x, y, ...)			NULL
@@ -45,12 +43,12 @@ namespace ErrorSystem {
 		static const int SZBufSize = sizeof(char) * BufSize;
 
 	public:
-		void Log(const char* Error, const OmniMIDI::source_location& location, ...);
-		void ThrowError(const char* Error, const OmniMIDI::source_location& location, bool IsSeriousError, ...);
+		void Log(const char* Error, const OmniMIDI::source_location& location, int dummy, ...);
+		void ThrowError(const char* Error, const OmniMIDI::source_location& location, bool IsSeriousError, int dummy, ...);
 		void ThrowFatalError(const char* Error);
 
-		void LogW(const wchar_t* Error, const OmniMIDI::source_location& location, ...);
-		void ThrowErrorW(const wchar_t* Error, const OmniMIDI::source_location& location, bool IsSeriousError, ...);
+		void LogW(const wchar_t* Error, const OmniMIDI::source_location& location, int dummy, ...);
+		void ThrowErrorW(const wchar_t* Error, const OmniMIDI::source_location& location, bool IsSeriousError, int dummy, ...);
 		void ThrowFatalErrorW(const wchar_t* Error);
 	};
 }

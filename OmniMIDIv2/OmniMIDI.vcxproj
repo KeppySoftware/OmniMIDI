@@ -209,6 +209,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>-Wno-invalid-token-paste</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -231,6 +232,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -254,6 +256,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>-Wno-invalid-token-paste</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -280,6 +283,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -303,6 +307,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>-Wno-invalid-token-paste</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -324,6 +329,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>-Wno-invalid-token-paste</AdditionalOptions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -347,6 +353,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>-Wno-invalid-token-paste</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -372,6 +379,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>-Wno-invalid-token-paste</AdditionalOptions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard_C>Default</LanguageStandard_C>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -389,6 +397,7 @@
     <ClInclude Include="EvBuf_t.h" />
     <ClInclude Include="FluidSynth.h" />
     <ClInclude Include="KDMAPI.h" />
+    <ClInclude Include="NtFuncs.h" />
     <ClInclude Include="SrcLoc.h" />
     <ClInclude Include="SynthMain.h" />
     <ClInclude Include="Utils.h" />
@@ -403,6 +412,7 @@
     <ClCompile Include="basswasapi.cpp" />
     <ClCompile Include="ErrSys.cpp" />
     <ClCompile Include="FluidSynth.cpp" />
+    <ClCompile Include="libfluidsynth.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WDMDrv.cpp" />
     <ClCompile Include="WDMEntry.cpp" />

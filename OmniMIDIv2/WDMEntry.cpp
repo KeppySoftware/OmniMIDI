@@ -11,7 +11,7 @@ static ErrorSystem::WinErr WDMErr;
 static WinDriver::DriverCallback* fDriverCallback;
 static WinDriver::DriverComponent* DriverComponent;
 static WinDriver::DriverMask* DriverMask;
-static OmniMIDI::SynthModule* BASSSynth;
+static OmniMIDI::SynthModule* SynthModule;
 
 extern "C" {
 	__declspec(dllexport)
@@ -27,14 +27,17 @@ extern "C" {
 				if ((ret = DriverComponent->SetLibraryHandle(hModule)) == TRUE) {
 					DriverMask = new WinDriver::DriverMask;
 					fDriverCallback = new WinDriver::DriverCallback;
-					BASSSynth = new OmniMIDI::BASSSynth;
+
+					// Allocate a generic dummy synth for now
+					SynthModule = new OmniMIDI::SynthModule;
 				}
 			}
+
 			break;
 
 		case DLL_PROCESS_DETACH:
 			if (DriverComponent) {
-				delete BASSSynth;
+				delete SynthModule;
 				delete fDriverCallback;
 				delete DriverMask;
 
@@ -50,7 +53,7 @@ extern "C" {
 	}
 
 	__declspec(dllexport)
-	LRESULT WINAPI DriverProc(DWORD DriverIdentifier, HDRVR DriverHandle, UINT Message, LONG Param1, LONG Param2) {
+		LRESULT WINAPI DriverProc(DWORD DriverIdentifier, HDRVR DriverHandle, UINT Message, LONG Param1, LONG Param2) {
 		switch (Message) {
 		case DRV_OPEN:
 			return DriverComponent->SetDriverHandle(DriverHandle);
@@ -78,6 +81,10 @@ extern "C" {
 		return DefDriverProc(DriverIdentifier, DriverHandle, Message, Param1, Param2);
 	}
 
+	MMRESULT WINAPI pmidiOutShortMsg(HMIDIOUT dev, DWORD ev) {
+
+	}
+
 	__declspec(dllexport)
 	MMRESULT WINAPI modMessage(UINT DeviceID, UINT Message, DWORD_PTR UserPointer, DWORD_PTR Param1, DWORD_PTR Param2) {
 		LPMIDIHDR hdr = nullptr;
@@ -85,46 +92,60 @@ extern "C" {
 
 		switch (Message) {
 		case MODM_DATA:
-			return (BASSSynth->PlayShortEvent((DWORD)Param1) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
+			return (SynthModule->PlayShortEvent((DWORD)Param1) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
 
 		case MODM_LONGDATA:
 			hdr = ((LPMIDIHDR)Param1);
-			r = BASSSynth->PlayLongEvent(hdr->lpData, hdr->dwBytesRecorded);
+			r = SynthModule->PlayLongEvent(hdr->lpData, hdr->dwBytesRecorded);
 			fDriverCallback->CallbackFunction(MOM_DONE, (DWORD)Param1, 0);
 			return (r == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
 
 		case MODM_RESET:
-			return (BASSSynth->PlayShortEvent(0x010101FF) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
+			return (SynthModule->PlayShortEvent(0x010101FF) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
 
 		case MODM_OPEN:
-			if (BASSSynth->LoadSynthModule()) {
-				if (BASSSynth->StartSynthModule()) {
-					if (fDriverCallback->PrepareCallbackFunction((LPMIDIOPENDESC)Param1, (DWORD)Param2))
-					{
-						fDriverCallback->CallbackFunction(MOM_OPEN, 0, 0);
-						return MMSYSERR_NOERROR;
+			if (SynthModule->SynthID() == EMPTYMODULE) {
+				delete SynthModule;
+				SynthModule = new OmniMIDI::FluidSynth;
+
+				if (SynthModule->LoadSynthModule()) {
+					if (SynthModule->StartSynthModule()) {
+						if (fDriverCallback->PrepareCallbackFunction((LPMIDIOPENDESC)Param1, (DWORD)Param2))
+						{
+							fDriverCallback->CallbackFunction(MOM_OPEN, 0, 0);
+							return MMSYSERR_NOERROR;
+						}
 					}
+					if (!SynthModule->StopSynthModule()) { FNERROR(WDMErr, "StopBASSSynth failed in MODM_OPEN!\n\nABORT!!!"); }
 				}
-				if (!BASSSynth->StopSynthModule()) { FNERROR(WDMErr, "StopBASSSynth failed in MODM_OPEN!\n\nABORT!!!"); }
+				if (!SynthModule->UnloadSynthModule()) { FNERROR(WDMErr, "UnloadBASSSynth failed in MODM_OPEN!\n\nABORT!!!"); }
 			}
-			if (!BASSSynth->UnloadSynthModule()) { FNERROR(WDMErr, "UnloadBASSSynth failed in MODM_OPEN!\n\nABORT!!!"); }
+			else return MMSYSERR_ALLOCATED;
 
 			NERROR(WDMErr, "MODM_OPEN failed.", true);
 			return MMSYSERR_NOMEM;
 
 		case MODM_CLOSE:
-			if (BASSSynth->StopSynthModule()) {
-				if (BASSSynth->UnloadSynthModule()) {
-					fDriverCallback->CallbackFunction(MOM_CLOSE, 0, 0);
-					if (fDriverCallback->ClearCallbackFunction())
-					{
-						return MMSYSERR_NOERROR;
+		{
+			if (SynthModule->SynthID() != EMPTYMODULE) {
+				if (SynthModule->StopSynthModule()) {
+					if (SynthModule->UnloadSynthModule()) {
+						fDriverCallback->CallbackFunction(MOM_CLOSE, 0, 0);
+						if (fDriverCallback->ClearCallbackFunction())
+						{
+							delete SynthModule;
+							SynthModule = new OmniMIDI::SynthModule;
+
+							return MMSYSERR_NOERROR;
+						}
 					}
 				}
-			}
+			} 
+			else return MMSYSERR_NOERROR;
 
 			LOG(WDMErr, "MODM_CLOSE failed.");
 			return MMSYSERR_ALLOCATED;
+		}
 
 		case MODM_GETNUMDEVS:
 			return 1;
@@ -156,13 +177,13 @@ extern "C" {
 
 	__declspec(dllexport)
 	int KDMAPI InitializeKDMAPIStream() {
-		if (BASSSynth->LoadSynthModule()) {
-			if (BASSSynth->StartSynthModule()) {
+		if (SynthModule->LoadSynthModule()) {
+			if (SynthModule->StartSynthModule()) {
 				return 1;
 			}
-			BASSSynth->StopSynthModule();
+			SynthModule->StopSynthModule();
 		}
-		BASSSynth->UnloadSynthModule();
+		SynthModule->UnloadSynthModule();
 
 		LOG(WDMErr, "InitializeKDMAPIStream failed.");
 		return 0;
@@ -170,8 +191,8 @@ extern "C" {
 
 	__declspec(dllexport)
 	int KDMAPI TerminateKDMAPIStream() {
-		if (BASSSynth->StopSynthModule()) {
-			if (BASSSynth->UnloadSynthModule()) {
+		if (SynthModule->StopSynthModule()) {
+			if (SynthModule->UnloadSynthModule()) {
 				return 1;
 			}
 		}
@@ -182,12 +203,12 @@ extern "C" {
 
 	__declspec(dllexport)
 	void KDMAPI ResetKDMAPIStream() {
-		BASSSynth->PlayShortEvent(0x010101FF);
+		SynthModule->PlayShortEvent(0x010101FF);
 	}
 
 	__declspec(dllexport)
 	void KDMAPI SendDirectData(unsigned int ev) {
-		BASSSynth->PlayShortEvent(ev);
+		SynthModule->PlayShortEvent(ev);
 	}
 
 	__declspec(dllexport)
@@ -197,14 +218,14 @@ extern "C" {
 
 	__declspec(dllexport)
 	int KDMAPI SendCustomEvent(unsigned int evt, unsigned int chan, unsigned int param) {
-		return BASSSynth->TalkToSynthDirectly(evt, chan, param);
+		return SynthModule->TalkToSynthDirectly(evt, chan, param);
 	}
 
 	__declspec(dllexport)
 	int KDMAPI DriverSettings(unsigned int setting, unsigned int mode, void* value, unsigned int cbValue) {
-		if (!BASSSynth)
+		if (!SynthModule)
 			return 0;
 
-		return BASSSynth->SettingsManager(setting, (bool)mode, value, (size_t)cbValue);
+		return SynthModule->SettingsManager(setting, (bool)mode, value, (size_t)cbValue);
 	}
 }

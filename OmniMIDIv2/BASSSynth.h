@@ -17,6 +17,7 @@
 #include <bass\bassasio.h>
 #include <bass\basswasapi.h>
 #include <future>
+#include "NtFuncs.h"
 #include "EvBuf_t.h"
 #include "ErrSys.h"
 #include "SynthMain.h"
@@ -29,105 +30,13 @@
 #define ASIO				3
 #define KERNEL_STREAM		4
 
-#define EvBuf				EvBuf_t
-#define JSONGetVal(f)		{ #f, f }
-#define JSONSetVal(t, f)	f = JsonData[#f].is_null() ? f : (t)JsonData[#f]
-
-#define SettingsManagerCase(choice, get, type, setting, var, size) \
-	case choice: \
-		if (size != sizeof(type)) return false; \
-		if (get) *(type*)var = setting; \
-		else setting = *(type*)var; \
-		break;
-
-namespace {
-	struct LibImport
-	{
-		void** ptr;
-		const char* name;
-	}
-
-	LibImports[] = {
-		// BASS
-		ImpFunc(BASS_ChannelFlags),
-		ImpFunc(BASS_ChannelGetAttribute),
-		ImpFunc(BASS_ChannelGetData),
-		ImpFunc(BASS_ChannelGetLevelEx),
-		ImpFunc(BASS_ChannelIsActive),
-		ImpFunc(BASS_ChannelPlay),
-		ImpFunc(BASS_ChannelRemoveFX),
-		ImpFunc(BASS_ChannelSeconds2Bytes),
-		ImpFunc(BASS_ChannelSetAttribute),
-		ImpFunc(BASS_ChannelSetDevice),
-		ImpFunc(BASS_ChannelSetFX),
-		ImpFunc(BASS_ChannelStop),
-		ImpFunc(BASS_ChannelUpdate),
-		ImpFunc(BASS_ErrorGetCode),
-		ImpFunc(BASS_FXSetParameters),
-		ImpFunc(BASS_Free),
-		ImpFunc(BASS_GetDevice),
-		ImpFunc(BASS_GetDeviceInfo),
-		ImpFunc(BASS_GetInfo),
-		ImpFunc(BASS_Init),
-		ImpFunc(BASS_PluginFree),
-		ImpFunc(BASS_SetConfig),
-		ImpFunc(BASS_Stop),
-		ImpFunc(BASS_StreamFree),
-
-		// BASSMIDI
-		ImpFunc(BASS_MIDI_FontFree),
-		ImpFunc(BASS_MIDI_FontInit),
-		ImpFunc(BASS_MIDI_FontLoad),
-		ImpFunc(BASS_MIDI_StreamCreate),
-		ImpFunc(BASS_MIDI_StreamEvent),
-		ImpFunc(BASS_MIDI_StreamEvents),
-		ImpFunc(BASS_MIDI_StreamGetEvent),
-		ImpFunc(BASS_MIDI_StreamLoadSamples),
-		ImpFunc(BASS_MIDI_StreamSetFonts),
-		ImpFunc(BASS_MIDI_StreamGetChannel),
-
-		// BASSWASAPI
-		ImpFunc(BASS_WASAPI_Init),
-		ImpFunc(BASS_WASAPI_Free),
-		ImpFunc(BASS_WASAPI_IsStarted),
-		ImpFunc(BASS_WASAPI_Start),
-		ImpFunc(BASS_WASAPI_Stop),
-		ImpFunc(BASS_WASAPI_GetDeviceInfo),
-		ImpFunc(BASS_WASAPI_GetInfo),
-		ImpFunc(BASS_WASAPI_GetDevice),
-		ImpFunc(BASS_WASAPI_GetLevelEx),
-
-		// BASSVST
-		ImpFunc(BASS_VST_ChannelSetDSP),
-
-		// BASSASIO
-		ImpFunc(BASS_ASIO_CheckRate),
-		ImpFunc(BASS_ASIO_ChannelEnable),
-		ImpFunc(BASS_ASIO_ChannelEnableBASS),
-		ImpFunc(BASS_ASIO_ChannelEnableMirror),
-		ImpFunc(BASS_ASIO_ChannelGetLevel),
-		ImpFunc(BASS_ASIO_ChannelJoin),
-		ImpFunc(BASS_ASIO_ChannelSetFormat),
-		ImpFunc(BASS_ASIO_ChannelSetRate),
-		ImpFunc(BASS_ASIO_ControlPanel),
-		ImpFunc(BASS_ASIO_ErrorGetCode),
-		ImpFunc(BASS_ASIO_Free),
-		ImpFunc(BASS_ASIO_GetDevice),
-		ImpFunc(BASS_ASIO_GetDeviceInfo),
-		ImpFunc(BASS_ASIO_GetLatency),
-		ImpFunc(BASS_ASIO_GetRate),
-		ImpFunc(BASS_ASIO_Init),
-		ImpFunc(BASS_ASIO_SetRate),
-		ImpFunc(BASS_ASIO_Start),
-		ImpFunc(BASS_ASIO_Stop),
-		ImpFunc(BASS_ASIO_IsStarted)
-	};
-}
-
 namespace OmniMIDI {
 	class BASSSettings : public SynthSettings {
 	private:
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-private-field"
 		ErrorSystem::WinErr SetErr;
+#pragma clang diagnostic pop
 
 	public:
 		// Global settings
@@ -189,7 +98,7 @@ namespace OmniMIDI {
 					auto json = nlohmann::json::parse(st, nullptr, false, true);
 
 					if (json != nullptr) {
-						auto JsonData = json["BASSSynth"];
+						auto& JsonData = json["BASSSynth"];
 
 						if (!(JsonData == nullptr)) {
 							JSONSetVal(bool, LoudMax);
@@ -225,12 +134,86 @@ namespace OmniMIDI {
 		Lib* BVstLib = nullptr;
 		Lib* BAsiLib = nullptr;
 
+		LibImport BLibImports[64] = {
+			// BASS
+			ImpFunc(BASS_ChannelFlags),
+			ImpFunc(BASS_ChannelGetAttribute),
+			ImpFunc(BASS_ChannelGetData),
+			ImpFunc(BASS_ChannelGetLevelEx),
+			ImpFunc(BASS_ChannelIsActive),
+			ImpFunc(BASS_ChannelPlay),
+			ImpFunc(BASS_ChannelRemoveFX),
+			ImpFunc(BASS_ChannelSeconds2Bytes),
+			ImpFunc(BASS_ChannelSetAttribute),
+			ImpFunc(BASS_ChannelSetDevice),
+			ImpFunc(BASS_ChannelSetFX),
+			ImpFunc(BASS_ChannelStop),
+			ImpFunc(BASS_ChannelUpdate),
+			ImpFunc(BASS_ErrorGetCode),
+			ImpFunc(BASS_FXSetParameters),
+			ImpFunc(BASS_Free),
+			ImpFunc(BASS_GetDevice),
+			ImpFunc(BASS_GetDeviceInfo),
+			ImpFunc(BASS_GetInfo),
+			ImpFunc(BASS_Init),
+			ImpFunc(BASS_PluginFree),
+			ImpFunc(BASS_SetConfig),
+			ImpFunc(BASS_Stop),
+			ImpFunc(BASS_StreamFree),
+
+			// BASSMIDI
+			ImpFunc(BASS_MIDI_FontFree),
+			ImpFunc(BASS_MIDI_FontInit),
+			ImpFunc(BASS_MIDI_FontLoad),
+			ImpFunc(BASS_MIDI_StreamCreate),
+			ImpFunc(BASS_MIDI_StreamEvent),
+			ImpFunc(BASS_MIDI_StreamEvents),
+			ImpFunc(BASS_MIDI_StreamGetEvent),
+			ImpFunc(BASS_MIDI_StreamLoadSamples),
+			ImpFunc(BASS_MIDI_StreamSetFonts),
+			ImpFunc(BASS_MIDI_StreamGetChannel),
+
+			// BASSWASAPI
+			ImpFunc(BASS_WASAPI_Init),
+			ImpFunc(BASS_WASAPI_Free),
+			ImpFunc(BASS_WASAPI_IsStarted),
+			ImpFunc(BASS_WASAPI_Start),
+			ImpFunc(BASS_WASAPI_Stop),
+			ImpFunc(BASS_WASAPI_GetDeviceInfo),
+			ImpFunc(BASS_WASAPI_GetInfo),
+			ImpFunc(BASS_WASAPI_GetDevice),
+			ImpFunc(BASS_WASAPI_GetLevelEx),
+
+			// BASSVST
+			ImpFunc(BASS_VST_ChannelSetDSP),
+
+			// BASSASIO
+			ImpFunc(BASS_ASIO_CheckRate),
+			ImpFunc(BASS_ASIO_ChannelEnable),
+			ImpFunc(BASS_ASIO_ChannelEnableBASS),
+			ImpFunc(BASS_ASIO_ChannelEnableMirror),
+			ImpFunc(BASS_ASIO_ChannelGetLevel),
+			ImpFunc(BASS_ASIO_ChannelJoin),
+			ImpFunc(BASS_ASIO_ChannelSetFormat),
+			ImpFunc(BASS_ASIO_ChannelSetRate),
+			ImpFunc(BASS_ASIO_ControlPanel),
+			ImpFunc(BASS_ASIO_ErrorGetCode),
+			ImpFunc(BASS_ASIO_Free),
+			ImpFunc(BASS_ASIO_GetDevice),
+			ImpFunc(BASS_ASIO_GetDeviceInfo),
+			ImpFunc(BASS_ASIO_GetLatency),
+			ImpFunc(BASS_ASIO_GetRate),
+			ImpFunc(BASS_ASIO_Init),
+			ImpFunc(BASS_ASIO_SetRate),
+			ImpFunc(BASS_ASIO_Start),
+			ImpFunc(BASS_ASIO_Stop),
+			ImpFunc(BASS_ASIO_IsStarted)
+		};
+
 		std::jthread _AudThread;
 		std::jthread _EvtThread;
 		EvBuf* Events;
 
-		signed long long onenano = -1;
-		unsigned int (WINAPI* NanoSleep)(unsigned char, signed long long*) = nullptr;
 		unsigned int AudioStream = 0;
 		std::vector<BASS_MIDI_FONTEX> SoundFonts;
 
@@ -256,6 +239,7 @@ namespace OmniMIDI {
 		bool StopSynthModule();
 		bool SettingsManager(unsigned int setting, bool get, void* var, size_t size);
 		bool IsSynthInitialized() { return (AudioStream != 0 && Fail != true); }
+		int SynthID() { return 0x1411BA55; }
 
 		// Event handling system
 		SynthResult PlayShortEvent(unsigned int ev);

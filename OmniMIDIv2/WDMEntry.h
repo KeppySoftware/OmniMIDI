@@ -21,6 +21,7 @@
 #include "WDMDrv.h"
 #include "KDMAPI.h"
 #include "BASSSynth.h"
+#include "FluidSynth.h"
 
 #ifdef DEFINE_DEVPROPKEY
 #undef DEFINE_DEVPROPKEY

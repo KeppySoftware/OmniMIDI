@@ -46,6 +46,9 @@
     <Filter Include="Header Files\Synthesizer\Synth modules">
       <UniqueIdentifier>{b6b525ba-124f-45d1-b0a5-e1ee085b4975}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Synthesizer\FluidSynth">
+      <UniqueIdentifier>{74999643-da04-4a39-a1ad-075c32c3d234}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ErrSys.h">
@@ -60,9 +63,6 @@
     <ClInclude Include="Utils.h">
       <Filter>Header Files\Extensions</Filter>
     </ClInclude>
-    <ClInclude Include="EvBuf_t.h">
-      <Filter>Header Files\Synthesizer</Filter>
-    </ClInclude>
     <ClInclude Include="KDMAPI.h">
       <Filter>Header Files\Extensions</Filter>
     </ClInclude>
@@ -74,6 +74,12 @@
     </ClInclude>
     <ClInclude Include="FluidSynth.h">
       <Filter>Header Files\Synthesizer\Synth modules</Filter>
+    </ClInclude>
+    <ClInclude Include="EvBuf_t.h">
+      <Filter>Header Files\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="NtFuncs.h">
+      <Filter>Header Files\Mandatory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +115,9 @@
     </ClCompile>
     <ClCompile Include="BASSSynth.cpp">
       <Filter>Source Files\Synthesizer\Synth modules</Filter>
+    </ClCompile>
+    <ClCompile Include="libfluidsynth.cpp">
+      <Filter>Source Files\Synthesizer\FluidSynth</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
