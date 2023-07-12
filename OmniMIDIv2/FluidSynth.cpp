@@ -18,6 +18,7 @@ void OmniMIDI::FluidSynth::EventsThread() {
 	while (!fDrv)
 		NtDelayExecution(-1);
 
+	fluid_synth_system_reset(fSyn);
 	while (IsSynthInitialized()) {
 		if (!ProcessEvBuf())
 			NtDelayExecution(-1);
@@ -25,94 +26,85 @@ void OmniMIDI::FluidSynth::EventsThread() {
 }
 
 bool OmniMIDI::FluidSynth::ProcessEvBuf() {
-	/*
+	// SysEx
+	int len = 0;
+	int handled = 0;
+	unsigned int sysev = 0;
+	unsigned int tgtev = 0;
 
-	For more info about how an event is structured, read this doc from Microsoft:
-	https://learn.microsoft.com/en-us/windows/win32/api/mmeapi/nf-mmeapi-midioutshortmsg
-
-	-
-	TL;DR is here though:
-	Let's assume that we have an event coming through, of value 0x007F7F95.
-
-	The high-order byte of the high word is ignored.
-
-	The low-order of the high word contains the first part of the data, which, for
-	a NoteOn event, is the key number (from 0 to 127).
-
-	The high-order of the low word contains the second part of the data, which, for
-	a NoteOn event, is the velocity of the key (again, from 0 to 127).
-
-	The low-order byte of the low word contains two nibbles combined into one.
-	The first nibble contains the type of event (1001 is 0x9, which is a NoteOn),
-	while the second nibble contains the channel (0101 is 0x5, which is the 5th channel).
-
-	So, in short, we can read it as follows:
-	0x957F7F should press the 128th key on the keyboard at full velocity, on MIDI channel 5.
-
-	But hey! We can also receive events with a long running status, which means there's no status byte!
-	That event, if we consider the same example from before, will look like this: 0x00007F7F
-
-	Such event will only work if the driver receives a status event, which will be stored in memory.
-	So, in a sequence of data like this:
-	..
-	1. 0x00044A90 (NoteOn on key 75 at velocity 10)
-	2. 0x00007F7F (... then on key 128 at velocity 127)
-	3. 0x00006031 (... then on key 50 at velocity 96)
-	4. 0x0000605F (... and finally on key 95 at velocity 96)
-	..
-	The same status from event 1 will be applied to all the status-less events from 2 and onwards.
-	-
-
-	INFO: ev will be recasted as char in some parts of the code, since those parts
-	do not require the high-word part of the unsigned int.
-
-	*/
-
-	unsigned int tev = 0;
-
-	if (!Events->Pop(tev) || !fSyn)
+	if (!Events->Pop(tgtev) || !fDrv)
 		return false;
 
-	if (CHKLRS(GETSTATUS(tev)) != 0) LastRunningStatus = GETSTATUS(tev);
-	else tev = tev << 8 | LastRunningStatus;
+	if (CHKLRS(GETSTATUS(tgtev)) != 0) LastRunningStatus = GETSTATUS(tgtev);
+	else tgtev = tgtev << 8 | LastRunningStatus;
 
-	unsigned char st = GETSTATUS(tev);
-	unsigned char cmd = GETCMD(tev);
-	unsigned char ch = GETCHANNEL(tev);
-	unsigned char param1 = GETFP(tev);
-	unsigned char param2 = GETSP(tev);
-
-	unsigned int len = 3;
+	unsigned char st = GETSTATUS(tgtev);
+	unsigned char cmd = GETCMD(tgtev);
+	unsigned char ch = GETCHANNEL(tgtev);
+	unsigned char param1 = GETFP(tgtev);
+	unsigned char param2 = GETSP(tgtev);
 
 	switch (cmd) {
 	case MIDI_NOTEON:
 		// param1 is the key, param2 is the velocity
 		fluid_synth_noteon(fSyn, ch, param1, param2);
 		break;
+
 	case MIDI_NOTEOFF:
 		// param1 is the key, ignore param2
 		fluid_synth_noteoff(fSyn, ch, param1);
 		break;
+
 	case MIDI_POLYAFTER:
 		fluid_synth_key_pressure(fSyn, ch, param1, param2);
 		break;
+
 	case MIDI_CMC:
 		fluid_synth_cc(fSyn, ch, param1, param2);
+		break;
+
 	case MIDI_PROGCHAN:
 		fluid_synth_program_change(fSyn, ch, param1);
+		fluid_synth_program_reset(fSyn);
 		break;
+
 	case MIDI_CHANAFTER:
 		fluid_synth_channel_pressure(fSyn, ch, param1);
 		break;
+
 	case MIDI_PITCHWHEEL:
-		fluid_synth_pitch_bend(fSyn, ch, param1 << 8 | param2);
+		fluid_synth_pitch_bend(fSyn, ch, param2 << 7 | param1);
+		break;
+
 	default:
 		switch (st) {
+
+		// Let's go!
+		case MIDI_SYSEXBEG:
+			sysev = tgtev << 8;
+
+			LOG(SynErr, "SysEx Begin: %x", sysev);
+			fluid_synth_sysex(fSyn, (const char*)&sysev, 2, 0, &len, &handled, 0);
+
+			while (GETSTATUS(sysev) != MIDI_SYSEXEND) {
+				Events->Peek(sysev);
+
+				if (GETSTATUS(sysev) != MIDI_SYSEXEND) {
+					Events->Pop(sysev);
+					LOG(SynErr, "SysEx Ev: %x", sysev);
+					fluid_synth_sysex(fSyn, (const char*)&sysev, 3, 0, &len, &handled, 0);
+				}		
+			}
+
+			LOG(SynErr, "SysEx End", sysev);		
+			break;
+
 		case 0xFF:
 			for (int i = 0; i < 16; i++)
 			{
 				fluid_synth_all_notes_off(fSyn, i);
 				fluid_synth_all_sounds_off(fSyn, i);
+				fluid_synth_system_reset(fSyn);
 			}
 		}
 		break;
@@ -182,7 +174,18 @@ bool OmniMIDI::FluidSynth::StartSynthModule() {
 	wchar_t OMPath[MAX_PATH] = { 0 };
 
 	if (fSet && Settings) {
-		fluid_settings_setint(fSet, "synth.polyphony", 1024);
+		fluid_settings_setint(fSet, "audio.periods-size", 64);
+		fluid_settings_setint(fSet, "audio.periods", 2);
+		fluid_settings_setint(fSet, "synth.cpu-cores", std::thread::hardware_concurrency() / 4);
+		fluid_settings_setint(fSet, "synth.device-id", 16);
+		fluid_settings_setint(fSet, "synth.polyphony", Settings->MaxVoices);
+		fluid_settings_setint(fSet, "synth.threadsafe-api", 0);
+		fluid_settings_setnum(fSet, "audio.sample-rate", Settings->AudioFrequency);
+		fluid_settings_setnum(fSet, "synth.overflow.age", 0.0);
+		fluid_settings_setnum(fSet, "synth.overflow.important", 0.0);
+		fluid_settings_setstr(fSet, "audio.driver", "wasapi");
+		fluid_settings_setstr(fSet, "audio.sample-format", "float");
+		fluid_settings_setstr(fSet, "synth.midi-bank-select", "xg");
 
 		fSyn = new_fluid_synth(fSet);
 		if (!fSyn) {
@@ -259,8 +262,8 @@ err:
 bool OmniMIDI::FluidSynth::StopSynthModule() {
 	if (fSyn && fDrv) {
 		delete_fluid_audio_driver(fDrv);
-		delete_fluid_synth(fSyn);
 		fDrv = nullptr;
+		delete_fluid_synth(fSyn);
 		fSyn = nullptr;
 	}
 
@@ -272,20 +275,27 @@ SynthResult OmniMIDI::FluidSynth::UPlayShortEvent(unsigned int ev) {
 }
 
 SynthResult OmniMIDI::FluidSynth::PlayShortEvent(unsigned int ev) {
-	if (!Events)
+	if (!Events || !IsSynthInitialized())
 		return SYNTH_NOTINIT;
 
 	return UPlayShortEvent(ev);
 }
 
 SynthResult OmniMIDI::FluidSynth::UPlayLongEvent(char* ev, unsigned int size) {
-	int r = fluid_synth_sysex(fSyn, (const char*)ev, size, nullptr, nullptr, nullptr, 0);
-	return (r != -1) ? SYNTH_OK : SYNTH_INVALPARAM;
+	int len = 0;
+	int handled = 0;
+
+	int r = fluid_synth_sysex(fSyn, ev, size, 0, &len, &handled, 0);
+
+	return (r != -1 && handled) ? SYNTH_OK : SYNTH_INVALPARAM;
 }
 
 SynthResult OmniMIDI::FluidSynth::PlayLongEvent(char* ev, unsigned int size) {
 	if (!FluiLib || !FluiLib->IsOnline())
 		return SYNTH_LIBOFFLINE;
+
+	if (!IsSynthInitialized())
+		return SYNTH_NOTINIT;
 
 	// The size has to be between 1B and 64KB!
 	if (size < 1 || size > 65536)

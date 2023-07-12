@@ -63,6 +63,7 @@ bool OmniMIDI::BASSSynth::ProcessEvBuf() {
 	*/
 
 	unsigned int tev = 0;
+	unsigned int sysev = 0;
 
 	if (!Events->Pop(tev) || !AudioStream)
 		return false;
@@ -71,6 +72,8 @@ bool OmniMIDI::BASSSynth::ProcessEvBuf() {
 	else tev = tev << 8 | LastRunningStatus;
 
 	unsigned int evt = MIDI_SYSTEM_DEFAULT;
+	unsigned int ev = 0;
+	unsigned char status = GETSTATUS(tev);
 	unsigned char cmd = GETCMD(tev);
 	unsigned char ch = GETCHANNEL(tev);
 	unsigned char param1 = GETFP(tev);
@@ -82,58 +85,90 @@ bool OmniMIDI::BASSSynth::ProcessEvBuf() {
 	case MIDI_NOTEON:
 		// param1 is the key, param2 is the velocity
 		evt = MIDI_EVENT_NOTE;
+		ev = param2 << 8 | param1;
 		break;
 	case MIDI_NOTEOFF:
 		// param1 is the key, ignore param2
 		evt = MIDI_EVENT_NOTE;
-		param2 = 0;
+		ev = param1;
 		break;
 	case MIDI_POLYAFTER:
 		evt = MIDI_EVENT_KEYPRES;
+		ev = param2 << 8 | param1;
 		break;
 	case MIDI_PROGCHAN:
 		evt = MIDI_EVENT_PROGRAM;
+		ev = param2 << 8 | param1;
 		break;
 	case MIDI_CHANAFTER:
 		evt = MIDI_EVENT_CHANPRES;
+		ev = param1;
+		break;
+	case MIDI_PITCHWHEEL:
+		evt = MIDI_EVENT_FINETUNE;
+		ev = param2 << 7 | param1;
 		break;
 	default:
-		// Some events do not have a specific counter part on BASSMIDI's side, so they have
-		// to be directly fed to the library by using the BASS_MIDI_EVENTS_RAW flag.
-		if (!(tev - 0x80 & 0xC0))
-		{
-			BASS_MIDI_StreamEvents(AudioStream, BASS_MIDI_EVENTS_RAW, &tev, 3);
+		switch (status) {
+			// Let's go!
+		case MIDI_SYSEXBEG:
+			sysev = tev << 8;
+
+			LOG(SynErr, "SysEx Begin: %x", sysev);
+			BASS_MIDI_StreamEvents(AudioStream, BASS_MIDI_EVENTS_RAW, &sysev, 2);
+
+			while (GETSTATUS(sysev) != MIDI_SYSEXEND) {
+				Events->Peek(sysev);
+
+				if (GETSTATUS(sysev) != MIDI_SYSEXEND) {
+					Events->Pop(sysev);
+					LOG(SynErr, "SysEx Ev: %x", sysev);
+					BASS_MIDI_StreamEvents(AudioStream, BASS_MIDI_EVENTS_RAW, &sysev, 3);
+				}
+			}
+
+			LOG(SynErr, "SysEx End", sysev);
+			return true;
+
+		default:
+			// Some events do not have a specific counter part on BASSMIDI's side, so they have
+			// to be directly fed to the library by using the BASS_MIDI_EVENTS_RAW flag.
+			if (!(tev - 0x80 & 0xC0))
+			{
+				BASS_MIDI_StreamEvents(AudioStream, BASS_MIDI_EVENTS_RAW, &tev, 3);
+				return true;
+			}
+
+			if (!((tev - 0xC0) & 0xE0)) len = 2;
+			else if (cmd == 0xF0)
+			{
+				switch (GETCHANNEL(tev))
+				{
+				case 0x3:
+					// This is 0xF3, which is a system reset.
+					len = 2;
+					break;
+				case 0xF:
+					// This is 0xFF, which is a system reset.
+					BASS_MIDI_StreamEvent(AudioStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
+					return true;
+				case 0xA:	// Start (CookedPlayer)
+				case 0xB:	// Continue (CookedPlayer)
+				case 0xC:	// Stop (CookedPlayer)
+				case 0xE:	// Sensing
+				default:
+					// Not supported by OmniMIDI!
+					return true;
+				}
+			}
+
+			BASS_MIDI_StreamEvents(AudioStream, BASS_MIDI_EVENTS_RAW, &tev, len);
 			return true;
 		}
 
-		if (!((tev - 0xC0) & 0xE0)) len = 2;
-		else if (cmd == 0xF0)
-		{
-			switch (GETCHANNEL(tev))
-			{
-			case 0x3:
-				// This is 0xF3, which is a system reset.
-				len = 2;
-				break;
-			case 0xF:
-				// This is 0xFF, which is a system reset.
-				BASS_MIDI_StreamEvent(AudioStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
-				return true;
-			case 0xA:	// Start (CookedPlayer)
-			case 0xB:	// Continue (CookedPlayer)
-			case 0xC:	// Stop (CookedPlayer)
-			case 0xE:	// Sensing
-			default:
-				// Not supported by OmniMIDI!
-				return true;
-			}
-		}
-
-		BASS_MIDI_StreamEvents(AudioStream, BASS_MIDI_EVENTS_RAW, &tev, len);
-		return true;
 	}
 
-	BASS_MIDI_StreamEvent(AudioStream, ch, evt, param2 << 8 | param1);
+	BASS_MIDI_StreamEvent(AudioStream, ch, evt, ev);
 	return true;
 }
 
@@ -257,8 +292,7 @@ void OmniMIDI::BASSSynth::StreamSettings(bool restart) {
 
 	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_VOICES, Settings->MaxVoices);
 	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_CPU, Settings->MaxCPU);
-	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_EVENTBUF_BYTE, Settings->EvBufSize * 4);
-	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_EVENTBUF_ASYNC, Settings->EvBufSize * 4);
+	BASS_ChannelSetAttribute(AudioStream, BASS_ATTRIB_MIDI_EVENTBUF_ASYNC, 1 << 24);
 }
 
 bool OmniMIDI::BASSSynth::LoadSynthModule() {

@@ -13,6 +13,8 @@ static WinDriver::DriverComponent* DriverComponent;
 static WinDriver::DriverMask* DriverMask;
 static OmniMIDI::SynthModule* SynthModule;
 
+#define SYNTH	FluidSynth
+
 extern "C" {
 	__declspec(dllexport)
 	BOOL APIENTRY DllMain(HMODULE hModule, DWORD ReasonForCall, LPVOID lpReserved)
@@ -106,7 +108,7 @@ extern "C" {
 		case MODM_OPEN:
 			if (SynthModule->SynthID() == EMPTYMODULE) {
 				delete SynthModule;
-				SynthModule = new OmniMIDI::FluidSynth;
+				SynthModule = new OmniMIDI::SYNTH;
 
 				if (SynthModule->LoadSynthModule()) {
 					if (SynthModule->StartSynthModule()) {
@@ -177,13 +179,18 @@ extern "C" {
 
 	__declspec(dllexport)
 	int KDMAPI InitializeKDMAPIStream() {
-		if (SynthModule->LoadSynthModule()) {
-			if (SynthModule->StartSynthModule()) {
-				return 1;
+		if (SynthModule->SynthID() == EMPTYMODULE) {
+			delete SynthModule;
+			SynthModule = new OmniMIDI::SYNTH;
+
+			if (SynthModule->LoadSynthModule()) {
+				if (SynthModule->StartSynthModule()) {
+					return 1;
+				}
+				SynthModule->StopSynthModule();
 			}
-			SynthModule->StopSynthModule();
+			SynthModule->UnloadSynthModule();
 		}
-		SynthModule->UnloadSynthModule();
 
 		LOG(WDMErr, "InitializeKDMAPIStream failed.");
 		return 0;
@@ -191,9 +198,14 @@ extern "C" {
 
 	__declspec(dllexport)
 	int KDMAPI TerminateKDMAPIStream() {
-		if (SynthModule->StopSynthModule()) {
-			if (SynthModule->UnloadSynthModule()) {
-				return 1;
+		if (SynthModule->SynthID() != EMPTYMODULE) {
+			if (SynthModule->StopSynthModule()) {
+				if (SynthModule->UnloadSynthModule()) {
+					delete SynthModule;
+					SynthModule = new OmniMIDI::SynthModule;
+
+					return 1;
+				}
 			}
 		}
 

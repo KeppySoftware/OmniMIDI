@@ -35,8 +35,7 @@ namespace OmniMIDI {
 		// Global settings
 		unsigned int EvBufSize = 32768;
 		unsigned int AudioFrequency = 48000;
-		unsigned int MaxVoices = 1000;
-		unsigned int MaxCPU = 95;
+		unsigned int MaxVoices = 1024;
 
 		FluidSettings() {
 			// When you initialize Settings(), load OM's own settings by default
@@ -57,7 +56,6 @@ namespace OmniMIDI {
 					{ "FluidSynth", {
 						JSONGetVal(AudioFrequency),
 						JSONGetVal(EvBufSize),
-						JSONGetVal(MaxCPU),
 						JSONGetVal(MaxVoices)
 					}}
 				};
@@ -84,7 +82,6 @@ namespace OmniMIDI {
 						if (!(JsonData == nullptr)) {
 							JSONSetVal(unsigned int, AudioFrequency);
 							JSONSetVal(unsigned int, EvBufSize);
-							JSONSetVal(unsigned int, MaxCPU);
 							JSONSetVal(unsigned int, MaxVoices);
 						}
 					}
@@ -107,7 +104,7 @@ namespace OmniMIDI {
 
 		Lib* FluiLib = nullptr;
 
-		LibImport FLibImports[22] = {
+		LibImport FLibImports[24] = {
 			// BASS
 			ImpFunc(new_fluid_synth),
 			ImpFunc(new_fluid_settings),
@@ -129,6 +126,8 @@ namespace OmniMIDI {
 			ImpFunc(fluid_synth_system_reset),
 			ImpFunc(fluid_synth_sfload),
 			ImpFunc(fluid_settings_setint),
+			ImpFunc(fluid_settings_setnum),
+			ImpFunc(fluid_settings_setstr),
 			ImpFunc(new_fluid_audio_driver),
 			ImpFunc(delete_fluid_audio_driver)
 		};

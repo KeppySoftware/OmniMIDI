@@ -115,8 +115,8 @@ output/OmniMIDIDevEnum.exe
 OmniMapper/OmniMapper/OmniMIDI.h
 OmniMIDIConfigurator/.vs/
 OmniMIDIv2/.vs/
-OmniMIDIv2/x64/Debug/bass.obj
-OmniMIDIv2/x64/
 OmniMIDIv2/OmniMIDI.vcxproj.user
 OmniMIDIv2/bin/
+OmniMIDIv2/Debug/
+OmniMIDIv2/Release/
 OmniMIDIv2/packages/
