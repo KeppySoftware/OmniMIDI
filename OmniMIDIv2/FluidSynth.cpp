@@ -65,7 +65,6 @@ bool OmniMIDI::FluidSynth::ProcessEvBuf() {
 
 	case MIDI_PROGCHAN:
 		fluid_synth_program_change(fSyn, ch, param1);
-		fluid_synth_program_reset(fSyn);
 		break;
 
 	case MIDI_CHANAFTER:
@@ -147,6 +146,9 @@ bool OmniMIDI::FluidSynth::LoadSynthModule() {
 }
 
 bool OmniMIDI::FluidSynth::UnloadSynthModule() {
+	if (!FluiLib || !FluiLib->IsOnline())
+		return true;
+
 	if (!fSyn && !fDrv) {
 		delete Settings;
 		Settings = nullptr;
@@ -174,17 +176,23 @@ bool OmniMIDI::FluidSynth::StartSynthModule() {
 	wchar_t OMPath[MAX_PATH] = { 0 };
 
 	if (fSet && Settings) {
-		fluid_settings_setint(fSet, "audio.periods-size", 64);
-		fluid_settings_setint(fSet, "audio.periods", 2);
-		fluid_settings_setint(fSet, "synth.cpu-cores", std::thread::hardware_concurrency() / 4);
+		if (Settings->ThreadsCount < 1 || Settings->ThreadsCount > std::thread::hardware_concurrency())
+			Settings->ThreadsCount = 1;
+
+		fluid_settings_setint(fSet, "synth.cpu-cores", Settings->ThreadsCount);
+		fluid_settings_setint(fSet, "audio.period-size", Settings->PeriodSize);
+		fluid_settings_setint(fSet, "audio.periods", Settings->Periods);
 		fluid_settings_setint(fSet, "synth.device-id", 16);
+		fluid_settings_setint(fSet, "synth.min-note-length", Settings->MinimumNoteLength);
 		fluid_settings_setint(fSet, "synth.polyphony", Settings->MaxVoices);
-		fluid_settings_setint(fSet, "synth.threadsafe-api", 0);
-		fluid_settings_setnum(fSet, "audio.sample-rate", Settings->AudioFrequency);
-		fluid_settings_setnum(fSet, "synth.overflow.age", 0.0);
-		fluid_settings_setnum(fSet, "synth.overflow.important", 0.0);
-		fluid_settings_setstr(fSet, "audio.driver", "wasapi");
-		fluid_settings_setstr(fSet, "audio.sample-format", "float");
+		fluid_settings_setint(fSet, "synth.threadsafe-api", Settings->ThreadsCount > 1 ? 0 : 1);
+		fluid_settings_setnum(fSet, "synth.sample-rate", Settings->AudioFrequency);
+		fluid_settings_setnum(fSet, "synth.overflow.volume", Settings->OverflowVolume);
+		fluid_settings_setnum(fSet, "synth.overflow.percussion", Settings->OverflowPercussion);
+		fluid_settings_setnum(fSet, "synth.overflow.important", Settings->OverflowImportant);
+		fluid_settings_setnum(fSet, "synth.overflow.released", Settings->OverflowReleased);
+		fluid_settings_setstr(fSet, "audio.driver", Settings->Driver.c_str());
+		fluid_settings_setstr(fSet, "audio.sample-format", Settings->SampleFormat.c_str());
 		fluid_settings_setstr(fSet, "synth.midi-bank-select", "xg");
 
 		fSyn = new_fluid_synth(fSet);

@@ -98,14 +98,14 @@ bool OmniMIDI::BASSSynth::ProcessEvBuf() {
 		break;
 	case MIDI_PROGCHAN:
 		evt = MIDI_EVENT_PROGRAM;
-		ev = param2 << 8 | param1;
+		ev = param1;
 		break;
 	case MIDI_CHANAFTER:
 		evt = MIDI_EVENT_CHANPRES;
 		ev = param1;
 		break;
 	case MIDI_PITCHWHEEL:
-		evt = MIDI_EVENT_FINETUNE;
+		evt = MIDI_EVENT_PITCH;
 		ev = param2 << 7 | param1;
 		break;
 	default:
@@ -130,6 +130,11 @@ bool OmniMIDI::BASSSynth::ProcessEvBuf() {
 			LOG(SynErr, "SysEx End", sysev);
 			return true;
 
+		case MIDI_SYSRESET:
+			// This is 0xFF, which is a system reset.
+			BASS_MIDI_StreamEvent(AudioStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
+			return true;
+
 		default:
 			// Some events do not have a specific counter part on BASSMIDI's side, so they have
 			// to be directly fed to the library by using the BASS_MIDI_EVENTS_RAW flag.
@@ -148,10 +153,6 @@ bool OmniMIDI::BASSSynth::ProcessEvBuf() {
 					// This is 0xF3, which is a system reset.
 					len = 2;
 					break;
-				case 0xF:
-					// This is 0xFF, which is a system reset.
-					BASS_MIDI_StreamEvent(AudioStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
-					return true;
 				case 0xA:	// Start (CookedPlayer)
 				case 0xB:	// Continue (CookedPlayer)
 				case 0xC:	// Stop (CookedPlayer)
@@ -165,7 +166,6 @@ bool OmniMIDI::BASSSynth::ProcessEvBuf() {
 			BASS_MIDI_StreamEvents(AudioStream, BASS_MIDI_EVENTS_RAW, &tev, len);
 			return true;
 		}
-
 	}
 
 	BASS_MIDI_StreamEvent(AudioStream, ch, evt, ev);
@@ -572,7 +572,6 @@ bool OmniMIDI::BASSSynth::StartSynthModule() {
 							// If it's not, then let's loop until the end of the JSON struct
 						}
 
-						std::reverse(SoundFonts.begin(), SoundFonts.end());
 						BASS_MIDI_StreamSetFonts(AudioStream, &SoundFonts[0], (unsigned int)SoundFonts.size() | BASS_MIDI_FONT_EX);
 					}
 					else NERROR(SynErr, "\"%s\" does not contain a valid \"SoundFonts\" JSON structure.", false, OMPath);
@@ -622,7 +621,6 @@ bool OmniMIDI::BASSSynth::StopSynthModule() {
 			if (BASS_ASIO_IsStarted()) {
 				BASS_ASIO_Stop();
 				BASS_ASIO_Free();
-				Sleep(100);
 			}
 
 		case BASS_INTERNAL:

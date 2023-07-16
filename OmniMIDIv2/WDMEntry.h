@@ -13,6 +13,7 @@
 #pragma once
 
 #include <Windows.h>
+#include <Shlwapi.h>
 #include <devguid.h>
 #include <newdev.h>
 #include <regstr.h>
@@ -22,13 +23,13 @@
 #include "KDMAPI.h"
 #include "BASSSynth.h"
 #include "FluidSynth.h"
+#include "XSynthM.h"
+#include "TSFSynth.h"
 
 #ifdef DEFINE_DEVPROPKEY
 #undef DEFINE_DEVPROPKEY
 #endif
 #define DEFINE_DEVPROPKEY(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8, pid) EXTERN_C const DEVPROPKEY DECLSPEC_SELECTANY name = { { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }, pid }
-
-#define KDMAPI WINAPI
 
 // Copied from devpkey.h in the WinDDK
 DEFINE_DEVPROPKEY(DEVPKEY_Device_BusReportedDeviceDesc, 0x540b947e, 0x8b40, 0x45bc, 0xa8, 0xa2, 0x6a, 0x0b, 0x89, 0x4c, 0xbd, 0xa2, 4);	// DEVPROP_TYPE_STRING
@@ -58,5 +59,130 @@ static bool DriverBusy = false;
 
 // MIDI REG
 const wchar_t MIDI_REGISTRY_ENTRY_TEMPLATE[] = L"midi%d";
+
+namespace OmniMIDI {
+	class WDMSettings : public SynthSettings {
+	private:
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-private-field"
+		ErrorSystem::WinErr SetErr;
+#pragma clang diagnostic pop
+
+	public:
+		// Global settings
+		int Renderer = BASSMIDI;
+		std::string CustomRenderer = "empty";
+		std::vector<std::string> Blacklist;
+
+		WDMSettings() {
+			// When you initialize Settings(), load OM's own settings by default
+			WinUtils::SysPath Utils;
+			wchar_t OMPath[MAX_PATH] = { 0 };
+			wchar_t OMBPath[MAX_PATH] = { 0 };
+			wchar_t OMDBPath[MAX_PATH] = { 0 };
+
+			if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
+				wcscpy_s(OMBPath, OMPath);
+				swprintf_s(OMPath, L"%s\\OmniMIDI\\settings.json\0", OMPath);
+				swprintf_s(OMBPath, L"%s\\OmniMIDI\\defblacklist.json\0", OMBPath);
+				swprintf_s(OMBPath, L"%s\\OmniMIDI\\blacklist.json\0", OMBPath);
+				LoadJSON(OMPath);
+				LoadBlacklist(OMBPath);
+			}
+		}
+
+		void CreateJSON(wchar_t* Path) {
+			std::fstream st;
+			st.open(Path, std::fstream::out | std::ofstream::trunc);
+			if (st.is_open()) {
+				nlohmann::json defset = {
+					{ "WDMInit", {
+						JSONGetVal(Renderer),
+						JSONGetVal(CustomRenderer)
+					}}
+				};
+
+				std::string dump = defset.dump(1);
+				st.write(dump.c_str(), dump.length());
+				st.close();
+			}
+		}
+
+		// Here you can load your own JSON, it will be tied to ChangeSetting()
+		void LoadJSON(wchar_t* Path) {
+			std::fstream st;
+			st.open(Path, std::fstream::in);
+
+			if (st.is_open()) {
+				try {
+					// Read the JSON data from there
+					auto json = nlohmann::json::parse(st, nullptr, false, true);
+
+					if (json != nullptr) {
+						auto& JsonData = json["WDMInit"];
+
+						if (!(JsonData == nullptr)) {
+							JSONSetVal(int, Renderer);
+							JSONSetVal(std::string, CustomRenderer);
+						}
+					}
+					else throw nlohmann::json::type_error::create(667, "json structure is not valid", nullptr);
+				}
+				catch (nlohmann::json::type_error ex) {
+					st.close();
+					LOG(SetErr, "The JSON is corrupted or malformed!\n\nnlohmann::json says: %s", ex.what());
+					CreateJSON(Path);
+					return;
+				}
+				st.close();
+			}
+		}
+
+		void LoadBlacklist(wchar_t* Path) {
+			std::fstream st;
+			st.open(Path, std::fstream::in);
+
+			if (st.is_open()) {
+				try {
+					// Read the JSON data from there
+					auto JsonData = nlohmann::json::parse(st, nullptr, false, true);
+
+					if (JsonData != nullptr) {
+						JSONSetVal(std::vector<std::string>, Blacklist);
+					}
+					else throw nlohmann::json::type_error::create(667, "json structure is not valid", nullptr);
+				}
+				catch (nlohmann::json::type_error ex) {
+					st.close();
+					return;
+				}
+				st.close();
+			}
+		}
+
+		bool IsBlacklistedProcess() {
+			char szFilePath[MAX_PATH];
+			char szFileName[MAX_PATH];
+
+			if (!Blacklist.empty())
+			{
+				GetModuleFileNameA(NULL, szFilePath, MAX_PATH);
+				strncpy_s(szFileName, PathFindFileNameA(szFilePath), MAX_PATH);
+
+				for (int i = 0; i < Blacklist.size(); i++) {
+					if (!_stricmp(szFilePath, Blacklist[i].c_str())) {
+						return true;
+					}
+
+					if (!_stricmp(szFileName, Blacklist[i].c_str())) {
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+	};
+}
 
 #endif

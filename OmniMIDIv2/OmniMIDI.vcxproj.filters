@@ -49,6 +49,12 @@
     <Filter Include="Source Files\Synthesizer\FluidSynth">
       <UniqueIdentifier>{74999643-da04-4a39-a1ad-075c32c3d234}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Synthesizer\XSynth">
+      <UniqueIdentifier>{af17c2cd-0ad8-47b1-a0fa-3485840a6151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Synthesizer\SDL">
+      <UniqueIdentifier>{523a16c6-a8d4-49ea-809c-7df576ddef9d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ErrSys.h">
@@ -80,6 +86,12 @@
     </ClInclude>
     <ClInclude Include="NtFuncs.h">
       <Filter>Header Files\Mandatory</Filter>
+    </ClInclude>
+    <ClInclude Include="XSynthM.h">
+      <Filter>Header Files\Synthesizer\Synth modules</Filter>
+    </ClInclude>
+    <ClInclude Include="TSFSynth.h">
+      <Filter>Header Files\Synthesizer\Synth modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,6 +130,18 @@
     </ClCompile>
     <ClCompile Include="libfluidsynth.cpp">
       <Filter>Source Files\Synthesizer\FluidSynth</Filter>
+    </ClCompile>
+    <ClCompile Include="xsynth.cpp">
+      <Filter>Source Files\Synthesizer\XSynth</Filter>
+    </ClCompile>
+    <ClCompile Include="XSynthM.cpp">
+      <Filter>Source Files\Synthesizer\Synth modules</Filter>
+    </ClCompile>
+    <ClCompile Include="TSFSynth.cpp">
+      <Filter>Source Files\Synthesizer\Synth modules</Filter>
+    </ClCompile>
+    <ClCompile Include="minisdl_audio.cpp">
+      <Filter>Source Files\Synthesizer\SDL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

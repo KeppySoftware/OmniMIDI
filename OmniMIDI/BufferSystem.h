@@ -114,7 +114,7 @@ void __inline SendLongMIDIFeedback(LPMIDIHDR mHDR, UINT Size) {
 	}
 }
 
-bool __inline SendToBASSMIDI(unsigned int ev) {
+bool __inline SendToBASSMIDI(unsigned int sev) {
 	/*
 	
 	For more info about how an event is structured, read this doc from Microsoft:
@@ -159,79 +159,89 @@ bool __inline SendToBASSMIDI(unsigned int ev) {
 
 	*/
 
-	unsigned int tev = ev;
+	unsigned int tev = sev;
 
 	if (CHKLRS(GETSTATUS(tev)) != 0) LastRunningStatus = GETSTATUS(tev);
-	else tev = ev << 8 | LastRunningStatus;
+	else tev = tev << 8 | LastRunningStatus;
 
-	unsigned int ch = tev & 0xF;
-	unsigned int evt = 0;
-	unsigned int param = GETFP(tev);
+	unsigned int evt = MIDI_SYSTEM_DEFAULT;
+	unsigned int ev = 0;
+	unsigned char status = GETSTATUS(tev);
+	unsigned char cmd = GETCMD(tev);
+	unsigned char ch = GETCHANNEL(tev);
+	unsigned char param1 = GETFP(tev);
+	unsigned char param2 = GETSP(tev);
 
-	unsigned int cmd = GETCMD(tev);
 	unsigned int len = 3;
-	bool ok = true;
 
-	switch (LastRunningStatus) {
-	// Handle 0xFF (GS reset) first!
-	case 0xFF:
-		for (int i = 0; i < 16; i++) {
-			if (!BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_SOUNDOFF, 0))
-				ok = false;
-
-			if (!BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_NOTESOFF, 0))
-				ok = false;
-
-			if (!BASS_MIDI_StreamEvent(OMStream, i, MIDI_EVENT_SYSTEM, MIDI_SYSTEM_DEFAULT))
-				ok = false;
-		}
-		return ok;
-
+	switch (cmd) {
+	case MIDI_NOTEON:
+		// param1 is the key, param2 is the velocity
+		evt = MIDI_EVENT_NOTE;
+		ev = param2 << 8 | param1;
+		break;
+	case MIDI_NOTEOFF:
+		// param1 is the key, ignore param2
+		evt = MIDI_EVENT_NOTE;
+		ev = param1;
+		break;
+	case MIDI_POLYAFTER:
+		evt = MIDI_EVENT_KEYPRES;
+		ev = param2 << 8 | param1;
+		break;
+	case MIDI_PROGCHAN:
+		evt = MIDI_EVENT_PROGRAM;
+		ev = param1;
+		break;
+	case MIDI_CHANAFTER:
+		evt = MIDI_EVENT_CHANPRES;
+		ev = param1;
+		break;
+	case MIDI_PITCHWHEEL:
+		evt = MIDI_EVENT_PITCH;
+		ev = param2 << 7 | param1;
+		break;
 	default:
-		switch (GETCMD(ev)) {
-		case MIDI_NOTEON:
-			evt = MIDI_EVENT_NOTE;
-			break;
-		case MIDI_NOTEOFF:
-			evt = MIDI_EVENT_NOTE;
-			param = (char)param;
-			break;
-		case MIDI_POLYAFTER:
-			evt = MIDI_EVENT_KEYPRES;
-			break;
-		case MIDI_PROGCHAN:
-			evt = MIDI_EVENT_PROGRAM;
-			param = (char)param;
-			break;
-		case MIDI_CHANAFTER:
-			evt = MIDI_EVENT_CHANPRES;
-			param = (char)param;
-			break;
+		switch (status) {
+		case 0xFF:
+			// This is 0xFF, which is a system reset.
+			_BMSE(OMStream, 0, MIDI_EVENT_SYSTEMEX, MIDI_SYSTEM_DEFAULT);
+			return true;
+
 		default:
 			// Some events do not have a specific counter part on BASSMIDI's side, so they have
 			// to be directly fed to the library by using the BASS_MIDI_EVENTS_RAW flag.
-			if (!(ev - 0x80 & 0xC0))
-				return _BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &tev, 3);
-
-			if (!((ev - 0xC0) & 0xE0)) len = 2;
-			else if (GETCMD(ev) == 0xF0)
+			if (!(tev - 0x80 & 0xC0))
 			{
-				switch (ev & 0xF)
+				_BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &tev, 3);
+				return true;
+			}
+
+			if (!((tev - 0xC0) & 0xE0)) len = 2;
+			else if (cmd == 0xF0)
+			{
+				switch (GETCHANNEL(tev))
 				{
-				case 3:
+				case 0x3:
+					// This is 0xF3, which is a system reset.
 					len = 2;
 					break;
+				case 0xA:	// Start (CookedPlayer)
+				case 0xB:	// Continue (CookedPlayer)
+				case 0xC:	// Stop (CookedPlayer)
+				case 0xE:	// Sensing
 				default:
 					// Not supported by OmniMIDI!
-					return false;
+					return true;
 				}
 			}
 
-			return _BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &tev, len);
+			_BMSEs(OMStream, BASS_MIDI_EVENTS_RAW, &tev, len);
+			return true;
 		}
 	}
 
-	return _BMSE(OMStream, ch, evt, param);
+	return _BMSE(OMStream, ch, evt, ev);
 }
 
 void __inline PrepareForBASSMIDI(DWORD dwParam1) {

@@ -36,6 +36,16 @@ namespace OmniMIDI {
 		unsigned int EvBufSize = 32768;
 		unsigned int AudioFrequency = 48000;
 		unsigned int MaxVoices = 1024;
+		unsigned int PeriodSize = 64;
+		unsigned int Periods = 2;
+		unsigned int ThreadsCount = 1;
+		unsigned int MinimumNoteLength = 10;
+		double OverflowVolume = 10000.0;
+		double OverflowPercussion = 10000.0;
+		double OverflowReleased = -10000.0;
+		double OverflowImportant = 0.0;
+		std::string Driver = "wasapi";
+		std::string SampleFormat = "float";
 
 		FluidSettings() {
 			// When you initialize Settings(), load OM's own settings by default
@@ -56,7 +66,17 @@ namespace OmniMIDI {
 					{ "FluidSynth", {
 						JSONGetVal(AudioFrequency),
 						JSONGetVal(EvBufSize),
-						JSONGetVal(MaxVoices)
+						JSONGetVal(MaxVoices),
+						JSONGetVal(PeriodSize),
+						JSONGetVal(Periods),
+						JSONGetVal(ThreadsCount),
+						JSONGetVal(MinimumNoteLength),
+						JSONGetVal(OverflowVolume),
+						JSONGetVal(OverflowPercussion),
+						JSONGetVal(OverflowReleased),
+						JSONGetVal(OverflowImportant),
+						JSONGetVal(Driver),
+						JSONGetVal(SampleFormat)
 					}}
 				};
 
@@ -83,6 +103,16 @@ namespace OmniMIDI {
 							JSONSetVal(unsigned int, AudioFrequency);
 							JSONSetVal(unsigned int, EvBufSize);
 							JSONSetVal(unsigned int, MaxVoices);
+							JSONSetVal(unsigned int, PeriodSize);
+							JSONSetVal(unsigned int, Periods);
+							JSONSetVal(unsigned int, ThreadsCount);
+							JSONSetVal(unsigned int, MinimumNoteLength);
+							JSONSetVal(double, OverflowVolume);
+							JSONSetVal(double, OverflowPercussion);
+							JSONSetVal(double, OverflowReleased);
+							JSONSetVal(double, OverflowImportant);
+							JSONSetVal(std::string, Driver);
+							JSONSetVal(std::string, SampleFormat);
 						}
 					}
 					else throw nlohmann::json::type_error::create(667, "json structure is not valid", nullptr);

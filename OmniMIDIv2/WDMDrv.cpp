@@ -106,7 +106,6 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 }
 
 bool WinDriver::DriverCallback::PrepareCallbackFunction(MIDIOPENDESC* OpInfStruct, DWORD CallbackMode) {
-
 	if (pCallback) {
 		NERROR(CallbackErr, "A callback has already been allocated!", false);
 		return false;

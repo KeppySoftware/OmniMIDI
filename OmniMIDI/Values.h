@@ -11,12 +11,12 @@ UINT CPUThreadsAvailable = 0;
 #define SetPath(f)		if (!f.Path) f.Path = L#f
 #define LoadFuncM(l, f)	*((void**)&f) = GetProcAddress(l.Lib,#f)
 
-#define CHKLRS(f) (f & 0x80)
-#define GETCMD(f) (f & 0xF0)
-#define GETCHANNEL(f) (f & 0xF)
-#define GETSTATUS(f) (f & 0xFF)
-#define GETSP(f) (f >> 16)
-#define GETFP(f) (f >> 8)
+#define CHKLRS(f)			(f & 0x80)
+#define GETSTATUS(f)		(f & 0xFF)
+#define GETCMD(f)			(f & 0xF0)
+#define GETCHANNEL(f)		(f & 0xF)
+#define GETFP(f)			((f >> 8) & 0xFF)
+#define GETSP(f)			((f >> 16) & 0xFF)
 
 #define SETVELOCITY(f, nf) f = (f & 0xFF00FFFF) | ((DWORD(nf) & 0xFF) << 16)
 #define SETNOTE(f, nf) f = (f & 0xFFFF00FF) | ((DWORD(nf) & 0xFF) << 8)

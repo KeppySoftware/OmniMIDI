@@ -65,9 +65,11 @@ void ErrorSystem::WinErr::ThrowError(const char* Error, const OmniMIDI::source_l
 		vsprintf_s(tBuf, SZBufSize, Error, vl);
 
 #ifdef _DEBUG
-		sprintf_s(Buf, BufSize, "An error has occured in the \"%s\" function!\n\nFile: %s\nLine: %s\n\nError:\n%s", location.function_name(), location.file_name(), location.line(), tBuf);
+		sprintf_s(Buf, BufSize, "An error has occured in the \"%s\" function!\n\nFile: %s\nLine: %d\n\nError:\n%s", 
+			location.function_name(), location.file_name(), location.line(), tBuf);
 #else
-		sprintf_s(Buf, BufSize, "An error has occured in the \"%s\" function!\n\nError:\n%s", location.function_name(), tBuf);
+		sprintf_s(Buf, BufSize, "An error has occured in the \"%s\" function!\n\nError:\n%s", 
+			location.function_name(), tBuf);
 #endif
 		delete[] tBuf;
 
@@ -80,16 +82,23 @@ void ErrorSystem::WinErr::ThrowError(const char* Error, const OmniMIDI::source_l
 #endif
 }
 
-void ErrorSystem::WinErr::ThrowFatalError(const char* Error) {
+void ErrorSystem::WinErr::ThrowFatalError(const char* Error, const OmniMIDI::source_location& location) {
 #if defined(_WIN32) && !defined(_M_ARM)
 	char* Buf = new char[SZBufSize];
+	int GLE = GetLastError();
 
-	sprintf_s(Buf, BufSize, "A fatal error has occured from which the driver is unable to recover!\n\nError: %s", Error);
+#ifdef _DEBUG
+	sprintf_s(Buf, BufSize, "An fatal error has occured in the \"%s\" function, from which the driver can NOT recover!\n\nFile: %s\nLine: %s\n\nError:\n%s",
+		location.function_name(), location.file_name(), location.line(), Error);
+#else
+	sprintf_s(Buf, BufSize, "An fatal error has occured in the \"%s\" function, from which the driver can NOT recover!\n\nError:\n%s", 
+		location.function_name(), Error);
+#endif
 
 	MessageBoxA(NULL, Buf, "OmniMIDI - FATAL ERROR", MB_ICONERROR | MB_OK | MB_SYSTEMMODAL);
 
 	delete[] Buf;
 
-	throw ::GetLastError();
+	throw std::runtime_error(Error);
 #endif
 }

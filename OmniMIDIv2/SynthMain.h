@@ -49,6 +49,13 @@ typedef	unsigned int SynthResult;
 #define SYNTH_LIBOFFLINE	0x03
 #define SYNTH_INVALPARAM	0x04
 
+// Renderers
+#define EXTERNAL			-1
+#define BASSMIDI			0
+#define FLUIDSYNTH			1
+#define XSYNTH				2
+#define TINYSF				3
+
 #define fv2fn(f)			(#f)
 #define ImpFunc(f)			LibImport((void**)&##f, #f)
 
@@ -113,6 +120,7 @@ namespace OmniMIDI {
 		bool Initialized = false;
 		bool LoadFailed = false;
 		bool AppSelfHosted = false;
+		ErrorSystem::WinErr LibErr;
 
 	public:
 		HMODULE Ptr() { return Library; }
@@ -125,6 +133,7 @@ namespace OmniMIDI {
 		bool LoadLib(wchar_t* CustomPath = nullptr) {
 			WinUtils::SysPath Utils;
 
+			char CName[MAX_PATH] = { 0 };
 			wchar_t SysDir[MAX_PATH] = { 0 };
 			wchar_t DLLPath[MAX_PATH] = { 0 };
 			int swp = 0;
@@ -172,8 +181,12 @@ namespace OmniMIDI {
 										Library = LoadLibrary(DLLPath);
 										assert(Library != 0);
 
-										if (!Library)
+										if (!Library) {
+											wcstombs_s(nullptr, CName, Name, MAX_PATH);
+											NERROR(LibErr, "The required library \"%s\" could not be loaded or found.\nThis is required for the synthesizer to work.", true, CName);
 											return false;
+										}
+											
 									}
 									else return false;
 								}
