@@ -244,7 +244,7 @@
 extern "C" {
 #endif
 
-extern DECLSPEC const char * SDLCALL SDL_GetPlatform (void);
+    extern DECLSPEC const char* SDLCALL SDL_GetPlatform(void);
 
 #ifdef __cplusplus
 }
@@ -445,9 +445,9 @@ typedef unsigned int uintptr_t;
 #include <AvailabilityMacros.h>
 
 #ifdef __LP64__
-    #define SIZEOF_VOIDP 8
+#define SIZEOF_VOIDP 8
 #else
-    #define SIZEOF_VOIDP 4
+#define SIZEOF_VOIDP 4
 #endif
 
 #define HAVE_ALLOCA_H       1
@@ -852,7 +852,7 @@ typedef unsigned long uintptr_t;
 #define _SDL_render_h
 #define _SDL_gesture_c_h
 #define _SDL_stdinc_h
-static SDL_INLINE int SDL_SetError(const char *errstr, ...) { (void)errstr; return 1; }
+static SDL_INLINE int SDL_SetError(const char* errstr, ...) { (void)errstr; return 1; }
 #define SDL_assert(a)
 #define SDL_Error(e)
 #define SDL_ASSERT_LEVEL 0
@@ -889,7 +889,7 @@ static SDL_INLINE int SDL_OutOfMemory() { return 1; }
 
 #define SDL_Renderer void
 #define SDL_Texture void
-typedef struct SDL_RendererInfo { const char* name; int num_texture_formats; int *texture_formats; } SDL_RendererInfo;
+typedef struct SDL_RendererInfo { const char* name; int num_texture_formats; int* texture_formats; } SDL_RendererInfo;
 #define SDL_GetNumRenderDrivers() 0
 #define SDL_GetRenderDriverInfo(i, info) { (info)->name = NULL; (info)->num_texture_formats = 0; }
 #define SDL_CreateRenderer(a,b,c) NULL
@@ -1182,9 +1182,9 @@ extern "C" {
 # elif defined(__AIX__)
 #pragma alloca
 # elif defined(__MRC__)
-void *alloca(unsigned);
+    void* alloca(unsigned);
 # else
-char *alloca();
+    char* alloca();
 # endif
 #endif
 #ifdef HAVE_ALLOCA
@@ -1232,9 +1232,9 @@ char *alloca();
 #define SDL_strcasecmp strcmp
 #define SDL_strncasecmp strncmp
 #if __STDC_WANT_SECURE_LIB__
-static SDL_INLINE int SDL_snprintf(char *text, size_t maxlen, const char *fmt, ...) { va_list ap; va_start(ap, fmt); return vsprintf_s(text, maxlen, fmt, ap); }
+    static SDL_INLINE int SDL_snprintf(char* text, size_t maxlen, const char* fmt, ...) { va_list ap; va_start(ap, fmt); return vsprintf_s(text, maxlen, fmt, ap); }
 #else
-static SDL_INLINE int SDL_snprintf(char *text, size_t maxlen, const char *fmt, ...) { va_list ap; (void)maxlen; va_start(ap, fmt); return vsprintf(text, fmt, ap); }
+    static SDL_INLINE int SDL_snprintf(char* text, size_t maxlen, const char* fmt, ...) { va_list ap; (void)maxlen; va_start(ap, fmt); return vsprintf(text, fmt, ap); }
 #endif
 #define SDL_sscanf(t,f,v) NULL
 
@@ -1264,19 +1264,19 @@ static SDL_INLINE int SDL_snprintf(char *text, size_t maxlen, const char *fmt, .
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern DECLSPEC void (SDLCALL *SDL_Delay)(Uint32 ms);
-extern DECLSPEC Uint32 SDLCALL SDL_WasInit(Uint32 flags);
-extern DECLSPEC int (SDLCALL* SDL_InitSubSystem)(Uint32 flags);
+    extern DECLSPEC void SDLCALL SDL_Delay(Uint32 ms);
+    extern DECLSPEC Uint32 SDLCALL SDL_WasInit(Uint32 flags);
+    extern DECLSPEC int SDLCALL SDL_InitSubSystem(Uint32 flags);
 #ifdef __WIN32__
-extern DECLSPEC int SDLCALL SDL_RegisterApp(char *name, Uint32 style, void *hInst);
-extern DECLSPEC void SDLCALL SDL_UnregisterApp(void);
-char* WIN_StringToUTF8(const unsigned short* s);
-unsigned short* WIN_UTF8ToString(const char* s);
+    extern DECLSPEC int SDLCALL SDL_RegisterApp(char* name, Uint32 style, void* hInst);
+    extern DECLSPEC void SDLCALL SDL_UnregisterApp(void);
+    char* WIN_StringToUTF8(const unsigned short* s);
+    unsigned short* WIN_UTF8ToString(const char* s);
 #endif
 #define SDL_TLSCreate() 0
 #if defined(__LP64__) || defined(_LP64) || defined(__LLP64__) || defined(__x86_64__) || defined(__ia64__) || defined(_WIN64) || defined(_M_X64)
-unsigned int SDL_TLSSet64(void*);
-void* SDL_TLSGet64(unsigned int);
+    unsigned int SDL_TLSSet64(void*);
+    void* SDL_TLSGet64(unsigned int);
 #define SDL_TLSSet(tls, v, cb) tls = SDL_TLSSet64(v)
 #define SDL_TLSGet(tls) SDL_TLSGet64(tls)
 #else
@@ -1401,24 +1401,24 @@ void* SDL_TLSGet64(unsigned int);
 extern "C" {
 #endif
 
-extern DECLSPEC int SDLCALL SDL_SetError(const char *fmt, ...);
-extern DECLSPEC const char *SDLCALL SDL_GetError(void);
-extern DECLSPEC void SDLCALL SDL_ClearError(void);
+    extern DECLSPEC int SDLCALL SDL_SetError(const char* fmt, ...);
+    extern DECLSPEC const char* SDLCALL SDL_GetError(void);
+    extern DECLSPEC void SDLCALL SDL_ClearError(void);
 
 #define SDL_OutOfMemory()   SDL_Error(SDL_ENOMEM)
 #define SDL_Unsupported()   SDL_Error(SDL_UNSUPPORTED)
 #define SDL_InvalidParamError(param)    SDL_SetError("Parameter '%s' is invalid", (param))
-typedef enum
-{
-    SDL_ENOMEM,
-    SDL_EFREAD,
-    SDL_EFWRITE,
-    SDL_EFSEEK,
-    SDL_UNSUPPORTED,
-    SDL_LASTERROR
-} SDL_errorcode;
+    typedef enum
+    {
+        SDL_ENOMEM,
+        SDL_EFREAD,
+        SDL_EFWRITE,
+        SDL_EFSEEK,
+        SDL_UNSUPPORTED,
+        SDL_LASTERROR
+    } SDL_errorcode;
 
-extern DECLSPEC int SDLCALL SDL_Error(SDL_errorcode code);
+    extern DECLSPEC int SDLCALL SDL_Error(SDL_errorcode code);
 
 #ifdef __cplusplus
 }
@@ -1566,137 +1566,137 @@ extern "C" {
 
 #if defined(__GNUC__) && defined(__i386__) && \
    !(__GNUC__ == 2 && __GNUC_MINOR__ == 95)
-SDL_FORCE_INLINE Uint16
-SDL_Swap16(Uint16 x)
-{
-  __asm__("xchgb %b0,%h0": "=q"(x):"0"(x));
-    return x;
-}
-#elif defined(__GNUC__) && defined(__x86_64__)
-SDL_FORCE_INLINE Uint16
-SDL_Swap16(Uint16 x)
-{
-  __asm__("xchgb %b0,%h0": "=Q"(x):"0"(x));
-    return x;
-}
-#elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
-SDL_FORCE_INLINE Uint16
-SDL_Swap16(Uint16 x)
-{
-    int result;
-
-  __asm__("rlwimi %0,%2,8,16,23": "=&r"(result):"0"(x >> 8), "r"(x));
-    return (Uint16)result;
-}
-#elif defined(__GNUC__) && (defined(__M68000__) || defined(__M68020__)) && !defined(__mcoldfire__)
-SDL_FORCE_INLINE Uint16
-SDL_Swap16(Uint16 x)
-{
-  __asm__("rorw #8,%0": "=d"(x): "0"(x):"cc");
-    return x;
-}
-#else
-SDL_FORCE_INLINE Uint16
-SDL_Swap16(Uint16 x)
-{
-    return SDL_static_cast(Uint16, ((x << 8) | (x >> 8)));
-}
-#endif
-
-#if defined(__GNUC__) && defined(__i386__)
-SDL_FORCE_INLINE Uint32
-SDL_Swap32(Uint32 x)
-{
-  __asm__("bswap %0": "=r"(x):"0"(x));
-    return x;
-}
-#elif defined(__GNUC__) && defined(__x86_64__)
-SDL_FORCE_INLINE Uint32
-SDL_Swap32(Uint32 x)
-{
-  __asm__("bswapl %0": "=r"(x):"0"(x));
-    return x;
-}
-#elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
-SDL_FORCE_INLINE Uint32
-SDL_Swap32(Uint32 x)
-{
-    Uint32 result;
-
-  __asm__("rlwimi %0,%2,24,16,23": "=&r"(result):"0"(x >> 24), "r"(x));
-  __asm__("rlwimi %0,%2,8,8,15": "=&r"(result):"0"(result), "r"(x));
-  __asm__("rlwimi %0,%2,24,0,7": "=&r"(result):"0"(result), "r"(x));
-    return result;
-}
-#elif defined(__GNUC__) && (defined(__M68000__) || defined(__M68020__)) && !defined(__mcoldfire__)
-SDL_FORCE_INLINE Uint32
-SDL_Swap32(Uint32 x)
-{
-  __asm__("rorw #8,%0\n\tswap %0\n\trorw #8,%0": "=d"(x): "0"(x):"cc");
-    return x;
-}
-#else
-SDL_FORCE_INLINE Uint32
-SDL_Swap32(Uint32 x)
-{
-    return SDL_static_cast(Uint32, ((x << 24) | ((x << 8) & 0x00FF0000) |
-                                    ((x >> 8) & 0x0000FF00) | (x >> 24)));
-}
-#endif
-
-#if defined(__GNUC__) && defined(__i386__)
-SDL_FORCE_INLINE Uint64
-SDL_Swap64(Uint64 x)
-{
-    union
+    SDL_FORCE_INLINE Uint16
+        SDL_Swap16(Uint16 x)
     {
-        struct
+        __asm__("xchgb %b0,%h0": "=q"(x) : "0"(x));
+        return x;
+    }
+#elif defined(__GNUC__) && defined(__x86_64__)
+    SDL_FORCE_INLINE Uint16
+        SDL_Swap16(Uint16 x)
+    {
+        __asm__("xchgb %b0,%h0": "=Q"(x) : "0"(x));
+        return x;
+    }
+#elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
+    SDL_FORCE_INLINE Uint16
+        SDL_Swap16(Uint16 x)
+    {
+        int result;
+
+        __asm__("rlwimi %0,%2,8,16,23": "=&r"(result) : "0"(x >> 8), "r"(x));
+        return (Uint16)result;
+    }
+#elif defined(__GNUC__) && (defined(__M68000__) || defined(__M68020__)) && !defined(__mcoldfire__)
+    SDL_FORCE_INLINE Uint16
+        SDL_Swap16(Uint16 x)
+    {
+        __asm__("rorw #8,%0": "=d"(x) : "0"(x) : "cc");
+        return x;
+    }
+#else
+    SDL_FORCE_INLINE Uint16
+        SDL_Swap16(Uint16 x)
+    {
+        return SDL_static_cast(Uint16, ((x << 8) | (x >> 8)));
+    }
+#endif
+
+#if defined(__GNUC__) && defined(__i386__)
+    SDL_FORCE_INLINE Uint32
+        SDL_Swap32(Uint32 x)
+    {
+        __asm__("bswap %0": "=r"(x) : "0"(x));
+        return x;
+    }
+#elif defined(__GNUC__) && defined(__x86_64__)
+    SDL_FORCE_INLINE Uint32
+        SDL_Swap32(Uint32 x)
+    {
+        __asm__("bswapl %0": "=r"(x) : "0"(x));
+        return x;
+    }
+#elif defined(__GNUC__) && (defined(__powerpc__) || defined(__ppc__))
+    SDL_FORCE_INLINE Uint32
+        SDL_Swap32(Uint32 x)
+    {
+        Uint32 result;
+
+        __asm__("rlwimi %0,%2,24,16,23": "=&r"(result) : "0"(x >> 24), "r"(x));
+        __asm__("rlwimi %0,%2,8,8,15": "=&r"(result) : "0"(result), "r"(x));
+        __asm__("rlwimi %0,%2,24,0,7": "=&r"(result) : "0"(result), "r"(x));
+        return result;
+    }
+#elif defined(__GNUC__) && (defined(__M68000__) || defined(__M68020__)) && !defined(__mcoldfire__)
+    SDL_FORCE_INLINE Uint32
+        SDL_Swap32(Uint32 x)
+    {
+        __asm__("rorw #8,%0\n\tswap %0\n\trorw #8,%0": "=d"(x) : "0"(x) : "cc");
+        return x;
+    }
+#else
+    SDL_FORCE_INLINE Uint32
+        SDL_Swap32(Uint32 x)
+    {
+        return SDL_static_cast(Uint32, ((x << 24) | ((x << 8) & 0x00FF0000) |
+            ((x >> 8) & 0x0000FF00) | (x >> 24)));
+    }
+#endif
+
+#if defined(__GNUC__) && defined(__i386__)
+    SDL_FORCE_INLINE Uint64
+        SDL_Swap64(Uint64 x)
+    {
+        union
         {
-            Uint32 a, b;
-        } s;
-        Uint64 u;
-    } v;
-    v.u = x;
-  __asm__("bswapl %0 ; bswapl %1 ; xchgl %0,%1": "=r"(v.s.a), "=r"(v.s.b):"0"(v.s.a),
+            struct
+            {
+                Uint32 a, b;
+            } s;
+            Uint64 u;
+        } v;
+        v.u = x;
+        __asm__("bswapl %0 ; bswapl %1 ; xchgl %0,%1": "=r"(v.s.a), "=r"(v.s.b) : "0"(v.s.a),
             "1"(v.s.
                 b));
-    return v.u;
-}
+        return v.u;
+    }
 #elif defined(__GNUC__) && defined(__x86_64__)
-SDL_FORCE_INLINE Uint64
-SDL_Swap64(Uint64 x)
-{
-  __asm__("bswapq %0": "=r"(x):"0"(x));
-    return x;
-}
+    SDL_FORCE_INLINE Uint64
+        SDL_Swap64(Uint64 x)
+    {
+        __asm__("bswapq %0": "=r"(x) : "0"(x));
+        return x;
+    }
 #else
-SDL_FORCE_INLINE Uint64
-SDL_Swap64(Uint64 x)
-{
-    Uint32 hi, lo;
+    SDL_FORCE_INLINE Uint64
+        SDL_Swap64(Uint64 x)
+    {
+        Uint32 hi, lo;
 
-    lo = SDL_static_cast(Uint32, x & 0xFFFFFFFF);
-    x >>= 32;
-    hi = SDL_static_cast(Uint32, x & 0xFFFFFFFF);
-    x = SDL_Swap32(lo);
-    x <<= 32;
-    x |= SDL_Swap32(hi);
-    return (x);
-}
+        lo = SDL_static_cast(Uint32, x & 0xFFFFFFFF);
+        x >>= 32;
+        hi = SDL_static_cast(Uint32, x & 0xFFFFFFFF);
+        x = SDL_Swap32(lo);
+        x <<= 32;
+        x |= SDL_Swap32(hi);
+        return (x);
+    }
 #endif
 
-SDL_FORCE_INLINE float
-SDL_SwapFloat(float x)
-{
-    union
+    SDL_FORCE_INLINE float
+        SDL_SwapFloat(float x)
     {
-        float f;
-        Uint32 ui32;
-    } swapper;
-    swapper.f = x;
-    swapper.ui32 = SDL_Swap32(swapper.ui32);
-    return swapper.f;
-}
+        union
+        {
+            float f;
+            Uint32 ui32;
+        } swapper;
+        swapper.f = x;
+        swapper.ui32 = SDL_Swap32(swapper.ui32);
+        return swapper.f;
+    }
 
 #if SDL_BYTEORDER == SDL_LIL_ENDIAN
 #define SDL_SwapLE16(X) (X)
@@ -1846,53 +1846,53 @@ extern "C" {
 
 #define SDL_MUTEX_MAXWAIT   (~(Uint32)0)
 
-struct SDL_mutex;
-typedef struct SDL_mutex SDL_mutex;
+    struct SDL_mutex;
+    typedef struct SDL_mutex SDL_mutex;
 
-extern DECLSPEC SDL_mutex* (SDLCALL* SDL_CreateMutex)(void);
+    extern DECLSPEC SDL_mutex* SDLCALL SDL_CreateMutex(void);
 
 #define SDL_mutexP(m)   SDL_LockMutex(m)
-extern DECLSPEC int (SDLCALL* SDL_LockMutex)(SDL_mutex * mutex);
+    extern DECLSPEC int SDLCALL SDL_LockMutex(SDL_mutex* mutex);
 
-extern DECLSPEC int SDLCALL SDL_TryLockMutex(SDL_mutex * mutex);
+    extern DECLSPEC int SDLCALL SDL_TryLockMutex(SDL_mutex* mutex);
 
 #define SDL_mutexV(m)   SDL_UnlockMutex(m)
-extern DECLSPEC int (SDLCALL* SDL_UnlockMutex)(SDL_mutex * mutex);
+    extern DECLSPEC int SDLCALL SDL_UnlockMutex(SDL_mutex* mutex);
 
-extern DECLSPEC void (SDLCALL* SDL_DestroyMutex)(SDL_mutex * mutex);
+    extern DECLSPEC void SDLCALL SDL_DestroyMutex(SDL_mutex* mutex);
 
-struct SDL_semaphore;
-typedef struct SDL_semaphore SDL_sem;
+    struct SDL_semaphore;
+    typedef struct SDL_semaphore SDL_sem;
 
-extern DECLSPEC SDL_sem *SDLCALL SDL_CreateSemaphore(Uint32 initial_value);
+    extern DECLSPEC SDL_sem* SDLCALL SDL_CreateSemaphore(Uint32 initial_value);
 
-extern DECLSPEC void SDLCALL SDL_DestroySemaphore(SDL_sem * sem);
+    extern DECLSPEC void SDLCALL SDL_DestroySemaphore(SDL_sem* sem);
 
-extern DECLSPEC int SDLCALL SDL_SemWait(SDL_sem * sem);
+    extern DECLSPEC int SDLCALL SDL_SemWait(SDL_sem* sem);
 
-extern DECLSPEC int SDLCALL SDL_SemTryWait(SDL_sem * sem);
+    extern DECLSPEC int SDLCALL SDL_SemTryWait(SDL_sem* sem);
 
-extern DECLSPEC int SDLCALL SDL_SemWaitTimeout(SDL_sem * sem, Uint32 ms);
+    extern DECLSPEC int SDLCALL SDL_SemWaitTimeout(SDL_sem* sem, Uint32 ms);
 
-extern DECLSPEC int SDLCALL SDL_SemPost(SDL_sem * sem);
+    extern DECLSPEC int SDLCALL SDL_SemPost(SDL_sem* sem);
 
-extern DECLSPEC Uint32 SDLCALL SDL_SemValue(SDL_sem * sem);
+    extern DECLSPEC Uint32 SDLCALL SDL_SemValue(SDL_sem* sem);
 
-struct SDL_cond;
-typedef struct SDL_cond SDL_cond;
+    struct SDL_cond;
+    typedef struct SDL_cond SDL_cond;
 
-extern DECLSPEC SDL_cond *SDLCALL SDL_CreateCond(void);
+    extern DECLSPEC SDL_cond* SDLCALL SDL_CreateCond(void);
 
-extern DECLSPEC void SDLCALL SDL_DestroyCond(SDL_cond * cond);
+    extern DECLSPEC void SDLCALL SDL_DestroyCond(SDL_cond* cond);
 
-extern DECLSPEC int SDLCALL SDL_CondSignal(SDL_cond * cond);
+    extern DECLSPEC int SDLCALL SDL_CondSignal(SDL_cond* cond);
 
-extern DECLSPEC int SDLCALL SDL_CondBroadcast(SDL_cond * cond);
+    extern DECLSPEC int SDLCALL SDL_CondBroadcast(SDL_cond* cond);
 
-extern DECLSPEC int SDLCALL SDL_CondWait(SDL_cond * cond, SDL_mutex * mutex);
+    extern DECLSPEC int SDLCALL SDL_CondWait(SDL_cond* cond, SDL_mutex* mutex);
 
-extern DECLSPEC int SDLCALL SDL_CondWaitTimeout(SDL_cond * cond,
-                                                SDL_mutex * mutex, Uint32 ms);
+    extern DECLSPEC int SDLCALL SDL_CondWaitTimeout(SDL_cond* cond,
+        SDL_mutex* mutex, Uint32 ms);
 
 #ifdef __cplusplus
 }
@@ -2021,16 +2021,16 @@ extern DECLSPEC int SDLCALL SDL_CondWaitTimeout(SDL_cond * cond,
 extern "C" {
 #endif
 
-typedef int SDL_SpinLock;
+    typedef int SDL_SpinLock;
 
-extern DECLSPEC SDL_bool SDLCALL SDL_AtomicTryLock(SDL_SpinLock *lock);
+    extern DECLSPEC SDL_bool SDLCALL SDL_AtomicTryLock(SDL_SpinLock* lock);
 
-extern DECLSPEC void SDLCALL SDL_AtomicLock(SDL_SpinLock *lock);
+    extern DECLSPEC void SDLCALL SDL_AtomicLock(SDL_SpinLock* lock);
 
-extern DECLSPEC void SDLCALL SDL_AtomicUnlock(SDL_SpinLock *lock);
+    extern DECLSPEC void SDLCALL SDL_AtomicUnlock(SDL_SpinLock* lock);
 
 #if defined(_MSC_VER) && (_MSC_VER > 1200)
-void _ReadWriteBarrier(void);
+    void _ReadWriteBarrier(void);
 #pragma intrinsic(_ReadWriteBarrier)
 #define SDL_CompilerBarrier()   _ReadWriteBarrier()
 #elif defined(__GNUC__)
@@ -2050,8 +2050,8 @@ void _ReadWriteBarrier(void);
 #elif defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) || defined(__ARM_ARCH_6T2__) || defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__)
 #ifdef __thumb__
 
-extern DECLSPEC void SDLCALL SDL_MemoryBarrierRelease();
-extern DECLSPEC void SDLCALL SDL_MemoryBarrierAcquire();
+    extern DECLSPEC void SDLCALL SDL_MemoryBarrierRelease();
+    extern DECLSPEC void SDLCALL SDL_MemoryBarrierAcquire();
 #else
 #define SDL_MemoryBarrierRelease()   __asm__ __volatile__ ("mcr p15, 0, %0, c7, c10, 5" : : "r"(0) : "memory")
 #define SDL_MemoryBarrierAcquire()   __asm__ __volatile__ ("mcr p15, 0, %0, c7, c10, 5" : : "r"(0) : "memory")
@@ -2066,15 +2066,15 @@ extern DECLSPEC void SDLCALL SDL_MemoryBarrierAcquire();
 #define SDL_MemoryBarrierAcquire()  SDL_CompilerBarrier()
 #endif
 
-typedef struct { int value; } SDL_atomic_t;
+    typedef struct { int value; } SDL_atomic_t;
 
-extern DECLSPEC SDL_bool SDLCALL SDL_AtomicCAS(SDL_atomic_t *a, int oldval, int newval);
+    extern DECLSPEC SDL_bool SDLCALL SDL_AtomicCAS(SDL_atomic_t* a, int oldval, int newval);
 
-extern DECLSPEC int SDLCALL SDL_AtomicSet(SDL_atomic_t *a, int v);
+    extern DECLSPEC int SDLCALL SDL_AtomicSet(SDL_atomic_t* a, int v);
 
-extern DECLSPEC int SDLCALL SDL_AtomicGet(SDL_atomic_t *a);
+    extern DECLSPEC int SDLCALL SDL_AtomicGet(SDL_atomic_t* a);
 
-extern DECLSPEC int SDLCALL SDL_AtomicAdd(SDL_atomic_t *a, int v);
+    extern DECLSPEC int SDLCALL SDL_AtomicAdd(SDL_atomic_t* a, int v);
 
 #ifndef SDL_AtomicIncRef
 #define SDL_AtomicIncRef(a)    SDL_AtomicAdd(a, 1)
@@ -2084,11 +2084,11 @@ extern DECLSPEC int SDLCALL SDL_AtomicAdd(SDL_atomic_t *a, int v);
 #define SDL_AtomicDecRef(a)    (SDL_AtomicAdd(a, -1) == 1)
 #endif
 
-extern DECLSPEC SDL_bool SDLCALL SDL_AtomicCASPtr(void **a, void *oldval, void *newval);
+    extern DECLSPEC SDL_bool SDLCALL SDL_AtomicCASPtr(void** a, void* oldval, void* newval);
 
-extern DECLSPEC void* SDLCALL SDL_AtomicSetPtr(void **a, void* v);
+    extern DECLSPEC void* SDLCALL SDL_AtomicSetPtr(void** a, void* v);
 
-extern DECLSPEC void* SDLCALL SDL_AtomicGetPtr(void **a);
+    extern DECLSPEC void* SDLCALL SDL_AtomicGetPtr(void** a);
 
 #ifdef __cplusplus
 }
@@ -2211,38 +2211,38 @@ extern DECLSPEC void* SDLCALL SDL_AtomicGetPtr(void **a);
 extern "C" {
 #endif
 
-struct SDL_Thread;
-typedef struct SDL_Thread SDL_Thread;
+    struct SDL_Thread;
+    typedef struct SDL_Thread SDL_Thread;
 
-typedef unsigned long SDL_threadID;
+    typedef unsigned long SDL_threadID;
 
-typedef unsigned int SDL_TLSID;
+    typedef unsigned int SDL_TLSID;
 
-typedef enum {
-    SDL_THREAD_PRIORITY_LOW,
-    SDL_THREAD_PRIORITY_NORMAL,
-    SDL_THREAD_PRIORITY_HIGH
-} SDL_ThreadPriority;
+    typedef enum {
+        SDL_THREAD_PRIORITY_LOW,
+        SDL_THREAD_PRIORITY_NORMAL,
+        SDL_THREAD_PRIORITY_HIGH
+    } SDL_ThreadPriority;
 
-typedef int (SDLCALL * SDL_ThreadFunction) (void *data);
+    typedef int (SDLCALL* SDL_ThreadFunction) (void* data);
 
 #if defined(__WIN32__) && !defined(HAVE_LIBC)
 
 #define SDL_PASSED_BEGINTHREAD_ENDTHREAD
 #include <process.h>
 
-typedef uintptr_t(__cdecl * pfnSDL_CurrentBeginThread) (void *, unsigned,
-                                                        unsigned (__stdcall *
-                                                                  func) (void
-                                                                         *),
-                                                        void *arg, unsigned,
-                                                        unsigned *threadID);
-typedef void (__cdecl * pfnSDL_CurrentEndThread) (unsigned code);
+    typedef uintptr_t(__cdecl* pfnSDL_CurrentBeginThread) (void*, unsigned,
+        unsigned(__stdcall*
+            func) (void
+                *),
+        void* arg, unsigned,
+        unsigned* threadID);
+    typedef void(__cdecl* pfnSDL_CurrentEndThread) (unsigned code);
 
-extern DECLSPEC SDL_Thread *SDLCALL
-SDL_CreateThread(SDL_ThreadFunction fn, const char *name, void *data,
-                 pfnSDL_CurrentBeginThread pfnBeginThread,
-                 pfnSDL_CurrentEndThread pfnEndThread);
+    extern DECLSPEC SDL_Thread* SDLCALL
+        SDL_CreateThread(SDL_ThreadFunction fn, const char* name, void* data,
+            pfnSDL_CurrentBeginThread pfnBeginThread,
+            pfnSDL_CurrentEndThread pfnEndThread);
 
 #if defined(SDL_CreateThread) && SDL_DYNAMIC_API
 #undef SDL_CreateThread
@@ -2253,22 +2253,22 @@ SDL_CreateThread(SDL_ThreadFunction fn, const char *name, void *data,
 
 #else
 
-extern DECLSPEC SDL_Thread *SDLCALL
-SDL_CreateThread(SDL_ThreadFunction fn, const char *name, void *data);
+    extern DECLSPEC SDL_Thread* SDLCALL
+        SDL_CreateThread(SDL_ThreadFunction fn, const char* name, void* data);
 
 #endif
 
-extern DECLSPEC const char *SDLCALL SDL_GetThreadName(SDL_Thread *thread);
+    extern DECLSPEC const char* SDLCALL SDL_GetThreadName(SDL_Thread* thread);
 
-extern DECLSPEC SDL_threadID SDLCALL SDL_ThreadID(void);
+    extern DECLSPEC SDL_threadID SDLCALL SDL_ThreadID(void);
 
-extern DECLSPEC SDL_threadID SDLCALL SDL_GetThreadID(SDL_Thread * thread);
+    extern DECLSPEC SDL_threadID SDLCALL SDL_GetThreadID(SDL_Thread* thread);
 
-extern DECLSPEC int SDLCALL SDL_SetThreadPriority(SDL_ThreadPriority priority);
+    extern DECLSPEC int SDLCALL SDL_SetThreadPriority(SDL_ThreadPriority priority);
 
-extern DECLSPEC void SDLCALL SDL_WaitThread(SDL_Thread * thread, int *status);
+    extern DECLSPEC void SDLCALL SDL_WaitThread(SDL_Thread* thread, int* status);
 
-extern DECLSPEC void SDLCALL SDL_DetachThread(SDL_Thread * thread);
+    extern DECLSPEC void SDLCALL SDL_DetachThread(SDL_Thread* thread);
 
 #ifdef __cplusplus
 }
@@ -2401,91 +2401,91 @@ extern "C" {
 #define SDL_RWOPS_MEMORY    4
 #define SDL_RWOPS_MEMORY_RO 5
 
-typedef struct SDL_RWops
-{
-
-    Sint64 (SDLCALL * size) (struct SDL_RWops * context);
-
-    Sint64 (SDLCALL * seek) (struct SDL_RWops * context, Sint64 offset,
-                             int whence);
-
-    size_t (SDLCALL * read) (struct SDL_RWops * context, void *ptr,
-                             size_t size, size_t maxnum);
-
-    size_t (SDLCALL * write) (struct SDL_RWops * context, const void *ptr,
-                              size_t size, size_t num);
-
-    int (SDLCALL * close) (struct SDL_RWops * context);
-
-    Uint32 type;
-    union
+    typedef struct SDL_RWops
     {
+
+        Sint64(SDLCALL* size) (struct SDL_RWops* context);
+
+        Sint64(SDLCALL* seek) (struct SDL_RWops* context, Sint64 offset,
+            int whence);
+
+        size_t(SDLCALL* read) (struct SDL_RWops* context, void* ptr,
+            size_t size, size_t maxnum);
+
+        size_t(SDLCALL* write) (struct SDL_RWops* context, const void* ptr,
+            size_t size, size_t num);
+
+        int (SDLCALL* close) (struct SDL_RWops* context);
+
+        Uint32 type;
+        union
+        {
 #if defined(ANDROID)
-        struct
-        {
-            void *fileNameRef;
-            void *inputStreamRef;
-            void *readableByteChannelRef;
-            void *readMethod;
-            void *assetFileDescriptorRef;
-            long position;
-            long size;
-            long offset;
-            int fd;
-        } androidio;
-#elif defined(__WIN32__)
-        struct
-        {
-            SDL_bool append;
-            void *h;
             struct
             {
-                void *data;
-                size_t size;
-                size_t left;
-            } buffer;
-        } windowsio;
+                void* fileNameRef;
+                void* inputStreamRef;
+                void* readableByteChannelRef;
+                void* readMethod;
+                void* assetFileDescriptorRef;
+                long position;
+                long size;
+                long offset;
+                int fd;
+            } androidio;
+#elif defined(__WIN32__)
+            struct
+            {
+                SDL_bool append;
+                void* h;
+                struct
+                {
+                    void* data;
+                    size_t size;
+                    size_t left;
+                } buffer;
+            } windowsio;
 #endif
 
 #ifdef HAVE_STDIO_H
-        struct
-        {
-            SDL_bool autoclose;
-            FILE *fp;
-        } stdio;
+            struct
+            {
+                SDL_bool autoclose;
+                FILE* fp;
+            } stdio;
 #endif
-        struct
-        {
-            Uint8 *base;
-            Uint8 *here;
-            Uint8 *stop;
-        } mem;
-        struct
-        {
-            void *data1;
-            void *data2;
-        } unknown;
-    } hidden;
+            struct
+            {
+                Uint8* base;
+                Uint8* here;
+                Uint8* stop;
+            } mem;
+            struct
+            {
+                void* data1;
+                void* data2;
+            } unknown;
+        } hidden;
 
-} SDL_RWops;
+    } SDL_RWops;
 
-extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromFile(const char *file,
-                                                  const char *mode);
+    extern DECLSPEC SDL_RWops* SDLCALL SDL_RWFromFile(const char* file,
+        const char* mode);
 
 #ifdef HAVE_STDIO_H
-extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromFP(FILE * fp,
-                                                SDL_bool autoclose);
+    extern DECLSPEC SDL_RWops* SDLCALL SDL_RWFromFP(FILE* fp,
+        SDL_bool autoclose);
 #else
-extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromFP(void * fp,
-                                                SDL_bool autoclose);
+    extern DECLSPEC SDL_RWops* SDLCALL SDL_RWFromFP(void* fp,
+        SDL_bool autoclose);
 #endif
 
-extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromMem(void *mem, int size);
-extern DECLSPEC SDL_RWops *SDLCALL SDL_RWFromConstMem(const void *mem,
-                                                      int size);
+    extern DECLSPEC SDL_RWops* SDLCALL SDL_RWFromMem(void* mem, int size);
+    extern DECLSPEC SDL_RWops* SDLCALL SDL_RWFromConstMem(const void* mem,
+        int size);
 
-extern DECLSPEC SDL_RWops *SDLCALL SDL_AllocRW(void);
-extern DECLSPEC void SDLCALL SDL_FreeRW(SDL_RWops * area);
+    extern DECLSPEC SDL_RWops* SDLCALL SDL_AllocRW(void);
+    extern DECLSPEC void SDLCALL SDL_FreeRW(SDL_RWops* area);
 
 #define RW_SEEK_SET 0
 #define RW_SEEK_CUR 1
@@ -2498,21 +2498,21 @@ extern DECLSPEC void SDLCALL SDL_FreeRW(SDL_RWops * area);
 #define SDL_RWwrite(ctx, ptr, size, n)  (ctx)->write(ctx, ptr, size, n)
 #define SDL_RWclose(ctx)        (ctx)->close(ctx)
 
-extern DECLSPEC Uint8 SDLCALL SDL_ReadU8(SDL_RWops * src);
-extern DECLSPEC Uint16 SDLCALL SDL_ReadLE16(SDL_RWops * src);
-extern DECLSPEC Uint16 SDLCALL SDL_ReadBE16(SDL_RWops * src);
-extern DECLSPEC Uint32 SDLCALL SDL_ReadLE32(SDL_RWops * src);
-extern DECLSPEC Uint32 SDLCALL SDL_ReadBE32(SDL_RWops * src);
-extern DECLSPEC Uint64 SDLCALL SDL_ReadLE64(SDL_RWops * src);
-extern DECLSPEC Uint64 SDLCALL SDL_ReadBE64(SDL_RWops * src);
+    extern DECLSPEC Uint8 SDLCALL SDL_ReadU8(SDL_RWops* src);
+    extern DECLSPEC Uint16 SDLCALL SDL_ReadLE16(SDL_RWops* src);
+    extern DECLSPEC Uint16 SDLCALL SDL_ReadBE16(SDL_RWops* src);
+    extern DECLSPEC Uint32 SDLCALL SDL_ReadLE32(SDL_RWops* src);
+    extern DECLSPEC Uint32 SDLCALL SDL_ReadBE32(SDL_RWops* src);
+    extern DECLSPEC Uint64 SDLCALL SDL_ReadLE64(SDL_RWops* src);
+    extern DECLSPEC Uint64 SDLCALL SDL_ReadBE64(SDL_RWops* src);
 
-extern DECLSPEC size_t SDLCALL SDL_WriteU8(SDL_RWops * dst, Uint8 value);
-extern DECLSPEC size_t SDLCALL SDL_WriteLE16(SDL_RWops * dst, Uint16 value);
-extern DECLSPEC size_t SDLCALL SDL_WriteBE16(SDL_RWops * dst, Uint16 value);
-extern DECLSPEC size_t SDLCALL SDL_WriteLE32(SDL_RWops * dst, Uint32 value);
-extern DECLSPEC size_t SDLCALL SDL_WriteBE32(SDL_RWops * dst, Uint32 value);
-extern DECLSPEC size_t SDLCALL SDL_WriteLE64(SDL_RWops * dst, Uint64 value);
-extern DECLSPEC size_t SDLCALL SDL_WriteBE64(SDL_RWops * dst, Uint64 value);
+    extern DECLSPEC size_t SDLCALL SDL_WriteU8(SDL_RWops* dst, Uint8 value);
+    extern DECLSPEC size_t SDLCALL SDL_WriteLE16(SDL_RWops* dst, Uint16 value);
+    extern DECLSPEC size_t SDLCALL SDL_WriteBE16(SDL_RWops* dst, Uint16 value);
+    extern DECLSPEC size_t SDLCALL SDL_WriteLE32(SDL_RWops* dst, Uint32 value);
+    extern DECLSPEC size_t SDLCALL SDL_WriteBE32(SDL_RWops* dst, Uint32 value);
+    extern DECLSPEC size_t SDLCALL SDL_WriteLE64(SDL_RWops* dst, Uint64 value);
+    extern DECLSPEC size_t SDLCALL SDL_WriteBE64(SDL_RWops* dst, Uint64 value);
 
 #ifdef __cplusplus
 }
@@ -2635,7 +2635,7 @@ extern DECLSPEC size_t SDLCALL SDL_WriteBE64(SDL_RWops * dst, Uint64 value);
 extern "C" {
 #endif
 
-typedef Uint16 SDL_AudioFormat;
+    typedef Uint16 SDL_AudioFormat;
 
 #define SDL_AUDIO_MASK_BITSIZE       (0xFF)
 #define SDL_AUDIO_MASK_DATATYPE      (1<<8)
@@ -2683,25 +2683,25 @@ typedef Uint16 SDL_AudioFormat;
 #define SDL_AUDIO_ALLOW_CHANNELS_CHANGE     0x00000004
 #define SDL_AUDIO_ALLOW_ANY_CHANGE          (SDL_AUDIO_ALLOW_FREQUENCY_CHANGE|SDL_AUDIO_ALLOW_FORMAT_CHANGE|SDL_AUDIO_ALLOW_CHANNELS_CHANGE)
 
-typedef void (SDLCALL * SDL_AudioCallback) (void *userdata, Uint8 * stream,
-                                            int len);
+    typedef void (SDLCALL* SDL_AudioCallback) (void* userdata, Uint8* stream,
+        int len);
 
-typedef struct SDL_AudioSpec
-{
-    int freq;
-    SDL_AudioFormat format;
-    Uint8 channels;
-    Uint8 silence;
-    Uint16 samples;
-    Uint16 padding;
-    Uint32 size;
-    SDL_AudioCallback callback;
-    void *userdata;
-} SDL_AudioSpec;
+    typedef struct SDL_AudioSpec
+    {
+        int freq;
+        SDL_AudioFormat format;
+        Uint8 channels;
+        Uint8 silence;
+        Uint16 samples;
+        Uint16 padding;
+        Uint32 size;
+        SDL_AudioCallback callback;
+        void* userdata;
+    } SDL_AudioSpec;
 
-struct SDL_AudioCVT;
-typedef void (SDLCALL * SDL_AudioFilter) (struct SDL_AudioCVT * cvt,
-                                          SDL_AudioFormat format);
+    struct SDL_AudioCVT;
+    typedef void (SDLCALL* SDL_AudioFilter) (struct SDL_AudioCVT* cvt,
+        SDL_AudioFormat format);
 
 #ifdef __GNUC__
 
@@ -2710,103 +2710,103 @@ typedef void (SDLCALL * SDL_AudioFilter) (struct SDL_AudioCVT * cvt,
 #define SDL_AUDIOCVT_PACKED
 #endif
 
-typedef struct SDL_AudioCVT
-{
-    int needed;
-    SDL_AudioFormat src_format;
-    SDL_AudioFormat dst_format;
-    double rate_incr;
-    Uint8 *buf;
-    int len;
-    int len_cvt;
-    int len_mult;
-    double len_ratio;
-    SDL_AudioFilter filters[10];
-    int filter_index;
-} SDL_AUDIOCVT_PACKED SDL_AudioCVT;
+    typedef struct SDL_AudioCVT
+    {
+        int needed;
+        SDL_AudioFormat src_format;
+        SDL_AudioFormat dst_format;
+        double rate_incr;
+        Uint8* buf;
+        int len;
+        int len_cvt;
+        int len_mult;
+        double len_ratio;
+        SDL_AudioFilter filters[10];
+        int filter_index;
+    } SDL_AUDIOCVT_PACKED SDL_AudioCVT;
 
-extern DECLSPEC int SDLCALL SDL_GetNumAudioDrivers(void);
-extern DECLSPEC const char *SDLCALL SDL_GetAudioDriver(int index);
+    extern DECLSPEC int SDLCALL SDL_GetNumAudioDrivers(void);
+    extern DECLSPEC const char* SDLCALL SDL_GetAudioDriver(int index);
 
-extern DECLSPEC int (SDLCALL* SDL_Init)(Uint32 flags);
-extern DECLSPEC void (SDLCALL* SDL_Quit)(void);
-extern DECLSPEC int (SDLCALL *SDL_AudioInit)(const char *driver_name);
-extern DECLSPEC void (SDLCALL *SDL_AudioQuit)(void);
+    extern DECLSPEC int SDLCALL SDL_AudioInit(const char* driver_name);
+    extern DECLSPEC void SDLCALL SDL_AudioQuit(void);
 
-extern DECLSPEC int(SDLCALL* SDL_OpenAudio)(SDL_AudioSpec * desired,
-                                          SDL_AudioSpec * obtained);
+    extern DECLSPEC const char* SDLCALL SDL_GetCurrentAudioDriver(void);
 
-typedef Uint32 SDL_AudioDeviceID;
+    extern DECLSPEC int SDLCALL SDL_OpenAudio(SDL_AudioSpec* desired,
+        SDL_AudioSpec* obtained);
 
-extern DECLSPEC int SDLCALL SDL_GetNumAudioDevices(int iscapture);
+    typedef Uint32 SDL_AudioDeviceID;
 
-extern DECLSPEC const char *SDLCALL SDL_GetAudioDeviceName(int index,
-                                                           int iscapture);
+    extern DECLSPEC int SDLCALL SDL_GetNumAudioDevices(int iscapture);
 
-extern DECLSPEC SDL_AudioDeviceID (SDLCALL* SDL_OpenAudioDevice)(const char
-                                                              *device,
-                                                              int iscapture,
-                                                              const
-                                                              SDL_AudioSpec *
-                                                              desired,
-                                                              SDL_AudioSpec *
-                                                              obtained,
-                                                              int
-                                                              allowed_changes);
+    extern DECLSPEC const char* SDLCALL SDL_GetAudioDeviceName(int index,
+        int iscapture);
 
-typedef enum
-{
-    SDL_AUDIO_STOPPED = 0,
-    SDL_AUDIO_PLAYING,
-    SDL_AUDIO_PAUSED
-} SDL_AudioStatus;
-extern DECLSPEC SDL_AudioStatus SDLCALL SDL_GetAudioStatus(void);
+    extern DECLSPEC SDL_AudioDeviceID SDLCALL SDL_OpenAudioDevice(const char
+        * device,
+        int iscapture,
+        const
+        SDL_AudioSpec*
+        desired,
+        SDL_AudioSpec*
+        obtained,
+        int
+        allowed_changes);
 
-extern DECLSPEC SDL_AudioStatus SDLCALL
-SDL_GetAudioDeviceStatus(SDL_AudioDeviceID dev);
+    typedef enum
+    {
+        SDL_AUDIO_STOPPED = 0,
+        SDL_AUDIO_PLAYING,
+        SDL_AUDIO_PAUSED
+    } SDL_AudioStatus;
+    extern DECLSPEC SDL_AudioStatus SDLCALL SDL_GetAudioStatus(void);
 
-extern DECLSPEC void (SDLCALL* SDL_PauseAudio)(int pause_on);
-extern DECLSPEC void (SDLCALL* SDL_PauseAudioDevice)(SDL_AudioDeviceID dev,
-                                                  int pause_on);
+    extern DECLSPEC SDL_AudioStatus SDLCALL
+        SDL_GetAudioDeviceStatus(SDL_AudioDeviceID dev);
 
-extern DECLSPEC SDL_AudioSpec *SDLCALL SDL_LoadWAV_RW(SDL_RWops * src,
-                                                      int freesrc,
-                                                      SDL_AudioSpec * spec,
-                                                      Uint8 ** audio_buf,
-                                                      Uint32 * audio_len);
+    extern DECLSPEC void SDLCALL SDL_PauseAudio(int pause_on);
+    extern DECLSPEC void SDLCALL SDL_PauseAudioDevice(SDL_AudioDeviceID dev,
+        int pause_on);
+
+    extern DECLSPEC SDL_AudioSpec* SDLCALL SDL_LoadWAV_RW(SDL_RWops* src,
+        int freesrc,
+        SDL_AudioSpec* spec,
+        Uint8** audio_buf,
+        Uint32* audio_len);
 
 #define SDL_LoadWAV(file, spec, audio_buf, audio_len) \
     SDL_LoadWAV_RW(SDL_RWFromFile(file, "rb"),1, spec,audio_buf,audio_len)
 
-extern DECLSPEC void SDLCALL SDL_FreeWAV(Uint8 * audio_buf);
+    extern DECLSPEC void SDLCALL SDL_FreeWAV(Uint8* audio_buf);
 
-extern DECLSPEC int SDLCALL SDL_BuildAudioCVT(SDL_AudioCVT * cvt,
-                                              SDL_AudioFormat src_format,
-                                              Uint8 src_channels,
-                                              int src_rate,
-                                              SDL_AudioFormat dst_format,
-                                              Uint8 dst_channels,
-                                              int dst_rate);
+    extern DECLSPEC int SDLCALL SDL_BuildAudioCVT(SDL_AudioCVT* cvt,
+        SDL_AudioFormat src_format,
+        Uint8 src_channels,
+        int src_rate,
+        SDL_AudioFormat dst_format,
+        Uint8 dst_channels,
+        int dst_rate);
 
-extern DECLSPEC int SDLCALL SDL_ConvertAudio(SDL_AudioCVT * cvt);
+    extern DECLSPEC int SDLCALL SDL_ConvertAudio(SDL_AudioCVT* cvt);
 
 #define SDL_MIX_MAXVOLUME 128
 
-extern DECLSPEC void SDLCALL SDL_MixAudio(Uint8 * dst, const Uint8 * src,
-                                          Uint32 len, int volume);
+    extern DECLSPEC void SDLCALL SDL_MixAudio(Uint8* dst, const Uint8* src,
+        Uint32 len, int volume);
 
-extern DECLSPEC void SDLCALL SDL_MixAudioFormat(Uint8 * dst,
-                                                const Uint8 * src,
-                                                SDL_AudioFormat format,
-                                                Uint32 len, int volume);
+    extern DECLSPEC void SDLCALL SDL_MixAudioFormat(Uint8* dst,
+        const Uint8* src,
+        SDL_AudioFormat format,
+        Uint32 len, int volume);
 
-extern DECLSPEC void SDLCALL SDL_LockAudio(void);
-extern DECLSPEC void SDLCALL SDL_LockAudioDevice(SDL_AudioDeviceID dev);
-extern DECLSPEC void SDLCALL SDL_UnlockAudio(void);
-extern DECLSPEC void SDLCALL SDL_UnlockAudioDevice(SDL_AudioDeviceID dev);
+    extern DECLSPEC void SDLCALL SDL_LockAudio(void);
+    extern DECLSPEC void SDLCALL SDL_LockAudioDevice(SDL_AudioDeviceID dev);
+    extern DECLSPEC void SDLCALL SDL_UnlockAudio(void);
+    extern DECLSPEC void SDLCALL SDL_UnlockAudioDevice(SDL_AudioDeviceID dev);
 
-extern DECLSPEC void (SDLCALL* SDL_CloseAudio)(void);
-extern DECLSPEC void (SDLCALL* SDL_CloseAudioDevice)(SDL_AudioDeviceID dev);
+    extern DECLSPEC void SDLCALL SDL_CloseAudio(void);
+    extern DECLSPEC void SDLCALL SDL_CloseAudioDevice(SDL_AudioDeviceID dev);
 
 #ifdef __cplusplus
 }

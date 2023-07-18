@@ -127,6 +127,7 @@ namespace OmniMIDI {
 	class BASSSynth : public SynthModule {
 	private:
 		ErrorSystem::WinErr SynErr;
+		NT::Funcs NTFuncs;
 
 		Lib* BAudLib = nullptr;
 		Lib* BMidLib = nullptr;

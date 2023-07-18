@@ -140,7 +140,7 @@
     <ClCompile Include="TSFSynth.cpp">
       <Filter>Source Files\Synthesizer\Synth modules</Filter>
     </ClCompile>
-    <ClCompile Include="minisdl_audio.cpp">
+    <ClCompile Include="minisdl_audio.c">
       <Filter>Source Files\Synthesizer\SDL</Filter>
     </ClCompile>
   </ItemGroup>

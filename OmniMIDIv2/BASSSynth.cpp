@@ -3,18 +3,18 @@
 void OmniMIDI::BASSSynth::AudioThread() {
 	while (IsSynthInitialized()) {
 		BASS_ChannelUpdate(AudioStream, 0);
-		NtDelayExecution(-1);
+		NTFuncs.uSleep(-1);
 	}
 }
 
 void OmniMIDI::BASSSynth::EventsThread() {
 	// Spin while waiting for the stream to go online
 	while (AudioStream == 0)
-		NtDelayExecution(-1);
+		NTFuncs.uSleep(-1);
 
 	while (IsSynthInitialized()) {
 		if (!ProcessEvBuf())
-			NtDelayExecution(-1);
+			NTFuncs.uSleep(-1);
 	}
 }
 
@@ -173,8 +173,6 @@ bool OmniMIDI::BASSSynth::ProcessEvBuf() {
 }
 
 bool OmniMIDI::BASSSynth::LoadFuncs() {
-	PrepZwDelayExecution();
-
 	void* ptr = nullptr;
 
 	// Load required libs
@@ -673,7 +671,7 @@ bool OmniMIDI::BASSSynth::SettingsManager(unsigned int setting, bool get, void* 
 	SettingsManagerCase(KDMAPI_MAXRENDERINGTIME, get, unsigned int, Settings->MaxCPU, var, size);
 
 	default:
-		NERROR(SynErr, "Unknown setting passed to SettingsManager.", true);
+		LOG(SynErr, "Unknown setting passed to SettingsManager.");
 		return false;
 	}
 

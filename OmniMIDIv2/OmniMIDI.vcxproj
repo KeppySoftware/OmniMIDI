@@ -266,6 +266,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
+      <ImportLibrary>$(ProjectDir)lib\$(TargetName)_Win32.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -293,6 +294,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
+      <ImportLibrary>$(ProjectDir)lib\$(TargetName)_ARM.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -363,6 +365,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
+      <ImportLibrary>$(ProjectDir)lib\$(TargetName)_Win64.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
@@ -389,6 +392,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
+      <ImportLibrary>$(ProjectDir)lib\$(TargetName)_ARM64.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -415,7 +419,7 @@
     <ClCompile Include="ErrSys.cpp" />
     <ClCompile Include="FluidSynth.cpp" />
     <ClCompile Include="libfluidsynth.cpp" />
-    <ClCompile Include="minisdl_audio.cpp" />
+    <ClCompile Include="minisdl_audio.c" />
     <ClCompile Include="TSFSynth.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WDMDrv.cpp" />

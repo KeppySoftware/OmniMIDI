@@ -87,7 +87,9 @@ namespace OmniMIDI {
 				swprintf_s(OMBPath, L"%s\\OmniMIDI\\defblacklist.json\0", OMBPath);
 				swprintf_s(OMBPath, L"%s\\OmniMIDI\\blacklist.json\0", OMBPath);
 				LoadJSON(OMPath);
+#ifndef _M_ARM
 				LoadBlacklist(OMBPath);
+#endif
 			}
 		}
 
@@ -138,6 +140,7 @@ namespace OmniMIDI {
 			}
 		}
 
+#ifndef _M_ARM
 		void LoadBlacklist(wchar_t* Path) {
 			std::fstream st;
 			st.open(Path, std::fstream::in);
@@ -159,6 +162,7 @@ namespace OmniMIDI {
 				st.close();
 			}
 		}
+#endif
 
 		bool IsBlacklistedProcess() {
 			char szFilePath[MAX_PATH];
@@ -184,5 +188,4 @@ namespace OmniMIDI {
 		}
 	};
 }
-
 #endif

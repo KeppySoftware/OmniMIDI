@@ -10,13 +10,13 @@
 #ifndef _TSFSYNTH_H
 #define _TSFSYNTH_H
 
-// Not supported on ARM Thumb-2!
+#ifdef _M_ARM
+#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 #ifdef _WIN32
 #include <Windows.h>
 #endif
-
-#ifndef _M_ARM
 
 #include <tsf/minisdl_audio.h>
 #include <tsf.h>
@@ -33,9 +33,11 @@ namespace OmniMIDI {
 #pragma clang diagnostic pop
 
 	public:
+		bool StereoRendering = true;
 		unsigned int EvBufSize = 32768;
 		unsigned int AudioFrequency = 48000;
 		unsigned int Samples = 4096;
+		unsigned int MaxVoices = 512;
 
 		TinySFSettings() {
 			// When you initialize Settings(), load OM's own settings by default
@@ -54,9 +56,11 @@ namespace OmniMIDI {
 			if (st.is_open()) {
 				nlohmann::json defset = {
 					{ "TinySFSynth", {
+						JSONGetVal(StereoRendering),
 						JSONGetVal(EvBufSize),
 						JSONGetVal(AudioFrequency),
-						JSONGetVal(Samples)
+						JSONGetVal(Samples),
+						JSONGetVal(MaxVoices)
 					}}
 				};
 
@@ -80,9 +84,11 @@ namespace OmniMIDI {
 						auto& JsonData = json["TinySFSynth"];
 
 						if (!(JsonData == nullptr)) {
+							JSONSetVal(bool, StereoRendering);
 							JSONSetVal(unsigned int, EvBufSize);
 							JSONSetVal(unsigned int, AudioFrequency);
 							JSONSetVal(unsigned int, Samples);
+							JSONSetVal(unsigned int, MaxVoices);
 						}
 					}
 					else throw nlohmann::json::type_error::create(667, "json structure is not valid", nullptr);
@@ -101,20 +107,7 @@ namespace OmniMIDI {
 	class TinySFSynth : public SynthModule {
 	private:
 		ErrorSystem::WinErr SynErr;
-
-		Lib* SDLLib = nullptr;
-
-		LibImport SLibImports[9] = {
-			ImpFunc(SDL_AudioInit),
-			ImpFunc(SDL_AudioQuit),
-			ImpFunc(SDL_CreateMutex),
-			ImpFunc(SDL_DestroyMutex),
-			ImpFunc(SDL_OpenAudioDevice),
-			ImpFunc(SDL_PauseAudioDevice),
-			ImpFunc(SDL_LockMutex),
-			ImpFunc(SDL_UnlockMutex),
-			ImpFunc(SDL_CloseAudioDevice)
-		};
+		NT::Funcs NTFuncs;
 
 		std::jthread _EvtThread;
 		EvBuf* Events = nullptr;
@@ -136,7 +129,7 @@ namespace OmniMIDI {
 
 		void Callback(float* stream, int len) {
 			// Render the audio samples in float format
-			int SampleCount = (len / (2 * sizeof(float))); //2 output channels
+			int SampleCount = (len / ((Settings->StereoRendering ? 2 : 1) * sizeof(float))); //2 output channels
 			SDL_LockMutex(g_Mutex); //get exclusive lock
 			tsf_render_float(g_TinySoundFont, stream, SampleCount, 0);
 			SDL_UnlockMutex(g_Mutex);
@@ -165,7 +158,5 @@ namespace OmniMIDI {
 		int TalkToSynthDirectly(unsigned int evt, unsigned int chan, unsigned int param) { return 0; }
 	};
 }
-
-#endif
 
 #endif

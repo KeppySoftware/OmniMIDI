@@ -20,6 +20,9 @@ static OmniMIDI::WDMSettings* WDMSettings = nullptr;
 static OmniMIDI::SynthModule* SynthModule = nullptr;
 static HMODULE extModule = nullptr;
 
+static NT::Funcs NTFuncs;
+static signed long long TickStart = 0;
+
 extern "C" {
 	__declspec(dllexport)
 	BOOL APIENTRY DllMain(HMODULE hModule, DWORD ReasonForCall, LPVOID lpReserved)
@@ -28,6 +31,13 @@ extern "C" {
 		switch (ReasonForCall)
 		{
 		case DLL_PROCESS_ATTACH:
+			if (!TickStart) {
+				if (!(NTFuncs.querySystemTime(&TickStart) == 0)) {
+					OutputDebugStringA("Failed to parse starting tick through NtQuerySystemTime! OmniMIDI will not load.");
+					return FALSE;
+				}
+			}
+
 			if (!DriverComponent) {
 				DriverComponent = new WinDriver::DriverComponent;
 
@@ -51,7 +61,9 @@ extern "C" {
 				if (WDMSettings) delete WDMSettings;
 
 				ret = DriverComponent->UnsetLibraryHandle();
+
 				delete DriverComponent;
+				DriverComponent = nullptr;
 			}
 			break;
 
@@ -59,6 +71,7 @@ extern "C" {
 		case DLL_THREAD_DETACH:
 			break;
 		}
+
 		return ret;
 	}
 
@@ -92,7 +105,7 @@ extern "C" {
 	}
 
 	void freeAudioRender() {
-		if (extModule) {
+		if (extModule != nullptr) {
 			if (SynthModule) {
 				auto fM = (rStopModule)GetProcAddress(extModule, "freeModule");
 				fM();
@@ -102,7 +115,8 @@ extern "C" {
 			extModule = nullptr;
 			SynthModule = nullptr;
 		}
-		else if (SynthModule != nullptr)
+		
+		if (SynthModule != nullptr)
 		{
 			delete SynthModule;
 			SynthModule = nullptr;
@@ -117,8 +131,8 @@ extern "C" {
 		SynthModule = new OmniMIDI::SynthModule;
 	}
 
-	BOOL getAudioRender() {
-		BOOL good = TRUE;
+	bool getAudioRender() {
+		bool good = true;
 
 		if (WDMSettings != nullptr)
 			delete WDMSettings;
@@ -138,11 +152,11 @@ extern "C" {
 					SynthModule = iM();
 
 					if (!SynthModule)
-						good = FALSE;
+						good = false;
 				}
-				else good = FALSE;
+				else good = false;
 			}
-			else good = FALSE;
+			else good = false;
 			break;
 		case BASSMIDI:
 			SynthModule = new OmniMIDI::BASSSynth;
@@ -150,14 +164,16 @@ extern "C" {
 		case FLUIDSYNTH:
 			SynthModule = new OmniMIDI::FluidSynth;
 			break;
+#ifndef _M_ARM
 		case XSYNTH:
 			SynthModule = new OmniMIDI::XSynth;
 			break;
+#endif
 		case TINYSF:
 			SynthModule = new OmniMIDI::TinySFSynth;
 			break;
 		default:
-			good = FALSE;
+			good = false;
 			break;
 		}
 
@@ -294,6 +310,8 @@ extern "C" {
 	int KDMAPI TerminateKDMAPIStream() {
 		if (SynthModule->StopSynthModule()) {
 			if (SynthModule->UnloadSynthModule()) {
+				fDriverCallback->CallbackFunction(MOM_CLOSE, 0, 0);
+				fDriverCallback->ClearCallbackFunction();
 				freeAudioRender();
 				return 1;
 			}
@@ -319,6 +337,56 @@ extern "C" {
 	}
 
 	__declspec(dllexport)
+	unsigned int KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize) {
+		fDriverCallback->CallbackFunction(MOM_DONE, (DWORD_PTR)IIMidiHdr, 0);
+		return SynthModule->PlayLongEvent(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded) == SYNTH_OK ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
+	}
+
+	__declspec(dllexport)
+	unsigned int KDMAPI PrepareLongData(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize) {
+		if (!IIMidiHdr || sizeof(IIMidiHdr->lpData) > 65536) return MMSYSERR_INVALPARAM;	// The buffer doesn't exist or is too big, invalid parameter
+
+		// Mark the buffer as prepared, and return MMSYSERR_NOERROR
+		IIMidiHdr->dwFlags |= MHDR_PREPARED;
+
+		fDriverCallback->CallbackFunction(MOM_DONE, (DWORD_PTR)IIMidiHdr, 0);
+		return MMSYSERR_NOERROR;
+	}
+
+	__declspec(dllexport)
+	unsigned int KDMAPI UnprepareLongData(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize) {
+		if (!IIMidiHdr) return MMSYSERR_INVALPARAM;								// The buffer doesn't exist, invalid parameter
+		if (!(IIMidiHdr->dwFlags & MHDR_PREPARED)) return MMSYSERR_NOERROR;		// Already unprepared, everything is fine
+		if (IIMidiHdr->dwFlags & MHDR_INQUEUE) return MIDIERR_STILLPLAYING;		// The buffer is currently being played from the driver, cannot unprepare
+
+		// Mark the buffer as unprepared
+		IIMidiHdr->dwFlags &= ~MHDR_PREPARED;
+
+		fDriverCallback->CallbackFunction(MOM_DONE, (DWORD_PTR)IIMidiHdr, 0);
+		return MMSYSERR_NOERROR;
+	}
+
+	__declspec(dllexport)
+	int KDMAPI InitializeCallbackFeatures(HMIDI OMHM, DWORD_PTR OMCB, DWORD_PTR OMI, DWORD_PTR OMU, DWORD OMCM) {
+		MIDIOPENDESC MidiP;
+
+		MidiP.hMidi = OMHM;
+		MidiP.dwCallback = OMCB;
+		MidiP.dwInstance = OMI;
+
+		if (!fDriverCallback->PrepareCallbackFunction(&MidiP, OMCM))
+			return FALSE;
+
+		fDriverCallback->CallbackFunction(MOM_OPEN, 0, 0);
+		return TRUE;
+	}
+
+	__declspec(dllexport)
+	void KDMAPI RunCallbackFunction(DWORD msg, DWORD_PTR p1, DWORD_PTR p2) {
+		fDriverCallback->CallbackFunction(msg, p1, p2);
+	}
+
+	__declspec(dllexport)
 	int KDMAPI SendCustomEvent(unsigned int evt, unsigned int chan, unsigned int param) {
 		return SynthModule->TalkToSynthDirectly(evt, chan, param);
 	}
@@ -326,5 +394,12 @@ extern "C" {
 	__declspec(dllexport)
 	int KDMAPI DriverSettings(unsigned int setting, unsigned int mode, void* value, unsigned int cbValue) {
 		return SynthModule->SettingsManager(setting, (bool)mode, value, (size_t)cbValue);
+	}
+
+	__declspec(dllexport)
+	unsigned long long KDMAPI timeGetTime64() {
+		signed long long CurrentTime;
+		NTFuncs.querySystemTime(&CurrentTime);
+		return (unsigned long long)((CurrentTime) - TickStart) / 10000.0;
 	}
 }

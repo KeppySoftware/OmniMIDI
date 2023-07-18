@@ -7,6 +7,8 @@
 
 */
 
+#ifndef _M_ARM
+
 #include "XSynthM.h"
 
 bool OmniMIDI::XSynth::LoadSynthModule() {
@@ -140,3 +142,5 @@ SynthResult OmniMIDI::XSynth::PlayLongEvent(char* ev, unsigned int size) {
 SynthResult OmniMIDI::XSynth::UPlayLongEvent(char* ev, unsigned int size) {
 	return SYNTH_OK;
 }
+
+#endif

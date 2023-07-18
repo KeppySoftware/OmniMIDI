@@ -11,12 +11,11 @@
 #define _XSYNTHM_H
 
 // Not supported on ARM Thumb-2!
+#ifndef _M_ARM
 
 #ifdef _WIN32
 #include <Windows.h>
 #endif
-
-#ifndef _M_ARM
 
 #include <xsynth.h>
 #include "NtFuncs.h"

@@ -11,17 +11,15 @@
 
 #include "FluidSynth.h"
 
-#ifndef _M_ARM
-
 void OmniMIDI::FluidSynth::EventsThread() {
 	// Spin while waiting for the stream to go online
 	while (!fDrv)
-		NtDelayExecution(-1);
+		NTFuncs.uSleep(-1);
 
 	fluid_synth_system_reset(fSyn);
 	while (IsSynthInitialized()) {
 		if (!ProcessEvBuf())
-			NtDelayExecution(-1);
+			NTFuncs.uSleep(-1);
 	}
 }
 
@@ -115,8 +113,6 @@ bool OmniMIDI::FluidSynth::ProcessEvBuf() {
 bool OmniMIDI::FluidSynth::LoadSynthModule() {
 	if (!Settings) {
 		Settings = new FluidSettings;
-
-		PrepZwDelayExecution();
 
 		if (!FluiLib)
 			FluiLib = new Lib(L"libfluidsynth-3");
@@ -311,5 +307,3 @@ SynthResult OmniMIDI::FluidSynth::PlayLongEvent(char* ev, unsigned int size) {
 
 	return UPlayLongEvent(ev, size);
 }
-
-#endif

@@ -13,11 +13,11 @@
 void OmniMIDI::TinySFSynth::EventsThread() {
 	// Spin while waiting for the stream to go online
 	while (!IsSynthInitialized())
-		NtDelayExecution(-1);
+		NTFuncs.uSleep(-1);
 
 	while (IsSynthInitialized()) {
 		if (!ProcessEvBuf())
-			NtDelayExecution(-1);
+			NTFuncs.uSleep(-1);
 	}
 }
 
@@ -74,26 +74,8 @@ bool OmniMIDI::TinySFSynth::ProcessEvBuf() {
 }
 
 bool OmniMIDI::TinySFSynth::LoadSynthModule() {
-	PrepZwDelayExecution();
-
-	if (!SDLLib)
-		SDLLib = new Lib(L"SDL2");
-
 	if (!Settings)
 		Settings = new TinySFSettings;
-
-	if (!SDLLib->LoadLib())
-		return false;
-
-	for (int i = 0; i < sizeof(SLibImports) / sizeof(SLibImports[0]); i++)
-	{
-		void* ptr = (void*)GetProcAddress(SDLLib->Ptr(), SLibImports[i].GetName());
-		if (ptr)
-		{
-			SLibImports[i].SetPtr(ptr);
-			continue;
-		}
-	}
 
 	Events = new EvBuf(Settings->EvBufSize);
 	_EvtThread = std::jthread(&TinySFSynth::EventsThread, this);
@@ -127,14 +109,17 @@ bool OmniMIDI::TinySFSynth::StartSynthModule() {
 	memset(&FinalAudioSpec, 0, sizeof(FinalAudioSpec));
 	OutputAudioSpec.freq = Settings->AudioFrequency;
 	OutputAudioSpec.format = AUDIO_F32;
-	OutputAudioSpec.channels = 2;
+	OutputAudioSpec.channels = Settings->StereoRendering ? 2 : 1;
 	OutputAudioSpec.samples = Settings->Samples;
 	OutputAudioSpec.callback = TinySFSynth::cCallback;
 	OutputAudioSpec.userdata = this;
 
 	// Initialize the audio system
-	if (SDL_AudioInit(0) < 0)
+	if (SDL_AudioInit(TSF_NULL) < 0)
+	{
+		NERROR(SynErr, "SDL_AutoInit failed.", true);
 		return false;
+	}
 
 	if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
 		swprintf_s(OMPath, L"%s\\OmniMIDI\\lists\\OmniMIDI_A.json\0", OMPath);
@@ -189,20 +174,23 @@ bool OmniMIDI::TinySFSynth::StartSynthModule() {
 		else NERROR(SynErr, "SoundFonts JSON does not exist.", false);
 	}
 
-	tsf_set_output(g_TinySoundFont, TSF_STEREO_INTERLEAVED, OutputAudioSpec.freq, 0);
+	tsf_set_output(g_TinySoundFont, Settings->StereoRendering ? TSF_STEREO_INTERLEAVED : TSF_MONO, OutputAudioSpec.freq, 0);
+	tsf_set_max_voices(g_TinySoundFont, Settings->MaxVoices);
 
 	g_Mutex = SDL_CreateMutex();
 
 	// Request the desired audio output format
-	dev = SDL_OpenAudioDevice(0, 0, &OutputAudioSpec, &FinalAudioSpec, SDL_AUDIO_ALLOW_FORMAT_CHANGE);
-	if (!dev)
+	if (SDL_OpenAudio(&OutputAudioSpec, &FinalAudioSpec) < 0)
+	{
+		NERROR(SynErr, "SDL_OpenAudio failed to open a target output device.", true);
 		return false;
+	}
 
 	LOG(SynErr, "Op: freq %d, ch %d, samp %d\nGot: freq %d, ch %d, samp %d", 
 		OutputAudioSpec.freq, OutputAudioSpec.channels, OutputAudioSpec.samples, 
 		FinalAudioSpec.freq, FinalAudioSpec.channels, FinalAudioSpec.samples);
 
-	SDL_PauseAudioDevice(dev, 0);
+	SDL_PauseAudio(0);
 
 	Running = true;
 	return true;
@@ -210,8 +198,8 @@ bool OmniMIDI::TinySFSynth::StartSynthModule() {
 
 bool OmniMIDI::TinySFSynth::StopSynthModule() {
 	if (IsSynthInitialized()) {
-		SDL_PauseAudioDevice(dev, 1);
-		SDL_CloseAudioDevice(dev);
+		SDL_PauseAudio(1);
+		SDL_CloseAudio();
 		SDL_DestroyMutex(g_Mutex);
 		SDL_AudioQuit();
 		tsf_close(g_TinySoundFont);

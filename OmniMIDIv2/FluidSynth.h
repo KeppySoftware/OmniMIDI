@@ -10,13 +10,9 @@
 #ifndef _OFLUIDSYNTH_H
 #define _OFLUIDSYNTH_H
 
-// Not supported on ARM Thumb-2!
-
 #ifdef _WIN32
 #include <Windows.h>
 #endif
-
-#ifndef _M_ARM
 
 #include <fluidsynth.h>
 #include "NtFuncs.h"
@@ -131,6 +127,7 @@ namespace OmniMIDI {
 	class FluidSynth : public SynthModule {
 	private:
 		ErrorSystem::WinErr SynErr;
+		NT::Funcs NTFuncs;
 
 		Lib* FluiLib = nullptr;
 
@@ -196,7 +193,5 @@ namespace OmniMIDI {
 		int TalkToSynthDirectly(unsigned int evt, unsigned int chan, unsigned int param) { return 0; }
 	};
 }
-
-#endif
 
 #endif
