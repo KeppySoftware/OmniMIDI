@@ -18,8 +18,8 @@ EXPORTS
 	DriverSettings
 	GetDriverDebugInfo
 	LoadCustomSoundFontsList
-	InitializeCallbackFeatures @ 51 NONAME
-	RunCallbackFunction @ 67 NONAME
+	InitializeCallbackFeatures @ 51
+	RunCallbackFunction @ 67
 	NoFeedbackMode @ 44 NONAME
 	timeGetTime64
 		GetOWINMM						= WINMM_GetOWINMM
