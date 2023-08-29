@@ -60,7 +60,7 @@ typedef	unsigned int SynthResult;
 #define ImpFunc(f)			LibImport((void**)&##f, #f)
 
 #define JSONGetVal(f)		{ #f, f }
-#define JSONSetVal(t, f)	f = JsonData[#f].is_null() ? f : (t)JsonData[#f]
+#define JSONSetVal(t, f)	f = JsonData[#f].is_null() ? f : JsonData[#f].get<t>()
 
 #define SettingsManagerCase(choice, get, type, setting, var, size) \
 	case choice: \

@@ -159,16 +159,26 @@ extern "C" {
 			else good = false;
 			break;
 		case BASSMIDI:
+#ifndef _M_ARM
 			SynthModule = new OmniMIDI::BASSSynth;
+#else
+			NERROR(WDMErr, "BASSMIDI is not available on ARM Thumb-2.", true);
+			good = false;
+#endif
 			break;
 		case FLUIDSYNTH:
 			SynthModule = new OmniMIDI::FluidSynth;
 			break;
-#ifndef _M_ARM
+
 		case XSYNTH:
+#ifdef _M_AMD64
 			SynthModule = new OmniMIDI::XSynth;
-			break;
+#else
+			NERROR(WDMErr, "XSynth is only available on AMD64 platforms.", true);
+			good = false;
 #endif
+			break;
+
 		case TINYSF:
 			SynthModule = new OmniMIDI::TinySFSynth;
 			break;
@@ -185,19 +195,18 @@ extern "C" {
 		return good;
 	}
 
-
 	__declspec(dllexport)
 	MMRESULT WINAPI modMessage(UINT DeviceID, UINT Message, DWORD_PTR UserPointer, DWORD_PTR Param1, DWORD_PTR Param2) {
 		switch (Message) {
 		case MODM_DATA:
-			return (!SynthModule->PlayShortEvent((DWORD)Param1)) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
+			return (SynthModule->PlayShortEvent((DWORD)Param1) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
 
 		case MODM_LONGDATA:
 			fDriverCallback->CallbackFunction(MOM_DONE, (DWORD)Param1, 0);
-			return (!SynthModule->PlayLongEvent(((LPMIDIHDR)Param1)->lpData, ((LPMIDIHDR)Param1)->dwBytesRecorded)) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
+			return (SynthModule->PlayLongEvent(((LPMIDIHDR)Param1)->lpData, ((LPMIDIHDR)Param1)->dwBytesRecorded) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
 
 		case MODM_RESET:
-			return (!SynthModule->PlayShortEvent(0x0101FF) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
+			return (SynthModule->PlayShortEvent(0x0101FF) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
 
 		case MODM_OPEN:
 			freeAudioRender();

@@ -232,6 +232,7 @@ namespace OmniMIDI {
 		bool UnloadFuncs();
 		void StreamSettings(bool restart);
 		bool ProcessEvBuf();
+		bool ProcessEvent(unsigned int ev);
 
 	public:
 		bool LoadSynthModule();

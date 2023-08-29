@@ -6,7 +6,7 @@ HMODULE KERNEL32 = NULL;
 DWORD(WINAPI* INtimeGetTime)() = 0;
 
 // Wine check
-const char* (WINAPI* WGBI)(void) = 0;
+typedef const char* (WINAPI* WGBI)(void);
 INT WDummy = 0xFFFFF;
 HMIDI OMDummy = (HMIDI)0x1001;
 DWORD_PTR OMUser;
@@ -449,6 +449,10 @@ MMImports[] =
 };
 
 // Functions start -> HERE <-
+
+MMRESULT WINAPI xxx32Message(UINT_PTR, UINT, DWORD_PTR, DWORD_PTR, DWORD_PTR) {
+	return MMSYSERR_ERROR;
+}
 
 HDRVR WINAPI WINMM_OpenDriver(_In_ LPCWSTR lpDN, _In_ LPCWSTR lpSN, _In_ LPARAM lp) {
 	return MMOpenDriver(lpDN, lpSN, lp);
@@ -1129,20 +1133,20 @@ MMRESULT WINAPI WINMM_wod32Message(UINT_PTR uDeviceID, UINT uMsg, DWORD_PTR hMid
 }
 #endif
 
-BOOL ImportFromWinMM(int i, TCHAR* ErrorBuf) {
+BOOL ImportFromWinMM(int i, char* ErrorBuf) {
 	*(MMImports[i].ptr) = (void*)GetProcAddress(OWINMM, MMImports[i].name);
 
 	if (!*(MMImports[i].ptr)) {
-		swprintf_s(
+		sprintf_s(
 			ErrorBuf,
 			1024,
-			L"An error has occured while loading \"%s\" from the Windows Multimedia Extension API library.\n\nFailed to load the required functions, press OK to exit.",
+			"An error has occured while loading \"%s\" from the Windows Multimedia Extension API library.\n\nFailed to load the required functions, press OK to exit.",
 			MMImports[i].name);
 
-		MessageBox(
+		MessageBoxA(
 			NULL,
 			ErrorBuf,
-			L"KDMAPI ERROR",
+			"KDMAPI ERROR",
 			MB_ICONERROR | MB_OK | MB_SYSTEMMODAL
 		);
 		return FALSE;
@@ -1165,9 +1169,19 @@ void GetSpeedHack() {
 	RegCloseKey(RegKey);
 }
 
+BOOL IsOMRunningUnderWine() {
+	HMODULE hntdll = GetModuleHandleA("ntdll");
+	if (!hntdll) return FALSE;
+
+	WGBI test = (WGBI)GetProcAddress(hntdll, "wine_get_build_id");
+	return (test != NULL) ? TRUE : FALSE;
+}
+
 BOOL InitializeWinMM() {
 	if (OWINMM)
 		return TRUE;
+
+	BOOL IOMRUW = IsOMRunningUnderWine();
 
 	if (!OWINMM) {
 		// Load WinMM from system directory if copy isn't found in the app's directory
@@ -1207,7 +1221,23 @@ BOOL InitializeWinMM() {
 		}
 	}
 
-	TCHAR ErrorBuf[1024];
+	char ErrorBuf[1024];
+
+#ifdef _M_IX86
+	if (IOMRUW) {
+		MMaux32Message = xxx32Message;
+		MMjoy32Message = xxx32Message;
+		MMmci32Message = xxx32Message;
+		MMmid32Message = xxx32Message;
+		MMmod32Message = xxx32Message;
+		MMmxd32Message = xxx32Message;
+		MMtid32Message = xxx32Message;
+		MMwid32Message = xxx32Message;
+		MMwod32Message = xxx32Message;
+
+		printf("Detected Wine.");
+	}
+#endif
 
 	// LOAD EVERYTHING!
 	for (int i = 0; i < sizeof(MMImports) / sizeof(MMImports[0]); i++)
@@ -1223,7 +1253,13 @@ BOOL InitializeWinMM() {
 			if (!*(MMImports[i].ptr))
 				ImportFromWinMM(i, ErrorBuf);
 		}
-		else ImportFromWinMM(i, ErrorBuf);
+		else {
+			if (*(MMImports[i].ptr) == xxx32Message)
+				continue;
+
+			if (!ImportFromWinMM(i, ErrorBuf))
+				break;
+		}
 	}
 
 	return TRUE;

@@ -18,7 +18,7 @@ void OmniMIDI::BASSSynth::EventsThread() {
 	}
 }
 
-bool OmniMIDI::BASSSynth::ProcessEvBuf() {
+bool OmniMIDI::BASSSynth::ProcessEvent(unsigned int tev) {
 	/*
 
 	For more info about how an event is structured, read this doc from Microsoft:
@@ -62,14 +62,7 @@ bool OmniMIDI::BASSSynth::ProcessEvBuf() {
 
 	*/
 
-	unsigned int tev = 0;
 	unsigned int sysev = 0;
-
-	if (!Events->Pop(tev) || !AudioStream)
-		return false;
-
-	if (CHKLRS(GETSTATUS(tev)) != 0) LastRunningStatus = GETSTATUS(tev);
-	else tev = tev << 8 | LastRunningStatus;
 
 	unsigned int evt = MIDI_SYSTEM_DEFAULT;
 	unsigned int ev = 0;
@@ -170,6 +163,18 @@ bool OmniMIDI::BASSSynth::ProcessEvBuf() {
 
 	BASS_MIDI_StreamEvent(AudioStream, ch, evt, ev);
 	return true;
+}
+
+bool OmniMIDI::BASSSynth::ProcessEvBuf() {
+	unsigned int tev = 0;
+
+	if (!Events->Pop(tev) || !AudioStream)
+		return false;
+
+	if (CHKLRS(GETSTATUS(tev)) != 0) LastRunningStatus = GETSTATUS(tev);
+	else tev = tev << 8 | LastRunningStatus;
+
+	return ProcessEvent(tev);
 }
 
 bool OmniMIDI::BASSSynth::LoadFuncs() {
@@ -708,6 +713,9 @@ SynthResult OmniMIDI::BASSSynth::PlayLongEvent(char* ev, unsigned int size) {
 int OmniMIDI::BASSSynth::TalkToSynthDirectly(unsigned int evt, unsigned int chan, unsigned int param) {
 	if (!BMidLib || !BMidLib->IsOnline())
 		return 0;
+
+	if (!evt && !chan)
+		return ProcessEvent(param) ? SYNTH_OK : SYNTH_INVALPARAM;
 
 	return BASS_MIDI_StreamEvent(AudioStream, chan, evt, param);
 }
