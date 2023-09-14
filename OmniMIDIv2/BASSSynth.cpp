@@ -209,49 +209,27 @@ bool OmniMIDI::BASSSynth::LoadFuncs() {
 
 	for (int i = 0; i < sizeof(BLibImports) / sizeof(BLibImports[0]); i++)
 	{
-		ptr = (void*)GetProcAddress(BAudLib->Ptr(), BLibImports[i].GetName());
-		if (ptr)
-		{
-			BLibImports[i].SetPtr(ptr);
+		if (BLibImports[i].SetPtr((void*)GetProcAddress(BAudLib->Ptr(), BLibImports[i].GetName())))
 			continue;
-		}
 
-		ptr = (void*)GetProcAddress(BMidLib->Ptr(), BLibImports[i].GetName());
-		if (ptr)
-		{
-			BLibImports[i].SetPtr(ptr);
+		if (BLibImports[i].SetPtr((void*)GetProcAddress(BMidLib->Ptr(), BLibImports[i].GetName())))
 			continue;
-		}
 
 		switch (Settings->AudioEngine) {
 		case WASAPI:
-			ptr = (void*)GetProcAddress(BWasLib->Ptr(), BLibImports[i].GetName());
-			if (ptr)
-			{
-				BLibImports[i].SetPtr(ptr);
+			if (BLibImports[i].SetPtr((void*)GetProcAddress(BWasLib->Ptr(), BLibImports[i].GetName())))
 				continue;
-			}
 			break;
 
 		case ASIO:
-			ptr = (void*)GetProcAddress(BAsiLib->Ptr(), BLibImports[i].GetName());
-			if (ptr)
-			{
-				BLibImports[i].SetPtr(ptr);
+			if (BLibImports[i].SetPtr((void*)GetProcAddress(BAsiLib->Ptr(), BLibImports[i].GetName())))
 				continue;
-			}
 			break;
 		}
 
 		if (BVstLib->IsOnline())
-		{
-			ptr = (void*)GetProcAddress(BVstLib->Ptr(), BLibImports[i].GetName());
-			if (ptr)
-			{
-				BLibImports[i].SetPtr(ptr);
+			if (BLibImports[i].SetPtr((void*)GetProcAddress(BVstLib->Ptr(), BLibImports[i].GetName())))
 				continue;
-			}
-		}
 	}
 
 	return true;
@@ -274,7 +252,7 @@ bool OmniMIDI::BASSSynth::UnloadFuncs() {
 		return false;
 
 	for (int i = 0; i < sizeof(BLibImports) / sizeof(BLibImports[0]); i++)
-		BLibImports[i].SetPtr(nullptr);
+		BLibImports[i].SetPtr();
 
 	return true;
 }

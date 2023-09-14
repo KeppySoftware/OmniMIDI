@@ -109,7 +109,23 @@ namespace OmniMIDI {
 		void SetName(const char* pfuncname) { funcname = pfuncname; }
 		const char* GetName() { return funcname; }
 
-		void SetPtr(void* pfuncptr) { *(funcptr) = pfuncptr; }
+		bool SetPtr(void* pfuncptr = (void*)-1){
+			if (!pfuncptr)
+				return false;
+
+			if ((size_t)pfuncptr == -1)
+			{
+				*(funcptr) = nullptr;
+				return true;
+			}
+			else {
+				if (pfuncptr != *(funcptr))
+					*(funcptr) = pfuncptr;
+			}
+
+			return true;
+		}
+
 		void* GetPtr() { return *(funcptr); }
 	};
 

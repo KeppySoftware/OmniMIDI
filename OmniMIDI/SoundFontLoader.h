@@ -78,7 +78,7 @@ static BOOL FontLoader(LPWSTR in_path) {
 			{
 				PrintMessageToDebugLog("NewSFLoader", "Initializing SoundFont...");
 				HSOUNDFONT SF = BASS_MIDI_FontInit(in_path, 
-					BASS_UNICODE | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP |
+					BASS_UNICODE | BASS_MIDI_FONT_MMAP |
 					(ManagedSettings.AudioRampIn ? BASS_MIDI_FONT_NORAMPIN : 0) |
 					(ManagedSettings.LinAttMod ? BASS_MIDI_FONT_LINATTMOD : 0) |
 					(ManagedSettings.LinDecVol ? BASS_MIDI_FONT_LINDECVOL : 0) |
@@ -289,12 +289,12 @@ static BOOL FontLoader(LPWSTR in_path) {
 				{
 					PrintSoundFontToDebugLog(CurrentSF->Path, "Initializing SoundFont...");
 					HSOUNDFONT font = BASS_MIDI_FontInit(CurrentSF->Path,
-						BASS_UNICODE | BASS_MIDI_FONT_NOLIMITS | BASS_MIDI_FONT_MMAP | 
+						BASS_UNICODE | BASS_MIDI_FONT_MMAP | 
 						(CurrentSF->XGBankMode ? BASS_MIDI_FONT_XGDRUMS : NULL) |
-						(ManagedSettings.AudioRampIn ? BASS_MIDI_FONT_NORAMPIN : 0) |
-						(ManagedSettings.LinAttMod ? BASS_MIDI_FONT_LINATTMOD : 0) |
-						(ManagedSettings.LinDecVol ? BASS_MIDI_FONT_LINDECVOL : 0) |
-						(ManagedSettings.NoSFGenLimits ? BASS_MIDI_FONT_NOLIMITS : 0));
+						(ManagedSettings.AudioRampIn ? BASS_MIDI_FONT_NORAMPIN : NULL) |
+						(ManagedSettings.LinAttMod ? BASS_MIDI_FONT_LINATTMOD : NULL) |
+						(ManagedSettings.LinDecVol ? BASS_MIDI_FONT_LINDECVOL : NULL) |
+						(ManagedSettings.NoSFGenLimits ? BASS_MIDI_FONT_NOLIMITS : NULL));
 
 					if (!font) {
 						PrintSoundFontToDebugLog(CurrentSF->Path, "An error has occurred while initializing the SoundFont.");
@@ -311,8 +311,6 @@ static BOOL FontLoader(LPWSTR in_path) {
 						CurrentSF->DestinationBank, 
 						CurrentSF->DestinationBankLSB 
 					};
-
-
 
 					if (ManagedSettings.PreloadSoundFonts && CurrentSF->Preload) {
 						PrintSoundFontToDebugLog(CurrentSF->Path, "Preloading SoundFont...");

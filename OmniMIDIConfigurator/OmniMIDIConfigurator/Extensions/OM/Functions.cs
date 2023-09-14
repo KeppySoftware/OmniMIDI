@@ -142,6 +142,7 @@ namespace OmniMIDIConfigurator
             new SettingStruct ("Extra8Lists", 0),
             new SettingStruct ("FastHotkeys", 1),
             new SettingStruct ("FollowDefaultAudioDevice", 0),
+            new SettingStruct ("TGTSpeedHack", 0x3B9ACA00),
             new SettingStruct ("GetEvBuffSizeFromRAM", 0),
             new SettingStruct ("HyperPlayback", 0),
             new SettingStruct ("IgnoreNotesBetweenVel", 0),
@@ -175,7 +176,9 @@ namespace OmniMIDIConfigurator
             new SettingStruct ("VolumeMonitor", 0),
             new SettingStruct ("XASamplesPerFrame", 88),
             new SettingStruct ("XASPFSweepRate", 15),
-            new SettingStruct ("FastLibs", 0)
+            new SettingStruct ("XASPFSweepRate", 15),
+            new SettingStruct ("LinAttMod", 0),
+            new SettingStruct ("LinDecVol", 0)
         };
 
         public static string GetProcessorArchitecture()

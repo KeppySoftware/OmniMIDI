@@ -148,7 +148,7 @@
             this.Set.Location = new System.Drawing.Point(4, 24);
             this.Set.Name = "Set";
             this.Set.Padding = new System.Windows.Forms.Padding(3);
-            this.Set.Size = new System.Drawing.Size(826, 505);
+            this.Set.Size = new System.Drawing.Size(826, 506);
             this.Set.TabIndex = 1;
             this.Set.Text = "Settings";
             this.Set.UseVisualStyleBackColor = true;
@@ -257,7 +257,7 @@
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(687, 17);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(718, 17);
             this.toolStripStatusLabel1.Spring = true;
             this.toolStripStatusLabel1.Text = " ";
             // 

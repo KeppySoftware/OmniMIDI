@@ -17,7 +17,7 @@ namespace NT {
 		Funcs() {
 			ntdll = GetModuleHandleA("ntdll");
 			
-			if (ntdll) {
+			if (!ntdll) {
 				// ... How?
 				LL = true;
 				ntdll = LoadLibraryA("ntdll");

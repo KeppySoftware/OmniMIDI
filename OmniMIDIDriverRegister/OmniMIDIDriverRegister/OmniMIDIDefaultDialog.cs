@@ -20,7 +20,7 @@ namespace OmniMIDIDriverRegister
 
         private void RD_Click(object sender, EventArgs e)
         {
-            Program.Register(false);
+            Program.Register();
 
             /*
             if (Environment.Is64BitOperatingSystem)
@@ -37,7 +37,7 @@ namespace OmniMIDIDriverRegister
 
         private void UnRD_Click(object sender, EventArgs e)
         {
-            Program.Unregister(false);
+            Program.Unregister();
 
             /*
             if (Environment.Is64BitOperatingSystem)
