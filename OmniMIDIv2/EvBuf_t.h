@@ -7,12 +7,17 @@
 
 */
 
-#include <Windows.h>
 
 #ifndef _EVBUF_T_H
 #define _EVBUF_T_H
 
 #define EvBuf				EvBuf_t
+
+#include <Windows.h>
+#ifdef _STATSDEV
+#include <iostream>
+#include <future>
+#endif
 
 namespace OmniMIDI {
 	struct Ev {
@@ -35,38 +40,54 @@ namespace OmniMIDI {
 		alignas(64) size_t ReadHeadCached { 0 };
 
 #ifdef _STATSDEV
-		size_t EventsSent{ 0 };
-		size_t EventsSkipped{ 0 };
+		FILE* dummy;
+		alignas(64) size_t EventsSent{ 0 };
+		alignas(64) size_t EventsSkipped{ 0 };
 #endif
 
 	public:
 		EvBuf_t(size_t ReqSize) {
+#ifdef _STATSDEV
+			if (AllocConsole()) {
+				freopen_s(&dummy, "CONOUT$", "w", stdout);
+				freopen_s(&dummy, "CONOUT$", "w", stderr);
+				freopen_s(&dummy, "CONIN$", "r", stdin);
+				std::cout.clear();
+				std::clog.clear();
+				std::cerr.clear();
+				std::cin.clear();
+			}
+#endif
+
 			Buffer = new Ev[ReqSize];
 			Size = ReqSize;
 		}
 
 		~EvBuf_t() {
+#ifdef _STATSDEV
+			GetStats();
+			EventsSent = 0;
+			EventsSkipped = 0;
+			FreeConsole();
+#endif
+
 			Size = 0;
 			ReadHead = 0;
 			WriteHead = 0;
 			ReadHeadCached = 0;
 			WriteHeadCached = 0;
-#ifdef _STATSDEV
-			EventsSent = 0;
-			EventsSkipped = 0;
-#endif
+
 			delete[] Buffer;
 		}
 
-		void GetStats() {
 #ifdef _STATSDEV
+		void GetStats() {
 			char asdf[1024] = {};
 			snprintf(asdf, sizeof(asdf), "%llu of %llu events skipped", EventsSkipped, EventsSent);
-			MessageBoxA(NULL, asdf, "", 0);
-#else
-			// Absolutely nothing.
-#endif
+			std::cout << asdf << std::endl;
+			while (std::cin.get() != '');
 		}
+#endif
 
 		bool Push(unsigned int ev) {
 			size_t LocalWriteHead = WriteHead;
@@ -75,11 +96,16 @@ namespace OmniMIDI {
 			if (NextWriteHead >= Size)
 				NextWriteHead = 0;
 
+#ifdef _STATSDEV
+			EventsSent++;
+#endif
+
 			if (NextWriteHead == ReadHeadCached)
 			{
 				ReadHeadCached = ReadHead;
 				if (NextWriteHead == ReadHeadCached) {
 #ifdef _STATSDEV
+					// std::async([&ev]() { std::cout << "Event " << std::hex << ev << " has been skipped because the buffer is overflowing!" << std::endl; });
 					EventsSkipped++;
 #endif
 					return false;
@@ -92,7 +118,7 @@ namespace OmniMIDI {
 			return true;
 		}
 
-		bool Pop(unsigned int& ev) {
+		bool Pop(unsigned int* ev) {
 			size_t LocalReadHead = ReadHead;
 			if (LocalReadHead == WriteHeadCached)
 			{
@@ -105,18 +131,18 @@ namespace OmniMIDI {
 			if (NextReadHead >= Size)
 				NextReadHead = 0;
 
-			ev = Buffer[LocalReadHead].Event;
+			*ev = Buffer[LocalReadHead].Event;
 			ReadHead = NextReadHead;
 
 			return true;
 		}
 
-		void Peek(unsigned int& ev) {
+		void Peek(unsigned int* ev) {
 			size_t NextReadHead = ReadHead + 1;
 			if (NextReadHead >= Size)
 				NextReadHead = 0;
 
-			ev = Buffer[NextReadHead].Event;
+			*ev = Buffer[NextReadHead].Event;
 		}
 	};
 }

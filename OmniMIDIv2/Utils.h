@@ -3,24 +3,30 @@
 	OmniMIDI v15+ (Rewrite) for Windows NT
 
 	This file contains the required code to run the driver under Windows 7 SP1 and later.
-	This file is useful only if you want to compile the driver under Windows, it's not needed for Linux/macOS porting.
 
 */
+
+#pragma once
 
 #ifndef _UTILS_H
 #define _UTILS_H
 
-#pragma once
-
+#ifdef _WIN32
 #include <Windows.h>
 #include <guiddef.h>
 #include <ShlObj_core.h>
 #include <strsafe.h>
+#endif
 
-namespace WinUtils {
+namespace Utils {
+	enum FIDs {
+		System,
+		UserFolder	
+	};
+
 	class SysPath {
 	public:
-		bool GetFolderPath(const GUID FolderID, wchar_t* String, size_t StringLen);
+		bool GetFolderPath(const FIDs FolderID, wchar_t* String, size_t StringLen);
 	};
 }
 

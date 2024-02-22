@@ -115,14 +115,14 @@ bool WinDriver::DriverCallback::PrepareCallbackFunction(MIDIOPENDESC* OpInfStruc
 	if (CallbackMode != CALLBACK_NULL) {
 		if (OpInfStruct->dwCallback != 0) {
 			pCallback = new Callback{
-				.Handle = OpInfStruct->hMidi,
+				.Handle = (HMIDIOUT)OpInfStruct->hMidi,
 				.Mode = CallbackMode,
-				.Ptr = OpInfStruct->dwCallback,
+				.Func = reinterpret_cast<midiOutProc>(OpInfStruct->dwCallback),
 				.Instance = OpInfStruct->dwInstance
 			};
 
 #ifdef _DEBUG
-			LOG(CallbackErr, ".Handle -> %x\n.Mode -> %x\n.Ptr -> %x\n.Instance -> %x", pCallback->Handle, pCallback->Mode, pCallback->Ptr, pCallback->Instance);
+			LOG(CallbackErr, ".Handle -> %x - .Mode -> %x - .Ptr -> %x - .Instance -> %x", pCallback->Handle, pCallback->Mode, pCallback->Func, pCallback->Instance);
 #endif
 		}
 
@@ -155,19 +155,19 @@ void WinDriver::DriverCallback::CallbackFunction(DWORD Message, DWORD_PTR Arg1, 
 
 	case CALLBACK_FUNCTION:	// Use a custom function to notify the app
 		// Use the app's custom function to send the callback
-		(*(WMMC)pCallback->Ptr)((HMIDIOUT)(pCallback->Handle), Message, pCallback->Instance, Arg1, Arg2);
+		pCallback->Func(pCallback->Handle, Message, pCallback->Instance, Arg1, Arg2);
 		break;
 
 	case CALLBACK_EVENT:	// Set an event to notify the app
-		SetEvent((HANDLE)(pCallback->Ptr));
+		SetEvent((HANDLE)(*pCallback->Func));
 		break;
 
 	case CALLBACK_TASK:		// Send a message to a thread to notify the app
-		PostThreadMessageA((DWORD)(pCallback->Ptr), Message, Arg1, Arg2);
+		PostThreadMessageA((DWORD_PTR)(*pCallback->Func), Message, Arg1, Arg2);
 		break;
 
 	case CALLBACK_WINDOW:	// Send a message to the app's main window
-		PostMessageA((HWND)(pCallback->Ptr), Message, Arg1, Arg2);
+		PostMessageA((HWND)(*pCallback->Func), Message, Arg1, Arg2);
 		break;
 
 	default:				// stub

@@ -30,7 +30,7 @@ bool OmniMIDI::FluidSynth::ProcessEvBuf() {
 	unsigned int sysev = 0;
 	unsigned int tgtev = 0;
 
-	if (!Events->Pop(tgtev) || !fDrv)
+	if (!Events->Pop(&tgtev) || !fDrv)
 		return false;
 
 	if (CHKLRS(GETSTATUS(tgtev)) != 0) LastRunningStatus = GETSTATUS(tgtev);
@@ -84,10 +84,10 @@ bool OmniMIDI::FluidSynth::ProcessEvBuf() {
 			fluid_synth_sysex(fSyn, (const char*)&sysev, 2, 0, &len, &handled, 0);
 
 			while (GETSTATUS(sysev) != MIDI_SYSEXEND) {
-				Events->Peek(sysev);
+				Events->Peek(&sysev);
 
 				if (GETSTATUS(sysev) != MIDI_SYSEXEND) {
-					Events->Pop(sysev);
+					Events->Pop(&sysev);
 					LOG(SynErr, "SysEx Ev: %x", sysev);
 					fluid_synth_sysex(fSyn, (const char*)&sysev, 3, 0, &len, &handled, 0);
 				}		
@@ -122,12 +122,8 @@ bool OmniMIDI::FluidSynth::LoadSynthModule() {
 
 		void* ptr = nullptr;
 		for (int i = 0; i < sizeof(FLibImports) / sizeof(FLibImports[0]); i++) {
-			ptr = (void*)GetProcAddress(FluiLib->Ptr(), FLibImports[i].GetName());
-			if (ptr)
-			{
-				FLibImports[i].SetPtr(ptr);
+			if (FLibImports[i].SetPtr(FluiLib->Ptr(), FLibImports[i].GetName()))
 				continue;
-			}
 		}
 
 		fSet = new_fluid_settings();
@@ -168,7 +164,7 @@ bool OmniMIDI::FluidSynth::UnloadSynthModule() {
 }
 
 bool OmniMIDI::FluidSynth::StartSynthModule() {
-	WinUtils::SysPath Utils;
+	Utils::SysPath Utils;
 	wchar_t OMPath[MAX_PATH] = { 0 };
 
 	if (fSet && Settings) {
@@ -203,56 +199,18 @@ bool OmniMIDI::FluidSynth::StartSynthModule() {
 			goto err;
 		}
 
-		if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
-			swprintf_s(OMPath, L"%s\\OmniMIDI\\lists\\OmniMIDI_A.json\0", OMPath);
+		std::vector<OmniMIDI::SoundFont>* SFv = SFSystem.LoadList();
+		if (SFv != nullptr) {
+			std::vector<SoundFont>& dSFv = *SFv;
 
-			std::fstream sfs;
-			sfs.open(OMPath);
+			for (int i = 0; i < SFv->size(); i++) {
+				int sf = fluid_synth_sfload(fSyn, dSFv[i].path.c_str(), 1);
 
-			if (sfs.is_open()) {
-				try {
-					// Read the JSON data from there
-					auto json = nlohmann::json::parse(sfs, nullptr, false, true);
-
-					if (json != nullptr) {
-						auto& JsonData = json["SoundFonts"];
-
-						if (!(JsonData == nullptr || JsonData.size() < 1)) {
-							for (int i = 0; i < JsonData.size(); i++) {
-								bool enabled = true;
-								nlohmann::json subitem = JsonData[i];
-
-								// Is item valid?
-								if (subitem != nullptr) {
-									std::string sfpath = subitem["path"].is_null() ? "\0" : subitem["path"];
-									enabled = subitem["enabled"].is_null() ? enabled : (bool)subitem["enabled"];
-
-									if (enabled) {
-										if (GetFileAttributesA(sfpath.c_str()) != INVALID_FILE_ATTRIBUTES) {
-											int sf = fluid_synth_sfload(fSyn, sfpath.c_str(), 1);
-
-											// Check if the soundfont loads, if it does then it's valid
-											if (sf)
-												SoundFonts.push_back(sf);
-											else NERROR(SynErr, "fluid_synth_sfload failed to load \"%s\"!", false, sfpath.c_str());
-										}
-										else NERROR(SynErr, "The SoundFont \"%s\" could not be found!", false, sfpath.c_str());
-									}
-								}
-
-								// If it's not, then let's loop until the end of the JSON struct
-							}
-						}
-						else NERROR(SynErr, "\"%s\" does not contain a valid \"SoundFonts\" JSON structure.", false, OMPath);
-					}
-					else NERROR(SynErr, "Invalid JSON structure!", false);
-				}
-				catch (nlohmann::json::type_error ex) {
-					NERROR(SynErr, "The SoundFont JSON is corrupted or malformed!\n\nnlohmann::json says: %s", ex.what());
-				}
-				sfs.close();
+				// Check if the soundfont loads, if it does then it's valid
+				if (sf)
+					SoundFonts.push_back(sf);
+				else NERROR(SynErr, "fluid_synth_sfload failed to load \"%s\"!", false, dSFv[i].path.c_str());
 			}
-			else NERROR(SynErr, "SoundFonts JSON does not exist.", false);
 		}
 
 		return true;
@@ -264,9 +222,14 @@ err:
 }
 
 bool OmniMIDI::FluidSynth::StopSynthModule() {
-	if (fSyn && fDrv) {
+	SFSystem.ClearList();
+
+	if (fDrv) {
 		delete_fluid_audio_driver(fDrv);
 		fDrv = nullptr;
+	}
+
+	if (fSyn) {
 		delete_fluid_synth(fSyn);
 		fSyn = nullptr;
 	}

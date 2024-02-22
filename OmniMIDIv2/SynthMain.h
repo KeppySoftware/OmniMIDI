@@ -71,17 +71,6 @@ typedef	unsigned int SynthResult;
 
 #define EMPTYMODULE			0xDEADBEEF
 
-#include <Windows.h>
-#include <strsafe.h>
-#include <thread>
-#include <atomic>
-#include <algorithm>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-#include <codecvt>
-#include <locale>
 #include "ErrSys.h"
 #include "Utils.h"
 #include "KDMAPI.h"
@@ -109,19 +98,22 @@ namespace OmniMIDI {
 		void SetName(const char* pfuncname) { funcname = pfuncname; }
 		const char* GetName() { return funcname; }
 
-		bool SetPtr(void* pfuncptr = (void*)-1){
-			if (!pfuncptr)
-				return false;
+		bool SetPtr(HMODULE module = nullptr, const char* ptrname = nullptr){
+			void* ptr = (void*)-1;
 
-			if ((size_t)pfuncptr == -1)
+			if (module == nullptr || ptrname == nullptr)
 			{
 				*(funcptr) = nullptr;
 				return true;
 			}
-			else {
-				if (pfuncptr != *(funcptr))
-					*(funcptr) = pfuncptr;
-			}
+
+			ptr = (void*)GetProcAddress(module, ptrname);
+
+			if (!ptr)
+				return false;
+
+			if (ptr != *(funcptr))
+				*(funcptr) = ptr;
 
 			return true;
 		}
@@ -147,28 +139,21 @@ namespace OmniMIDI {
 		}
 
 		bool LoadLib(wchar_t* CustomPath = nullptr) {
-			WinUtils::SysPath Utils;
+			Utils::SysPath Utils;
 
 			char CName[MAX_PATH] = { 0 };
 			wchar_t SysDir[MAX_PATH] = { 0 };
 			wchar_t DLLPath[MAX_PATH] = { 0 };
 			int swp = 0;
 
-			// Check if library is loaded
 			if (Library == nullptr) {
-				// If not, begin loading process
-
-				// Check if the host MIDI application has a version of the library
-				// in memory already.
 				if ((Library = GetModuleHandle(Name)) != nullptr)
 				{
 					// (TODO) Make it so we can load our own version of it
 					// For now, just make the driver try and use that instead
 					return (AppSelfHosted = true);
 				}
-				// Otherwise, let's load our own
 				else {
-					// Let's get the system path
 					if (CustomPath != nullptr) {
 						swp = swprintf_s(DLLPath, MAX_PATH, L"%s\\%s.dll\0", CustomPath, Name);
 						assert(swp != -1);
@@ -182,7 +167,7 @@ namespace OmniMIDI {
 						else return false;
 					}
 					else {
-						if (Utils.GetFolderPath(FOLDERID_System, SysDir, sizeof(SysDir))) {
+						if (Utils.GetFolderPath(Utils::FIDs::System, SysDir, sizeof(SysDir))) {
 							swp = swprintf_s(DLLPath, MAX_PATH, L"%s.dll\0", Name);
 							assert(swp != -1);
 
@@ -199,7 +184,7 @@ namespace OmniMIDI {
 
 										if (!Library) {
 											wcstombs_s(nullptr, CName, Name, MAX_PATH);
-											NERROR(LibErr, "The required library \"%s\" could not be loaded or found.\nThis is required for the synthesizer to work.", true, CName);
+											NERROR(LibErr, "The required library \"%s\" could not be loaded or found. This is required for the synthesizer to work.", true, CName);
 											return false;
 										}
 											
@@ -219,17 +204,12 @@ namespace OmniMIDI {
 		}
 
 		bool UnloadLib() {
-			// Check if library is already loaded
 			if (Library != nullptr) {
-				// Set all flags to false
 				Initialized = false;
 				LoadFailed = false;
 
-				// Check if the library was originally loaded by the
-				// hosting MIDI application, this happens sometimes.
 				if (AppSelfHosted)
 				{
-					// It was, set Lib to nullptr and return true
 					AppSelfHosted = false;
 				}
 				else {
@@ -243,7 +223,6 @@ namespace OmniMIDI {
 				Library = nullptr;
 			}
 
-			// It is, return true
 			return true;
 		}
 	};

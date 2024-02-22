@@ -20,9 +20,20 @@
 
 #include <tsf/minisdl_audio.h>
 #include <tsf.h>
+#include <thread>
+#include <atomic>
+#include <algorithm>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <codecvt>
+#include <locale>
+#include <future>
 #include "NtFuncs.h"
 #include "EvBuf_t.h"
 #include "SynthMain.h"
+#include "SoundFontSystem.h"
 
 namespace OmniMIDI {
 	class TinySFSettings : public SynthSettings {
@@ -41,10 +52,10 @@ namespace OmniMIDI {
 
 		TinySFSettings() {
 			// When you initialize Settings(), load OM's own settings by default
-			WinUtils::SysPath Utils;
+			Utils::SysPath Utils;
 			wchar_t OMPath[MAX_PATH] = { 0 };
 
-			if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
+			if (Utils.GetFolderPath(Utils::FIDs::UserFolder, OMPath, sizeof(OMPath))) {
 				swprintf_s(OMPath, L"%s\\OmniMIDI\\settings.json\0", OMPath);
 				LoadJSON(OMPath);
 			}
@@ -120,6 +131,7 @@ namespace OmniMIDI {
 		SDL_AudioDeviceID dev = 0;
 		SDL_mutex* g_Mutex = nullptr;
 
+		SoundFontSystem SFSystem;
 		TinySFSettings* Settings = nullptr;
 		bool Running = false;
 

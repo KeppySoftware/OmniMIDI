@@ -25,6 +25,7 @@
 #include "FluidSynth.h"
 #include "XSynthM.h"
 #include "TSFSynth.h"
+#include "StreamPlayer.h"
 
 #ifdef DEFINE_DEVPROPKEY
 #undef DEFINE_DEVPROPKEY
@@ -71,17 +72,18 @@ namespace OmniMIDI {
 	public:
 		// Global settings
 		int Renderer = BASSMIDI;
+		bool KDMAPIEnabled = true;
 		std::string CustomRenderer = "empty";
 		std::vector<std::string> Blacklist;
 
 		WDMSettings() {
 			// When you initialize Settings(), load OM's own settings by default
-			WinUtils::SysPath Utils;
+			Utils::SysPath Utils;
 			wchar_t OMPath[MAX_PATH] = { 0 };
 			wchar_t OMBPath[MAX_PATH] = { 0 };
 			wchar_t OMDBPath[MAX_PATH] = { 0 };
 
-			if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
+			if (Utils.GetFolderPath(Utils::FIDs::UserFolder, OMPath, sizeof(OMPath))) {
 				wcscpy_s(OMBPath, OMPath);
 				swprintf_s(OMPath, L"%s\\OmniMIDI\\settings.json\0", OMPath);
 				swprintf_s(OMBPath, L"%s\\OmniMIDI\\defblacklist.json\0", OMBPath);
@@ -130,7 +132,7 @@ namespace OmniMIDI {
 				}
 				catch (nlohmann::json::type_error ex) {
 					st.close();
-					LOG(SetErr, "The JSON is corrupted or malformed!\n\nnlohmann::json says: %s", ex.what());
+					LOG(SetErr, "The JSON is corrupted or malformed! nlohmann::json says: %s", ex.what());
 					CreateJSON(Path);
 					return;
 				}

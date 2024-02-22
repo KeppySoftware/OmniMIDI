@@ -12,6 +12,9 @@
 
 #pragma once
 
+#define MIDI_IO_PACKED	0x00000000L			// Legacy mode, used by most MIDI apps
+#define MIDI_IO_COOKED	0x00000002L			// Stream mode, used by some old MIDI apps (Such as GZDoom)
+
 #include <Windows.h>
 #include <ShlObj_core.h>
 #include <cmmddk.h>
@@ -20,12 +23,12 @@
 #include "ErrSys.h"
 
 namespace WinDriver {
-	typedef VOID(CALLBACK* WMMC)(HMIDIOUT, DWORD, DWORD_PTR, DWORD_PTR, DWORD_PTR);
+	typedef void(CALLBACK* midiOutProc)(HMIDIOUT hmOut, UINT wMsg, DWORD_PTR dwInstance, DWORD_PTR Param1, DWORD_PTR Param2);
 
 	struct Callback {
-		HMIDI Handle = nullptr;
+		HMIDIOUT Handle = nullptr;
 		DWORD Mode = 0;
-		DWORD_PTR Ptr = 0;
+		midiOutProc Func = 0;
 		DWORD_PTR Instance = 0;
 	};
 
@@ -40,7 +43,7 @@ namespace WinDriver {
 		unsigned short ManufacturerID = 0xFFFF;
 		unsigned short ProductID = 0xFFFF;
 		unsigned short Technology = MOD_SWSYNTH;
-		unsigned short Support = MIDICAPS_VOLUME;
+		unsigned short Support = MIDICAPS_VOLUME | MIDICAPS_STREAM;
 
 		ErrorSystem::WinErr MaskErr;
 

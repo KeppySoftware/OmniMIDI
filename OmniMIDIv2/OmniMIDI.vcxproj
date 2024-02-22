@@ -129,7 +129,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>ClangCL</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <LLVMToolsVersion>16</LLVMToolsVersion>
+    <LLVMToolsVersion>17.0.1</LLVMToolsVersion>
     <DisableAdvancedSupport>false</DisableAdvancedSupport>
     <SupportLTL>false</SupportLTL>
   </PropertyGroup>
@@ -148,7 +148,7 @@
     <PlatformToolset>ClangCL</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <LLVMToolsVersion>16</LLVMToolsVersion>
+    <LLVMToolsVersion>17.0.1</LLVMToolsVersion>
     <DisableAdvancedSupport>true</DisableAdvancedSupport>
     <SupportLTL>true</SupportLTL>
     <WindowsTargetPlatformMinVersion>6.0.6000.0</WindowsTargetPlatformMinVersion>
@@ -625,11 +625,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BASSSynth.h" />
+    <ClInclude Include="StreamPlayer.h" />
     <ClInclude Include="ErrSys.h" />
     <ClInclude Include="EvBuf_t.h" />
     <ClInclude Include="FluidSynth.h" />
     <ClInclude Include="KDMAPI.h" />
     <ClInclude Include="NtFuncs.h" />
+    <ClInclude Include="SoundFontSystem.h" />
     <ClInclude Include="SrcLoc.h" />
     <ClInclude Include="SynthMain.h" />
     <ClInclude Include="TSFSynth.h" />
@@ -644,10 +646,12 @@
     <ClCompile Include="BASSSynth.cpp" />
     <ClCompile Include="bass_vst.cpp" />
     <ClCompile Include="basswasapi.cpp" />
+    <ClCompile Include="StreamPlayer.cpp" />
     <ClCompile Include="ErrSys.cpp" />
     <ClCompile Include="FluidSynth.cpp" />
     <ClCompile Include="libfluidsynth.cpp" />
     <ClCompile Include="minisdl_audio.c" />
+    <ClCompile Include="SoundFontSystem.cpp" />
     <ClCompile Include="TSFSynth.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WDMDrv.cpp" />

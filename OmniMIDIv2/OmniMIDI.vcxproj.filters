@@ -93,6 +93,12 @@
     <ClInclude Include="TSFSynth.h">
       <Filter>Header Files\Synthesizer\Synth modules</Filter>
     </ClInclude>
+    <ClInclude Include="SoundFontSystem.h">
+      <Filter>Header Files\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="StreamPlayer.h">
+      <Filter>Header Files\Extensions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ErrSys.cpp">
@@ -142,6 +148,12 @@
     </ClCompile>
     <ClCompile Include="minisdl_audio.c">
       <Filter>Source Files\Synthesizer\SDL</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundFontSystem.cpp">
+      <Filter>Source Files\Extensions</Filter>
+    </ClCompile>
+    <ClCompile Include="StreamPlayer.cpp">
+      <Filter>Source Files\Extensions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -25,7 +25,7 @@ bool OmniMIDI::TinySFSynth::ProcessEvBuf() {
 	unsigned int tev = 0;
 	unsigned int sysev = 0;
 
-	if (!Events->Pop(tev) || !IsSynthInitialized())
+	if (!Events->Pop(&tev) || !IsSynthInitialized())
 		return false;
 
 	if (CHKLRS(GETSTATUS(tev)) != 0) LastRunningStatus = GETSTATUS(tev);
@@ -93,7 +93,7 @@ bool OmniMIDI::TinySFSynth::UnloadSynthModule() {
 }
 
 bool OmniMIDI::TinySFSynth::StartSynthModule() {
-	WinUtils::SysPath Utils;
+	Utils::SysPath Utils;
 	wchar_t OMPath[MAX_PATH] = { 0 };
 
 	if (Running)
@@ -121,57 +121,17 @@ bool OmniMIDI::TinySFSynth::StartSynthModule() {
 		return false;
 	}
 
-	if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
-		swprintf_s(OMPath, L"%s\\OmniMIDI\\lists\\OmniMIDI_A.json\0", OMPath);
+	std::vector<OmniMIDI::SoundFont>* SFv = SFSystem.LoadList();
+	if (SFv != nullptr) {
+		std::vector<SoundFont>& dSFv = *SFv;
 
-		std::fstream sfs;
-		sfs.open(OMPath);
-
-		if (sfs.is_open()) {
-			try {
-				// Read the JSON data from there
-				auto json = nlohmann::json::parse(sfs, nullptr, false, true);
-
-				if (json != nullptr) {
-					auto& JsonData = json["SoundFonts"];
-
-					if (!(JsonData == nullptr || JsonData.size() < 1)) {
-						for (int i = 0; i < JsonData.size(); i++) {
-							bool enabled = true;
-							nlohmann::json subitem = JsonData[i];
-
-							// Is item valid?
-							if (subitem != nullptr) {
-								std::string sfpath = subitem["path"].is_null() ? "\0" : subitem["path"];
-								enabled = subitem["enabled"].is_null() ? enabled : (bool)subitem["enabled"];
-
-								if (enabled) {
-									if (GetFileAttributesA(sfpath.c_str()) != INVALID_FILE_ATTRIBUTES) {
-										g_TinySoundFont = tsf_load_filename(sfpath.c_str());
-										if (g_TinySoundFont) {
-											tsf_channel_set_bank_preset(g_TinySoundFont, 9, 128, 0);
-											break;
-										}						
-
-										continue;
-									}
-									else NERROR(SynErr, "The SoundFont \"%s\" could not be found!", false, sfpath.c_str());
-								}
-							}
-
-							// If it's not, then let's loop until the end of the JSON struct
-						}
-					}
-					else NERROR(SynErr, "\"%s\" does not contain a valid \"SoundFonts\" JSON structure.", false, OMPath);
-				}
-				else NERROR(SynErr, "Invalid JSON structure!", false);
+		for (int i = 0; i < SFv->size(); i++) {
+			g_TinySoundFont = tsf_load_filename(dSFv[i].path.c_str());
+			if (g_TinySoundFont) {
+				tsf_channel_set_bank_preset(g_TinySoundFont, 9, 128, 0);
+				break;
 			}
-			catch (nlohmann::json::type_error ex) {
-				NERROR(SynErr, "The SoundFont JSON is corrupted or malformed!\n\nnlohmann::json says: %s", ex.what());
-			}
-			sfs.close();
 		}
-		else NERROR(SynErr, "SoundFonts JSON does not exist.", false);
 	}
 
 	tsf_set_output(g_TinySoundFont, Settings->StereoRendering ? TSF_STEREO_INTERLEAVED : TSF_MONO, OutputAudioSpec.freq, 0);
@@ -186,7 +146,7 @@ bool OmniMIDI::TinySFSynth::StartSynthModule() {
 		return false;
 	}
 
-	LOG(SynErr, "Op: freq %d, ch %d, samp %d\nGot: freq %d, ch %d, samp %d", 
+	LOG(SynErr, "Op: freq %d, ch %d, samp %d - Got: freq %d, ch %d, samp %d", 
 		OutputAudioSpec.freq, OutputAudioSpec.channels, OutputAudioSpec.samples, 
 		FinalAudioSpec.freq, FinalAudioSpec.channels, FinalAudioSpec.samples);
 

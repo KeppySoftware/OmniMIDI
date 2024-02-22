@@ -15,6 +15,10 @@
 #include <string>
 #include <string_view>
 #include <stdexcept>
+#ifdef _DEBUG
+#include <iostream>
+#include <future>
+#endif
 #include "SrcLoc.h"
 
 #define S2(x)					#x

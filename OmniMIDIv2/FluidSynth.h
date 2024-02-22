@@ -15,9 +15,20 @@
 #endif
 
 #include <fluidsynth.h>
+#include <thread>
+#include <atomic>
+#include <algorithm>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <codecvt>
+#include <locale>
+#include <future>
 #include "NtFuncs.h"
 #include "EvBuf_t.h"
 #include "SynthMain.h"
+#include "SoundFontSystem.h"
 
 namespace OmniMIDI {
 	class FluidSettings : public SynthSettings {
@@ -45,10 +56,10 @@ namespace OmniMIDI {
 
 		FluidSettings() {
 			// When you initialize Settings(), load OM's own settings by default
-			WinUtils::SysPath Utils;
+			Utils::SysPath Utils;
 			wchar_t OMPath[MAX_PATH] = { 0 };
 
-			if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
+			if (Utils.GetFolderPath(Utils::FIDs::UserFolder, OMPath, sizeof(OMPath))) {
 				swprintf_s(OMPath, L"%s\\OmniMIDI\\settings.json\0", OMPath);
 				LoadJSON(OMPath);
 			}
@@ -115,7 +126,7 @@ namespace OmniMIDI {
 				}
 				catch (nlohmann::json::type_error ex) {
 					st.close();
-					LOG(SetErr, "The JSON is corrupted or malformed!\n\nnlohmann::json says: %s", ex.what());
+					LOG(SetErr, "The JSON is corrupted or malformed!nlohmann::json says: %s", ex.what());
 					CreateJSON(Path);
 					return;
 				}
@@ -162,6 +173,7 @@ namespace OmniMIDI {
 		std::jthread _EvtThread;
 		EvBuf* Events;
 
+		SoundFontSystem SFSystem;
 		FluidSettings* Settings = nullptr;
 		fluid_settings_t* fSet = nullptr;
 		fluid_synth_t* fSyn = nullptr;

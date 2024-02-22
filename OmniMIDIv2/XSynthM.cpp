@@ -26,12 +26,8 @@ bool OmniMIDI::XSynth::LoadSynthModule() {
 
 	void* ptr = nullptr;
 	for (int i = 0; i < sizeof(FLibImports) / sizeof(FLibImports[0]); i++) {
-		ptr = (void*)GetProcAddress(XLib->Ptr(), FLibImports[i].GetName());
-		if (ptr)
-		{
-			FLibImports[i].SetPtr(ptr);
+		if (FLibImports[i].SetPtr(XLib->Ptr(), FLibImports[i].GetName()))
 			continue;
-		}
 	}
 
 	return true;
@@ -48,7 +44,7 @@ bool OmniMIDI::XSynth::UnloadSynthModule() {
 }
 
 bool OmniMIDI::XSynth::StartSynthModule() {
-	WinUtils::SysPath Utils;
+	Utils::SysPath Utils;
 	wchar_t OMPath[MAX_PATH] = { 0 };
 
 	if (Running)
@@ -59,52 +55,14 @@ bool OmniMIDI::XSynth::StartSynthModule() {
 
 	if (StartModule(Settings->BufSize))
 	{
-		if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
-			swprintf_s(OMPath, L"%s\\OmniMIDI\\lists\\OmniMIDI_A.json\0", OMPath);
+		std::vector<OmniMIDI::SoundFont>* SFv = SFSystem.LoadList();
+		if (SFv != nullptr) {
+			std::vector<SoundFont>& dSFv = *SFv;
 
-			std::fstream sfs;
-			sfs.open(OMPath);
-
-			if (sfs.is_open()) {
-				try {
-					// Read the JSON data from there
-					auto json = nlohmann::json::parse(sfs, nullptr, false, true);
-
-					if (json != nullptr) {
-						auto& JsonData = json["SoundFonts"];
-
-						if (!(JsonData == nullptr || JsonData.size() < 1)) {
-							for (int i = 0; i < JsonData.size(); i++) {
-								bool enabled = true;
-								nlohmann::json subitem = JsonData[i];
-
-								// Is item valid?
-								if (subitem != nullptr) {
-									std::string sfpath = subitem["path"].is_null() ? "\0" : subitem["path"];
-									enabled = subitem["enabled"].is_null() ? enabled : (bool)subitem["enabled"];
-
-									if (enabled) {
-										if (GetFileAttributesA(sfpath.c_str()) != INVALID_FILE_ATTRIBUTES) {
-											LoadSoundFont(sfpath.c_str());
-											break;
-										}
-										else NERROR(SynErr, "The SoundFont \"%s\" could not be found!", false, sfpath.c_str());
-									}
-								}
-
-								// If it's not, then let's loop until the end of the JSON struct
-							}
-						}
-						else NERROR(SynErr, "\"%s\" does not contain a valid \"SoundFonts\" JSON structure.", false, OMPath);
-					}
-					else NERROR(SynErr, "Invalid JSON structure!", false);
-				}
-				catch (nlohmann::json::type_error ex) {
-					NERROR(SynErr, "The SoundFont JSON is corrupted or malformed!\n\nnlohmann::json says: %s", ex.what());
-				}
-				sfs.close();
+			for (int i = 0; i < SFv->size(); i++) {
+				LoadSoundFont(dSFv[i].path.c_str());
+				break;
 			}
-			else NERROR(SynErr, "SoundFonts JSON does not exist.", false);
 		}
 
 		Running = true;

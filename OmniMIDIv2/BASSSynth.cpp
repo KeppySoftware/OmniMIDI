@@ -111,10 +111,10 @@ bool OmniMIDI::BASSSynth::ProcessEvent(unsigned int tev) {
 			BASS_MIDI_StreamEvents(AudioStream, BASS_MIDI_EVENTS_RAW, &sysev, 2);
 
 			while (GETSTATUS(sysev) != MIDI_SYSEXEND) {
-				Events->Peek(sysev);
+				Events->Peek(&sysev);
 
 				if (GETSTATUS(sysev) != MIDI_SYSEXEND) {
-					Events->Pop(sysev);
+					Events->Pop(&sysev);
 					LOG(SynErr, "SysEx Ev: %x", sysev);
 					BASS_MIDI_StreamEvents(AudioStream, BASS_MIDI_EVENTS_RAW, &sysev, 3);
 				}
@@ -168,7 +168,7 @@ bool OmniMIDI::BASSSynth::ProcessEvent(unsigned int tev) {
 bool OmniMIDI::BASSSynth::ProcessEvBuf() {
 	unsigned int tev = 0;
 
-	if (!Events->Pop(tev) || !AudioStream)
+	if (!Events->Pop(&tev) || !AudioStream)
 		return false;
 
 	if (CHKLRS(GETSTATUS(tev)) != 0) LastRunningStatus = GETSTATUS(tev);
@@ -209,26 +209,26 @@ bool OmniMIDI::BASSSynth::LoadFuncs() {
 
 	for (int i = 0; i < sizeof(BLibImports) / sizeof(BLibImports[0]); i++)
 	{
-		if (BLibImports[i].SetPtr((void*)GetProcAddress(BAudLib->Ptr(), BLibImports[i].GetName())))
+		if (BLibImports[i].SetPtr(BAudLib->Ptr(), BLibImports[i].GetName()))
 			continue;
 
-		if (BLibImports[i].SetPtr((void*)GetProcAddress(BMidLib->Ptr(), BLibImports[i].GetName())))
+		if (BLibImports[i].SetPtr(BMidLib->Ptr(), BLibImports[i].GetName()))
 			continue;
 
 		switch (Settings->AudioEngine) {
 		case WASAPI:
-			if (BLibImports[i].SetPtr((void*)GetProcAddress(BWasLib->Ptr(), BLibImports[i].GetName())))
+			if (BLibImports[i].SetPtr(BWasLib->Ptr(), BLibImports[i].GetName()))
 				continue;
 			break;
 
 		case ASIO:
-			if (BLibImports[i].SetPtr((void*)GetProcAddress(BAsiLib->Ptr(), BLibImports[i].GetName())))
+			if (BLibImports[i].SetPtr(BAsiLib->Ptr(), BLibImports[i].GetName()))
 				continue;
 			break;
 		}
 
 		if (BVstLib->IsOnline())
-			if (BLibImports[i].SetPtr((void*)GetProcAddress(BVstLib->Ptr(), BLibImports[i].GetName())))
+			if (BLibImports[i].SetPtr(BVstLib->Ptr(), BLibImports[i].GetName()))
 				continue;
 	}
 
@@ -311,7 +311,6 @@ bool OmniMIDI::BASSSynth::LoadSynthModule() {
 bool OmniMIDI::BASSSynth::UnloadSynthModule() {
 	// LOG(SynErr, L"UnloadBASSSynth called.");
 	if (UnloadFuncs()) {
-		Events->GetStats();
 		delete Events;
 		Events = nullptr;
 
@@ -328,13 +327,19 @@ bool OmniMIDI::BASSSynth::UnloadSynthModule() {
 
 bool OmniMIDI::BASSSynth::StartSynthModule() {
 	// SF path
-	WinUtils::SysPath Utils;
+	Utils::SysPath Utils;
 	wchar_t OMPath[MAX_PATH] = { 0 };
 
 	// BASS stream flags
 	const char* dev = Settings->ASIODevice.c_str();
-	BASS_ASIO_DEVICEINFO info = BASS_ASIO_DEVICEINFO();
-	unsigned int ASIOCount = 0, ASIODev = 0;
+	BASS_ASIO_DEVICEINFO devinfo = BASS_ASIO_DEVICEINFO();
+
+	unsigned int lchv = 0, rchv = 1;
+	const char* lch = Settings->ASIOLCh.c_str();
+	const char* rch = Settings->ASIORCh.c_str();
+	BASS_ASIO_CHANNELINFO chinfo = BASS_ASIO_CHANNELINFO();
+
+	unsigned int ASIOCount = 0, ASIODev = 0, ASIOCh = 0;
 	unsigned int StreamFlags = BASS_SAMPLE_FLOAT | BASS_MIDI_ASYNC;
 
 	// If the audio stream is not 0, then stream is allocated already
@@ -393,14 +398,11 @@ bool OmniMIDI::BASSSynth::StartSynthModule() {
 			return false;
 		}
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wint-to-void-pointer-cast"
 		if (!BASS_WASAPI_Init(-1, 0, 0, BASS_WASAPI_ASYNC | BASS_WASAPI_EVENT | BASS_WASAPI_SAMPLES, Settings->WASAPIBuf, 0, WASAPIPROC_BASS, (void*)AudioStream)) {
 			NERROR(SynErr, "BASS_WASAPI_Init failed with error 0x%x.", true, BASS_ErrorGetCode());
 			Fail = true;
 			return false;
 		}
-#pragma clang diagnostic pop
 
 		if (!BASS_WASAPI_Start()) {
 			NERROR(SynErr, "BASS_WASAPI_Start failed with error 0x%x.", true, BASS_ErrorGetCode());
@@ -427,9 +429,9 @@ bool OmniMIDI::BASSSynth::StartSynthModule() {
 		}
 
 		// Get the amount of ASIO devices available
-		for (; BASS_ASIO_GetDeviceInfo(ASIOCount, &info); ASIOCount++) {
+		for (; BASS_ASIO_GetDeviceInfo(ASIOCount, &devinfo); ASIOCount++) {
 			// Return the correct ID when found
-			if (strcmp(dev, info.name) == 0) {
+			if (strcmp(dev, devinfo.name) == 0) {
 				LOG(SynErr, "Found target device: %s (ID %d)", dev, ASIOCount);
 				ASIODev = ASIOCount;
 			}
@@ -449,17 +451,28 @@ bool OmniMIDI::BASSSynth::StartSynthModule() {
 		}
 
 		if (!BASS_ASIO_SetRate(Settings->AudioFrequency)) {
-			LOG(SynErr, "BASS_ASIO_SetRate failed, falling back to BASS_ASIO_ChannelSetRate...\nBASSERR: %d", BASS_ErrorGetCode());
+			LOG(SynErr, "BASS_ASIO_SetRate failed, falling back to BASS_ASIO_ChannelSetRate...BASSERR: %d", BASS_ErrorGetCode());
 			if (!BASS_ASIO_ChannelSetRate(0, 0, Settings->AudioFrequency)) {
-				NERROR(SynErr, "BASS_ASIO_ChannelSetRate failed to set the frequency with error 0x%x.\nIs %dHz supported?", true, BASS_ErrorGetCode(), Settings->AudioFrequency);
+				NERROR(SynErr, "BASS_ASIO_ChannelSetRate failed to set the frequency with error 0x%x.Is %dHz supported?", true, BASS_ErrorGetCode(), Settings->AudioFrequency);
 				Fail = true;
 				return false;
 			}
 		}
 
+		for (; BASS_ASIO_ChannelGetInfo(0, ASIOCh, &chinfo); ASIOCh++) {
+			// Return the correct ID when found
+			if (strcmp(lch, chinfo.name) == 0) {
+				lchv = ASIOCh;
+			}
+			else if (strcmp(rch, chinfo.name) == 0) {
+				rchv = ASIOCh;
+			}
+		}
+
 		BASS_ASIO_SetRate(Settings->AudioFrequency);
-		BASS_ASIO_ChannelSetFormat(0, 0, BASS_ASIO_FORMAT_FLOAT);
-		BASS_ASIO_ChannelEnableBASS(0, 0, AudioStream, 1);
+		BASS_ASIO_ChannelEnable(0, lchv, nullptr, nullptr);
+		BASS_ASIO_ChannelSetFormat(0, lchv, BASS_ASIO_FORMAT_FLOAT);
+		BASS_ASIO_ChannelEnableBASS(0, lchv, AudioStream, true);
 
 		if (!BASS_ASIO_Start(0, std::thread::hardware_concurrency())) {
 			NERROR(SynErr, "BASS_ASIO_Start failed with error 0x%x.", true, BASS_ErrorGetCode());
@@ -476,100 +489,41 @@ bool OmniMIDI::BASSSynth::StartSynthModule() {
 		return false;
 	}
 
-	if (Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath))) {
-		swprintf_s(OMPath, L"%s\\OmniMIDI\\lists\\OmniMIDI_A.json\0", OMPath);
+	std::vector<OmniMIDI::SoundFont>* SFv = SFSystem.LoadList();
+	if (SFv != nullptr) {
+		std::vector<SoundFont>& dSFv = *SFv;
 
-		std::fstream sfs;
-		sfs.open(OMPath);
+		for (int i = 0; i < SFv->size(); i++) {
+			unsigned int bmfiflags = 0;
+			BASS_MIDI_FONTEX sf = BASS_MIDI_FONTEX();
 
-		if (sfs.is_open()) {
-			try {
-				// Read the JSON data from there
-				auto json = nlohmann::json::parse(sfs, nullptr, false, true);
+			sf.spreset = dSFv[i].spreset;
+			sf.sbank = dSFv[i].sbank;
+			sf.dpreset = dSFv[i].dpreset;
+			sf.dbank = dSFv[i].dbank;
+			sf.dbanklsb = dSFv[i].dbanklsb;
 
-				if (json != nullptr) {
-					auto& JsonData = json["SoundFonts"];
+			if (dSFv[i].xgdrums) bmfiflags |= BASS_MIDI_FONT_XGDRUMS;
+			if (dSFv[i].linattmod) bmfiflags |= BASS_MIDI_FONT_LINATTMOD;
+			if (dSFv[i].lindecvol) bmfiflags |= BASS_MIDI_FONT_LINDECVOL;
+			if (dSFv[i].minfx) bmfiflags |= BASS_MIDI_FONT_MINFX;
+			if (dSFv[i].nolimits) bmfiflags |= BASS_MIDI_FONT_NOLIMITS;
+			if (dSFv[i].norampin) bmfiflags |= BASS_MIDI_FONT_NORAMPIN;
 
-					if (!(JsonData == nullptr || JsonData.size() < 1)) {
-						for (int i = 0; i < JsonData.size(); i++) {
-							unsigned int bmfiflags = 0;
-							BASS_MIDI_FONTEX sf = BASS_MIDI_FONTEX();
+			sf.font = BASS_MIDI_FontInit(dSFv[i].path.c_str(), bmfiflags | BASS_MIDI_FONT_MMAP);
 
-							bool enabled = true;
-							bool xgdrums = false;
-							bool linattmod = false;
-							bool lindecvol = false;
-							bool minfx = false;
-							bool nolimits = false;
-							bool norampin = false;
-
-							sf.font = 0;
-							sf.spreset = -1;
-							sf.sbank = -1;
-							sf.dpreset = -1;
-							sf.dbank = 0;
-							sf.dbanklsb = 0;
-
-							nlohmann::json subitem = JsonData[i];
-
-							// Is item valid?
-							if (subitem != nullptr) {
-								std::string sfpath = subitem["path"].is_null() ? "\0" : subitem["path"];
-								enabled = subitem["enabled"].is_null() ? enabled : (bool)subitem["enabled"];
-
-								if (enabled) {
-									if (GetFileAttributesA(sfpath.c_str()) != INVALID_FILE_ATTRIBUTES) {
-										xgdrums = subitem["xgdrums"].is_null() ? xgdrums : (bool)subitem["xgdrums"];
-										linattmod = subitem["linattmod"].is_null() ? linattmod : (bool)subitem["linattmod"];
-										lindecvol = subitem["lindecvol"].is_null() ? lindecvol : (bool)subitem["lindecvol"];
-										minfx = subitem["minfx"].is_null() ? minfx : (bool)subitem["minfx"];
-										nolimits = subitem["nolimits"].is_null() ? nolimits : (bool)subitem["nolimits"];
-										norampin = subitem["norampin"].is_null() ? norampin : (bool)subitem["norampin"];
-
-										sf.spreset = subitem["spreset"].is_null() ? sf.spreset : (int)subitem["spreset"];
-										sf.sbank = subitem["sbank"].is_null() ? sf.sbank : (int)subitem["sbank"];
-										sf.dpreset = subitem["dpreset"].is_null() ? sf.dpreset : (int)subitem["dpreset"];
-										sf.dbank = subitem["dbank"].is_null() ? sf.dbank : (int)subitem["dbank"];
-										sf.dbanklsb = subitem["dbanklsb"].is_null() ? sf.dbanklsb : (int)subitem["dbanklsb"];
-
-										if (xgdrums) bmfiflags |= BASS_MIDI_FONT_XGDRUMS;
-										if (linattmod) bmfiflags |= BASS_MIDI_FONT_LINATTMOD;
-										if (lindecvol) bmfiflags |= BASS_MIDI_FONT_LINDECVOL;
-										if (minfx) bmfiflags |= BASS_MIDI_FONT_MINFX;
-										if (nolimits) bmfiflags |= BASS_MIDI_FONT_NOLIMITS;
-										if (norampin) bmfiflags |= BASS_MIDI_FONT_NORAMPIN;
-
-										sf.font = BASS_MIDI_FontInit(sfpath.c_str(), bmfiflags | BASS_MIDI_FONT_MMAP);
-
-										// Check if the soundfont loads, if it does then it's valid
-										if (BASS_MIDI_FontLoad(sf.font, sf.spreset, sf.sbank))
-											SoundFonts.push_back(sf);
-										else NERROR(SynErr, "Error 0x%x occurred while loading \"%s\"!", false, BASS_ErrorGetCode(), sfpath.c_str());			
-									}
-									else NERROR(SynErr, "The SoundFont \"%s\" could not be found!", false, sfpath.c_str());
-								}
-							}
-
-							// If it's not, then let's loop until the end of the JSON struct
-						}
-
-						BASS_MIDI_StreamSetFonts(AudioStream, &SoundFonts[0], (unsigned int)SoundFonts.size() | BASS_MIDI_FONT_EX);
-					}
-					else NERROR(SynErr, "\"%s\" does not contain a valid \"SoundFonts\" JSON structure.", false, OMPath);
-				}
-				else NERROR(SynErr, "Invalid JSON structure!", false);
-			}
-			catch (nlohmann::json::type_error ex) {
-				NERROR(SynErr, "The SoundFont JSON is corrupted or malformed!\n\nnlohmann::json says: %s", ex.what());
-			}
-			sfs.close();
+			// Check if the soundfont loads, if it does then it's valid
+			if (BASS_MIDI_FontLoad(sf.font, sf.spreset, sf.sbank))
+				SoundFonts.push_back(sf);
+			else NERROR(SynErr, "Error 0x%x occurred while loading \"%s\"!", false, BASS_ErrorGetCode(), dSFv[i].path.c_str());
 		}
-		else NERROR(SynErr, "SoundFonts JSON does not exist.", false);
+
+		BASS_MIDI_StreamSetFonts(AudioStream, &SoundFonts[0], (unsigned int)SoundFonts.size() | BASS_MIDI_FONT_EX);
 	}
 
 	// Sorry ARM users!
 #if defined(_M_AMD64) || defined(_M_IX86)
-	if (Settings->LoudMax && Utils.GetFolderPath(FOLDERID_Profile, OMPath, sizeof(OMPath)))
+	if (Settings->LoudMax && Utils.GetFolderPath(Utils::FIDs::UserFolder, OMPath, sizeof(OMPath)))
 	{
 #if defined(_M_AMD64)
 		swprintf_s(OMPath, L"%s\\OmniMIDI\\LoudMax\\LoudMax64.dll", OMPath);
@@ -589,6 +543,8 @@ bool OmniMIDI::BASSSynth::StartSynthModule() {
 
 bool OmniMIDI::BASSSynth::StopSynthModule() {
 	if (AudioStream) {
+		SFSystem.ClearList();
+
 		BASS_StreamFree(AudioStream);
 		AudioStream = 0;
 
@@ -596,6 +552,9 @@ bool OmniMIDI::BASSSynth::StopSynthModule() {
 		case WASAPI:
 			BASS_WASAPI_Stop(true);
 			BASS_WASAPI_Free();
+
+			// why do I have to do it myself
+			BASS_WASAPI_SetNotify(nullptr, nullptr);
 			break;
 
 		case ASIO:

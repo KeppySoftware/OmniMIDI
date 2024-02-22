@@ -16,9 +16,13 @@ static ErrorSystem::WinErr WDMErr;
 static WinDriver::DriverCallback* fDriverCallback = nullptr;
 static WinDriver::DriverComponent* DriverComponent = nullptr;
 static WinDriver::DriverMask* DriverMask = nullptr;
+static OmniMIDI::StreamPlayer* StreamPlayer = nullptr;
 static OmniMIDI::WDMSettings* WDMSettings = nullptr;
 static OmniMIDI::SynthModule* SynthModule = nullptr;
 static HMODULE extModule = nullptr;
+#ifdef _DEBUG
+static FILE* dummy;
+#endif
 
 static NT::Funcs NTFuncs;
 static signed long long TickStart = 0;
@@ -51,10 +55,27 @@ extern "C" {
 				}
 			}
 
+
+#ifdef _DEBUG
+			if (AllocConsole()) {
+				freopen_s(&dummy, "CONOUT$", "w", stdout);
+				freopen_s(&dummy, "CONOUT$", "w", stderr);
+				freopen_s(&dummy, "CONIN$", "r", stdin);
+				std::cout.clear();
+				std::clog.clear();
+				std::cerr.clear();
+				std::cin.clear();
+			}
+#endif
+
 			break;
 
 		case DLL_PROCESS_DETACH:
 			if (DriverComponent) {
+#ifdef _DEBUG
+				FreeConsole();
+#endif
+
 				delete SynthModule;
 				delete fDriverCallback;
 				delete DriverMask;
@@ -188,7 +209,7 @@ extern "C" {
 		}
 
 		if (!good) freeAudioRender();
-		else LOG(WDMErr, "Renderer: %d\nCustom renderer: %s", 
+		else LOG(WDMErr, "Renderer: %d - Custom renderer: %s", 
 			WDMSettings->Renderer, 
 			WDMSettings->CustomRenderer.c_str());
 
@@ -205,30 +226,126 @@ extern "C" {
 			fDriverCallback->CallbackFunction(MOM_DONE, (DWORD)Param1, 0);
 			return (SynthModule->PlayLongEvent(((LPMIDIHDR)Param1)->lpData, ((LPMIDIHDR)Param1)->dwBytesRecorded) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
 
+		case MODM_STRMDATA: {
+			MIDIHDR* mhdr = (MIDIHDR*)Param1;
+			DWORD hdrLen = (DWORD)Param2;
+
+			if (StreamPlayer == nullptr)
+				return MIDIERR_NOTREADY;
+
+			if (hdrLen < offsetof(MIDIHDR, dwOffset) ||
+				!mhdr || !mhdr->lpData ||
+				mhdr->dwBufferLength < mhdr->dwBytesRecorded ||
+				mhdr->dwBytesRecorded % 4)
+			{
+				return MMSYSERR_INVALPARAM;
+			}
+
+			if (!(mhdr->dwFlags & MHDR_PREPARED))
+				return MIDIERR_UNPREPARED;
+
+			if (!(mhdr->dwFlags & MHDR_DONE))
+			{
+				if (mhdr->dwFlags & MHDR_INQUEUE)
+					return MIDIERR_STILLPLAYING;
+			}
+
+			mhdr->dwFlags &= ~MHDR_DONE;
+			mhdr->dwFlags |= MHDR_INQUEUE;
+			mhdr->lpNext = 0;
+			mhdr->dwOffset = 0;
+
+			if (!StreamPlayer->AddToQueue(mhdr))
+				return MIDIERR_STILLPLAYING;
+
+			return MMSYSERR_NOERROR;
+		}
+
+		case MODM_PREPARE:
+		{
+			MIDIHDR* mhdr = (MIDIHDR*)Param1;
+			unsigned int mhdrSize = (unsigned int)Param2;
+
+			if (!mhdr)
+				return MMSYSERR_INVALPARAM;
+
+			if (mhdrSize != sizeof(MIDIHDR))
+				return MMSYSERR_INVALPARAM;
+
+			if (mhdr->dwBufferLength < 1 || mhdr->dwBufferLength > 65535)
+				return MMSYSERR_INVALPARAM;
+
+			if (mhdr->dwBufferLength < 1)
+				return MMSYSERR_INVALPARAM;
+
+			if (!(mhdr->dwFlags & MHDR_PREPARED))
+			{
+				if (!VirtualLock(mhdr->lpData, mhdr->dwBufferLength))
+					return MMSYSERR_NOMEM;
+			}
+
+			mhdr->dwFlags |= MHDR_PREPARED;
+			return MMSYSERR_NOERROR;
+		}
+
+		case MODM_UNPREPARE:
+		{
+			MIDIHDR* mhdr = (MIDIHDR*)Param1;
+			unsigned int mhdrSize = (unsigned int)Param2;
+
+			if (!mhdr)
+				return MMSYSERR_INVALPARAM;
+
+			if (mhdrSize != sizeof(MIDIHDR))
+				return MMSYSERR_INVALPARAM;
+
+			if (mhdr->dwBufferLength < 1 || mhdr->dwBufferLength > 65535)
+				return MMSYSERR_INVALPARAM;
+
+			if (mhdr->dwBufferLength < 1)
+				return MMSYSERR_INVALPARAM;
+
+			if (!(mhdr->dwFlags & MHDR_INQUEUE))
+			{
+				if (!VirtualUnlock(mhdr->lpData, mhdr->dwBufferLength))
+				{
+					const unsigned int err = GetLastError();
+
+					if (err != 0x9E) {
+						throw std::runtime_error("Fatal error while unlocking buffer. Execution has been halted.");
+					}
+				}
+			}
+
+			mhdr->dwFlags &= ~MHDR_PREPARED;
+			return MMSYSERR_NOERROR;
+		}
+
 		case MODM_RESET:
 			return (SynthModule->PlayShortEvent(0x0101FF) == SYNTH_OK) ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
 
-		case MODM_OPEN:
+		case MODM_OPEN: 
+		{
+			LPMIDIOPENDESC midiOpenDesc = reinterpret_cast<LPMIDIOPENDESC>(Param1);
+			DWORD callbackMode = (DWORD)Param2;
+
 			freeAudioRender();
 			if (getAudioRender()) {
 				if (!SynthModule->LoadSynthModule()) {
-					NERROR(WDMErr, "Unable to initialize the synthesizer module!\n\nPress OK to continue without audio.", true);
+					NERROR(WDMErr, "Unable to initialize the synthesizer module!Press OK to continue without audio.", true);
 
-					if (!SynthModule->UnloadSynthModule()) 
-						FNERROR(WDMErr, "UnloadSynthModule failed in MODM_OPEN!\n\nABORT!!!");
+					if (!SynthModule->UnloadSynthModule())
+						FNERROR(WDMErr, "UnloadSynthModule failed in MODM_OPEN!ABORT!!!");
 
 					freeAudioRender();
 					return MMSYSERR_NOMEM;
 				}
 
 				if (!SynthModule->StartSynthModule()) {
-					NERROR(WDMErr, "Unable to start up the synthesizer module!\n\nPress OK to continue without audio.", true);
+					NERROR(WDMErr, "Unable to start up the synthesizer module!Press OK to continue without audio.", true);
 
-					if (fDriverCallback->PrepareCallbackFunction((LPMIDIOPENDESC)Param1, (DWORD)Param2))
-					{
-						fDriverCallback->CallbackFunction(MOM_OPEN, 0, 0);
-						return MMSYSERR_NOERROR;
-					}
+					if (!SynthModule->UnloadSynthModule())
+						FNERROR(WDMErr, "UnloadSynthModule failed in MODM_OPEN!ABORT!!!");
 
 					freeAudioRender();
 					return MMSYSERR_NOTENABLED;
@@ -236,14 +353,32 @@ extern "C" {
 
 				LOG(WDMErr, "Synth ID: %x", SynthModule->SynthID());
 
-				fDriverCallback->PrepareCallbackFunction((LPMIDIOPENDESC)Param1, (DWORD)Param2);
-				fDriverCallback->CallbackFunction(MOM_OPEN, 0, 0);
+				if (fDriverCallback->PrepareCallbackFunction(midiOpenDesc, callbackMode)) {
+					LOG(WDMErr, "PrepareCallbackFunction done.");
 
+					if (callbackMode & MIDI_IO_COOKED) {
+						StreamPlayer = new OmniMIDI::StreamPlayer(SynthModule, fDriverCallback);
+						LOG(WDMErr, "CookedPlayer allocated.");
+
+						if (!StreamPlayer)
+						{
+							freeAudioRender();
+							return MMSYSERR_NOMEM;
+						}
+
+						LOG(WDMErr, "CookedPlayer address: %x", StreamPlayer);
+					}
+
+					fDriverCallback->CallbackFunction(MOM_OPEN, 0, 0);
+				}
+	
 				return MMSYSERR_NOERROR;
 			}
 
 			NERROR(WDMErr, "Failed to initialize synthesizer.", true);
 			return MMSYSERR_NOMEM;
+		}
+
 
 		case MODM_CLOSE:
 			if (SynthModule->StopSynthModule()) {
@@ -264,6 +399,83 @@ extern "C" {
 		case MODM_GETDEVCAPS:
 			return DriverMask->GiveCaps(DeviceID, (PVOID)Param1, (DWORD)Param2);
 
+		case MODM_PROPERTIES:
+		{
+			MIDIPROPTEMPO* mpTempo = (MIDIPROPTEMPO*)Param1;
+			MIDIPROPTIMEDIV* mpTimeDiv = (MIDIPROPTIMEDIV*)Param1;
+			DWORD mpFlags = (DWORD)Param2;
+
+			if (StreamPlayer == nullptr)
+				return MIDIERR_NOTREADY;
+
+			if (!(mpFlags & (MIDIPROP_GET | MIDIPROP_SET)))
+				return MMSYSERR_INVALPARAM;
+
+			if (mpFlags & MIDIPROP_TEMPO)
+			{
+				if (mpTempo->cbStruct != sizeof(MIDIPROPTEMPO))
+					return MMSYSERR_INVALPARAM;
+				
+				if (mpFlags & MIDIPROP_SET)
+					StreamPlayer->SetTempo(mpTempo->dwTempo);
+				else if (mpFlags & MIDIPROP_GET)
+					mpTempo->dwTempo = StreamPlayer->GetTempo();
+			}
+			else if (mpFlags & MIDIPROP_TIMEDIV) {
+				if (mpTimeDiv->cbStruct != sizeof(MIDIPROPTIMEDIV))
+					return MMSYSERR_INVALPARAM;
+
+				if (mpFlags & MIDIPROP_SET)
+					StreamPlayer->SetTicksPerQN(mpTimeDiv->dwTimeDiv);
+				else if (mpFlags & MIDIPROP_GET)
+					mpTimeDiv->dwTimeDiv = StreamPlayer->GetTicksPerQN();
+			}
+			else return MMSYSERR_INVALPARAM;
+
+			return MMSYSERR_NOERROR;
+		}
+
+		case MODM_GETPOS:
+		{
+			if (StreamPlayer == nullptr)
+				return MIDIERR_NOTREADY;
+
+			if (!Param1)
+				return MMSYSERR_INVALPARAM;
+
+			StreamPlayer->GetPosition((MMTIME*)Param1);
+
+			return MMSYSERR_NOERROR;
+		}
+
+		case MODM_RESTART:
+			if (StreamPlayer == nullptr)
+				return MMSYSERR_NOTENABLED;
+
+			StreamPlayer->Start();
+			SynthModule->PlayShortEvent(0x0101FF);
+
+			return MMSYSERR_NOERROR;
+
+		case MODM_PAUSE:
+			if (StreamPlayer == nullptr)
+				return MMSYSERR_NOTENABLED;
+
+			StreamPlayer->Stop();
+
+			return MMSYSERR_NOERROR;
+
+		case MODM_STOP:
+			if (StreamPlayer == nullptr)
+				return MMSYSERR_NOTENABLED;
+
+			if (StreamPlayer->EmptyQueue()) {
+				SynthModule->PlayShortEvent(0x0101FF);
+				return MMSYSERR_NOERROR;
+			}
+
+			return MMSYSERR_NOERROR;
+
 		case DRVM_INIT:
 		case DRVM_EXIT:
 		case DRVM_ENABLE:
@@ -283,7 +495,7 @@ extern "C" {
 
 	__declspec(dllexport)
 	int KDMAPI IsKDMAPIAvailable() {
-		return 1;
+		return (int)WDMSettings->KDMAPIEnabled;
 	}
 
 	__declspec(dllexport)
@@ -291,17 +503,17 @@ extern "C" {
 		freeAudioRender();
 		if (getAudioRender()) {
 			if (!SynthModule->LoadSynthModule()) {
-				NERROR(WDMErr, "Unable to initialize the synthesizer module!\n\nPress OK to continue without audio.", true);
+				NERROR(WDMErr, "Unable to initialize the synthesizer module!Press OK to continue without audio.", true);
 
 				if (!SynthModule->UnloadSynthModule())
-					FNERROR(WDMErr, "UnloadSynthModule failed in MODM_OPEN!\n\nABORT!!!");
+					FNERROR(WDMErr, "UnloadSynthModule failed in MODM_OPEN!ABORT!!!");
 
 				freeAudioRender();
 				return 0;
 			}
 
 			if (!SynthModule->StartSynthModule()) {
-				NERROR(WDMErr, "Unable to start up the synthesizer module!\n\nPress OK to continue without audio.", true);
+				NERROR(WDMErr, "Unable to start up the synthesizer module!Press OK to continue without audio.", true);
 				freeAudioRender();
 				return 0;
 			}
@@ -341,14 +553,21 @@ extern "C" {
 	}
 
 	__declspec(dllexport)
-	void KDMAPI SendDirectDataNoBuf(unsigned int) {
-		// Unsupported.
+	void KDMAPI SendDirectDataNoBuf(unsigned int ev) {
+		// Unsupported, forward to SendDirectData
+		SendDirectData(ev);
 	}
 
 	__declspec(dllexport)
 	unsigned int KDMAPI SendDirectLongData(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize) {
 		fDriverCallback->CallbackFunction(MOM_DONE, (DWORD_PTR)IIMidiHdr, 0);
 		return SynthModule->PlayLongEvent(IIMidiHdr->lpData, IIMidiHdr->dwBytesRecorded) == SYNTH_OK ? MMSYSERR_NOERROR : MMSYSERR_INVALPARAM;
+	}
+
+	__declspec(dllexport)
+	unsigned int KDMAPI SendDirectLongDataNoBuf(MIDIHDR* IIMidiHdr, UINT IIMidiHdrSize) {
+		// Unsupported, forward to SendDirectLongData
+		SendDirectLongData(IIMidiHdr, IIMidiHdrSize);
 	}
 
 	__declspec(dllexport)
