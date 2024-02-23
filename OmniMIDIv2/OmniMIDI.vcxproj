@@ -65,7 +65,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>ClangCL</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <LLVMToolsVersion>16</LLVMToolsVersion>
+    <LLVMToolsVersion>17.0.1</LLVMToolsVersion>
     <DisableAdvancedSupport>false</DisableAdvancedSupport>
     <SupportLTL>false</SupportLTL>
   </PropertyGroup>
@@ -84,7 +84,7 @@
     <PlatformToolset>ClangCL</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <LLVMToolsVersion>16</LLVMToolsVersion>
+    <LLVMToolsVersion>17.0.1</LLVMToolsVersion>
     <DisableAdvancedSupport>true</DisableAdvancedSupport>
     <SupportLTL>true</SupportLTL>
     <WindowsTargetPlatformMinVersion>6.0.6000.0</WindowsTargetPlatformMinVersion>
@@ -171,7 +171,7 @@
     <PlatformToolset>ClangCL</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <LLVMToolsVersion>16</LLVMToolsVersion>
+    <LLVMToolsVersion>17.0.1</LLVMToolsVersion>
     <DisableAdvancedSupport>true</DisableAdvancedSupport>
     <SupportLTL>true</SupportLTL>
     <WindowsTargetPlatformMinVersion>6.0.6000.0</WindowsTargetPlatformMinVersion>
@@ -297,7 +297,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;OMNIMIDI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;OMNIMIDI_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>
@@ -314,6 +314,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
@@ -338,6 +339,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (WINNTCRT)|Win32'">
@@ -367,6 +369,7 @@
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
       <ImportLibrary>$(ProjectDir)lib\$(TargetName)_Win32.lib</ImportLibrary>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (MSVC++)|Win32'">
@@ -397,6 +400,7 @@
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
       <ImportLibrary>$(ProjectDir)lib\$(TargetName)_Win32.lib</ImportLibrary>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (WINNTCRT)|ARM'">
@@ -427,6 +431,7 @@
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
       <ImportLibrary>$(ProjectDir)lib\$(TargetName)_ARM.lib</ImportLibrary>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (MSVC++)|ARM'">
@@ -457,6 +462,7 @@
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
       <ImportLibrary>$(ProjectDir)lib\$(TargetName)_ARM.lib</ImportLibrary>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -480,6 +486,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -503,6 +510,7 @@
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (WINNTCRT)|x64'">
@@ -532,6 +540,7 @@
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
       <ImportLibrary>$(ProjectDir)lib\$(TargetName)_Win64.lib</ImportLibrary>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (MSVC++)|x64'">
@@ -562,6 +571,7 @@
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
       <ImportLibrary>$(ProjectDir)lib\$(TargetName)_Win64.lib</ImportLibrary>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (WINNTCRT)|ARM64'">
@@ -591,6 +601,7 @@
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
       <ImportLibrary>$(ProjectDir)lib\$(TargetName)_ARM64.lib</ImportLibrary>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release (MSVC++)|ARM64'">
@@ -621,6 +632,7 @@
       <AdditionalDependencies>winmm.lib;Shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <MinimumRequiredVersion>10.0</MinimumRequiredVersion>
       <ImportLibrary>$(ProjectDir)lib\$(TargetName)_ARM64.lib</ImportLibrary>
+      <ModuleDefinitionFile>OMExports.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -660,6 +672,7 @@
     <ClCompile Include="XSynthM.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="OMExports.def" />
     <None Include="packages.config" />
     <None Include="WDMEntry.h" />
   </ItemGroup>

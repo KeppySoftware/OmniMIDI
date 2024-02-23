@@ -54,6 +54,7 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 		CapsA.wVoices = 65535;
 		CapsA.vDriverVersion = MAKEWORD(6, 2);
 		memcpy((LPMIDIOUTCAPSA)CapsPointer, &CapsA, min(CapsSize, sizeof(CapsA)));
+		LOG(MaskErr, "MIDIOUTCAPSA given to app.");
 		break;
 
 	case (sizeof(MIDIOUTCAPSW)):
@@ -67,6 +68,7 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 		CapsW.wVoices = 65535;
 		CapsW.vDriverVersion = MAKEWORD(6, 2);
 		memcpy((LPMIDIOUTCAPSW)CapsPointer, &CapsW, min(CapsSize, sizeof(CapsW)));
+		LOG(MaskErr, "MIDIOUTCAPSW given to app.");
 		break;
 
 	case (sizeof(MIDIOUTCAPS2A)):
@@ -80,6 +82,7 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 		Caps2A.wVoices = 65535;
 		Caps2A.vDriverVersion = MAKEWORD(6, 2);
 		memcpy((LPMIDIOUTCAPS2A)CapsPointer, &Caps2A, min(CapsSize, sizeof(Caps2A)));
+		LOG(MaskErr, "MIDIOUTCAPS2A given to app.");
 		break;
 
 	case (sizeof(MIDIOUTCAPS2W)):
@@ -93,6 +96,7 @@ unsigned long WinDriver::DriverMask::GiveCaps(UINT DeviceIdentifier, PVOID CapsP
 		Caps2W.wVoices = 65535;
 		Caps2W.vDriverVersion = MAKEWORD(6, 2);
 		memcpy((LPMIDIOUTCAPS2W)CapsPointer, &Caps2W, min(CapsSize, sizeof(Caps2W)));
+		LOG(MaskErr, "MIDIOUTCAPS2W given to app.");
 		break;
 
 	default:
@@ -184,15 +188,9 @@ bool WinDriver::DriverComponent::SetDriverHandle(HDRVR Handle) {
 	}
 
 	// We already have the same pointer in memory.
-	if (this->DrvHandle == Handle) {
+	if (this->DrvHandle) {
 		LOG(DrvErr, "We already have the DrvHandle in memory. The app has Alzheimer's I guess?");
 		return true;
-	}
-
-	// A pointer is already stored in the variable, UnSetDriverHandle hasn't been called
-	if (this->DrvHandle != nullptr) {
-		LOG(DrvErr, "DrvHandle has been set in a previous call and not freed.");
-		return false;
 	}
 
 	// All good, save the pointer to a local variable and return true

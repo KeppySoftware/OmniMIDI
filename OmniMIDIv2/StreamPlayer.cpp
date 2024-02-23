@@ -14,7 +14,9 @@ OmniMIDI::StreamPlayer::StreamPlayer(OmniMIDI::SynthModule* sptr, WinDriver::Dri
 
 OmniMIDI::StreamPlayer::~StreamPlayer() {
 	goToBed = true;
-	_CooThread.join();
+
+	if (_CooThread.joinable())
+		_CooThread.join();
 }
 
 void OmniMIDI::StreamPlayer::PlayerThread() {
@@ -93,7 +95,7 @@ void OmniMIDI::StreamPlayer::PlayerThread() {
 
 			if (event->dwEvent & MEVT_F_LONG)
 			{
-				DWORD accum = ((event->dwEvent & 0xFFFFFF) + 3) & ~3;	// PAD
+				DWORD accum = ((event->dwEvent & 0xFFFFFF) + 3) & ~3;
 				byteAcc += accum;
 				hdr->dwOffset += accum;
 			}
@@ -153,6 +155,10 @@ bool OmniMIDI::StreamPlayer::EmptyQueue() {
 		hdr->dwFlags |= MHDR_DONE;
 		drvCallback->CallbackFunction(MOM_DONE, (DWORD_PTR)hdr, 0);
 	}
+
+	tickAcc = 0;
+	timeAcc = 0;
+	byteAcc = 0;
 
 	return true;
 }

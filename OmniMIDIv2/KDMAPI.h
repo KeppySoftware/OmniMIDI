@@ -12,8 +12,6 @@
 
 #pragma once
 
-#define KDMAPI WINAPI
-
 // KDMAPI settings
 #define KDMAPI_SET						0x0
 #define KDMAPI_GET						0x1

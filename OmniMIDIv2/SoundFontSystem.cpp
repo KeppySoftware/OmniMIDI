@@ -11,6 +11,9 @@
 std::vector<OmniMIDI::SoundFont>* OmniMIDI::SoundFontSystem::LoadList(std::wstring list) {
 	wchar_t OMPath[MAX_PATH] = { 0 };
 
+	if (SoundFonts.size() > 0)
+		return &SoundFonts;
+
 	if (Utils.GetFolderPath(Utils::FIDs::UserFolder, OMPath, sizeof(OMPath))) {
 		swprintf_s(OMPath, L"%s\\OmniMIDI\\lists\\OmniMIDI_A.json\0", OMPath);
 
